@@ -19,7 +19,7 @@ epydoc -v -u https://github.com/namd/pypln --graph=all --parse-only --html \
 
 echo 'Now execute:'
 echo '  git checkout gh-pages'
+echo '  rm -rf *'
 echo "  mv $TMP_DIR/* ."
-echo "  touch .nojekyll"
 echo "  rm -rf $TMP_DIR"
 echo "...and them git add/rm files, commit and push"
