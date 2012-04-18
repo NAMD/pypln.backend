@@ -5,7 +5,6 @@ TMP_DIR=/tmp/pypln-docs
 # Temporary directory to store static files
 rm -rf $TMP_DIR
 mkdir $TMP_DIR
-touch $TMP_DIR/.nojekyll
 
 # Make Sphinx documentation
 cd doc
@@ -21,5 +20,6 @@ epydoc -v -u https://github.com/namd/pypln --graph=all --parse-only --html \
 echo 'Now execute:'
 echo '  git checkout gh-pages'
 echo "  mv $TMP_DIR/* ."
+echo "  touch .nojekyll"
 echo "  rm -rf $TMP_DIR"
 echo "...and them git add/rm files, commit and push"
