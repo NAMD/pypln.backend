@@ -11,6 +11,7 @@ nodes = x.x.x.x, x.x.x.x # list of IPs to add to PyPLN cluster
 [authentication]
 
 
+
 license: GPL v3 or later
 """
 __date__ = 4 / 23 / 12
@@ -24,7 +25,7 @@ class Manager(object):
     def __init__(self, config={}):
         """
         The manager class requires no parameters  as it will try to read them from configuration files.
-        If they don't exist, initializatio will fail unless provided with a config dict
+        If they don't exist, initialization will fail unless provided with a config dict
         :return:
         """
         if not config:
@@ -32,3 +33,8 @@ class Manager(object):
             self.config.read()
         else:
             self.config = config
+    def _bootstrap_cluster(self):
+        u"""
+        Connect to the
+        :return:
+        """
