@@ -16,8 +16,8 @@ io_threads = 2
 
 
 license: GPL v3 or later
-"""
 __date__ = 4 / 23 / 12
+"""
 __docformat__ = "restructuredtext en"
 
 #TODO: Complete usage docs to modules docstring
@@ -32,11 +32,6 @@ log = logging.getLogger(__name__)
 
 class Manager(object):
     def __init__(self, configfile='/etc/pypln.conf'):
-        """
-        The manager class requires no parameters  as it will try to read them from configuration files.
-        If they don't exist, initialization will fail unless provided with a config dict
-        :return:
-        """
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
     def __bootstrap_cluster(self):
@@ -45,6 +40,10 @@ class Manager(object):
         :return:
         """
         pass
+
+
+
+# Code below lifted of salt's master. for inspiration. still needs to be adapted.
 
 class Publisher(multiprocessing.Process):
     '''

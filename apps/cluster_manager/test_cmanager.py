@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 u"""
-Testting module or cmanager.py
+Testing module for cmanager.py
 
 license: GPL v3 or later
 """
@@ -15,7 +15,7 @@ class TestManager(unittest.TestCase):
     def setUp(self):
         pass
     def test_load_config_file(self):
-        M = Manager('pypln.conf')
+        M = Manager('pypln.test.conf')
         self.assertTrue(M.config.has_section('cluster'))
         self.assertTrue(M.config.has_section('zeromq'))
         self.assertTrue(M.config.has_section('authentication'))
