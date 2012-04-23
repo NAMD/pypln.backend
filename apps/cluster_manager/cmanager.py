@@ -3,6 +3,13 @@ u"""
 This executable is the manager of a pypln cluster. All tasks should be started through it and are
 monitorable/controllable through it.
 
+Cluster configuration must be specified on a config file pypln.conf
+with at least the following sections:
+[cluster]
+nodes = x.x.x.x, x.x.x.x # list of IPs to add to PyPLN cluster
+
+[authentication]
+
 
 license: GPL v3 or later
 """
@@ -11,6 +18,8 @@ __docformat__ = "restructuredtext en"
 
 #TODO: Complete usage docs to modules docstring
 
+import ConfigParser
+
 class Manager(object):
     def __init__(self, config={}):
         """
@@ -18,3 +27,8 @@ class Manager(object):
         If they don't exist, initializatio will fail unless provided with a config dict
         :return:
         """
+        if not config:
+            self.config = ConfigParser.ConfigParser()
+            self.config.read()
+        else:
+            self.config = config
