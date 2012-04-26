@@ -1,0 +1,4 @@
+zmq
+nose
+fabric
+pymongo
