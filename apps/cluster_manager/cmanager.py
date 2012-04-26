@@ -26,6 +26,9 @@ import ConfigParser
 import fabric
 import zmq
 import logging
+from zmq.devices import ProcessDevice
+from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
+from zmq
 import multiprocessing
 
 log = logging.getLogger(__name__)
