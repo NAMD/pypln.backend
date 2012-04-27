@@ -6,7 +6,7 @@ monitorable/controllable through it.
 Cluster configuration must be specified on a config file pypln.conf
 with at least the following sections:
 [cluster]
-nodes = x.x.x.x, x.x.x.x # list of IPs to add to PyPLN cluster
+nodes = [x.x.x.x, x.x.x.x] # list of IPs to add to PyPLN cluster
 
 [authentication]
 
@@ -28,8 +28,8 @@ import zmq
 import logging
 from zmq.devices import ProcessDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
-from zmq
 import multiprocessing
+import socket, subprocess, re
 
 log = logging.getLogger(__name__)
 
@@ -37,105 +37,80 @@ class Manager(object):
     def __init__(self, configfile='/etc/pypln.conf'):
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
+        self.nodes = eval(self.config.get('cluster','nodes'))
     def __bootstrap_cluster(self):
         u"""
         Connect to the nodes and make sure they are ready to join the cluster
         :return:
         """
-        pass
+        #Start the Streamer
+        self.streamer = Streamer(dict(self.config.items('streamer')))
 
 
 
-# Code below lifted of salt's master. for inspiration. still needs to be adapted.
-
-class Publisher(multiprocessing.Process):
+class Streamer(multiprocessing.Process):
     '''
-    The publishing interface, a simple zeromq publisher that sends out the
-    commands.
+    The cluster control interface, containing a Streamer device, and a subscribe channel
+    to listem to SlaveDrivers, on slave nodes.
     '''
     def __init__(self, opts):
         super(Publisher, self).__init__()
         self.opts = opts
+        self.ipaddress = get_ipv4_address()
+
 
     def run(self):
-        '''
+        """
         Bind to the interface specified in the configuration file
-        '''
+        """
         context = zmq.Context(1)
-        pub_sock = context.socket(zmq.PUB)
-        pub_sock.setsockopt(zmq.HWM, 1)
-        pull_sock = context.socket(zmq.PULL)
-        pub_uri = 'tcp://{0[interface]}:{0[publish_port]}'.format(self.opts)
-        pull_uri = 'ipc://{0}'.format(
-            os.path.join(self.opts['sock_dir'], 'publish_pull.ipc')
-        )
-        log.info('Starting the Salt Publisher on {0}'.format(pub_uri))
-        pub_sock.bind(pub_uri)
-        pull_sock.bind(pull_uri)
+        # Socket facing Manager
+        frontend = context.socket(zmq.PULL)
+        frontend.bind("tcp://*:5559")
+
+        # Socket facing slave nodes
+        backend = context.socket(zmq.PUSH)
+        backend.bind("tcp://*:5560")
+
+        # Socket to reply to status requests
+        monitor = context.socket(zmq.REP)
+        monitor.bind("tcp://%:%"%(self.ipaddress,))
+
+        zmq.device(zmq.STREAMER, frontend, backend)
+
+
+        sub_slaved_sock = context.socket(zmq.SUB)
+#        sub_slaved_sock.setsockopt(zmq.HWM, 1)
+
+        log.info('Starting the Streamer on {0}'.format(self.ipaddress))
+        sub_slaved_sock.bind(pub_uri)
+
 
         try:
             while True:
-                package = pull_sock.recv()
-                pub_sock.send(package)
+                package = frontend.recv_json()
+                backend.send_json(package)
         except KeyboardInterrupt:
-            pub_sock.close()
-            pull_sock.close()
+            frontend.close()
+            backend.close()
 
 
-class ReqServer(object):
-    '''
-    Starts up the `Manager` request server, node Apps send status reports to this
-    interface.
-    '''
-    def __init__(self, opts, crypticle, key, mkey):
-        self.opts = opts
-        self.master_key = mkey
-        self.context = zmq.Context(self.opts['worker_threads'])
-        # Prepare the zeromq sockets
-        self.uri = 'tcp://%(interface)s:%(ret_port)s' % self.opts
-        self.clients = self.context.socket(zmq.ROUTER)
-        self.workers = self.context.socket(zmq.DEALER)
-        self.w_uri = 'ipc://{0}'.format(
-            os.path.join(self.opts['sock_dir'], 'workers.ipc')
-        )
-        # Prepare the AES key
-        self.key = key
-        self.crypticle = crypticle
-
-    def __bind(self):
-        '''
-        Binds the reply server
-        '''
-        log.info('Setting up the master communication server')
-        self.clients.bind(self.uri)
-        self.work_procs = []
-
-        for ind in range(int(self.opts['worker_threads'])):
-            self.work_procs.append(MWorker(self.opts,
-                self.master_key,
-                self.key,
-                self.crypticle,
-                self.aes_funcs,
-                self.clear_funcs))
-
-        for ind, proc in enumerate(self.work_procs):
-            log.info('Starting Salt worker process {0}'.format(ind))
-            proc.start()
-
-        self.workers.bind(self.w_uri)
-
-        zmq.device(zmq.QUEUE, self.clients, self.workers)
-
-    def start_publisher(self):
-        '''
-        Start the salt publisher interface
-        '''
-        # Start the publisher
-        self.publisher = Publisher(self.opts)
-        self.publisher.start()
 
     def run(self):
         '''
         Start up the ReqServer
         '''
         self.__bind()
+
+def get_ipv4_address():
+    """
+    Returns IPv4 address(es) of current machine.
+    :return:
+    """
+    p = subprocess.Popen(["ifconfig"], stdout=subprocess.PIPE)
+    ifc_resp = p.communicate()
+    patt = re.compile(r'inet\s*\w*\S*:\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
+    resp = [ip for ip in patt.findall(ifc_resp[0]) if ip != '127.0.0.1']
+    if resp == []:
+        raise NameError("Couldn't determine IP Address.")
+    return resp[0]

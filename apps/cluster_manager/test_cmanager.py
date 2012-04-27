@@ -19,6 +19,12 @@ class TestManager(unittest.TestCase):
         self.assertTrue(M.config.has_section('cluster'))
         self.assertTrue(M.config.has_section('zeromq'))
         self.assertTrue(M.config.has_section('authentication'))
+        self.assertTrue(M.config.has_section('streamer'))
+        self.assertTrue(M.config.has_section('slavedriver'))
+        self.assertTrue(M.config.has_section('worker'))
+        self.assertTrue(M.config.has_section('sink'))
+    def test_bootstrap_cluster(self):
+        self.assertTrue(True)
 
 
 
