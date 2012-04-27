@@ -24,7 +24,9 @@ class TestManager(unittest.TestCase):
         self.assertTrue(M.config.has_section('worker'))
         self.assertTrue(M.config.has_section('sink'))
     def test_bootstrap_cluster(self):
-        self.assertTrue(True)
+        M = Manager('pypln.test.conf',True)
+        self.assertTrue(M.streamer.is_alive())
+        M.streamer.terminate()
 
 
 

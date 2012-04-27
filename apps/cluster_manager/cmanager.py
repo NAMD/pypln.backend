@@ -34,10 +34,12 @@ import socket, subprocess, re
 log = logging.getLogger(__name__)
 
 class Manager(object):
-    def __init__(self, configfile='/etc/pypln.conf'):
+    def __init__(self, configfile='/etc/pypln.conf',bootstrap=False):
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
+        if bootstrap:
+            self.__bootstrap_cluster()
     def __bootstrap_cluster(self):
         u"""
         Connect to the nodes and make sure they are ready to join the cluster
@@ -45,6 +47,7 @@ class Manager(object):
         """
         #Start the Streamer
         self.streamer = Streamer(dict(self.config.items('streamer')))
+        self.streamer.start()
 
 
 
@@ -54,7 +57,7 @@ class Streamer(multiprocessing.Process):
     to listem to SlaveDrivers, on slave nodes.
     '''
     def __init__(self, opts):
-        super(Publisher, self).__init__()
+        super(Streamer, self).__init__()
         self.opts = opts
         self.ipaddress = get_ipv4_address()
 
@@ -85,7 +88,6 @@ class Streamer(multiprocessing.Process):
         log.info('Starting the Streamer on {0}'.format(self.ipaddress))
         sub_slaved_sock.bind(pub_uri)
 
-
         try:
             while True:
                 package = frontend.recv_json()
@@ -95,12 +97,6 @@ class Streamer(multiprocessing.Process):
             backend.close()
 
 
-
-    def run(self):
-        '''
-        Start up the ReqServer
-        '''
-        self.__bind()
 
 def get_ipv4_address():
     """
