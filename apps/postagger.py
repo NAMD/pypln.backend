@@ -13,12 +13,11 @@ from nltk import pos_tag, word_tokenize
 from nltk.data import LazyLoader
 from nltk.tag import tuple2str
 from pymongo import Connection
-from pymongo.errors import OperationFailure
 import argparse
 from pypln.workers.tagger_worker import POSTaggerWorker
 from pypln.sinks.mongo_update_sink import MongoUpdateSink
 from pypln.servers.ventilator import Ventilator
-from baseapp import TaskVentilator
+from pypln.servers.baseapp import TaskVentilator
 
 eng_sent_tokenizer = LazyLoader('tokenizers/punkt/english.pickle')
 port_sent_tokenizer = LazyLoader('tokenizers/punkt/portuguese.pickle')

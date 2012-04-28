@@ -7,12 +7,20 @@ license: GPL v3 or later
 __docformat__ = "restructuredtext en"
 
 import unittest
-
 from cmanager import Manager
+from fabric.api import local
+import subprocess
+import zmq
+import time
 
 class TestManager(unittest.TestCase):
     def setUp(self):
-        pass
+        self.context = zmq.Context()
+        self.sock = self.context.socket(zmq.REQ)
+    def tearDown(self):
+        self.sock.close()
+        self.context.term()
+
     def test_load_config_file(self):
         M = Manager('pypln.test.conf')
         self.assertTrue(M.config.has_section('cluster'))
@@ -23,23 +31,36 @@ class TestManager(unittest.TestCase):
         self.assertTrue(M.config.has_section('worker'))
         self.assertTrue(M.config.has_section('sink'))
 
+
     def test_manager_bind(self):
         M = Manager('pypln.test.conf',True)
-        M.bind()
         M.streamer.terminate()
         self.assertTrue(True)
+
+
+    def test_manager_run(self):
+        P = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+        time.sleep(5)
+        self.sock.connect('tcp://127.0.0.1:5550')
+        self.sock.send('job')
+#        print self.sock.recv()
+        P.terminate()
 
     def test_bootstrap_cluster(self):
         M = Manager('pypln.test.conf',True)
         self.assertTrue(M.streamer.is_alive())
         M.streamer.terminate()
 
+
     def testing_sending_messages(self):
+#        local('./slavedriver.py 127.0.0.1:5551')
         M = Manager('pypln.test.conf',True)
-        M.bind()
+#        M.run()
         msgs = [{'jobid':12, 'data':'fksdjfhlaksf'}]*100
-        M.push_load(msgs)
+#        M.push_load(msgs)
         M.streamer.terminate()
+
+#        local('killall slavedriver.py')
 
 
 

@@ -1,4 +1,4 @@
-zmq
+pyzmq
 nose
 fabric
 pymongo
