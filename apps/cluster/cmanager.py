@@ -35,8 +35,7 @@ import socket, subprocess, re
 
 log = logging.getLogger(__name__)
 # Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler(
-              '/tmp/pypln.log', maxBytes=20000, backupCount=1)
+handler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=20000, backupCount=1)
 log.addHandler(handler)
 
 class Manager(object):
