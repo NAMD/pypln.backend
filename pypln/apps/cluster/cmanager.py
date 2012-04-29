@@ -69,6 +69,7 @@ class Manager(object):
             if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
                 jobmsg = self.monitor.recv_json()
                 self.process_jobs(jobmsg)
+                self.monitor.send_json("{ans:'Job queued'}")
             if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
                 self.monitor.send_json("{ans:'Job queued'}")
             if self.confport in socks and socks[self.confport] == zmq.POLLIN:
@@ -88,27 +89,27 @@ class Manager(object):
         Create and bind all sockets
         :return:
         """
-        try:
-            context = zmq.Context(1)
-            # Socket to reply to job requests
-            self.monitor = context.socket(zmq.REP)
-            self.monitor.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['replyport']))
-            # Socket to reply to configuration requests
-            self.confport = context.socket(zmq.REP)
-            self.confport.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['conf_reply']))
-            # Socket to push jobs to streamer
-            self.pusher = context.socket(zmq.PUSH)
-            self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
-            # Socket to subscribe to subscribe to  slavedrivers status messages
-            self.sub_slaved_port = context.socket(zmq.SUB)
-            self.sub_slaved_port.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
-            # Initialize poll set to listen on multiple channels at once
-            self.poller = zmq.Poller()
-            self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
-            self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
-            self.poller.register(self.sub_slaved_port, zmq.POLLIN)
-        except KeyboardInterrupt:
-            log.info('Bringing down Manager')
+#        try:
+        context = zmq.Context(1)
+        # Socket to reply to job requests
+        self.monitor = context.socket(zmq.REP)
+        self.monitor.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['replyport']))
+        # Socket to reply to configuration requests
+        self.confport = context.socket(zmq.REP)
+        self.confport.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['conf_reply']))
+        # Socket to push jobs to streamer
+        self.pusher = context.socket(zmq.PUSH)
+        self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
+        # Socket to subscribe to subscribe to  slavedrivers status messages
+        self.sub_slaved_port = context.socket(zmq.SUB)
+        self.sub_slaved_port.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
+        # Initialize poll set to listen on multiple channels at once
+        self.poller = zmq.Poller()
+        self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
+        self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
+        self.poller.register(self.sub_slaved_port, zmq.POLLIN)
+#        except KeyboardInterrupt:
+#            log.info('Bringing down Manager')
 #        finally:
 #            self.monitor.close()
 #            self.sub_slaved_port.close()
