@@ -127,7 +127,7 @@ class Manager(object):
         """
         :param msg: json string speciying the job
         """
-        pass
+        print msg
 
     def __push_load(self,messages):
         """

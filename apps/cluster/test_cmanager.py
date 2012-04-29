@@ -44,7 +44,6 @@ class TestManager(unittest.TestCase):
         time.sleep(2)
         self.sock.connect('tcp://%s:5550'%ip)
         self.sock.send_json('{job:"job"}')
-        time.sleep(2)
 #        print self.sock.recv_json()
         P.terminate()
 
@@ -56,11 +55,14 @@ class TestManager(unittest.TestCase):
 
     def testing_sending_messages(self):
 #        local('./slavedriver.py 127.0.0.1:5551')
-        M = Manager('pypln.test.conf',True)
-#        M.run()
+        ip = get_ipv4_address()
+        P = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+        time.sleep(2)
+        self.sock.connect('tcp://%s:5550'%ip)
         msgs = [{'jobid':12, 'data':'fksdjfhlaksf'}]*100
-#        M.push_load(msgs)
-        M.streamer.terminate()
+        self.sock.send_json(msgs)
+#        self.sock.recv()
+        P.terminate()
 
 #        local('killall slavedriver.py')
 
