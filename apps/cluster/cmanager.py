@@ -27,6 +27,7 @@ import ConfigParser
 from fabric.api import local, abort, execute
 import zmq
 import logging
+import logging.handlers
 import argparse
 from zmq.devices import ProcessDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
@@ -57,7 +58,6 @@ class Manager(object):
         if bootstrap:
             self.__bootstrap_cluster()
 
-#        self.run()
 
     def run(self):
         """
@@ -70,7 +70,7 @@ class Manager(object):
                 jobmsg = self.monitor.recv_json()
                 self.process_jobs(jobmsg)
             if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
-                self.monitor.send_json("Job queued")
+                self.monitor.send_json("{ans:'Job queued'}")
             if self.confport in socks and socks[self.confport] == zmq.POLLIN:
                 msg = self.confport.recv()
                 if msg == 'slavedriver':
@@ -192,12 +192,13 @@ def get_ipv4_address():
     patt = re.compile(r'inet\s*\w*\S*:\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
     resp = [ip for ip in patt.findall(ifc_resp[0]) if ip != '127.0.0.1']
     if resp == []:
-        raise NameError("Couldn't determine IP Address.")
+        log.warning("Couldn't determine IP Address.")
+        return '127.0.0.1'
     return resp[0]
 
 if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     args = parser.parse_args()
-    M = Manager(configfile=args.conf,bootstrap=True)
+    M = Manager(configfile=args.conf,bootstrap=0)
     M.run()

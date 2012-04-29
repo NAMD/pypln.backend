@@ -7,7 +7,7 @@ license: GPL v3 or later
 __docformat__ = "restructuredtext en"
 
 import unittest
-from cmanager import Manager
+from cmanager import Manager, get_ipv4_address
 from fabric.api import local
 import subprocess
 import zmq
@@ -39,11 +39,13 @@ class TestManager(unittest.TestCase):
 
 
     def test_manager_run(self):
+        ip = get_ipv4_address()
         P = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
-        time.sleep(5)
-        self.sock.connect('tcp://127.0.0.1:5550')
-        self.sock.send('job')
-#        print self.sock.recv()
+        time.sleep(2)
+        self.sock.connect('tcp://%s:5550'%ip)
+        self.sock.send_json('{job:"job"}')
+        time.sleep(2)
+#        print self.sock.recv_json()
         P.terminate()
 
     def test_bootstrap_cluster(self):
