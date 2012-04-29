@@ -17,6 +17,7 @@ from pypln.testing import zmqtesting
 class TestManagerComm(unittest.TestCase):
     def setUp(self):
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:5551'%get_ipv4_address()])
         self.context = zmq.Context()
         self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ,connect=(get_ipv4_address(), 5550))
         time.sleep(2)
@@ -24,17 +25,18 @@ class TestManagerComm(unittest.TestCase):
         self.req_sock.close()
         self.context.term()
         os.kill(self.managerproc.pid,signal.SIGINT)
+        os.kill(self.sdproc.pid,signal.SIGINT)
         self.managerproc.terminate()
+        self.sdproc.terminate()
+
 
     def test_manager_send_one_message(self):
-        self.req_sock.send_json('{job:"job"}')
+        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
         msg = self.req_sock.recv_json()
         self.assertEqual(msg,"{ans:'Job queued'}")
 
 
     def testing_sending_many_messages(self):
-        pass
-#        local('./slavedriver.py 127.0.0.1:5551')
         msgs = [{'jobid':12, 'data':'fksdjfhlaksf'}]*10
         self.req_sock.send_json(msgs)
         msg = self.req_sock.recv_json()
