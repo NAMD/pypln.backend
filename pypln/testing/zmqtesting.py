@@ -9,10 +9,6 @@ license: GPL v3 or later
 
 __docformat__ = "restructuredtext en"
 
-"""
-
-
-"""
 import time
 import sys
 
@@ -50,7 +46,7 @@ def get_wrapped_fwd(func):
 
     """
     def forwarder(*args, **kwargs):
-        for i in range(100):
+        for i in xrange(100):
             try:
                 rep = func(*args, flags=zmq.NOBLOCK, **kwargs)
                 return rep

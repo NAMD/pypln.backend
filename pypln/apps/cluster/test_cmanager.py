@@ -16,18 +16,28 @@ from pypln.testing import zmqtesting
 
 class TestManagerComm(unittest.TestCase):
     def setUp(self):
+        localip = get_ipv4_address().strip()
+        print "local ip: ",localip
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
-        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:5551'%get_ipv4_address()])
+        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:5551'%localip])
         self.context = zmq.Context()
-        self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ,connect=(get_ipv4_address(), 5550))
+#        self.req_sock = self.context.socket(zmq.REQ)
+#        self.req_sock.connect("tcp://%s:%s"%(localip, 5550))
+        self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, 5550))
         time.sleep(2)
     def tearDown(self):
         self.req_sock.close()
-        self.context.term()
         os.kill(self.managerproc.pid,signal.SIGINT)
         os.kill(self.sdproc.pid,signal.SIGINT)
         self.managerproc.terminate()
         self.sdproc.terminate()
+        self.context.term()
+
+    def test_dummy(self):
+        pass
+
+    def test_dummy2(self):
+        pass
 
 
     def test_manager_send_one_message(self):

@@ -98,13 +98,13 @@ class Manager(object):
             log.info("Manager coming down")
         finally:
             print "======> Manager coming down"
-            if self.streamer:
-                self.streamer.terminate()
-            self.monitor.close()
-            self.confport.close()
-            self.sub_slaved_port.close()
-            self.context.term()
-            sys.exit()
+#            if self.streamer:
+#                self.streamer.terminate()
+#            self.monitor.close()
+#            self.confport.close()
+#            self.sub_slaved_port.close()
+#            self.context.term()
+#            sys.exit()
 
 
     def bind(self):
@@ -153,7 +153,8 @@ class Manager(object):
         """
         print msg
         self.pusher.send_json(msg)
-        log.info("sent msg to streamer %s"%self.streamer.pid)
+        if self.streamer:
+            log.info("sent msg to streamer %s"%self.streamer.pid)
 
 
 
@@ -223,5 +224,5 @@ if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     args = parser.parse_args()
-    M = Manager(configfile=args.conf,bootstrap=1)
+    M = Manager(configfile=args.conf,bootstrap=0)
     M.run()
