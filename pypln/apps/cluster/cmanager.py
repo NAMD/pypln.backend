@@ -28,7 +28,7 @@ from fabric.api import local, abort, execute
 import zmq
 from zmq.core.error import ZMQError
 import argparse
-from zmq.devices import ProcessDevice
+from zmq.devices import ProcessDevice, ThreadDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
 import socket, subprocess, re
@@ -54,7 +54,7 @@ class Manager(object):
         self.localconf = dict(self.config.items('manager'))
         self.ipaddress = get_ipv4_address()
         self.stayalive = True
-        self.streamer = None
+        self.streamerdevice = None
         self.bind()
 
         if bootstrap:
@@ -93,12 +93,13 @@ class Manager(object):
             log.info("Manager coming down")
         finally:
             print "======> Manager coming down"
-            if self.streamer:
-                self.streamer.terminate()
             self.monitor.close()
             self.confport.close()
+            self.pusher.close()
             self.sub_slaved_port.close()
             self.context.term()
+            if self.streamerdevice:
+                self.streamerdevice.join()
             sys.exit()
 
 
@@ -145,11 +146,14 @@ class Manager(object):
 
     def setup_streamer(self,opts):
         ipaddress = get_ipv4_address()
-        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
+        #TODO: to have this as a ProcessDevice, One needs to figure out how to kill it when manager ends.
+        self.streamerdevice  = ThreadDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
+#        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
         self.streamerdevice.bind_in("tcp://%s:%s"%(ipaddress,opts['pullport']))
         self.streamerdevice.bind_out("tcp://%s:%s"%(ipaddress,opts['pushport']))
         self.streamerdevice.setsockopt_in(zmq.IDENTITY, 'PULL')
         self.streamerdevice.setsockopt_out(zmq.IDENTITY, 'PUSH')
+        self.streamerdevice.start()
 
 
     def process_jobs(self,msg):
@@ -158,8 +162,8 @@ class Manager(object):
         """
 #        print msg
         self.pusher.send_json(msg)
-        if self.streamer:
-            log.info("sent msg to streamer %s"%self.streamer.pid)
+        if self.streamerdevice:
+            log.info("sent msg to streamer")
 
 
 
@@ -172,45 +176,46 @@ class Manager(object):
 
 
 
-class Streamer(multiprocessing.Process):
-    '''
-    The cluster control interface, containing a Streamer device, and a subscribe channel
-    to listem to SlaveDrivers, on slave nodes.
-    This class is ***deprecated***
-    '''
-    def __init__(self, opts):
-        super(Streamer, self).__init__()
-        self.opts = opts
-        self.ipaddress = get_ipv4_address()
+#class Streamer(multiprocessing.Process):
+#    '''
+#    The cluster control interface, containing a Streamer device, and a subscribe channel
+#    to listem to SlaveDrivers, on slave nodes.
+#    This class is ***deprecated***
+#    '''
+#    def __init__(self, opts):
+#        super(Streamer, self).__init__()
+#        self.opts = opts
+#        self.ipaddress = get_ipv4_address()
+#
+#
+#    def run(self):
+#        """
+#        Bind to the interface specified in the configuration file
+#        """
+#        try:
+#            context = zmq.Context(1)
+#            # Socket facing Manager
+#            frontend = context.socket(zmq.PULL)
+#            frontend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pullport']))
+#
+#            # Socket facing slave nodes
+#            backend = context.socket(zmq.PUSH)
+#            backend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pushport']))
+#
+#            zmq.device(zmq.STREAMER, frontend, backend)
+#
+#            log.info('Starting the Streamer on {0}'.format(self.ipaddress))
+#
+#        except (KeyboardInterrupt,SystemExit):
+#            frontend.close()
+#            backend.close()
+#            context.term()
 
-
-    def run(self):
-        """
-        Bind to the interface specified in the configuration file
-        """
-        try:
-            context = zmq.Context(1)
-            # Socket facing Manager
-            frontend = context.socket(zmq.PULL)
-            frontend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pullport']))
-
-            # Socket facing slave nodes
-            backend = context.socket(zmq.PUSH)
-            backend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pushport']))
-
-            zmq.device(zmq.STREAMER, frontend, backend)
-
-            log.info('Starting the Streamer on {0}'.format(self.ipaddress))
-
-        except (KeyboardInterrupt,SystemExit):
-            frontend.close()
-            backend.close()
-            context.term()
-
-@atexit.register
-def cleanup():
-    if streamerpid:
-        os.kill(streamerpid,signal.SIGKILL)
+#@atexit.register
+#def cleanup():
+#    if self.streamerdevice:
+#        self.streamerdevice.join()
+##        os.kill(streamerpid,signal.SIGKILL)
 
 def get_ipv4_address():
     """

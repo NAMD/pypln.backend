@@ -56,11 +56,11 @@ class TestManagerComm(unittest.TestCase):
         msg = self.req_sock.recv_json()
         self.assertEqual(msg,"{ans:'Job queued'}")
 
-#    def test_streamer(self):
-#        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
-#        self.req_sock.recv_json()
-#        msg = self.pull_from_streamer_sock.recv_json()
-#        self.assertEqual(msg,'{job:"%s"}')
+    def test_streamer(self):
+        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
+        self.req_sock.recv_json()
+        msg = self.pull_from_streamer_sock.recv_json()
+        self.assertEqual(msg[:5],'{job:')
 
 
 
@@ -81,8 +81,6 @@ class TestManagerInst(unittest.TestCase):
         M = Manager('pypln.test.conf',True)
 
 
-    def test_manager_bind(self):
-        M = Manager('pypln.test.conf',True)
 
 class TestSlavedriverInst(unittest.TestCase):
     """
