@@ -13,7 +13,9 @@ import sys
 from pypln.servers import baseapp
 import logging
 from zmq.core.error import ZMQError
-log = logging.getLogger(__name__)
+from logger import make_log
+
+log = make_log(__name__)
 
 
 
@@ -36,9 +38,11 @@ class SlaveDriver(object):
             self.localconf = self.pullconf.recv_json(zmq.NOBLOCK)
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['masterip'],self.localconf['pullport']))
+            log.info('Slavedriver started on %s')
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
-        log.info('Slavedriver started on %s')
+
+
 
     def run(self):
         """

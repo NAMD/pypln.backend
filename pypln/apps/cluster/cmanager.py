@@ -27,23 +27,17 @@ import ConfigParser
 from fabric.api import local, abort, execute
 import zmq
 from zmq.core.error import ZMQError
-import logging
-import logging.handlers
 import argparse
 from zmq.devices import ProcessDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
 import socket, subprocess, re
 import sys, os, signal, atexit
+from logger import make_log
 
 # Setting up the logger
-log = logging.getLogger(__name__)
-log.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-# Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=20000, backupCount=1)
-handler.setFormatter(formatter)
-log.addHandler(handler)
+log = make_log(__name__)
+
 
 global streamerpid
 streamerpid = None
@@ -51,10 +45,8 @@ streamerpid = None
 class Manager(object):
     def __init__(self, configfile='/etc/pypln.conf',bootstrap=False):
         """
-
         :param configfile: path to pypln.conf
         :param bootstrap: if a cluster should be bootstrapped upon instantiation
-        :return:
         """
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
