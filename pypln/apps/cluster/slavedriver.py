@@ -12,6 +12,7 @@ import zmq
 import sys
 from pypln.servers import baseapp
 import logging
+from zmq.core.error import ZMQError
 log = logging.getLogger(__name__)
 
 
@@ -27,15 +28,16 @@ class SlaveDriver(object):
         :return:
         """
         self.master_uri = master_uri
-        context = zmq.Context(1)
-        self.pullconf = context.socket(zmq.REQ)
+        self.context = zmq.Context(1)
+        self.pullconf = self.context.socket(zmq.REQ)
         self.pullconf.connect("tcp://%s"%(self.master_uri))
         self.pullconf.send('slavedriver')
-        self.localconf = self.pullconf.recv()
-        self.pullsock = context.socket(zmq.PULL)
-        self.pullsock.connect("tcp://%s:%s"%(self.localconf['masterip'],self.localconf['pullport']))
-
-
+        try:
+            self.localconf = self.pullconf.recv_json(zmq.NOBLOCK)
+            self.pullsock = self.context.socket(zmq.PULL)
+            self.pullsock.connect("tcp://%s:%s"%(self.localconf['masterip'],self.localconf['pullport']))
+        except ZMQError:
+            log.error("Could Not fetch configuration from Manager!")
         log.info('Slavedriver started on %s')
 
     def run(self):
@@ -43,13 +45,20 @@ class SlaveDriver(object):
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
         """
-        while True:
-            msg = self.pullsock.recv_json()
-            print msg
+        try:
+            while True:
+                msg = self.pullsock.recv_json()
+                print "Slavedriver got ",msg
+        except (KeyboardInterrupt,SystemExit):
+            self.pullconf.close()
+            self.pullsock.close()
+            self.context.term()
+
 if __name__=='__main__':
     if len(sys.argv) < 2:
         sys.exit(1)
-    SlaveDriver(master_uri=sys.argv[1])
+    SD = SlaveDriver(master_uri=sys.argv[1])
+    SD.run()
 
 
 

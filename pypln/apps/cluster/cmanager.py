@@ -86,25 +86,28 @@ class Manager(object):
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
                     msg = self.confport.recv()
                     if msg == 'slavedriver':
-                        replymsg = dict(self.config.items('slavedriver'))
+                        configmsg = dict(self.config.items('slavedriver'))
+                        print configmsg
+                        self.confport.send_json(configmsg)
+
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
-                    self.confport.send_json(replymsg)
+                    self.confport.send_json(configmsg)
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
                     msg = self.sub_slaved_port.recv_json()
-                    print msg
+
         except (KeyboardInterrupt, SystemExit):
             log.info("Manager coming down")
         finally:
             print "======> Manager coming down"
-#            if self.streamer:
-#                self.streamer.terminate()
-#            self.monitor.close()
-#            self.confport.close()
-#            self.sub_slaved_port.close()
-#            self.context.term()
-#            sys.exit()
+            if self.streamer:
+                self.streamer.terminate()
+            self.monitor.close()
+            self.confport.close()
+            self.sub_slaved_port.close()
+            self.context.term()
+            sys.exit()
 
 
     def bind(self):
@@ -142,16 +145,26 @@ class Manager(object):
         """
         global streamerpid
         #Start the Streamer
-        self.streamer = Streamer(dict(self.config.items('streamer')))
-        self.streamer.start()
-        streamerpid = self.streamer.pid
-        self.__deploy_slaves()
+        self.setup_streamer(dict(self.config.items('streamer')))
+#        self.streamer = Streamer(dict(self.config.items('streamer')))
+#        self.streamer.start()
+#        streamerpid = self.streamer.pid
+#        self.__deploy_slaves()
+
+    def setup_streamer(self,opts):
+        ipaddress = get_ipv4_address()
+        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
+        self.streamerdevice.bind_in("tcp://%s:%s"%(ipaddress,opts['pullport']))
+        self.streamerdevice.bind_out("tcp://%s:%s"%(ipaddress,opts['pushport']))
+        self.streamerdevice.setsockopt_in(zmq.IDENTITY, 'PULL')
+        self.streamerdevice.setsockopt_out(zmq.IDENTITY, 'PUSH')
+
 
     def process_jobs(self,msg):
         """
         :param msg: json string speciying the job
         """
-        print msg
+#        print msg
         self.pusher.send_json(msg)
         if self.streamer:
             log.info("sent msg to streamer %s"%self.streamer.pid)
@@ -171,6 +184,7 @@ class Streamer(multiprocessing.Process):
     '''
     The cluster control interface, containing a Streamer device, and a subscribe channel
     to listem to SlaveDrivers, on slave nodes.
+    This class is ***deprecated***
     '''
     def __init__(self, opts):
         super(Streamer, self).__init__()
@@ -216,7 +230,7 @@ def get_ipv4_address():
     patt = re.compile(r'inet\s*\w*\S*:\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})')
     resp = [ip for ip in patt.findall(ifc_resp[0]) if ip != '127.0.0.1']
     if resp == []:
-#        log.warning("Couldn't determine IP Address.")
+        log.warning("Couldn't determine IP Address, using 127.0.0.1.")
         return '127.0.0.1'
     return resp[0]
 
@@ -224,5 +238,5 @@ if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     args = parser.parse_args()
-    M = Manager(configfile=args.conf,bootstrap=0)
+    M = Manager(configfile=args.conf,bootstrap=1)
     M.run()

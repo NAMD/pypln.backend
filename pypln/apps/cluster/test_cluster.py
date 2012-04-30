@@ -8,6 +8,7 @@ __docformat__ = "restructuredtext en"
 
 import unittest
 from pypln.apps.cluster.cmanager import Manager, get_ipv4_address
+from pypln.apps.cluster.slavedriver import SlaveDriver
 import subprocess
 import zmq
 import time
@@ -21,12 +22,11 @@ class TestManagerComm(unittest.TestCase):
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
         self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:5551'%localip])
         self.context = zmq.Context()
-#        self.req_sock = self.context.socket(zmq.REQ)
-#        self.req_sock.connect("tcp://%s:%s"%(localip, 5550))
         self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, 5550))
-        time.sleep(2)
+        self.pull_from_streamer_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.PULL, connect=(localip, 5571))
     def tearDown(self):
         self.req_sock.close()
+        self.pull_from_streamer_sock.close()
         os.kill(self.managerproc.pid,signal.SIGINT)
         os.kill(self.sdproc.pid,signal.SIGINT)
         self.managerproc.terminate()
@@ -56,6 +56,13 @@ class TestManagerComm(unittest.TestCase):
         msg = self.req_sock.recv_json()
         self.assertEqual(msg,"{ans:'Job queued'}")
 
+#    def test_streamer(self):
+#        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
+#        self.req_sock.recv_json()
+#        msg = self.pull_from_streamer_sock.recv_json()
+#        self.assertEqual(msg,'{job:"%s"}')
+
+
 
 #        local('killall slavedriver.py')
 
@@ -72,13 +79,22 @@ class TestManagerInst(unittest.TestCase):
 
     def test_bootstrap_cluster(self):
         M = Manager('pypln.test.conf',True)
-        self.assertTrue(M.streamer.is_alive())
-        M.streamer.terminate()
+
 
     def test_manager_bind(self):
         M = Manager('pypln.test.conf',True)
-        M.streamer.terminate()
-        self.assertTrue(True)
+
+class TestSlavedriverInst(unittest.TestCase):
+    """
+    tests related with Slavedriver class instantiation
+    """
+    def setUp(self):
+        M = Manager('pypln.test.conf',True)
+        self.localip = get_ipv4_address().strip()
+    def test_fetch_conf(self):
+        SD = SlaveDriver(self.localip+":5551")
+        self.assertTrue(isinstance(SD.localconf,dict))
+
 
 if __name__ == '__main__':
     unittest.main()
