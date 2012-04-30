@@ -89,8 +89,13 @@ class TestSlavedriverInst(unittest.TestCase):
     tests related with Slavedriver class instantiation
     """
     def setUp(self):
-        M = Manager('pypln.test.conf',True)
+        self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+
         self.localip = get_ipv4_address().strip()
+    def tearDown(self):
+        os.kill(self.managerproc.pid,signal.SIGINT)
+        self.managerproc.terminate()
+
     def test_fetch_conf(self):
         SD = SlaveDriver(self.localip+":5551")
         self.assertTrue(isinstance(SD.localconf,dict))

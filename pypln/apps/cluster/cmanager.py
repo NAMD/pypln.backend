@@ -36,7 +36,7 @@ import sys, os, signal, atexit
 from logger import make_log
 
 # Setting up the logger
-log = make_log(__name__)
+log = make_log("Manager")
 
 
 global streamerpid
@@ -73,18 +73,18 @@ class Manager(object):
                     jobmsg = self.monitor.recv_json()
                     self.process_jobs(jobmsg)
                     self.monitor.send_json("{ans:'Job queued'}")
-                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
-                    self.monitor.send_json("{ans:'Job queued'}")
+#                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
+#                    pass
+##                    self.monitor.send_json("{ans:'Job queued'}")
+
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
                     msg = self.confport.recv()
                     if msg == 'slavedriver':
                         configmsg = dict(self.config.items('slavedriver'))
-                        print configmsg
+                        configmsg['master_ip'] = self.ipaddress
                         self.confport.send_json(configmsg)
-
-
-                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
-                    self.confport.send_json(configmsg)
+#                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
+#                    self.confport.send_json(configmsg)
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
                     msg = self.sub_slaved_port.recv_json()

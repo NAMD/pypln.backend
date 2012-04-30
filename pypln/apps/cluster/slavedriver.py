@@ -9,13 +9,13 @@ license: GPL V3 or Later
 __docformat__ = 'restructuredtext en'
 
 import zmq
-import sys
+import sys, atexit
 from pypln.servers import baseapp
 import logging
 from zmq.core.error import ZMQError
 from logger import make_log
 
-log = make_log(__name__)
+log = make_log("Slavedriver")
 
 
 
@@ -35,12 +35,16 @@ class SlaveDriver(object):
         self.pullconf.connect("tcp://%s"%(self.master_uri))
         self.pullconf.send('slavedriver')
         try:
-            self.localconf = self.pullconf.recv_json(zmq.NOBLOCK)
+            self.localconf = self.pullconf.recv_json()
             self.pullsock = self.context.socket(zmq.PULL)
-            self.pullsock.connect("tcp://%s:%s"%(self.localconf['masterip'],self.localconf['pullport']))
+            self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
             log.info('Slavedriver started on %s')
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
+            self.pullconf.close()
+            self.pullsock.close()
+            self.context.term()
+            sys.exit()
 
 
 
