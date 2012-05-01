@@ -51,6 +51,7 @@ class Manager(object):
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
+        self.node_registry = {}
         self.localconf = dict(self.config.items('manager'))
         self.ipaddress = get_ipv4_address()
         self.stayalive = True
@@ -110,6 +111,7 @@ class Manager(object):
         if msg['type'] == 'slavedriver':
             configmsg = dict(self.config.items('slavedriver'))
             configmsg['master_ip'] = self.ipaddress
+            self.node_registry[msg['ip']] = msg
         return configmsg
 
     def bind(self):
