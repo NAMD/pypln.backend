@@ -11,16 +11,17 @@ __docformat__ = 'restructuredtext en'
 import zmq
 import sys, atexit
 import subprocess
+import sys
+from multiprocessing import cpu_count
 import re
 from pypln.servers import baseapp
 import logging
 from zmq.core.error import ZMQError
 from logger import make_log
 import os
+import psutil
 
 log = make_log("Slavedriver")
-
-
 
 class SlaveDriver(object):
     """
@@ -39,7 +40,8 @@ class SlaveDriver(object):
         self.pullconf = self.context.socket(zmq.REQ)
         self.pullconf.connect("tcp://%s"%(self.master_uri))
 #        self.pullconf.send("slavedriver")
-        self.pullconf.send_json({"type":"slavedriver","pid":self.pid,"ip":self.ipaddress})
+        self.pullconf.send_json({"type":"slavedriver","pid":self.pid,"ip":self.ipaddress,
+                                 "system":{"cpus":cpu_count(),"memory":psutil.phymem_usage()}})
         try:
             self.localconf = self.pullconf.recv_json()
             self.pullsock = self.context.socket(zmq.PULL)

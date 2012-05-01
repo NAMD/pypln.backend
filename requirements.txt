@@ -2,3 +2,4 @@ pyzmq
 nose
 fabric
 pymongo
+psutil
