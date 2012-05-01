@@ -18,10 +18,12 @@ from pypln.testing import zmqtesting
 
 class TestManagerComm(unittest.TestCase):
     def setUp(self):
+        self.config = ConfigParser.ConfigParser()
+        self.config.read('pypln.test.conf')
         localip = get_ipv4_address().strip()
         print "local ip: ",localip
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
-        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:5551'%localip])
+        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:%s'%(localip,self.config.get('manager','conf_reply'))])
         self.context = zmq.Context()
         self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, 5550))
         self.pull_from_streamer_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.PULL, connect=(localip, 5571))

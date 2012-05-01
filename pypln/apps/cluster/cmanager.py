@@ -78,8 +78,11 @@ class Manager(object):
 ##                    self.monitor.send_json("{ans:'Job queued'}")
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
-                    msg = self.confport.recv()
-                    if msg == 'slavedriver':
+                    msg = self.confport.recv_json()
+                    print msg, type(msg)
+                    if msg['type'] == 'slavedriver':
+#                    msg = self.confport.recv()
+#                    if msg == 'slavedriver':
                         configmsg = dict(self.config.items('slavedriver'))
                         configmsg['master_ip'] = self.ipaddress
                         self.confport.send_json(configmsg)
@@ -139,9 +142,7 @@ class Manager(object):
         global streamerpid
         #Start the Streamer
         self.setup_streamer(dict(self.config.items('streamer')))
-#        self.streamer = Streamer(dict(self.config.items('streamer')))
-#        self.streamer.start()
-#        streamerpid = self.streamer.pid
+
 #        self.__deploy_slaves()
 
     def setup_streamer(self,opts):
@@ -171,45 +172,16 @@ class Manager(object):
         """
         Start slavedrivers on slavenodes
         """
-        pass
-#        execute("./slavedriver",hosts= self.nodes)
+        execute(spawn_slave,hosts=self.nodes,masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
 
-
-
-#class Streamer(multiprocessing.Process):
-#    '''
-#    The cluster control interface, containing a Streamer device, and a subscribe channel
-#    to listem to SlaveDrivers, on slave nodes.
-#    This class is ***deprecated***
-#    '''
-#    def __init__(self, opts):
-#        super(Streamer, self).__init__()
-#        self.opts = opts
-#        self.ipaddress = get_ipv4_address()
-#
-#
-#    def run(self):
-#        """
-#        Bind to the interface specified in the configuration file
-#        """
-#        try:
-#            context = zmq.Context(1)
-#            # Socket facing Manager
-#            frontend = context.socket(zmq.PULL)
-#            frontend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pullport']))
-#
-#            # Socket facing slave nodes
-#            backend = context.socket(zmq.PUSH)
-#            backend.bind("tcp://%s:%s"%(self.ipaddress,self.opts['pushport']))
-#
-#            zmq.device(zmq.STREAMER, frontend, backend)
-#
-#            log.info('Starting the Streamer on {0}'.format(self.ipaddress))
-#
-#        except (KeyboardInterrupt,SystemExit):
-#            frontend.close()
-#            backend.close()
-#            context.term()
+def spawn_slave(masteruri):
+    """
+    Fabric task to spawn a slavedriver on remote node
+    :param masteruri:
+    :return:
+    """
+    sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s'%(masteruri)])
+    return sdproc.pid
 
 #@atexit.register
 #def cleanup():
