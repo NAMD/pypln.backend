@@ -80,12 +80,8 @@ class Manager(object):
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
                     msg = self.confport.recv_json()
                     print msg, type(msg)
-                    if msg['type'] == 'slavedriver':
-#                    msg = self.confport.recv()
-#                    if msg == 'slavedriver':
-                        configmsg = dict(self.config.items('slavedriver'))
-                        configmsg['master_ip'] = self.ipaddress
-                        self.confport.send_json(configmsg)
+                    configmsg = self.handle_checkins(msg)
+                    self.confport.send_json(configmsg)
 #                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
 #                    self.confport.send_json(configmsg)
 
@@ -105,6 +101,16 @@ class Manager(object):
                 self.streamerdevice.join()
             sys.exit()
 
+    def handle_checkins(self,msg):
+        """
+        Handle the checkin messages from slavedrivers adding their information to a registry of nodes
+        :param msg: checkin message
+        :return:
+        """
+        if msg['type'] == 'slavedriver':
+            configmsg = dict(self.config.items('slavedriver'))
+            configmsg['master_ip'] = self.ipaddress
+        return configmsg
 
     def bind(self):
         """
