@@ -10,6 +10,7 @@ import unittest
 from pypln.apps.cluster.cmanager import Manager, get_ipv4_address
 from pypln.apps.cluster.slavedriver import SlaveDriver
 import subprocess
+import ConfigParser
 import zmq
 import time
 import os,signal
@@ -32,12 +33,6 @@ class TestManagerComm(unittest.TestCase):
         self.managerproc.terminate()
         self.sdproc.terminate()
         self.context.term()
-
-    def test_dummy(self):
-        pass
-
-    def test_dummy2(self):
-        pass
 
 
     def test_manager_send_one_message(self):
@@ -87,15 +82,17 @@ class TestSlavedriverInst(unittest.TestCase):
     tests related with Slavedriver class instantiation
     """
     def setUp(self):
+        self.config = ConfigParser.ConfigParser()
+        self.config.read('pypln.test.conf')
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
-
         self.localip = get_ipv4_address().strip()
+
     def tearDown(self):
         os.kill(self.managerproc.pid,signal.SIGINT)
         self.managerproc.terminate()
 
     def test_fetch_conf(self):
-        SD = SlaveDriver(self.localip+":5551")
+        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
         self.assertTrue(isinstance(SD.localconf,dict))
 
 
