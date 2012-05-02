@@ -8,14 +8,14 @@ mkdir $TMP_DIR
 
 # Make Sphinx documentation
 cd doc
-make html
+make html 
 cd ..
 mv doc/_build/html/* $TMP_DIR/
 rm -rf doc/_build
 
 # Make Reference documentation using epydoc
-epydoc -v -u https://github.com/namd/pypln --graph=all --parse-only --html \
-       --no-frames -o $TMP_DIR/reference pypln/
+echo "Building Api Docs with EpyDoc..."
+epydoc -v -u https://github.com/namd/pypln --debug --graph=all --parse-only --html --no-frames -o $TMP_DIR/reference pypln/
 
 echo 'Now execute:'
 echo '  git checkout gh-pages'

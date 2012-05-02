@@ -45,6 +45,7 @@ streamerpid = None
 class Manager(object):
     def __init__(self, configfile='/etc/pypln.conf',bootstrap=False):
         """
+        Manager daemon which acts as cluster controller
         :param configfile: path to pypln.conf
         :param bootstrap: if a cluster should be bootstrapped upon instantiation
         """
@@ -167,6 +168,7 @@ class Manager(object):
 
     def process_jobs(self,msg):
         """
+        Process jobs received
         :param msg: json string speciying the job
         """
 #        print msg
