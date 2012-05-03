@@ -38,26 +38,26 @@ class TestManagerComm(unittest.TestCase):
 
 
     def test_manager_send_one_message(self):
-        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
+        self.req_sock.send_json({'job':self.managerproc.pid})
         msg = self.req_sock.recv_json()
-        self.assertEqual(msg,"{ans:'Job queued'}")
+        self.assertEqual(msg['ans'],'Job queued')
 
 
     def testing_sending_many_messages(self):
         msgs = [{'jobid':12, 'data':'fksdjfhlaksf'}]*10
         self.req_sock.send_json(msgs)
         msg = self.req_sock.recv_json()
-        self.assertEqual(msg,"{ans:'Job queued'}")
+        self.assertEqual(msg['ans'],'Job queued')
         #send again
         self.req_sock.send_json(msgs)
         msg = self.req_sock.recv_json()
-        self.assertEqual(msg,"{ans:'Job queued'}")
+        self.assertEqual(msg['ans'],'Job queued')
 
     def test_streamer(self):
-        self.req_sock.send_json('{job:"%s"}'%self.managerproc.pid)
+        self.req_sock.send_json({'job':self.managerproc.pid})
         self.req_sock.recv_json()
         msg = self.pull_from_streamer_sock.recv_json()
-        self.assertEqual(msg[:5],'{job:')
+        self.assertTrue(msg.has_key('job'))
 
 
 

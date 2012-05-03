@@ -74,7 +74,7 @@ class Manager(object):
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
                     jobmsg = self.monitor.recv_json()
                     self.process_jobs(jobmsg)
-                    self.monitor.send_json("{ans:'Job queued'}")
+                    self.monitor.send_json({'ans':'Job queued'})
 #                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
 #                    pass
 ##                    self.monitor.send_json("{ans:'Job queued'}")
