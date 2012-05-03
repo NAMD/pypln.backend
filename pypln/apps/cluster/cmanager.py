@@ -33,6 +33,7 @@ from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
 import socket, subprocess, re
 import sys, os, signal, atexit
+import time
 from logger import make_log
 
 # Setting up the logger
@@ -53,8 +54,10 @@ class Manager(object):
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
         self.node_registry = {}
+        self.active_jobs = []
         self.localconf = dict(self.config.items('manager'))
         self.ipaddress = get_ipv4_address()
+        self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
         self.bind()
@@ -134,6 +137,9 @@ class Manager(object):
             # Socket to subscribe to subscribe to  slavedrivers status messages
             self.sub_slaved_port = self.context.socket(zmq.SUB)
             self.sub_slaved_port.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
+            # Socket to publish status reports
+            self.statussock = self.context.socket(zmq.PUB)
+            self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
             # Initialize poll set to listen on multiple channels at once
             self.poller = zmq.Poller()
             self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
@@ -169,12 +175,21 @@ class Manager(object):
     def process_jobs(self,msg):
         """
         Process jobs received
-        :param msg: json string speciying the job
+        :param msg: dictionary or list of dicts
         """
-#        print msg
-        self.pusher.send_json(msg)
+        dispatch_time = time.asctime()
+        if isinstance(msg,list):
+            for m in msg:
+                m['dispatch_on'] = dispatch_time
+                self.pusher.send_json(m)
+                self.active_jobs.append(m)
+        else:
+            msg['dispatch_on'] = dispatch_time
+            self.pusher.send_json(msg)
+            self.active_jobs.append(msg)
         if self.streamerdevice:
             log.info("sent msg to streamer")
+
 
 
 
