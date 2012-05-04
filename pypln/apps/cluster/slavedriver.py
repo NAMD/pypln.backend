@@ -27,7 +27,7 @@ class SlaveDriver(object):
     """
     Class to manage work on slave nodes
     """
-    def __init__(self, master_uri):
+    def __init__(self, master_uri, run=True):
         """
         SlaveDriver
         :param opts: dictionary with parameters from pypln.conf
@@ -55,10 +55,12 @@ class SlaveDriver(object):
             sys.exit()
         self.pubsock = self.context.socket(zmq.PUB)
         self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
+        if run:
+            self._run()
 
 
 
-    def run(self):
+    def _run(self):
         """
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
@@ -67,11 +69,13 @@ class SlaveDriver(object):
             while True:
                 msg = self.pullsock.recv_json()
                 print "Slavedriver got ",msg
+                log.info("Slavedriver got %s"%msg)
                 self.pubsock.send_json({'pid':self.pid,'status':"Alive"})
         except (KeyboardInterrupt,SystemExit):
             self.pullconf.close()
             self.pullsock.close()
             self.context.term()
+            sys.exit()
 
 def get_ipv4_address():
     """
@@ -91,7 +95,7 @@ if __name__=='__main__':
     if len(sys.argv) < 2:
         sys.exit(1)
     SD = SlaveDriver(master_uri=sys.argv[1])
-    SD.run()
+#    SD.run()
 
 
 

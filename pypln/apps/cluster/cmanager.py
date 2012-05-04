@@ -92,7 +92,11 @@ class Manager(object):
         self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
+
         self.bind()
+
+        #Start the Streamer
+        self.setup_streamer(dict(self.config.items('streamer')))
 
         if bootstrap:
             self.__bootstrap_cluster()
@@ -198,10 +202,6 @@ class Manager(object):
         Connect to the nodes and make sure they are ready to join the cluster
         :return:
         """
-        global streamerpid
-        #Start the Streamer
-        self.setup_streamer(dict(self.config.items('streamer')))
-
         self.__deploy_slaves()
 
     def setup_streamer(self,opts):
@@ -275,6 +275,7 @@ def get_ipv4_address():
 if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
+    parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")
     args = parser.parse_args()
-    M = Manager(configfile=args.conf,bootstrap=1)
+    M = Manager(configfile=args.conf,bootstrap=args.nosetup)
     M.run()

@@ -7,8 +7,8 @@ license: GPL v3 or later
 __docformat__ = "restructuredtext en"
 
 import unittest
-from pypln.apps.cluster.cmanager import Manager, get_ipv4_address
-from pypln.apps.cluster.slavedriver import SlaveDriver
+from cmanager import Manager, get_ipv4_address
+from slavedriver import SlaveDriver
 import subprocess
 import ConfigParser
 import zmq
@@ -25,7 +25,7 @@ class TestManagerComm(unittest.TestCase):
         replyport = int(self.config.get('manager','replyport'))
         statusport = int(self.config.get('manager','statusport'))
 #        print "==> ",statusport
-        self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+        self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf','--nosetup'])
         self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:%s'%(localip,self.config.get('manager','conf_reply'))])
         self.context = zmq.Context()
         self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, replyport))
@@ -79,10 +79,6 @@ class TestManagerComm(unittest.TestCase):
 
 
 
-
-
-#        local('killall slavedriver.py')
-
 class TestManagerInst(unittest.TestCase):
     def test_load_config_file(self):
         M = Manager('pypln.test.conf',False)
@@ -106,7 +102,7 @@ class TestSlavedriverInst(unittest.TestCase):
     def setUp(self):
         self.config = ConfigParser.ConfigParser()
         self.config.read('pypln.test.conf')
-        self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf'])
+        self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf','--nosetup'])
         self.localip = get_ipv4_address().strip()
 
     def tearDown(self):
@@ -114,7 +110,7 @@ class TestSlavedriverInst(unittest.TestCase):
         self.managerproc.terminate()
 
     def test_fetch_conf(self):
-        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'),False)
         self.assertTrue(isinstance(SD.localconf,dict))
 
 
