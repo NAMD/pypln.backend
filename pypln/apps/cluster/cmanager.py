@@ -7,21 +7,53 @@ monitorable/controllable through it.
 Cluster configuration must be specified on a config file pypln.conf
 with at least the following sections:
 [cluster]
-nodes = [x.x.x.x, x.x.x.x] # list of IPs to add to PyPLN cluster
+master_ip = 127.0.0.1
+nodes = ['127.0.0.1', '10.250.46.208'] # list of IPs to add to PyPLN cluster
+[cluster]
 
 [authentication]
+sshkey =
 
 [zeromq]
-io_threads = 2
+# number of threads per context
+iothreads = 1
 
+[manager]
+pushport = 5570
+replyport = 5550
+sd_subport = 5562
+conf_reply = 5551
+statusport = 5552
+
+
+#Daemon configuration
+[streamer]
+# Streamer ports must be in the range 5570-9
+pullport = 5570
+pushport = 5571
+
+subport = 5573
+
+[slavedriver]
+# Slavedrivers ports should be in the range 5560-9
+confport = 5551
+pullport = 5571
+pushport = 5561
+pubport = 5562
+subport = 5563
+
+[worker]
+
+
+
+[sink]
+pubport=
 
 
 license: GPL v3 or later
 __date__ = 4 / 23 / 12
 """
 __docformat__ = "restructuredtext en"
-
-#TODO: Complete usage docs to modules docstring
 
 import ConfigParser
 from fabric.api import local, abort, execute
@@ -33,6 +65,7 @@ from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
 import socket, subprocess, re
 import sys, os, signal, atexit
+import time
 from logger import make_log
 
 # Setting up the logger
@@ -53,8 +86,10 @@ class Manager(object):
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
         self.node_registry = {}
+        self.active_jobs = []
         self.localconf = dict(self.config.items('manager'))
         self.ipaddress = get_ipv4_address()
+        self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
         self.bind()
@@ -70,6 +105,8 @@ class Manager(object):
         """
         try:
             while self.stayalive:
+#                self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
+#                print "====> Publishing status"
                 socks = dict(self.poller.poll())
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
                     jobmsg = self.monitor.recv_json()
@@ -81,19 +118,26 @@ class Manager(object):
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
                     msg = self.confport.recv_json()
-                    print msg, type(msg)
                     configmsg = self.handle_checkins(msg)
                     self.confport.send_json(configmsg)
 #                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
 #                    self.confport.send_json(configmsg)
+                if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
+                    print "====> Sending status"
+                    msg = self.statussock.recv()
+                    self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
                     msg = self.sub_slaved_port.recv_json()
 
         except (KeyboardInterrupt, SystemExit):
             log.info("Manager coming down")
+        except ZMQError as z:
+            log.error("Failed messaging: %"%z)
+            print "Failed messaging: %"%z
         finally:
             print "======> Manager coming down"
+            log.warning("Manager coming down")
             self.monitor.close()
             self.confport.close()
             self.pusher.close()
@@ -133,11 +177,15 @@ class Manager(object):
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             # Socket to subscribe to subscribe to  slavedrivers status messages
             self.sub_slaved_port = self.context.socket(zmq.SUB)
-            self.sub_slaved_port.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
+            self.sub_slaved_port.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
+            # Socket to send status reports
+            self.statussock = self.context.socket(zmq.REP)
+            self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
             # Initialize poll set to listen on multiple channels at once
             self.poller = zmq.Poller()
             self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
+            self.poller.register(self.statussock, zmq.POLLOUT|zmq.POLLIN)
             self.poller.register(self.sub_slaved_port, zmq.POLLIN)
         except ZMQError:
             sys.exit(1)
@@ -171,8 +219,17 @@ class Manager(object):
         Process jobs received
         :param msg: json string speciying the job
         """
-#        print msg
-        self.pusher.send_json(msg)
+        dispatch_time = time.asctime()
+        if isinstance(msg,list):
+            for m in msg:
+#                print m
+                m['dispatched_on'] = dispatch_time
+                self.pusher.send_json(m)
+                self.active_jobs.append(m)
+        else:
+            msg['dispatched_on'] = dispatch_time
+            self.pusher.send_json(msg)
+            self.active_jobs.append(msg)
         if self.streamerdevice:
             log.info("sent msg to streamer")
 
