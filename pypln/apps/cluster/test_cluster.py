@@ -43,7 +43,6 @@ class TestManagerComm(unittest.TestCase):
         self.sdproc.terminate()
         self.context.term()
 
-
     def test_manager_send_one_message(self):
         self.req_sock.send_json({'jobid':self.managerproc.pid})
         msg = self.req_sock.recv_json()
@@ -71,7 +70,6 @@ class TestManagerComm(unittest.TestCase):
         self.assertTrue(msg.has_key('active jobs'))
         self.assertTrue(isinstance(msg['cluster'],dict))
         self.assertTrue(isinstance(msg['active jobs'],list))
-        # TODO: check list of active jobs
 
     def test_streamer(self):
         self.req_sock.send_json({'jobid':self.managerproc.pid})

@@ -53,6 +53,8 @@ class SlaveDriver(object):
             self.pullsock.close()
             self.context.term()
             sys.exit()
+        self.pubsock = self.context.socket(zmq.PUB)
+        self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
 
 
 
@@ -65,6 +67,7 @@ class SlaveDriver(object):
             while True:
                 msg = self.pullsock.recv_json()
                 print "Slavedriver got ",msg
+                self.pubsock.send_json({'pid':self.pid,'status':"Alive"})
         except (KeyboardInterrupt,SystemExit):
             self.pullconf.close()
             self.pullsock.close()

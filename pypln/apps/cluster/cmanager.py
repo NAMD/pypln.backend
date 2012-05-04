@@ -105,7 +105,6 @@ class Manager(object):
         """
         try:
             while self.stayalive:
-#                self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 #                print "====> Publishing status"
                 socks = dict(self.poller.poll())
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
@@ -123,12 +122,14 @@ class Manager(object):
 #                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
 #                    self.confport.send_json(configmsg)
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
-                    print "====> Sending status"
+#                    print "====> Sending status"
                     msg = self.statussock.recv()
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
+                    print "==> receiving pubs from sds"
                     msg = self.sub_slaved_port.recv_json()
+                    print msg
 
         except (KeyboardInterrupt, SystemExit):
             log.info("Manager coming down")
@@ -176,8 +177,9 @@ class Manager(object):
             self.pusher = self.context.socket(zmq.PUSH)
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             # Socket to subscribe to subscribe to  slavedrivers status messages
-            self.sub_slaved_port = self.context.socket(zmq.SUB)
-            self.sub_slaved_port.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['sd_subport']))
+            for ip in self.nodes:
+                self.sub_slaved_port = self.context.socket(zmq.SUB)
+                self.sub_slaved_port.connect("tcp://%s:%s"%(ip,self.localconf['sd_subport']))
             # Socket to send status reports
             self.statussock = self.context.socket(zmq.REP)
             self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
@@ -200,7 +202,7 @@ class Manager(object):
         #Start the Streamer
         self.setup_streamer(dict(self.config.items('streamer')))
 
-#        self.__deploy_slaves()
+        self.__deploy_slaves()
 
     def setup_streamer(self,opts):
         ipaddress = get_ipv4_address()
