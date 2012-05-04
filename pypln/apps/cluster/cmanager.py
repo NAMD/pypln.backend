@@ -133,6 +133,7 @@ class Manager(object):
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
                     print "==> receiving pubs from sds"
                     msg = self.sub_slaved_port.recv_json()
+                    log.info("Status received: %s"%msg)
                     print msg
 
         except (KeyboardInterrupt, SystemExit):
@@ -146,6 +147,7 @@ class Manager(object):
             self.monitor.close()
             self.confport.close()
             self.pusher.close()
+            self.statussock.close()
             self.sub_slaved_port.close()
             self.context.term()
             if self.streamerdevice:

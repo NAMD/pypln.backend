@@ -72,18 +72,20 @@ class SlaveDriver(object):
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
         """
-        print "starting"
+        log.info("%s at %s  Starting listening cycle..."%(self.pid,self.ipaddress))
         try:
             while True:
                 socks = dict(self.poller.poll())
                 if self.pullsock in socks and socks[self.pullsock] == zmq.POLLIN:
                     print "Slavedriver listening... ",msg
-                    msg = self.pullsock.recv_json()
+                    msg = self.pullsock.recv_json(zmq.NOBLOCK)
                     print "Slavedriver got ",msg
                     log.info("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
                     log.info("Slavedriver %s at %s publishing status."%(self.pid,self.ipaddress))
                     self.pubsock.send_json({'pid':self.pid,'status':"Alive"})
+        except ZMQError:
+            log.info("No message to receive...")
         except (KeyboardInterrupt,SystemExit):
             self.pullconf.close()
             self.pullsock.close()
