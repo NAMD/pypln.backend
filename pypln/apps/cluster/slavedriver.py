@@ -47,14 +47,17 @@ class SlaveDriver(object):
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
             log.info('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
+            self.pubsock = self.context.socket(zmq.PUB)
+            self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
             self.pullconf.close()
             self.pullsock.close()
             self.context.term()
             sys.exit()
-        self.pubsock = self.context.socket(zmq.PUB)
-        self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
+        except KeyError:
+            print self.localconf
+
         # Setup the poller
         self.poller = zmq.Poller()
         self.poller.register(self.pullsock, zmq.POLLIN)
@@ -69,9 +72,10 @@ class SlaveDriver(object):
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
         """
+        print "starting"
         try:
             while True:
-                socks = dict(poller.poll())
+                socks = dict(self.poller.poll())
                 if self.pullsock in socks and socks[self.pullsock] == zmq.POLLIN:
                     print "Slavedriver listening... ",msg
                     msg = self.pullsock.recv_json()
