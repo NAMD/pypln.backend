@@ -1,10 +1,5 @@
 """
 PyPLN -- Distributed text processing pipeline.
-Ports:
-5557: task ventilator push; worker pull port
-5558: worker push port; Sink pull port
-5559: Ventilators  Pub/Sub port
-5560: Sinks PUB/SUB port for tasks finished
 """
 
 from zmq.core import version

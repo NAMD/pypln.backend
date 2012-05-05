@@ -16,6 +16,8 @@ from nltk import FreqDist
 from nltk.util import AbstractLazySequence, LazyMap, LazyConcatenation
 
 class MongoDBLazySequence(AbstractLazySequence):
+    """
+    """
     def __init__(self,host="127.0.0.1", port=27017, db='test',collection='Documentos',field='text'):
         self.conn = pymongo.Connection(host,port)
         self.collection = self.conn[db][collection]
