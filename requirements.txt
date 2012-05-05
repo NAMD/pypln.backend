@@ -3,3 +3,5 @@ nose
 fabric
 pymongo
 psutil
+flask
+mongoengine
