@@ -9,7 +9,10 @@ __date__ = 5 / 13 / 12
 
 __docformat__ = "restructuredtext en"
 
+import zmq
 from flask import Flask
+
+
 app = Flask(__name__)
 
 @app.route("/")
