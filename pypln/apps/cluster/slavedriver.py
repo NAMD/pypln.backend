@@ -27,7 +27,7 @@ class SlaveDriver(object):
     """
     Class to manage work on slave nodes
     """
-    def __init__(self, master_uri, run=True):
+    def __init__(self, master_uri):
         """
         SlaveDriver
         :param opts: dictionary with parameters from pypln.conf
@@ -60,22 +60,27 @@ class SlaveDriver(object):
             print self.localconf
 
         # Setup the poller
-        self.poller = zmq.Poller()
-        self.poller.register(self.pullsock, zmq.POLLIN)
-        self.poller.register(self.pubsock,zmq.POLLOUT)
-        if run:
-            self._run()
+        try:
+            self.poller = zmq.Poller()
+            self.poller.register(self.pullsock, zmq.POLLIN)
+            self.poller.register(self.pubsock,zmq.POLLOUT)
+        except ZMQError:
+            log.error("Failed to start poller")
+
+#        if RUN: #For some strange reason this if is always failing
+#            self.listen(0)
 
 
 
-    def _run(self):
+    def listen(self,n):
         """
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
         """
-        log.info("%s at %s  Starting listening cycle..."%(self.pid,self.ipaddress))
+        log.debug("Slavedriver %s at %s  Starting listening..."%(self.pid,self.ipaddress))
+        loops = 1
         try:
-            while True:
+            while loops != n: # Needed for finite runs in testing situations
                 socks = dict(self.poller.poll())
                 if self.pullsock in socks and socks[self.pullsock] == zmq.POLLIN:
                     print "Slavedriver listening... ",msg
@@ -83,11 +88,12 @@ class SlaveDriver(object):
                     print "Slavedriver got ",msg
                     log.info("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
-                    log.info("Slavedriver %s at %s publishing status."%(self.pid,self.ipaddress))
-                    self.pubsock.send_json({'pid':self.pid,'status':"Alive"})
+                    self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,'status':"Alive"})
+                loops += 1
         except ZMQError:
-            log.info("No message to receive...")
+            log.error("No message to receive...")
         except (KeyboardInterrupt,SystemExit):
+            log.warning("Shutting down...")
             self.pullconf.close()
             self.pullsock.close()
             self.pubsock.close()
@@ -112,7 +118,7 @@ if __name__=='__main__':
     if len(sys.argv) < 2:
         sys.exit(1)
     SD = SlaveDriver(master_uri=sys.argv[1])
-#    SD.run()
+    SD.listen(0)
 
 
 

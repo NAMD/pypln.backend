@@ -67,6 +67,7 @@ from mongoengine import connect
 import socket, subprocess, re
 import sys, os, signal, atexit
 import time
+import datetime
 from logger import make_log
 
 # Setting up the logger
@@ -135,10 +136,10 @@ class Manager(object):
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
-                    print "==> receiving pubs from sds"
+#                    print "==> receiving pubs from sds"
                     msg = self.sub_slaved_port.recv_json()
-                    log.info("Status received: %s"%msg)
-                    print msg
+                    log.debug("Status received: %s"%msg)
+                    self.handle_slavedriver_status(msg)
 
         except (KeyboardInterrupt, SystemExit) as e:
             log.warning("Manager coming down due to %s"%e)
@@ -159,17 +160,7 @@ class Manager(object):
             log.warning("Exiting")
             sys.exit()
 
-    def handle_checkins(self,msg):
-        """
-        Handle the checkin messages from slavedrivers adding their information to a registry of nodes
-        :param msg: checkin message
-        :return:
-        """
-        if msg['type'] == 'slavedriver':
-            configmsg = dict(self.config.items('slavedriver'))
-            configmsg['master_ip'] = self.ipaddress
-            self.node_registry[msg['ip']] = msg
-        return configmsg
+
 
     def bind(self):
         """
@@ -189,9 +180,10 @@ class Manager(object):
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             # Socket to subscribe to subscribe to multiple slavedrivers publishing status messages
             self.sub_slaved_port = self.context.socket(zmq.SUB)
-            self.sub_slaved_port.connect("tcp://%s:%s"%(self.nodes[0],self.localconf['sd_subport']))
+            for node in self.nodes:
+                self.sub_slaved_port.connect("tcp://%s:%s"%(node,self.localconf['sd_subport']))
             self.sub_slaved_port.setsockopt(zmq.SUBSCRIBE, "")
-            # Socket to send status reports
+            # Socket to send manager status reports
             self.statussock = self.context.socket(zmq.REP)
             self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
             # Initialize poll set to listen on multiple channels at once
@@ -204,6 +196,26 @@ class Manager(object):
             log.error("Failed Binding ports: %s"%z)
             sys.exit(1)
         log.debug("Finished Binding the sockets")
+
+    def handle_checkins(self,msg):
+        """
+        Handle the checkin messages from slavedrivers adding their information to a registry of nodes
+        :param msg: checkin message
+        :return:
+        """
+        if msg['type'] == 'slavedriver':
+            configmsg = dict(self.config.items('slavedriver'))
+            configmsg['master_ip'] = self.ipaddress
+            self.node_registry[msg['ip']] = configmsg
+        return configmsg
+
+    def handle_slavedriver_status(self,msg):
+        """
+
+        :param msg:
+        :return:
+        """
+        self.node_registry[msg['ip']]['last_reported'] = datetime.datetime.now()
 
 
     def __bootstrap_cluster(self):
@@ -242,7 +254,7 @@ class Manager(object):
             self.pusher.send_json(msg)
             self.active_jobs.append(msg)
         if self.streamerdevice:
-            log.info("sent msg to streamer")
+            log.debug("sent msg to streamer")
 
 
 
@@ -260,8 +272,8 @@ def spawn_slave(masteruri):
     :return:
     """
     sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s'%(masteruri)])
-    log.debug("Spawned Slavedriver PID:%s"%sdproc.pid)
-    return sdproc.pid
+    log.debug("Spawned Slavedriver.")
+
 
 #@atexit.register
 #def cleanup():
