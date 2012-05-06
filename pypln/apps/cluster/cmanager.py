@@ -189,7 +189,7 @@ class Manager(object):
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             # Socket to subscribe to subscribe to multiple slavedrivers publishing status messages
             self.sub_slaved_port = self.context.socket(zmq.SUB)
-            self.sub_slaved_port.connect("tcp://0.0.0.0:%s"%(self.localconf['sd_subport']))
+            self.sub_slaved_port.connect("tcp://%s:%s"%(self.nodes[0],self.localconf['sd_subport']))
             self.sub_slaved_port.setsockopt(zmq.SUBSCRIBE, "")
             # Socket to send status reports
             self.statussock = self.context.socket(zmq.REP)

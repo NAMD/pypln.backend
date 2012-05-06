@@ -28,4 +28,5 @@ def make_log(name):
     handler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
     handler.setFormatter(formatter)
     log.addHandler(handler)
+    #TODO: Maybe use zmq.loghandler
     return log

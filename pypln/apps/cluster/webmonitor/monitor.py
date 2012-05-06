@@ -23,6 +23,7 @@ app.config.from_pyfile('monitor.cfg')
 def dashboard():
     with open("/tmp/pypln.log") as f:
         logs = f.readlines()
+    logs.reverse() # Latest entries first
     return render_template('index.html',logs=logs)
 
 

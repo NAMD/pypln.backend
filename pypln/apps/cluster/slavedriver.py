@@ -47,8 +47,8 @@ class SlaveDriver(object):
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
             self.pubsock = self.context.socket(zmq.PUB)
-            self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
-            log.info('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
+            self.pubsock.bind("tcp://*:%s"%(self.localconf['pubport']))
+            log.debug('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
             self.pullconf.close()
