@@ -63,6 +63,7 @@ import argparse
 from zmq.devices import ProcessDevice, ThreadDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
+from mongoengine import connect
 import socket, subprocess, re
 import sys, os, signal, atexit
 import time
@@ -75,8 +76,10 @@ log = make_log("Manager")
 global streamerpid
 streamerpid = None
 
+connect('pypln_cluster_stats')
+
 class Manager(object):
-    def __init__(self, configfile='/etc/pypln.conf',bootstrap=False):
+    def __init__(self, configfile='/etc/pypln.conf',bootstrap=True):
         """
         Manager daemon which acts as cluster controller
         :param configfile: path to pypln.conf
@@ -107,6 +110,7 @@ class Manager(object):
         Infinite loop listening to request
         :return:
         """
+        log.debug("Starting run loop")
         try:
             while self.stayalive:
 #                print "====> Publishing status"
@@ -136,22 +140,23 @@ class Manager(object):
                     log.info("Status received: %s"%msg)
                     print msg
 
-        except (KeyboardInterrupt, SystemExit):
-            log.info("Manager coming down")
+        except (KeyboardInterrupt, SystemExit) as e:
+            log.warning("Manager coming down due to %s"%e)
         except ZMQError as z:
-            log.error("Failed messaging: %"%z)
-            print "Failed messaging: %"%z
+            log.error("Failed messaging: %s"%z)
+            print "Failed messaging: %s"%z
         finally:
             print "======> Manager coming down"
-            log.warning("Manager coming down")
+            log.warning("Closing sockets")
             self.monitor.close()
             self.confport.close()
             self.pusher.close()
             self.statussock.close()
             self.sub_slaved_port.close()
             self.context.term()
-            if self.streamerdevice:
-                self.streamerdevice.join()
+#            if self.streamerdevice:
+#                self.streamerdevice.join()
+            log.warning("Exiting")
             sys.exit()
 
     def handle_checkins(self,msg):
@@ -182,10 +187,10 @@ class Manager(object):
             # Socket to push jobs to streamer
             self.pusher = self.context.socket(zmq.PUSH)
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
-            # Socket to subscribe to subscribe to  slavedrivers status messages
-            for ip in self.nodes:
-                self.sub_slaved_port = self.context.socket(zmq.SUB)
-                self.sub_slaved_port.connect("tcp://%s:%s"%(ip,self.localconf['sd_subport']))
+            # Socket to subscribe to subscribe to multiple slavedrivers publishing status messages
+            self.sub_slaved_port = self.context.socket(zmq.SUB)
+            self.sub_slaved_port.connect("tcp://0.0.0.0:%s"%(self.localconf['sd_subport']))
+            self.sub_slaved_port.setsockopt(zmq.SUBSCRIBE, "")
             # Socket to send status reports
             self.statussock = self.context.socket(zmq.REP)
             self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
@@ -195,8 +200,10 @@ class Manager(object):
             self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.statussock, zmq.POLLOUT|zmq.POLLIN)
             self.poller.register(self.sub_slaved_port, zmq.POLLIN)
-        except ZMQError:
+        except ZMQError as z:
+            log.error("Failed Binding ports: %s"%z)
             sys.exit(1)
+        log.debug("Finished Binding the sockets")
 
 
     def __bootstrap_cluster(self):
@@ -243,7 +250,8 @@ class Manager(object):
         """
         Start slavedrivers on slavenodes
         """
-        execute(spawn_slave,hosts=self.nodes,masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
+        log.debug("About to start %s slavedriver(s)"%(len(self.nodes)))
+        execute(spawn_slave,hosts=self.nodes, masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
 
 def spawn_slave(masteruri):
     """
@@ -252,6 +260,7 @@ def spawn_slave(masteruri):
     :return:
     """
     sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s'%(masteruri)])
+    log.debug("Spawned Slavedriver PID:%s"%sdproc.pid)
     return sdproc.pid
 
 #@atexit.register
@@ -275,6 +284,7 @@ def get_ipv4_address():
     return resp[0]
 
 if  __name__ == '__main__':
+    #TODO: Add argument to set log verbosity: ERROR|WARNING|INFO|DEBUG
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")

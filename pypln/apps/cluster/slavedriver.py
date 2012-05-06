@@ -46,9 +46,9 @@ class SlaveDriver(object):
             self.localconf = self.pullconf.recv_json()
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
-            log.info('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
             self.pubsock = self.context.socket(zmq.PUB)
             self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
+            log.info('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
             self.pullconf.close()
@@ -56,6 +56,7 @@ class SlaveDriver(object):
             self.context.term()
             sys.exit()
         except KeyError:
+            log.error("Defective slavedriver configuration file (missing key)")
             print self.localconf
 
         # Setup the poller

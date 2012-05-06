@@ -22,7 +22,7 @@ def make_log(name):
     :return: Logger object
     """
     log = logging.getLogger(name)
-    log.setLevel(logging.INFO)
+    log.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # Add the log message handler to the logger
     handler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
