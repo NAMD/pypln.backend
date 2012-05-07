@@ -68,6 +68,7 @@ import socket, subprocess, re
 import sys, os, signal, atexit
 import time
 import datetime
+import logging
 from logger import make_log
 
 # Setting up the logger
@@ -130,6 +131,7 @@ class Manager(object):
                     self.confport.send_json(configmsg)
 #                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
 #                    self.confport.send_json(configmsg)
+
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
 #                    print "====> Sending status"
                     msg = self.statussock.recv()
@@ -216,6 +218,7 @@ class Manager(object):
         :return:
         """
         self.node_registry[msg['ip']]['last_reported'] = datetime.datetime.now()
+        log.debug('Saved status msg from %s'%msg['ip'])
 
 
     def __bootstrap_cluster(self):
@@ -296,10 +299,19 @@ def get_ipv4_address():
     return resp[0]
 
 if  __name__ == '__main__':
-    #TODO: Add argument to set log verbosity: ERROR|WARNING|INFO|DEBUG
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")
+    parser.add_argument('--verbose', '-v', action='count',
+        help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
     args = parser.parse_args()
+    if args.verbose == None:
+        log.setLevel(logging.ERROR)
+    elif args.verbose == 1:
+        log.setLevel(logging.WARNING)
+    elif args.verbose == 2:
+        log.setLevel(logging.INFO)
+    elif args.verbose >= 3:
+        log.setLevel(logging.DEBUG)
     M = Manager(configfile=args.conf,bootstrap=args.nosetup)
     M.run()

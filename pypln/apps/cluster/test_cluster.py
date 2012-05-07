@@ -131,13 +131,15 @@ class TestSlavedriverInst(unittest.TestCase):
     def test_fetch_conf(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
         self.assertTrue(isinstance(SD.localconf,dict))
+        self.assertTrue(SD.localconf.has_key('master_ip'))
 
     def test_handle_checkin(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+        SD.listen(300)
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
-        print msg
         self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
+        self.assertTrue(msg['cluster'][SD.ipaddress].has_key('last_reported'),"Manager did not get status message")
 
 
 
