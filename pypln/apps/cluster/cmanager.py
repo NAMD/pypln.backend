@@ -200,13 +200,13 @@ class Manager(object):
     def handle_checkins(self,msg):
         """
         Handle the checkin messages from slavedrivers adding their information to a registry of nodes
-        :param msg: checkin message
-        :return:
+        :param msg: Slavedriver's checkin message
+        :return: `configmsg` Slavedriver configuration dict extended with manager's ipaddress
         """
         if msg['type'] == 'slavedriver':
             configmsg = dict(self.config.items('slavedriver'))
             configmsg['master_ip'] = self.ipaddress
-            self.node_registry[msg['ip']] = configmsg
+            self.node_registry[msg['ip']] = msg
         return configmsg
 
     def handle_slavedriver_status(self,msg):

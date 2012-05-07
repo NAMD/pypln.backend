@@ -90,9 +90,6 @@ class TestManagerComm(unittest.TestCase):
 
 
 
-
-
-
 class TestManagerInst(unittest.TestCase):
     def test_load_config_file(self):
         M = Manager('pypln.test.conf',False)
@@ -119,16 +116,29 @@ class TestSlavedriverInst(unittest.TestCase):
     def setUp(self):
         self.config = ConfigParser.ConfigParser()
         self.config.read('pypln.test.conf')
+        statusport = int(self.config.get('manager','statusport'))
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf','--nosetup'])
         self.localip = get_ipv4_address().strip()
+        self.context = zmq.Context()
+        self.status_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(self.localip, statusport))
 
     def tearDown(self):
+        self.status_sock.close()
+        self.context.term()
         os.kill(self.managerproc.pid,signal.SIGINT)
         self.managerproc.terminate()
 
     def test_fetch_conf(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
         self.assertTrue(isinstance(SD.localconf,dict))
+
+    def test_handle_checkin(self):
+        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+        self.status_sock.send("status")
+        msg = self.status_sock.recv_json()
+        print msg
+        self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
+
 
 
 
