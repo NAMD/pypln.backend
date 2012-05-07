@@ -11,6 +11,7 @@ __author__ = 'fccoelho'
 
 import unittest
 from workers.highlighter_worker import HighlighterWorker
+from workers.pdfconv_worker import PDFConverterWorker
 
 class TestHighlighterWorker(unittest.TestCase):
     def setUp(self):
@@ -30,6 +31,40 @@ class TestHighlighterWorker(unittest.TestCase):
         res = self.W.process(msg)
         self.assertDictEqual(res,{'highlighted_text':['atirei','o','<span class="tagged" title="um,dois"><b>pau</b></span>',
                                                   'no','<span class="tagged" title="um"><b>gato</b></span>']})
+
+class TestPDFWorker(unittest.TestCase):
+    def setUp(self):
+        self.PC = PDFConverterWorker()
+    def tearDown(self):
+        pass
+    def test_parse_metadata(self):
+        md = """Title:          mve_848.dvi
+Creator:        dvips 5.83 Copyright 1998 Radical Eye Software
+Producer:       Acrobat Distiller 7.0.5 (Windows)
+CreationDate:   Tue Feb  9 14:58:46 2010
+ModDate:        Tue Feb  9 15:01:34 2010
+Tagged:         no
+Pages:          8
+Encrypted:      no
+Page size:      595.276 x 790.866 pts
+File size:      644613 bytes
+Optimized:      no
+PDF version:    1.3
+        """
+        expected = {'Title':'mve_848.dvi','Creator':'dvips 5.83 Copyright 1998 Radical Eye Software',
+                    'Producer':'Acrobat Distiller 7.0.5 (Windows)',
+                    'CreationDate':'Tue Feb  9 14:58:46 2010',
+                    'ModDate':'Tue Feb  9 15:01:34 2010',
+                    'Tagged':'no',
+                    'Pages':'8',
+                    'Encrypted':'no',
+                    'Page size':'595.276 x 790.866 pts',
+                    'File size':'644613 bytes',
+                    'Optimized':'no',
+                    'PDF version':'1.3'
+        }
+        mdict = self.PC.parse_metadata(md)
+        self.assertDictEqual(mdict,expected)
 
 if __name__ == '__main__':
     unittest.main()

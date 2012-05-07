@@ -38,8 +38,11 @@ class HighlighterWorker(PushPullWorker):
                 new_text.append(word)
 
         msgout = {'highlighted_text':new_text}
-
-        self.sender.send_json(msgout)
+        try:
+            self.sender.send_json(msgout)
+        except AttributeError:
+            #this is necessary so that we can test this method without starting the worker as a daemon
+            pass
         return msgout #for testing purposes
 
 if __name__=="__main__":
