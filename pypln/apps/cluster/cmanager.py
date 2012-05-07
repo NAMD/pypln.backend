@@ -102,9 +102,11 @@ class Manager(object):
 
         #Start the Streamer
         self.setup_streamer(dict(self.config.items('streamer')))
+        log.debug("Done setting up Streamer")
 
         if bootstrap:
             self.__bootstrap_cluster()
+            log.debug("Done bootstrapping cluster")
 
 
     def run(self):
@@ -115,7 +117,6 @@ class Manager(object):
         log.debug("Starting run loop")
         try:
             while self.stayalive:
-#                print "====> Publishing status"
                 socks = dict(self.poller.poll())
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
                     jobmsg = self.monitor.recv_json()
@@ -133,17 +134,15 @@ class Manager(object):
 #                    self.confport.send_json(configmsg)
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
-#                    print "====> Sending status"
                     msg = self.statussock.recv()
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 
                 if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
-#                    print "==> receiving pubs from sds"
                     msg = self.sub_slaved_port.recv_json()
                     log.debug("Status received: %s"%msg)
                     self.handle_slavedriver_status(msg)
 
-        except (KeyboardInterrupt, SystemExit) as e:
+        except KeyboardInterrupt as e:
             log.warning("Manager coming down due to %s"%e)
         except ZMQError as z:
             log.error("Failed messaging: %s"%z)
@@ -193,7 +192,7 @@ class Manager(object):
             self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.statussock, zmq.POLLOUT|zmq.POLLIN)
-            self.poller.register(self.sub_slaved_port, zmq.POLLIN)
+            self.poller.register(self.sub_slaved_port, zmq.POLLIN|zmq.POLLOUT)
         except ZMQError as z:
             log.error("Failed Binding ports: %s"%z)
             sys.exit(1)
@@ -265,8 +264,9 @@ class Manager(object):
         """
         Start slavedrivers on slavenodes
         """
-        log.debug("About to start %s slavedriver(s)"%(len(self.nodes)))
-        execute(spawn_slave,hosts=self.nodes, masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
+        nodes = set(self.nodes) #avoid duplicate ips
+        log.debug("About to start %s slavedriver(s)"%(len(nodes)))
+        execute(spawn_slave,hosts=list(nodes), masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
 
 def spawn_slave(masteruri):
     """
@@ -274,7 +274,7 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s'%(masteruri)])
+    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s'%(masteruri)])
     log.debug("Spawned Slavedriver.")
 
 
@@ -305,7 +305,7 @@ if  __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='count',
         help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
     args = parser.parse_args()
-    if args.verbose == None:
+    if args.verbose is None:
         log.setLevel(logging.ERROR)
     elif args.verbose == 1:
         log.setLevel(logging.WARNING)

@@ -39,7 +39,6 @@ class SlaveDriver(object):
         self.context = zmq.Context(1)
         self.pullconf = self.context.socket(zmq.REQ)
         self.pullconf.connect("tcp://%s"%(self.master_uri))
-#        self.pullconf.send("slavedriver")
         self.pullconf.send_json({"type":"slavedriver","pid":self.pid,"ip":self.ipaddress,
                                  "system":{"cpus":cpu_count(),"memory":psutil.phymem_usage()}})
         try:
@@ -53,6 +52,7 @@ class SlaveDriver(object):
             log.error("Could Not fetch configuration from Manager!")
             self.pullconf.close()
             self.pullsock.close()
+            self.pubsock.close()
             self.context.term()
             sys.exit()
         except KeyError:
@@ -86,14 +86,15 @@ class SlaveDriver(object):
                     print "Slavedriver listening... ",msg
                     msg = self.pullsock.recv_json(zmq.NOBLOCK)
                     print "Slavedriver got ",msg
-                    log.info("Slavedriver got %s"%msg)
+                    log.debug("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
                     self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,'status':"Alive"})
                 loops += 1
         except ZMQError:
             log.error("No message to receive...")
-        except (KeyboardInterrupt,SystemExit):
+        except KeyboardInterrupt:
             log.warning("Shutting down...")
+        finally:
             self.pullconf.close()
             self.pullsock.close()
             self.pubsock.close()
