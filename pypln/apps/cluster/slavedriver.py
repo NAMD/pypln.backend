@@ -51,13 +51,21 @@ class SlaveDriver(object):
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
             self.pullconf.close()
+            self.context.term()
+            sys.exit()
+        except KeyboardInterrupt:
+            self.pullconf.close()
+            self.pullsock.close()
+            self.pubsock.close()
+            self.context.term()
+        except KeyError:
+            log.error("Defective slavedriver configuration file (missing key)")
+            self.pullconf.close()
             self.pullsock.close()
             self.pubsock.close()
             self.context.term()
             sys.exit()
-        except KeyError:
-            log.error("Defective slavedriver configuration file (missing key)")
-            print self.localconf
+
 
         # Setup the poller
         try:
@@ -101,6 +109,11 @@ class SlaveDriver(object):
             self.context.term()
             sys.exit()
 
+def main():
+    with daemon.DaemonContext():
+        SD = SlaveDriver(master_uri=sys.argv[1])
+        SD.listen(0)
+
 def get_ipv4_address():
     """
     Returns IPv4 address(es) of current machine.
@@ -116,10 +129,11 @@ def get_ipv4_address():
     return resp[0]
 
 if __name__=='__main__':
+    import daemon
     if len(sys.argv) < 2:
         sys.exit(1)
-    SD = SlaveDriver(master_uri=sys.argv[1])
-    SD.listen(0)
+    main()
+
 
 
 

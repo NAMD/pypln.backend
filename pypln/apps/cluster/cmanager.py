@@ -274,7 +274,7 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s'%(masteruri)])
+    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s&'%(masteruri)])
     log.debug("Spawned Slavedriver.")
 
 
