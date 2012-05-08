@@ -64,7 +64,8 @@ import argparse
 from zmq.devices import ProcessDevice, ThreadDevice
 from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
 import multiprocessing
-from mongoengine import connect
+#from mongoengine import connect
+from pymongo import Connection
 import socket, subprocess, re
 import sys, os, signal, atexit
 import time
@@ -79,7 +80,6 @@ log = make_log("Manager")
 global streamerpid
 streamerpid = None
 
-connect('pypln_cluster_stats')
 
 class Manager(object):
     def __init__(self, configfile='/etc/pypln.conf',bootstrap=True):
@@ -99,6 +99,8 @@ class Manager(object):
         self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
+        self.connection = Connection()
+        self.db = self.connection['PYPLN']
 
         self.bind()
 
@@ -225,7 +227,12 @@ class Manager(object):
         :param msg:
         :return:
         """
-        self.node_registry[msg['ip']]['last_reported'] = datetime.datetime.now().isoformat()
+        time_stamp = datetime.datetime.now()
+        time_stamp_text = datetime.datetime.now().isoformat()
+        self.node_registry[msg['ip']]['last_reported'] = time_stamp_text
+        mongomsg = self.node_registry[msg['ip']]
+        mongomsg['last_reported'] = time_stamp
+        self.db.Stats.insert(mongomsg)
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 

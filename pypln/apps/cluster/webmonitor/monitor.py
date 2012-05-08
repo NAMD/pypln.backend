@@ -13,7 +13,7 @@ import zmq
 from flask import Flask,request, jsonify, make_response, render_template, flash, redirect, url_for, session, escape, g
 from mongoengine import connect
 
-connect('pypln_cluster_stats')
+connect('PYPLN')
 
 
 app = Flask(__name__)
