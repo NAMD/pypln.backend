@@ -74,7 +74,7 @@ import logging
 from logger import make_log, make_mongolog
 
 # Setting up the logger
-log = make_mongolog("Manager")
+log = make_log("Manager")
 
 
 global streamerpid
