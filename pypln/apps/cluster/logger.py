@@ -30,3 +30,9 @@ def make_log(name):
     log.addHandler(handler)
     #TODO: Maybe use zmq.loghandler
     return log
+
+def make_mongolog(name):
+    log = logging.getLogger(name)
+    log.setLevel(logging.DEBUG)
+    log.addHandler(MongoHandler(host='localhost',database_name='PYPLN'))
+    return log
