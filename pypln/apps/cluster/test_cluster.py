@@ -138,7 +138,7 @@ class TestSlavedriverInst(unittest.TestCase):
         os.kill(self.managerproc.pid,signal.SIGTERM)
         self.managerproc.terminate()
         os.kill(self.managerproc.pid,signal.SIGKILL)
-#        time.sleep(12)
+
 
     def test_fetch_conf(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
@@ -154,7 +154,7 @@ class TestSlavedriverInst(unittest.TestCase):
 
     def test_handle_checkin(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
-        SD.listen(3)
+        SD.listen(5)
         time.sleep(2)
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
