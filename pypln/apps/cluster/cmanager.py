@@ -71,10 +71,10 @@ import sys, os, signal, atexit
 import time
 import datetime
 import logging
-from logger import make_log
+from logger import make_log, make_mongolog
 
 # Setting up the logger
-log = make_log("Manager")
+log = make_mongolog("Manager")
 
 
 global streamerpid

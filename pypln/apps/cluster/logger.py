@@ -11,6 +11,7 @@ __docformat__ = "restructuredtext en"
 
 import logging
 import logging.handlers
+from log4mongo.handlers import MongoHandler
 
 # Setting up the logger
 
