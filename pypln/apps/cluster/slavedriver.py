@@ -46,7 +46,7 @@ class SlaveDriver(object):
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
             self.pubsock = self.context.socket(zmq.PUB)
-            self.pubsock.bind("tcp://*:%s"%(self.localconf['pubport']))
+            self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
             log.debug('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
         except ZMQError:
             log.error("Could Not fetch configuration from Manager!")
@@ -109,12 +109,14 @@ class SlaveDriver(object):
             self.context.term()
             sys.exit()
 
-def main(d=True):
+def main(d=False):
     """
 
     :param d: Flag to specify if the process should be daemonized or not
     :return:
     """
+    if len(sys.argv) < 2:
+        sys.exit("Master URI not specified")
     if d:
         with daemon.DaemonContext():
             SD = SlaveDriver(master_uri=sys.argv[1])

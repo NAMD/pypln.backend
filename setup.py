@@ -19,13 +19,13 @@ setup(name='pypln',
         description = 'Natural Language Processing Pipeline',
         zip_safe = True,
         entry_points = {
-            'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager',
-                               'slavedriver = pypln.apps.cluster.slavedriver',
-                               'pypln-monitor = pypln.apps.cluster.webmonitor.monitor'
+            'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager:main',
+                               'slavedriver = pypln.apps.cluster.slavedriver:main',
+                               'pypln-monitor = pypln.apps.cluster.webmonitor.monitor',
             ]
         },
         packages = find_packages(),
-        install_requires = ["SQLAlchemy", "pyzmq", "pymongo","chardet>=1.0.1","nltk","lxml>=2.3.1","fabric","mongoengine"],
+        install_requires = ["SQLAlchemy", "pyzmq", "pymongo","chardet>=1.0.1","nltk","lxml>=2.3.1","fabric","mongoengine", "psutil"],
         test_suite = 'nose.collector', 
         license = 'GPL',  
       )

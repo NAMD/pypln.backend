@@ -88,6 +88,7 @@ class Manager(object):
         :param configfile: path to pypln.conf
         :param bootstrap: if a cluster should be bootstrapped upon instantiation
         """
+        self.pid = os.getpid()
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
@@ -275,9 +276,7 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    frun('./slavedriver.py','tcp://%s &'%(masteruri,))
-#    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s&'%(masteruri)])
-#    sdproc.wait()
+    frun('nohup slavedriver tcp://%s &'%(masteruri,))
     log.debug("Spawned Slavedriver.")
 
 
@@ -300,6 +299,25 @@ def get_ipv4_address():
         log.warning("Couldn't determine IP Address, using 127.0.0.1.")
         return '127.0.0.1'
     return resp[0]
+
+def main():
+    parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
+    parser.add_argument('--conf', '-c', help="Config file",required=True)
+    parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")
+    parser.add_argument('--verbose', '-v', action='count',
+        help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
+    args = parser.parse_args()
+    if args.verbose is None:
+        log.setLevel(logging.ERROR)
+    elif args.verbose == 1:
+        log.setLevel(logging.WARNING)
+    elif args.verbose == 2:
+        log.setLevel(logging.INFO)
+    elif args.verbose >= 3:
+        log.setLevel(logging.DEBUG)
+    M = Manager(configfile=args.conf,bootstrap=args.nosetup)
+    M.run()
+
 
 if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
