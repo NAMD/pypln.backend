@@ -138,9 +138,10 @@ class Manager(object):
 #                    self.confport.send_json(configmsg)
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
-#                    print "status"
                     msg = self.statussock.recv()
+
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
+                    print msg,self.node_registry
 
                 if self.sub_slavedriver_sock in socks and socks[self.sub_slavedriver_sock] == zmq.POLLIN:
 #                    print "SD"
@@ -224,8 +225,9 @@ class Manager(object):
         :param msg:
         :return:
         """
-        self.node_registry[msg['ip']]['last_reported'] = datetime.datetime.now()
+        self.node_registry[msg['ip']]['last_reported'] = datetime.datetime.now().isoformat()
         log.debug('Saved status msg from %s'%msg['ip'])
+#        print self.node_registry
 
 
     def __bootstrap_cluster(self):

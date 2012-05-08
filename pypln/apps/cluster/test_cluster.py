@@ -41,8 +41,8 @@ class TestManagerComm(unittest.TestCase):
         self.req_sock.close()
         self.status_sock.close()
         self.pull_from_streamer_sock.close()
-        os.kill(self.managerproc.pid,signal.SIGINT)
-        os.kill(self.sdproc.pid,signal.SIGINT)
+        os.kill(self.managerproc.pid,signal.SIGKILL)
+        os.kill(self.sdproc.pid,signal.SIGKILL)
         self.managerproc.terminate()
         self.sdproc.terminate()
         self.context.term()
@@ -83,11 +83,12 @@ class TestManagerComm(unittest.TestCase):
 
     def test_get_SD_status(self):
         # trying to get SD status
+        time.sleep(2)
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
         self.assertTrue(isinstance(msg['cluster'],dict))
         print msg
-        self.assertTrue(msg['cluster'].has_key('last_reported'))
+        self.assertTrue(len(msg['cluster'])>0)
 
 
 
@@ -134,8 +135,9 @@ class TestSlavedriverInst(unittest.TestCase):
     def tearDown(self):
         self.status_sock.close()
         self.context.term()
-        os.kill(self.managerproc.pid,signal.SIGINT)
+        os.kill(self.managerproc.pid,signal.SIGTERM)
         self.managerproc.terminate()
+        os.kill(self.managerproc.pid,signal.SIGKILL)
 #        time.sleep(12)
 
     def test_fetch_conf(self):
@@ -153,6 +155,7 @@ class TestSlavedriverInst(unittest.TestCase):
     def test_handle_checkin(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
         SD.listen(3)
+        time.sleep(2)
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
         self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])

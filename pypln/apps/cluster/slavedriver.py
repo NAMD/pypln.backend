@@ -101,12 +101,12 @@ class SlaveDriver(object):
             while loops != n: # Needed for finite runs in testing situations
                 socks = dict(self.poller.poll())
                 if self.pullsock in socks and socks[self.pullsock] == zmq.POLLIN:
-                    print "Slavedriver listening... ",msg
+#                    print "Slavedriver listening... ",msg
                     msg = self.pullsock.recv_json(zmq.NOBLOCK)
-                    print "Slavedriver got ",msg
+#                    print "Slavedriver got ",msg
                     log.debug("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
-                    print "sent msg... ", loops
+#                    print "sent msg... ", loops
                     self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,
                                             'status':{'cpu':self.process.get_cpu_percent(),
                                                       'memory':self.process.get_memory_percent()},
