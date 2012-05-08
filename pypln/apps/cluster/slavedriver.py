@@ -109,8 +109,17 @@ class SlaveDriver(object):
             self.context.term()
             sys.exit()
 
-def main():
-    with daemon.DaemonContext():
+def main(d=True):
+    """
+
+    :param d: Flag to specify if the process should be daemonized or not
+    :return:
+    """
+    if d:
+        with daemon.DaemonContext():
+            SD = SlaveDriver(master_uri=sys.argv[1])
+            SD.listen(0)
+    else:
         SD = SlaveDriver(master_uri=sys.argv[1])
         SD.listen(0)
 
@@ -132,7 +141,7 @@ if __name__=='__main__':
     import daemon
     if len(sys.argv) < 2:
         sys.exit(1)
-    main()
+    main(False)
 
 
 

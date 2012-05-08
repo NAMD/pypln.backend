@@ -57,6 +57,7 @@ __docformat__ = "restructuredtext en"
 
 import ConfigParser
 from fabric.api import local, abort, execute
+from fabric.api import run as frun
 import zmq
 from zmq.core.error import ZMQError
 import argparse
@@ -274,7 +275,9 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s&'%(masteruri)])
+    frun('./slavedriver.py','tcp://%s &'%(masteruri,))
+#    sdproc = subprocess.Popen(['nohup','./slavedriver.py','tcp://%s&'%(masteruri)])
+#    sdproc.wait()
     log.debug("Spawned Slavedriver.")
 
 
