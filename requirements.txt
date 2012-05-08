@@ -5,3 +5,4 @@ pymongo
 psutil
 flask
 mongoengine
+log4mongo
