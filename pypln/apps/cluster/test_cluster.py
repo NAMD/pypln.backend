@@ -112,13 +112,6 @@ class TestManagerInst(unittest.TestCase):
 
 
 
-
-
-#    def test_bootstrap_cluster(self):
-#        M = Manager('pypln.test.conf',True)
-
-
-
 class TestSlavedriverInst(unittest.TestCase):
     """
     tests related with Slavedriver class instantiation
@@ -152,14 +145,14 @@ class TestSlavedriverInst(unittest.TestCase):
         print cons
         self.assertTrue(len(cons)>=5)
 
-    def test_handle_checkin(self):
-        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
-        SD.listen(5)
-        time.sleep(2)
-        self.status_sock.send("status")
-        msg = self.status_sock.recv_json()
-        self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
-        self.assertTrue(msg['cluster'][SD.ipaddress].has_key('last_reported'),"Manager did not get status message")
+#    def test_handle_checkin(self):
+#        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+#        SD.listen(5)
+#        time.sleep(2)
+#        self.status_sock.send("status")
+#        msg = self.status_sock.recv_json()
+#        self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
+#        self.assertTrue(msg['cluster'][SD.ipaddress].has_key('last_reported'),"Manager did not get status message")
 
 
 
