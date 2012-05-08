@@ -38,7 +38,7 @@ class PDFConverterWorker(PushPullWorker):
             if not (stdout and metadata):
                 msgout = {'fail':1}
             else:
-                if not (stderr or mderr):
+                if not stderr and not mderr:
                     msgout = {'filename':pdf.filename,'text':stdout.strip(),'file_metadata':metadata,
                               'database':msg['database'],'collection':msg['collection']}
                 else:
@@ -51,8 +51,8 @@ class PDFConverterWorker(PushPullWorker):
             msgout = {'fail':1}
         finally:
             self.sender.send_json(msgout)
-        return
-        # Assumes encoding is utf-8 which is not guaranteed. Although pdftotext attempts to convert to utf-8 it may not work.
+        return msgout
+        # Assumes encoding is utf-8, which is not guaranteed. Although pdftotext attempts to convert to utf-8 it may not work.
 
 
 
