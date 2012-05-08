@@ -117,18 +117,20 @@ class Manager(object):
         :return:
         """
         log.debug("Starting run loop")
+#        print "Starting run loop"
         try:
             while self.stayalive:
                 socks = dict(self.poller.poll())
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
+#                    print "monitor"
                     jobmsg = self.monitor.recv_json()
                     self.process_jobs(jobmsg)
                     self.monitor.send_json({'ans':'Job queued'})
 #                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
-#                    pass
 ##                    self.monitor.send_json("{ans:'Job queued'}")
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
+#                    print "conf"
                     msg = self.confport.recv_json()
                     configmsg = self.handle_checkins(msg)
                     self.confport.send_json(configmsg)
@@ -136,13 +138,17 @@ class Manager(object):
 #                    self.confport.send_json(configmsg)
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
+#                    print "status"
                     msg = self.statussock.recv()
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
 
-                if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
-                    msg = self.sub_slaved_port.recv_json()
+                if self.sub_slavedriver_sock in socks and socks[self.sub_slavedriver_sock] == zmq.POLLIN:
+#                    print "SD"
+                    msg = self.sub_slavedriver_sock.recv_json()
+#                    print msg
                     log.debug("Status received: %s"%msg)
                     self.handle_slavedriver_status(msg)
+
 
         except KeyboardInterrupt as e:
             log.warning("Manager coming down due to %s"%e)
@@ -156,7 +162,7 @@ class Manager(object):
             self.confport.close()
             self.pusher.close()
             self.statussock.close()
-            self.sub_slaved_port.close()
+            self.sub_slavedriver_sock.close()
             self.context.term()
 #            if self.streamerdevice:
 #                self.streamerdevice.join()
@@ -182,10 +188,10 @@ class Manager(object):
             self.pusher = self.context.socket(zmq.PUSH)
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             # Socket to subscribe to subscribe to multiple slavedrivers publishing status messages
-            self.sub_slaved_port = self.context.socket(zmq.SUB)
+            self.sub_slavedriver_sock = self.context.socket(zmq.SUB)
             for node in self.nodes:
-                self.sub_slaved_port.connect("tcp://%s:%s"%(node,self.localconf['sd_subport']))
-            self.sub_slaved_port.setsockopt(zmq.SUBSCRIBE, "")
+                self.sub_slavedriver_sock.connect("tcp://%s:%s"%(node,self.localconf['sd_subport']))
+                self.sub_slavedriver_sock.setsockopt(zmq.SUBSCRIBE, "")
             # Socket to send manager status reports
             self.statussock = self.context.socket(zmq.REP)
             self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
@@ -194,7 +200,7 @@ class Manager(object):
             self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.statussock, zmq.POLLOUT|zmq.POLLIN)
-            self.poller.register(self.sub_slaved_port, zmq.POLLIN|zmq.POLLOUT)
+            self.poller.register(self.sub_slavedriver_sock, zmq.POLLIN|zmq.POLLOUT)
         except ZMQError as z:
             log.error("Failed Binding ports: %s"%z)
             sys.exit(1)
@@ -276,7 +282,7 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    frun('nohup slavedriver tcp://%s &'%(masteruri,))
+    frun('nohup slavedriver %s &'%(masteruri,))
     log.debug("Spawned Slavedriver.")
 
 

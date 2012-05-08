@@ -26,6 +26,13 @@ def dashboard():
     logs.reverse() # Latest entries first
     return render_template('index.html',logs=logs)
 
+def get_cluster_stats():
+    """
+    Return status data about the cluster, such as list of nodes, network status, overall load, etc.
+    :return: JSON object with the data fetched from Mongodb
+    """
+    pass
+
 
 if __name__ == "__main__":
     app.run()

@@ -29,8 +29,7 @@ class TestManagerComm(unittest.TestCase):
         streamerpushport = int(self.config.get('streamer','pushport'))
 #        print "==> ",statusport
         self.managerproc = subprocess.Popen(['./cmanager.py', '-c','pypln.test.conf','--nosetup'])
-
-        self.sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s:%s'%(localip,confport)])
+        self.sdproc = subprocess.Popen(['./slavedriver.py','%s:%s'%(localip,confport)])
         self.context = zmq.Context()
         self.req_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, replyport))
         self.status_sock = zmqtesting.make_sock(context=self.context, sock_type=zmq.REQ, connect=(localip, statusport))
@@ -82,13 +81,13 @@ class TestManagerComm(unittest.TestCase):
         msg = self.pull_from_streamer_sock.recv_json()
         self.assertTrue(msg.has_key('jobid'))
 
-#    def test_get_SD_status(self):
-#        # trying to get SD status
-#        self.status_sock.send("status")
-#        msg = self.status_sock.recv_json()
-#        self.assertTrue(isinstance(msg['cluster'],dict))
-#        print msg
-#        self.assertTrue(msg['cluster'].has_key('last_reported'))
+    def test_get_SD_status(self):
+        # trying to get SD status
+        self.status_sock.send("status")
+        msg = self.status_sock.recv_json()
+        self.assertTrue(isinstance(msg['cluster'],dict))
+        print msg
+        self.assertTrue(msg['cluster'].has_key('last_reported'))
 
 
 
@@ -102,6 +101,7 @@ class TestManagerInst(unittest.TestCase):
         self.assertTrue(M.config.has_section('slavedriver'))
         self.assertTrue(M.config.has_section('worker'))
         self.assertTrue(M.config.has_section('sink'))
+
     def test_socket_binding(self):
         M = Manager('pypln.test.conf',False)
         p = psutil.Process(M.pid)
@@ -143,9 +143,16 @@ class TestSlavedriverInst(unittest.TestCase):
         self.assertTrue(isinstance(SD.localconf,dict))
         self.assertTrue(SD.localconf.has_key('master_ip'))
 
+    def test_socket_binding(self):
+        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+        p = psutil.Process(SD.pid)
+        cons = p.get_connections()
+        print cons
+        self.assertTrue(len(cons)>=5)
+
     def test_handle_checkin(self):
         SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
-        SD.listen(300)
+        SD.listen(3)
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
         self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])

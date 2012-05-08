@@ -33,8 +33,10 @@ class SlaveDriver(object):
         :param opts: dictionary with parameters from pypln.conf
         :return:
         """
+        print master_uri
         self.master_uri = master_uri
         self.pid = os.getpid()
+        self.process = psutil.Process(self.pid)
         self.ipaddress = get_ipv4_address()
         self.context = zmq.Context(1)
         self.pullconf = self.context.socket(zmq.REQ)
@@ -45,6 +47,8 @@ class SlaveDriver(object):
             self.localconf = self.pullconf.recv_json()
             self.pullsock = self.context.socket(zmq.PULL)
             self.pullsock.connect("tcp://%s:%s"%(self.localconf['master_ip'],self.localconf['pullport']))
+            self.pushsock = self.context.socket(zmq.PUSH)
+            self.pushsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
             self.pubsock = self.context.socket(zmq.PUB)
             self.pubsock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['pubport']))
             log.debug('Slavedriver %s started on %s'%(self.pid,self.ipaddress))
@@ -54,14 +58,19 @@ class SlaveDriver(object):
             self.context.term()
             sys.exit()
         except KeyboardInterrupt:
-            self.pullconf.close()
-            self.pullsock.close()
-            self.pubsock.close()
+            try:
+                self.pullconf.close()
+                self.pullsock.close()
+                self.pushsock.close()
+                self.pubsock.close()
+            except AttributeError:
+                pass
             self.context.term()
         except KeyError:
             log.error("Defective slavedriver configuration file (missing key)")
             self.pullconf.close()
             self.pullsock.close()
+            self.pushsock.close()
             self.pubsock.close()
             self.context.term()
             sys.exit()
@@ -71,6 +80,7 @@ class SlaveDriver(object):
         try:
             self.poller = zmq.Poller()
             self.poller.register(self.pullsock, zmq.POLLIN)
+#            self.poller.register(self.pushsock,zmq.POLLOUT)
             self.poller.register(self.pubsock,zmq.POLLOUT)
         except ZMQError:
             log.error("Failed to start poller")
@@ -96,7 +106,11 @@ class SlaveDriver(object):
                     print "Slavedriver got ",msg
                     log.debug("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
-                    self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,'status':"Alive"})
+                    print "sent msg... ", loops
+                    self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,
+                                            'status':{'cpu':self.process.get_cpu_percent(),
+                                                      'memory':self.process.get_memory_percent()},
+                    })
                 loops += 1
         except ZMQError:
             log.error("No message to receive...")
