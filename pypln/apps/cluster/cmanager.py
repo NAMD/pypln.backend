@@ -141,7 +141,6 @@ class Manager(object):
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
                     msg = self.statussock.recv()
-
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     print msg,self.node_registry
 
@@ -230,9 +229,7 @@ class Manager(object):
         time_stamp = datetime.datetime.now()
         time_stamp_text = datetime.datetime.now().isoformat()
         self.node_registry[msg['ip']]['last_reported'] = time_stamp_text
-        mongomsg = self.node_registry[msg['ip']]
-        mongomsg['last_reported'] = time_stamp
-        self.db.Stats.insert(mongomsg)
+        self.db.Stats.insert({'cluster':self.node_registry,'active jobs':self.active_jobs,'time_stamp':time_stamp})
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 

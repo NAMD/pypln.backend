@@ -12,7 +12,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='pypln', 
-        version  = '0.3',
+        version  = '0.3.1',
         author = 'Flávio Codeço Coelho', 
         author_email = 'fccoelho@gmail.com', 
         url = 'http://code.google.com/p/pypln/',
@@ -21,7 +21,7 @@ setup(name='pypln',
         entry_points = {
             'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager:main',
                                'slavedriver = pypln.apps.cluster.slavedriver:main',
-                               'pypln-monitor = pypln.apps.cluster.webmonitor.monitor',
+                               'pypln-monitor = pypln.Monitors.webmonitor.monitor',
             ]
         },
         packages = find_packages(),

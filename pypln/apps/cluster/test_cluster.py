@@ -85,6 +85,7 @@ class TestManagerComm(unittest.TestCase):
         # trying to get SD status
         time.sleep(2)
         self.status_sock.send("status")
+        time.sleep(1)
         msg = self.status_sock.recv_json()
         self.assertTrue(isinstance(msg['cluster'],dict))
         print msg

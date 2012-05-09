@@ -11,13 +11,15 @@ __docformat__ = "restructuredtext en"
 
 import zmq
 from flask import Flask,request, jsonify, make_response, render_template, flash, redirect, url_for, session, escape, g
-from mongoengine import connect
+from pymongo import Connection
 
-connect('PYPLN')
+
 
 
 app = Flask(__name__)
 app.config.from_pyfile('monitor.cfg')
+
+Db = Connection()[app.config['Database']]
 
 @app.route("/")
 def dashboard():
@@ -31,7 +33,8 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    pass
+    stats = Db.Stats.find().sort({"last_reported":-1})
+
 
 
 if __name__ == "__main__":
