@@ -69,6 +69,7 @@ from pymongo import Connection
 import socket, subprocess, re
 import sys, os, signal, atexit
 import time
+import json
 import datetime
 import logging
 from logger import make_log, make_mongolog
@@ -99,8 +100,7 @@ class Manager(object):
         self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
-        self.connection = Connection()
-        self.db = self.connection['PYPLN']
+        self.db = Connection(host='localhost').PYPLN
 
         self.bind()
 
@@ -141,6 +141,7 @@ class Manager(object):
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
                     msg = self.statussock.recv()
+#                    json.dumps({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     print msg,self.node_registry
 
@@ -217,19 +218,20 @@ class Manager(object):
         if msg['type'] == 'slavedriver':
             configmsg = dict(self.config.items('slavedriver'))
             configmsg['master_ip'] = self.ipaddress
-            self.node_registry[msg['ip']] = msg
+            self.node_registry[msg['ip'].replace('.',' ')] = msg #Mongodb doesn't accept keys containing '.'
         return configmsg
 
     def handle_slavedriver_status(self,msg):
         """
-
-        :param msg:
+        Updates self.node_registry and copies it to Mongodb: PYPLN.Stats
+        :param msg: Report from slavedriver processes
         :return:
         """
-        time_stamp = datetime.datetime.now()
         time_stamp_text = datetime.datetime.now().isoformat()
-        self.node_registry[msg['ip']]['last_reported'] = time_stamp_text
-        self.db.Stats.insert({'cluster':self.node_registry,'active jobs':self.active_jobs,'time_stamp':time_stamp})
+        msg['time_stamp'] = time_stamp_text
+        self.node_registry[msg['ip'].replace('.',' ')]['last_report'] = msg
+        log.debug("updated node_registry %s"%self.node_registry)
+        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":datetime.datetime.now()})
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 

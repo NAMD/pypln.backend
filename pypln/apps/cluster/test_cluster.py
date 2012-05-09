@@ -83,9 +83,8 @@ class TestManagerComm(unittest.TestCase):
 
     def test_get_SD_status(self):
         # trying to get SD status
-        time.sleep(2)
         self.status_sock.send("status")
-        time.sleep(1)
+
         msg = self.status_sock.recv_json()
         self.assertTrue(isinstance(msg['cluster'],dict))
         print msg
@@ -146,14 +145,14 @@ class TestSlavedriverInst(unittest.TestCase):
         print cons
         self.assertTrue(len(cons)>=5)
 
-#    def test_handle_checkin(self):
-#        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
-#        SD.listen(5)
-#        time.sleep(2)
-#        self.status_sock.send("status")
-#        msg = self.status_sock.recv_json()
-#        self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
-#        self.assertTrue(msg['cluster'][SD.ipaddress].has_key('last_reported'),"Manager did not get status message")
+    def test_handle_checkin(self):
+        SD = SlaveDriver(self.localip+":"+self.config.get('manager','conf_reply'))
+        SD.listen(5)
+        time.sleep(2)
+        self.status_sock.send("status")
+        msg = self.status_sock.recv_json()
+        self.assertEqual(SD.pid,msg['cluster'][SD.ipaddress]['pid'])
+        self.assertTrue(msg['cluster'][SD.ipaddress].has_key('last_reported'),"Manager did not get status message")
 
 
 
