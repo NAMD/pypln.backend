@@ -9,15 +9,12 @@ license: GPL V3 or Later
 __docformat__ = 'restructuredtext en'
 
 import zmq
-import sys, atexit
-import subprocess
 import sys
+import subprocess
 from multiprocessing import cpu_count
 import re
-from pypln.servers import baseapp
-import logging
 from zmq.core.error import ZMQError
-from logger import make_log
+from pypln.logger import make_log
 import os
 import psutil
 

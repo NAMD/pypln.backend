@@ -56,23 +56,20 @@ __date__ = 4 / 23 / 12
 __docformat__ = "restructuredtext en"
 
 import ConfigParser
-from fabric.api import local, abort, execute
+from fabric.api import   execute
 from fabric.api import run as frun
 import zmq
 from zmq.core.error import ZMQError
 import argparse
-from zmq.devices import ProcessDevice, ThreadDevice
-from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
-import multiprocessing
+from zmq.devices import  ThreadDevice
 #from mongoengine import connect
 from pymongo import Connection
-import socket, subprocess, re
-import sys, os, signal, atexit
+import  subprocess, re
+import sys, os
 import time
-import json
 import datetime
 import logging
-from logger import make_log, make_mongolog
+from pypln.logger import make_log
 
 # Setting up the logger
 log = make_log("Manager")
