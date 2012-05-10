@@ -30,7 +30,7 @@ class SlaveDriver(object):
         :param opts: dictionary with parameters from pypln.conf
         :return:
         """
-        print master_uri
+#        print master_uri
         self.master_uri = master_uri
         self.pid = os.getpid()
         self.process = psutil.Process(self.pid)

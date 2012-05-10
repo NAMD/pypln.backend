@@ -224,11 +224,11 @@ class Manager(object):
         :param msg: Report from slavedriver processes
         :return:
         """
-        time_stamp_text = datetime.datetime.now().isoformat()
-        msg['time_stamp'] = time_stamp_text
+        time_stamp = datetime.datetime.now()
+        msg['time_stamp'] = time_stamp.isoformat()
         self.node_registry[msg['ip'].replace('.',' ')]['last_report'] = msg
         log.debug("updated node_registry %s"%self.node_registry)
-        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":time_stamp_text})
+        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":time.mktime(time_stamp.timetuple())})
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 

@@ -13,6 +13,7 @@ import zmq
 from flask import Flask,request, jsonify,json, make_response, render_template, flash, redirect, url_for, session, escape, g
 from pymongo import Connection
 import datetime
+import time
 
 
 
@@ -35,7 +36,7 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    stats = Db.Stats.find(fields=['cluster','active_jobs']).sort("time_stamp",-1)
+    stats = Db.Stats.find(fields=['cluster','active_jobs']).sort("time_stamp",-1).limit(100)
     e = []
     for d in stats:
         d.pop('_id')
@@ -49,11 +50,12 @@ def get_logs():
     Get log entries from Mongo and return in a JSON object
     :return: JSON object
     """
-    logs = Db.logs.find(fields=['asctime','loggerName','level','message']).sort("timestamp",-1).limit(10)
+    logs = Db.logs.find(fields=['timestamp','loggerName','level','message']).sort("timestamp",-1).limit(10)
     l = []
     for i in logs:
         i.pop('_id')
-        i['asctime'] = i['asctime'].split(',')[0].strip()
+        #converting to javascript timestamps which are in milisecconds
+        i['timestamp'] = time.mktime(i['timestamp'].as_datetime().timetuple())*1000
         l.append(i)
     return jsonify(logs=l)
 

@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
+    <title>PyPLN Cluster Monitoring</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -30,7 +30,7 @@
     <link rel="apple-touch-icon-precomposed" href="../static/ico/apple-touch-icon-57-precomposed.png">
   </head>
 
-  <body onload="update()">
+  <body>
 
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -56,7 +56,7 @@
 
       <!-- Main hero unit for a primary marketing message or call to action -->
       <div class="hero-unit">
-        <h2>System Load</h2>
+        <h2>Cluster Load</h2>
         <div id="placeholder" style="width:600px;height:300px;"></div>
 
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
@@ -135,6 +135,7 @@
     <!--<script src="../static/js/bootstrap-carousel.js"></script>-->
     <!--<script src="../static/js/bootstrap-typeahead.js"></script>-->
     <script type="text/javascript">
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
         $(function () {
             // we use an inline data source in the example, usually data would
             // be fetched from a server
@@ -190,7 +191,6 @@
 
                 setTimeout(update, updateInterval);
             }
-
             update();
         });
 </script>
