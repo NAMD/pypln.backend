@@ -35,5 +35,6 @@ def make_log(name):
 def make_mongolog(name):
     log = logging.getLogger(name)
     log.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     log.addHandler(MongoHandler(host='localhost',database_name='PYPLN'))
     return log

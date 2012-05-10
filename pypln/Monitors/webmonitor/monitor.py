@@ -12,6 +12,7 @@ __docformat__ = "restructuredtext en"
 import zmq
 from flask import Flask,request, jsonify,json, make_response, render_template, flash, redirect, url_for, session, escape, g
 from pymongo import Connection
+import datetime
 
 
 
@@ -19,7 +20,7 @@ from pymongo import Connection
 app = Flask(__name__)
 app.config.from_pyfile('monitor.cfg')
 
-Db = Connection()[app.config['Database']]
+Db = Connection()[app.config['DATABASE']]
 
 @app.route("/")
 def dashboard():
@@ -28,14 +29,27 @@ def dashboard():
     logs.reverse() # Latest entries first
     return render_template('index.html',logs=logs)
 
-@app.route("_get_stats")
+@app.route("/_get_stats")
 def get_cluster_stats():
     """
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    stats = Db.Stats.find().sort({"time_stamp":-1})
-    return jsonify(stats.items())
+    stats = Db.Stats.find(fields=['cluster','active_jobs']).sort("time_stamp",-1)
+    e = []
+    for d in stats:
+        d.pop('_id')
+#        d.pop('time_stamp')
+        e.append(d)
+    return jsonify(entries= e)
+
+@app.route("/_get_logs")
+def get_logs():
+    """
+    Get log entries from Mongo and return in a JSON object
+    :return: JSON object
+    """
+    pass
 
 def get_logs():
     """

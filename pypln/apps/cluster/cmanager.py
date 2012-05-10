@@ -231,7 +231,7 @@ class Manager(object):
         msg['time_stamp'] = time_stamp_text
         self.node_registry[msg['ip'].replace('.',' ')]['last_report'] = msg
         log.debug("updated node_registry %s"%self.node_registry)
-        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":datetime.datetime.now()})
+        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":time_stamp_text})
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 
