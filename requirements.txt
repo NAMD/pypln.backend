@@ -6,3 +6,5 @@ psutil
 flask
 mongoengine
 log4mongo
+epydoc
+sphinx
