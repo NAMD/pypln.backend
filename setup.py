@@ -21,7 +21,7 @@ setup(name='pypln',
         entry_points = {
             'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager:main',
                                'slavedriver = pypln.apps.cluster.slavedriver:main',
-                               'pypln-monitor = pypln.Monitors.webmonitor.monitor',
+                               'pypln-monitor = pypln.Monitors.webmonitor.monitor:main',
             ]
         },
         packages = find_packages(),

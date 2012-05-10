@@ -18,7 +18,7 @@ import datetime
 
 
 app = Flask(__name__)
-app.config.from_pyfile('monitor.cfg')
+app.config.from_pyfile('settings.py')
 
 Db = Connection()[app.config['DATABASE']]
 
@@ -49,11 +49,17 @@ def get_logs():
     Get log entries from Mongo and return in a JSON object
     :return: JSON object
     """
-    pass
+    logs = Db.logs.find(fields=['asctime','loggerName','level','message']).sort("timestamp",-1).limit(10)
+    l = []
+    for i in logs:
+        i.pop('_id')
+        i['asctime'] = i['asctime'].split(',')[0].strip()
+        l.append(i)
+    return jsonify(logs=l)
 
 
-
-
+def main():
+    app.run()
 
 if __name__ == "__main__":
-    app.run()
+    main()
