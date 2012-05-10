@@ -55,6 +55,13 @@
     <div class="container">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
+      {% for i in range(nrows) %}
+        <div class="row">
+            <div class="span6"><div id="placeholder{{ i }}" style="width:300px;height:150px;"></div></div>
+            <div class="span6"><div id="placeholder{{ i + 1 }}" style="width:300px;height:150px;"></div></div>
+        </div>
+
+      {% endfor %}
       <div class="hero-unit">
         <h2>Cluster Load</h2>
         <div id="placeholder" style="width:600px;height:300px;"></div>
@@ -139,28 +146,18 @@
         $(function () {
             // we use an inline data source in the example, usually data would
             // be fetched from a server
-            var data = [], totalPoints = 300;
-            function getRandomData() {
-                if (data.length > 0)
-                    data = data.slice(1);
+            function get_ts_data(){
+                var Data = {}
+                $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
+                   Data = data
+                    var plots = []
+                    for ( var i = 0;i<{{ n_nodes }}; i++){
+                        var nnames = [{% for n in nnames %}"{{ n|safe }}"{% endfor %}]
+                        plots.push($.plot($("#placeholder"+i), data[nnames[i]], options))
+                    }});
+                return Data
+            };
 
-                // do a random walk
-                while (data.length < totalPoints) {
-                    var prev = data.length > 0 ? data[data.length - 1] : 50;
-                    var y = prev + Math.random() * 10 - 5;
-                    if (y < 0)
-                        y = 0;
-                    if (y > 100)
-                        y = 100;
-                    data.push(y);
-                }
-
-                // zip the generated y values with the x values
-                var res = [];
-                for (var i = 0; i < data.length; ++i)
-                    res.push([i, data[i]])
-                return res;
-            }
 
             // setup control widget
             var updateInterval = 30;
@@ -180,15 +177,25 @@
             var options = {
                 series: { shadowSize: 0 }, // drawing is faster without shadows
                 yaxis: { min: 0, max: 100 },
-                xaxis: { show: false }
+                xaxis: { show: true ,mode: "time"}
             };
-            var plot = $.plot($("#placeholder"), [ getRandomData() ], options);
+            var plots = []
+
+            for ( var i = 0;i<{{ n_nodes }}; i++){
+                var nnames = [{% for n in nnames %}"{{ n|safe }}"{% endfor %}]
+
+                var node_series =  get_ts_data()
+                alert(node_series["10 250 46 208"])
+                plots.push($.plot($("#placeholder"+i), node_series[nnames[i]], options))
+            }
+
 
             function update() {
-                plot.setData([ getRandomData() ]);
-                // since the axes don't change, we don't need to call plot.setupGrid()
-                plot.draw();
-
+                for ( var i = 0;i<{{ n_nodes }}; i++){
+                    plots[i].setData(get_ts_data()[nnames[i]])
+                    // since the axes don't change, we don't need to call plot.setupGrid()
+                    plots[i].draw()
+                }
                 setTimeout(update, updateInterval);
             }
             update();
