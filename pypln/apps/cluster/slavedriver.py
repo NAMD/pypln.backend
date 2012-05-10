@@ -92,7 +92,7 @@ class SlaveDriver(object):
         Infinite loop listening  form messages from master node and passing them to an app.
         :return:
         """
-        log.debug("Slavedriver %s at %s  Starting listening..."%(self.pid,self.ipaddress))
+        log.debug("Slavedriver %s at %s  Starting listening"%(self.pid,self.ipaddress))
         loops = 1
         try:
             while loops != n: # Needed for finite runs in testing situations

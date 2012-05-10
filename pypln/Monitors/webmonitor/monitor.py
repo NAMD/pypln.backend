@@ -51,13 +51,7 @@ def get_logs():
     """
     pass
 
-def get_logs():
-    """
-    Return logs about the cluster
-    :return: JSON object
-    """
-    pass
-    #TODO: think about log formatting.
+
 
 
 
