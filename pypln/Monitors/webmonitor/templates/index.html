@@ -55,16 +55,19 @@
     <div class="container">
 
       <!-- Main hero unit for a primary marketing message or call to action -->
-      {% for i in range(nrows) %}
-        <div class="row">
-            <div class="span6"><div id="placeholder{{ i }}" style="width:300px;height:150px;"></div></div>
-            <div class="span6"><div id="placeholder{{ i + 1 }}" style="width:300px;height:150px;"></div></div>
-        </div>
 
-      {% endfor %}
       <div class="hero-unit">
         <h2>Cluster Load</h2>
-        <div id="placeholder" style="width:600px;height:300px;"></div>
+          {% for i in nnames %}
+          <div class="row">
+              <div class="span12">
+              <div class="row">
+                  <div class="span6" ><p>{{i}}</p><div id="placeholder{{ loop.index0 }}" style="width:400px;height:200px;"></div></div>
+                  <div class="span6"><p>{{i}}</p><div id="placeholder{{ loop.index }}" style="width:400px;height:200px;"></div></div>
+              </div>
+              </div>
+          </div>
+          {% endfor %}
 
         <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
       </div>
@@ -142,25 +145,29 @@
     <!--<script src="../static/js/bootstrap-carousel.js"></script>-->
     <!--<script src="../static/js/bootstrap-typeahead.js"></script>-->
     <script type="text/javascript">
-        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}
         $(function () {
             // we use an inline data source in the example, usually data would
             // be fetched from a server
             function get_ts_data(){
-                var Data = {}
+                var Data = {};
+                var options = {
+                series: { shadowSize: 1 }, // drawing is faster without shadows
+                yaxis: { min: 0, max: 100 },
+                xaxis: { show: true ,mode: "time"}
+                };
                 $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
-                   Data = data
-                    var plots = []
-                    for ( var i = 0;i<{{ n_nodes }}; i++){
-                        var nnames = [{% for n in nnames %}"{{ n|safe }}"{% endfor %}]
-                        plots.push($.plot($("#placeholder"+i), data[nnames[i]], options))
-                    }});
-                return Data
-            };
+                   Data = data;
+                    for (var i = 0 ; i<{{ n_nodes }} ; i++){
+                        var nnames = [{% for n in nnames %}"{{ n|safe }}",{% endfor %}]
+                        $.plot($("#placeholder"+i), data[nnames[i]], options)
+                    }
+                });
+            }
 
 
             // setup control widget
-            var updateInterval = 30;
+            var updateInterval = 500;
             $("#updateInterval").val(updateInterval).change(function () {
                 var v = $(this).val();
                 if (v && !isNaN(+v)) {
@@ -174,31 +181,18 @@
             });
 
             // setup plot
-            var options = {
-                series: { shadowSize: 0 }, // drawing is faster without shadows
-                yaxis: { min: 0, max: 100 },
-                xaxis: { show: true ,mode: "time"}
-            };
-            var plots = []
 
-            for ( var i = 0;i<{{ n_nodes }}; i++){
-                var nnames = [{% for n in nnames %}"{{ n|safe }}"{% endfor %}]
+            setTimeout(get_ts_data, updateInterval);
 
-                var node_series =  get_ts_data()
-                alert(node_series["10 250 46 208"])
-                plots.push($.plot($("#placeholder"+i), node_series[nnames[i]], options))
-            }
-
-
-            function update() {
-                for ( var i = 0;i<{{ n_nodes }}; i++){
-                    plots[i].setData(get_ts_data()[nnames[i]])
-                    // since the axes don't change, we don't need to call plot.setupGrid()
-                    plots[i].draw()
-                }
-                setTimeout(update, updateInterval);
-            }
-            update();
+//            function update() {
+//                for ( var i = 0;i<{{ n_nodes }}; i++){
+//                    plots[i].setData(get_ts_data()[nnames[i]])
+//                    // since the axes don't change, we don't need to call plot.setupGrid()
+//                    plots[i].draw()
+//                }
+//                setTimeout(get_ts_data, updateInterval);
+//            }
+            get_ts_data();
         });
 </script>
 
