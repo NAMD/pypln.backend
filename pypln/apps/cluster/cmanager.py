@@ -163,6 +163,7 @@ class Manager(object):
             self.pusher.close()
             self.statussock.close()
             self.sub_slavedriver_sock.close()
+            self.streamerdevice.join(timeout=1)
             self.context.term()
 #            if self.streamerdevice:
 #                self.streamerdevice.join()
@@ -241,12 +242,11 @@ class Manager(object):
         self.__deploy_slaves()
 
     def setup_streamer(self,opts):
-        ipaddress = get_ipv4_address()
         #TODO: to have this as a ProcessDevice, One needs to figure out how to kill it when manager ends.
         self.streamerdevice  = ThreadDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
 #        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
-        self.streamerdevice.bind_in("tcp://%s:%s"%(ipaddress,opts['pullport']))
-        self.streamerdevice.bind_out("tcp://%s:%s"%(ipaddress,opts['pushport']))
+        self.streamerdevice.bind_in("tcp://%s:%s"%(self.ipaddress,opts['pullport']))
+        self.streamerdevice.bind_out("tcp://%s:%s"%(self.ipaddress,opts['pushport']))
         self.streamerdevice.setsockopt_in(zmq.IDENTITY, 'PULL')
         self.streamerdevice.setsockopt_out(zmq.IDENTITY, 'PUSH')
         self.streamerdevice.start()
