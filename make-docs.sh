@@ -6,6 +6,8 @@ current_branch=$(git branch | grep '*' | cut -d ' ' -f 2)
 # Temporary directory to store static files
 rm -rf $TMP_DIR
 mkdir $TMP_DIR
+touch $TMP_DIR/.nojekyll
+cp .gitignore $TMP_DIR/
 
 # Stash changes
 git stash save "saved to build doc" || exit 1
@@ -24,9 +26,9 @@ epydoc -v -u https://github.com/namd/pypln --debug --graph=all --parse-only --ht
 
 git checkout gh-pages
 rm -rf *
-mv $TMP_DIR/* .
+mv $TMP_DIR/* $TMP_DIR/.gitignore $TMP_DIR/.nojekyll .
 rm -rf $TMP_DIR
 git add .
-git commit -m 'Docs build'
+git commit -m 'Docs built automatically by make-docs.sh'
 git checkout $current_branch
 git stash pop
