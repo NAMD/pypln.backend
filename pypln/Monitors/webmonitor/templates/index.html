@@ -53,8 +53,9 @@
     </div>
 
     <div class="container">
+        <div class="alert" id="data_debug">
 
-      <!-- Main hero unit for a primary marketing message or call to action -->
+        </div>
 
       <div class="hero-unit">
         <h2>Cluster Load</h2>
@@ -76,7 +77,18 @@
       <div class="row">
         <div class="span4">
           <h2>Recent Jobs</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+           <ol class="pager">
+               <li>
+                    <a href="#">Previous</a>
+                </li>
+                <li>
+                    <a href="#">Next</a>
+                </li>
+               <div id="joblist">
+
+               </div>
+
+           </ol>
           <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
         <div class="span4">
@@ -162,7 +174,7 @@
                 xaxis: { show: true ,mode: "time",timeformat: "%y/%m/%d-%H:%M:%S"}
                 };
                 $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
-
+                    $("#data_debug").text(data)
                     for (var i = 0 ; i<{{ n_nodes }} ; i++){
                         var nnames = [{% for n in nnames %}"{{ n|safe }}",{% endfor %}]
 //                alert(data[nnames[0]].data)
@@ -171,8 +183,15 @@
                 });
             }
             function update_logs(){
-                $.getJSON($SCRIPT_ROOT + '/_get_logs',{})
+                $.getJSON($SCRIPT_ROOT + '/_get_logs',{},function(logs){})
 
+            }
+            function update_jobs(){
+                $.getJSON($SCRIPT_ROOT + '/_get_active_jobs',{},function(jobs){
+                    for (i=0;i<jobs.length;i++){
+                        $('#joblist').append('<li>'+jobs[i].toString()+'</li>')
+                    }
+                })
             }
 
 
@@ -192,14 +211,15 @@
 
             // setup plot
 
-            setTimeout(get_ts_data, updateInterval);
+//            setTimeout(get_ts_data, updateInterval);
 
             function update() {
                 get_ts_data();
                 update_logs()
+                update_jobs()
                 setTimeout(update, updateInterval);
             }
-            get_ts_data();
+            update();
         });
 </script>
 

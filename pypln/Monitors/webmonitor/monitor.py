@@ -49,17 +49,27 @@ def get_cluster_stats():
     for k,v in timeseries.iteritems():
         ts[k].append({'data':zip([(i,v[i][0]) for i in sorted(v.keys())]),
                       'label':"Percent CPU",
-                      'color':"blue"
+#                      'color':"blue"
                       })
         ts[k].append({'data':zip([(i,v[i][1]) for i in sorted(v.keys())]),
                       'label':"Percent Memory",
-                      'color':"red"
+#                      'color':"red"
         })
 
         d.pop('_id')
 #        d.pop('time_stamp')
         e.append(d)
     return json.dumps(ts)#jsonify(entries= e)
+
+@app.route("/_get_active_jobs")
+def get_jobs():
+    """
+    Returns a list of active jobs
+    :return:JSON
+    """
+    status = Db.Stats.find_one(fields=['active jobs','time_stamp'],sort=[("time_stamp",-1)])
+    return jsonify(jobs=status['active jobs'])
+
 
 @app.route("/_get_logs")
 def get_logs():
