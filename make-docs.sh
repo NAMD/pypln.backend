@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ ! -z "$(git status | grep '# Untracked files:')" ]; then
+    echo "Sorry, I can't make docs because you have untracked files."
+    echo 'Please move them from here, delete or even commit them.'
+    echo 'Run "git status" to see which files are untracked.'
+    exit 1
+fi
+
 TMP_DIR=/tmp/pypln-docs
 current_branch=$(git branch | grep '*' | cut -d ' ' -f 2)
 
