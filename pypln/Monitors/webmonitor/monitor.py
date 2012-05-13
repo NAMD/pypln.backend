@@ -45,7 +45,7 @@ def get_cluster_stats():
     ts = defaultdict(lambda:[])
     for d in stats:
         for k,v in d['cluster'].iteritems():
-            timeseries[k][int(d['time_stamp'])*1000]=[v['last_report']['status']['cpu'],v['last_report']['status']['memory']]
+            timeseries[k][int(d['time_stamp'])*1000]=[v['last_report']['status']['cpu']*100,v['last_report']['status']['memory']*100]
     for k,v in timeseries.iteritems():
         ts[k].append({'data':zip([(i,v[i][0]) for i in sorted(v.keys())]),
                       'label':"Percent CPU",
