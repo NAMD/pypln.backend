@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.apps.cluster.cmanager.Manager</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.apps-module.html">Package&nbsp;apps</a> ::
+        <a href="pypln.apps.cluster-module.html">Package&nbsp;cluster</a> ::
+        <a href="pypln.apps.cluster.cmanager-module.html">Module&nbsp;cmanager</a> ::
+        Class&nbsp;Manager
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Manager</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_pypln_ap" name="uml_class_diagram_for_pypln_ap">
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#__init__" title="Manager daemon which acts as cluster controller :param configfile: path to pypln.conf :param bootstrap: if a cluster should be bootstrapped upon instantiation" alt="" coords="17,39,355,57"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#run" title="Infinite loop listening to request :return:" alt="" coords="17,57,355,76"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#bind" title="Create and bind all sockets :return:" alt="" coords="17,76,355,95"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#handle_checkins" title="Handle the checkin messages from slavedrivers adding their information to a registry of nodes :param msg: Slavedriver&#39;s checkin message :return: configmsg Slavedriver configuration dict extended with manager&#39;s ipaddress" alt="" coords="17,95,355,113"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#handle_slavedriver_status" title="Updates self.node_registry and copies it to Mongodb: PYPLN.Stats :param msg: Report from slavedriver processes :return:" alt="" coords="17,113,355,132"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#setup_streamer" title="pypln.apps.cluster.cmanager.Manager.setup_streamer" alt="" coords="17,132,355,151"/>
+<area shape="rect" id="node0" href="pypln.apps.cluster.cmanager.Manager-class.html#process_jobs" title="Process jobs received :param msg: json string speciying the job" alt="" coords="17,151,355,169"/>
+<area shape="rect" id="node1" href="pypln.apps.cluster.cmanager.Manager-class.html" title="pypln.apps.cluster.cmanager.Manager" alt="" coords="5,6,365,175"/>
+</map>
+  <img src="uml_class_diagram_for_pypln_ap.gif" alt='' usemap="#uml_class_diagram_for_pypln_ap" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="pypln.apps.cluster.cmanager.Manager-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">configfile</span>=<span class="summary-sig-default">'/etc/pypln.conf'</span>,
+        <span class="summary-sig-arg">bootstrap</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Manager daemon which acts as cluster controller
+:param configfile: path to pypln.conf
+:param bootstrap: if a cluster should be bootstrapped upon instantiation</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="run"></a><span class="summary-sig-name">run</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Infinite loop listening to request
+:return:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.run">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="bind"></a><span class="summary-sig-name">bind</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Create and bind all sockets
+:return:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.bind">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_checkins"></a><span class="summary-sig-name">handle_checkins</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">msg</span>)</span><br />
+      Handle the checkin messages from slavedrivers adding their information to a registry of nodes
+:param msg: Slavedriver's checkin message
+:return: <code class="link">configmsg</code> Slavedriver configuration dict extended with manager's ipaddress</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.handle_checkins">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="handle_slavedriver_status"></a><span class="summary-sig-name">handle_slavedriver_status</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">msg</span>)</span><br />
+      Updates self.node_registry and copies it to Mongodb: PYPLN.Stats
+:param msg: Report from slavedriver processes
+:return:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.handle_slavedriver_status">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__bootstrap_cluster"></a><span class="summary-sig-name">__bootstrap_cluster</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Connect to the nodes and make sure they are ready to join the cluster
+:return:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.__bootstrap_cluster">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="setup_streamer"></a><span class="summary-sig-name">setup_streamer</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">opts</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.setup_streamer">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="process_jobs"></a><span class="summary-sig-name">process_jobs</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">msg</span>)</span><br />
+      Process jobs received
+:param msg: json string speciying the job</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.process_jobs">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__deploy_slaves"></a><span class="summary-sig-name">__deploy_slaves</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Start slavedrivers on slavenodes</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.__deploy_slaves">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">configfile</span>=<span class="sig-default">'/etc/pypln.conf'</span>,
+        <span class="sig-arg">bootstrap</span>=<span class="sig-default">True</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="pypln.apps.cluster.cmanager-pysrc.html#Manager.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Manager daemon which acts as cluster controller
+:param configfile: path to pypln.conf
+:param bootstrap: if a cluster should be bootstrapped upon instantiation
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:28:59 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

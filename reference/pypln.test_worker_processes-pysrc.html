@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.test_worker_processes</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        Module&nbsp;test_worker_processes
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.test_worker_processes-module.html">Module pypln.test_worker_processes</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#-*- coding:utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">This testing module contains tests of the process methods of workers</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring">These methods should be called directly, with a message, to avoid the need of starting</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">ventilators and worker processes communicating through ZMQ</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">Created on 27/02/12</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">by Fl&#225;vio Code&#231;o Coelho</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-name">__author__</tt> <tt class="py-op">=</tt> <tt class="py-string">'fccoelho'</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">unittest</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package pypln.workers=pypln.workers-module.html"><a title="pypln.workers" class="py-name" href="#" onclick="return doclink('link-0', 'workers', 'link-0');">workers</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module pypln.workers.highlighter_worker=pypln.workers.highlighter_worker-module.html"><a title="pypln.workers.highlighter_worker" class="py-name" href="#" onclick="return doclink('link-1', 'highlighter_worker', 'link-1');">highlighter_worker</a></tt> <tt class="py-keyword">import</tt> <tt id="link-2" class="py-name" targets="Class pypln.workers.highlighter_worker.HighlighterWorker=pypln.workers.highlighter_worker.HighlighterWorker-class.html"><a title="pypln.workers.highlighter_worker.HighlighterWorker" class="py-name" href="#" onclick="return doclink('link-2', 'HighlighterWorker', 'link-2');">HighlighterWorker</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="pypln.workers" class="py-name" href="#" onclick="return doclink('link-3', 'workers', 'link-0');">workers</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module pypln.workers.pdfconv_worker=pypln.workers.pdfconv_worker-module.html"><a title="pypln.workers.pdfconv_worker" class="py-name" href="#" onclick="return doclink('link-4', 'pdfconv_worker', 'link-4');">pdfconv_worker</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class pypln.workers.pdfconv_worker.PDFConverterWorker=pypln.workers.pdfconv_worker.PDFConverterWorker-class.html"><a title="pypln.workers.pdfconv_worker.PDFConverterWorker" class="py-name" href="#" onclick="return doclink('link-5', 'PDFConverterWorker', 'link-5');">PDFConverterWorker</a></tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="TestHighlighterWorker"></a><div id="TestHighlighterWorker-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="TestHighlighterWorker-toggle" onclick="return toggle('TestHighlighterWorker');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestHighlighterWorker-class.html">TestHighlighterWorker</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestHighlighterWorker-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="TestHighlighterWorker-expanded"><a name="TestHighlighterWorker.setUp"></a><div id="TestHighlighterWorker.setUp-def"><a name="L17"></a><tt class="py-lineno">17</tt> <a class="py-toggle" href="#" id="TestHighlighterWorker.setUp-toggle" onclick="return toggle('TestHighlighterWorker.setUp');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestHighlighterWorker-class.html#setUp">setUp</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestHighlighterWorker.setUp-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestHighlighterWorker.setUp-expanded"><a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">W</tt> <tt class="py-op">=</tt> <tt id="link-6" class="py-name"><a title="pypln.workers.highlighter_worker.HighlighterWorker" class="py-name" href="#" onclick="return doclink('link-6', 'HighlighterWorker', 'link-2');">HighlighterWorker</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="TestHighlighterWorker.tearDown"></a><div id="TestHighlighterWorker.tearDown-def"><a name="L19"></a><tt class="py-lineno">19</tt> <a class="py-toggle" href="#" id="TestHighlighterWorker.tearDown-toggle" onclick="return toggle('TestHighlighterWorker.tearDown');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestHighlighterWorker-class.html#tearDown">tearDown</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestHighlighterWorker.tearDown-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestHighlighterWorker.tearDown-expanded"><a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">        <tt class="py-keyword">pass</tt> </tt>
+</div><a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"> </tt>
+<a name="TestHighlighterWorker.test_single_wordlist"></a><div id="TestHighlighterWorker.test_single_wordlist-def"><a name="L22"></a><tt class="py-lineno">22</tt> <a class="py-toggle" href="#" id="TestHighlighterWorker.test_single_wordlist-toggle" onclick="return toggle('TestHighlighterWorker.test_single_wordlist');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestHighlighterWorker-class.html#test_single_wordlist">test_single_wordlist</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestHighlighterWorker.test_single_wordlist-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestHighlighterWorker.test_single_wordlist-expanded"><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'text'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'atirei'</tt><tt class="py-op">,</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-string">'pau'</tt><tt class="py-op">,</tt><tt class="py-string">'no'</tt><tt class="py-op">,</tt><tt class="py-string">'gato'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'wordlists'</tt><tt class="py-op">:</tt><tt class="py-op">{</tt><tt class="py-string">'um'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'pau'</tt><tt class="py-op">,</tt><tt class="py-string">'gato'</tt><tt class="py-op">]</tt><tt class="py-op">}</tt><tt class="py-op">}</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-name">res</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">W</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Method pypln.sinks.base.BaseSink.process()=pypln.sinks.base.BaseSink-class.html#process,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.process()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#process,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.process()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#process,Method pypln.sinks.raw_document_sink.RawDocumentSink.process()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#process,Method pypln.workers.base.BaseWorker.process()=pypln.workers.base.BaseWorker-class.html#process,Method pypln.workers.base.PushPullWorker.process()=pypln.workers.base.PushPullWorker-class.html#process,Method pypln.workers.dummy_worker.DummyWorker.process()=pypln.workers.dummy_worker.DummyWorker-class.html#process,Method pypln.workers.enc_detect_worker.EncodingWorker.process()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#process,Method pypln.workers.highlighter_worker.HighlighterWorker.process()=pypln.workers.highlighter_worker.HighlighterWorker-class.html#process,Method pypln.workers.mime_detect_worker.MimeWorker.process()=pypln.workers.mime_detect_worker.MimeWorker-class.html#process,Method pypln.workers.palavras_worker.Palavras_worker.process()=pypln.workers.palavras_worker.Palavras_worker-class.html#process,Method pypln.workers.parser_worker.ParserWorker.process()=pypln.workers.parser_worker.ParserWorker-class.html#process,Method pypln.workers.pdfconv_worker.PDFConverterWorker.process()=pypln.workers.pdfconv_worker.PDFConverterWorker-class.html#process,Method pypln.workers.tagger_worker.POSTaggerWorker.process()=pypln.workers.tagger_worker.POSTaggerWorker-class.html#process"><a title="pypln.sinks.base.BaseSink.process
+pypln.sinks.mongo_insert_sink.MongoInsertSink.process
+pypln.sinks.mongo_update_sink.MongoUpdateSink.process
+pypln.sinks.raw_document_sink.RawDocumentSink.process
+pypln.workers.base.BaseWorker.process
+pypln.workers.base.PushPullWorker.process
+pypln.workers.dummy_worker.DummyWorker.process
+pypln.workers.enc_detect_worker.EncodingWorker.process
+pypln.workers.highlighter_worker.HighlighterWorker.process
+pypln.workers.mime_detect_worker.MimeWorker.process
+pypln.workers.palavras_worker.Palavras_worker.process
+pypln.workers.parser_worker.ParserWorker.process
+pypln.workers.pdfconv_worker.PDFConverterWorker.process
+pypln.workers.tagger_worker.POSTaggerWorker.process" class="py-name" href="#" onclick="return doclink('link-7', 'process', 'link-7');">process</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertDictEqual</tt><tt class="py-op">(</tt><tt class="py-name">res</tt><tt class="py-op">,</tt><tt class="py-op">{</tt><tt class="py-string">'highlighted_text'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'atirei'</tt><tt class="py-op">,</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-string">'&lt;span class="tagged" title="um"&gt;&lt;b&gt;pau&lt;/b&gt;&lt;/span&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">                                                  <tt class="py-string">'no'</tt><tt class="py-op">,</tt><tt class="py-string">'&lt;span class="tagged" title="um"&gt;&lt;b&gt;gato&lt;/b&gt;&lt;/span&gt;'</tt><tt class="py-op">]</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"> </tt>
+<a name="TestHighlighterWorker.test_multiple_wordlist"></a><div id="TestHighlighterWorker.test_multiple_wordlist-def"><a name="L28"></a><tt class="py-lineno">28</tt> <a class="py-toggle" href="#" id="TestHighlighterWorker.test_multiple_wordlist-toggle" onclick="return toggle('TestHighlighterWorker.test_multiple_wordlist');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestHighlighterWorker-class.html#test_multiple_wordlist">test_multiple_wordlist</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestHighlighterWorker.test_multiple_wordlist-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestHighlighterWorker.test_multiple_wordlist-expanded"><a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'text'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'atirei'</tt><tt class="py-op">,</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-string">'pau'</tt><tt class="py-op">,</tt><tt class="py-string">'no'</tt><tt class="py-op">,</tt><tt class="py-string">'gato'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">               <tt class="py-string">'wordlists'</tt><tt class="py-op">:</tt><tt class="py-op">{</tt><tt class="py-string">'um'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'pau'</tt><tt class="py-op">,</tt><tt class="py-string">'gato'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'dois'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'pau'</tt><tt class="py-op">,</tt><tt class="py-string">'cachorro'</tt><tt class="py-op">]</tt><tt class="py-op">}</tt><tt class="py-op">}</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt class="py-name">res</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">W</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="pypln.sinks.base.BaseSink.process
+pypln.sinks.mongo_insert_sink.MongoInsertSink.process
+pypln.sinks.mongo_update_sink.MongoUpdateSink.process
+pypln.sinks.raw_document_sink.RawDocumentSink.process
+pypln.workers.base.BaseWorker.process
+pypln.workers.base.PushPullWorker.process
+pypln.workers.dummy_worker.DummyWorker.process
+pypln.workers.enc_detect_worker.EncodingWorker.process
+pypln.workers.highlighter_worker.HighlighterWorker.process
+pypln.workers.mime_detect_worker.MimeWorker.process
+pypln.workers.palavras_worker.Palavras_worker.process
+pypln.workers.parser_worker.ParserWorker.process
+pypln.workers.pdfconv_worker.PDFConverterWorker.process
+pypln.workers.tagger_worker.POSTaggerWorker.process" class="py-name" href="#" onclick="return doclink('link-8', 'process', 'link-7');">process</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertDictEqual</tt><tt class="py-op">(</tt><tt class="py-name">res</tt><tt class="py-op">,</tt><tt class="py-op">{</tt><tt class="py-string">'highlighted_text'</tt><tt class="py-op">:</tt><tt class="py-op">[</tt><tt class="py-string">'atirei'</tt><tt class="py-op">,</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-string">'&lt;span class="tagged" title="um,dois"&gt;&lt;b&gt;pau&lt;/b&gt;&lt;/span&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">                                                  <tt class="py-string">'no'</tt><tt class="py-op">,</tt><tt class="py-string">'&lt;span class="tagged" title="um"&gt;&lt;b&gt;gato&lt;/b&gt;&lt;/span&gt;'</tt><tt class="py-op">]</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="TestPDFWorker"></a><div id="TestPDFWorker-def"><a name="L35"></a><tt class="py-lineno">35</tt> <a class="py-toggle" href="#" id="TestPDFWorker-toggle" onclick="return toggle('TestPDFWorker');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestPDFWorker-class.html">TestPDFWorker</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPDFWorker-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="TestPDFWorker-expanded"><a name="TestPDFWorker.setUp"></a><div id="TestPDFWorker.setUp-def"><a name="L36"></a><tt class="py-lineno">36</tt> <a class="py-toggle" href="#" id="TestPDFWorker.setUp-toggle" onclick="return toggle('TestPDFWorker.setUp');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestPDFWorker-class.html#setUp">setUp</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPDFWorker.setUp-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestPDFWorker.setUp-expanded"><a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">PC</tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name"><a title="pypln.workers.pdfconv_worker.PDFConverterWorker" class="py-name" href="#" onclick="return doclink('link-9', 'PDFConverterWorker', 'link-5');">PDFConverterWorker</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="TestPDFWorker.tearDown"></a><div id="TestPDFWorker.tearDown-def"><a name="L38"></a><tt class="py-lineno">38</tt> <a class="py-toggle" href="#" id="TestPDFWorker.tearDown-toggle" onclick="return toggle('TestPDFWorker.tearDown');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestPDFWorker-class.html#tearDown">tearDown</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPDFWorker.tearDown-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestPDFWorker.tearDown-expanded"><a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">        <tt class="py-keyword">pass</tt> </tt>
+</div><a name="TestPDFWorker.test_parse_metadata"></a><div id="TestPDFWorker.test_parse_metadata-def"><a name="L40"></a><tt class="py-lineno">40</tt> <a class="py-toggle" href="#" id="TestPDFWorker.test_parse_metadata-toggle" onclick="return toggle('TestPDFWorker.test_parse_metadata');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.test_worker_processes.TestPDFWorker-class.html#test_parse_metadata">test_parse_metadata</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestPDFWorker.test_parse_metadata-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestPDFWorker.test_parse_metadata-expanded"><a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">        <tt class="py-name">md</tt> <tt class="py-op">=</tt> <tt class="py-string">"""Title:          mve_848.dvi</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt class="py-string">Creator:        dvips 5.83 Copyright 1998 Radical Eye Software</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line"><tt class="py-string">Producer:       Acrobat Distiller 7.0.5 (Windows)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-string">CreationDate:   Tue Feb  9 14:58:46 2010</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-string">ModDate:        Tue Feb  9 15:01:34 2010</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-string">Tagged:         no</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-string">Pages:          8</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-string">Encrypted:      no</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-string">Page size:      595.276 x 790.866 pts</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-string">File size:      644613 bytes</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"><tt class="py-string">Optimized:      no</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"><tt class="py-string">PDF version:    1.3</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"><tt class="py-string">        """</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">        <tt class="py-name">expected</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'Title'</tt><tt class="py-op">:</tt><tt class="py-string">'mve_848.dvi'</tt><tt class="py-op">,</tt><tt class="py-string">'Creator'</tt><tt class="py-op">:</tt><tt class="py-string">'dvips 5.83 Copyright 1998 Radical Eye Software'</tt><tt class="py-op">,</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">                    <tt class="py-string">'Producer'</tt><tt class="py-op">:</tt><tt class="py-string">'Acrobat Distiller 7.0.5 (Windows)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">                    <tt class="py-string">'CreationDate'</tt><tt class="py-op">:</tt><tt class="py-string">'Tue Feb  9 14:58:46 2010'</tt><tt class="py-op">,</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">                    <tt class="py-string">'ModDate'</tt><tt class="py-op">:</tt><tt class="py-string">'Tue Feb  9 15:01:34 2010'</tt><tt class="py-op">,</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">                    <tt class="py-string">'Tagged'</tt><tt class="py-op">:</tt><tt class="py-string">'no'</tt><tt class="py-op">,</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">                    <tt class="py-string">'Pages'</tt><tt class="py-op">:</tt><tt class="py-string">'8'</tt><tt class="py-op">,</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">                    <tt class="py-string">'Encrypted'</tt><tt class="py-op">:</tt><tt class="py-string">'no'</tt><tt class="py-op">,</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">                    <tt class="py-string">'Page size'</tt><tt class="py-op">:</tt><tt class="py-string">'595.276 x 790.866 pts'</tt><tt class="py-op">,</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">                    <tt class="py-string">'File size'</tt><tt class="py-op">:</tt><tt class="py-string">'644613 bytes'</tt><tt class="py-op">,</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">                    <tt class="py-string">'Optimized'</tt><tt class="py-op">:</tt><tt class="py-string">'no'</tt><tt class="py-op">,</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">                    <tt class="py-string">'PDF version'</tt><tt class="py-op">:</tt><tt class="py-string">'1.3'</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">        <tt class="py-op">}</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">        <tt class="py-name">mdict</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">PC</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Method pypln.workers.pdfconv_worker.PDFConverterWorker.parse_metadata()=pypln.workers.pdfconv_worker.PDFConverterWorker-class.html#parse_metadata"><a title="pypln.workers.pdfconv_worker.PDFConverterWorker.parse_metadata" class="py-name" href="#" onclick="return doclink('link-10', 'parse_metadata', 'link-10');">parse_metadata</a></tt><tt class="py-op">(</tt><tt class="py-name">md</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertDictEqual</tt><tt class="py-op">(</tt><tt class="py-name">mdict</tt><tt class="py-op">,</tt><tt class="py-name">expected</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line"> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line">    <tt class="py-name">unittest</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Function pypln.Monitors.webmonitor.monitor.main()=pypln.Monitors.webmonitor.monitor-module.html#main,Function pypln.apps.cluster.cmanager.main()=pypln.apps.cluster.cmanager-module.html#main,Function pypln.apps.cluster.slavedriver.main()=pypln.apps.cluster.slavedriver-module.html#main"><a title="pypln.Monitors.webmonitor.monitor.main
+pypln.apps.cluster.cmanager.main
+pypln.apps.cluster.slavedriver.main" class="py-name" href="#" onclick="return doclink('link-11', 'main', 'link-11');">main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:29:00 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

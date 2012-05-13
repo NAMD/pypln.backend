@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.apps.cluster.test_cluster</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.apps-module.html">Package&nbsp;apps</a> ::
+        <a href="pypln.apps.cluster-module.html">Package&nbsp;cluster</a> ::
+        Module&nbsp;test_cluster
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.apps.cluster.test_cluster-module.html">Module pypln.apps.cluster.test_cluster</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring">u"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">Testing module for cmanager.py</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">license: GPL v3 or later</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-name">__docformat__</tt> <tt class="py-op">=</tt> <tt class="py-string">"restructuredtext en"</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">unittest</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module pypln.apps.cluster.cmanager=pypln.apps.cluster.cmanager-module.html"><a title="pypln.apps.cluster.cmanager" class="py-name" href="#" onclick="return doclink('link-0', 'cmanager', 'link-0');">cmanager</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Class pypln.apps.cluster.cmanager.Manager=pypln.apps.cluster.cmanager.Manager-class.html"><a title="pypln.apps.cluster.cmanager.Manager" class="py-name" href="#" onclick="return doclink('link-1', 'Manager', 'link-1');">Manager</a></tt><tt class="py-op">,</tt> <tt id="link-2" class="py-name" targets="Function pypln.apps.cluster.cmanager.get_ipv4_address()=pypln.apps.cluster.cmanager-module.html#get_ipv4_address,Function pypln.apps.cluster.slavedriver.get_ipv4_address()=pypln.apps.cluster.slavedriver-module.html#get_ipv4_address"><a title="pypln.apps.cluster.cmanager.get_ipv4_address
+pypln.apps.cluster.slavedriver.get_ipv4_address" class="py-name" href="#" onclick="return doclink('link-2', 'get_ipv4_address', 'link-2');">get_ipv4_address</a></tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name" targets="Module pypln.apps.cluster.slavedriver=pypln.apps.cluster.slavedriver-module.html"><a title="pypln.apps.cluster.slavedriver" class="py-name" href="#" onclick="return doclink('link-3', 'slavedriver', 'link-3');">slavedriver</a></tt> <tt class="py-keyword">import</tt> <tt id="link-4" class="py-name" targets="Class pypln.apps.cluster.slavedriver.SlaveDriver=pypln.apps.cluster.slavedriver.SlaveDriver-class.html"><a title="pypln.apps.cluster.slavedriver.SlaveDriver" class="py-name" href="#" onclick="return doclink('link-4', 'SlaveDriver', 'link-4');">SlaveDriver</a></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">subprocess</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">ConfigParser</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">zmq</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">time</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">psutil</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt><tt class="py-op">,</tt><tt class="py-name">signal</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-5" class="py-name" targets="Package pypln=pypln-module.html"><a title="pypln" class="py-name" href="#" onclick="return doclink('link-5', 'pypln', 'link-5');">pypln</a></tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Package pypln.testing=pypln.testing-module.html"><a title="pypln.testing" class="py-name" href="#" onclick="return doclink('link-6', 'testing', 'link-6');">testing</a></tt> <tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Module pypln.testing.zmqtesting=pypln.testing.zmqtesting-module.html"><a title="pypln.testing.zmqtesting" class="py-name" href="#" onclick="return doclink('link-7', 'zmqtesting', 'link-7');">zmqtesting</a></tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm"></a><div id="TestManagerComm-def"><a name="L20"></a><tt class="py-lineno"> 20</tt> <a class="py-toggle" href="#" id="TestManagerComm-toggle" onclick="return toggle('TestManagerComm');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html">TestManagerComm</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestManagerComm-expanded"><a name="TestManagerComm.setUp"></a><div id="TestManagerComm.setUp-def"><a name="L21"></a><tt class="py-lineno"> 21</tt> <a class="py-toggle" href="#" id="TestManagerComm.setUp-toggle" onclick="return toggle('TestManagerComm.setUp');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#setUp">setUp</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.setUp-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.setUp-expanded"><a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt> <tt class="py-op">=</tt> <tt class="py-name">ConfigParser</tt><tt class="py-op">.</tt><tt class="py-name">ConfigParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">read</tt><tt class="py-op">(</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">        <tt class="py-name">localip</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name"><a title="pypln.apps.cluster.cmanager.get_ipv4_address
+pypln.apps.cluster.slavedriver.get_ipv4_address" class="py-name" href="#" onclick="return doclink('link-8', 'get_ipv4_address', 'link-2');">get_ipv4_address</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-comment">#        print "local ip: ",localip</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">        <tt class="py-name">replyport</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'replyport'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">        <tt class="py-name">statusport</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'statusport'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">        <tt class="py-name">confport</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-name">streamerpushport</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'streamer'</tt><tt class="py-op">,</tt><tt class="py-string">'pushport'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-comment">#        print "==&gt; ",statusport</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-string">'./cmanager.py'</tt><tt class="py-op">,</tt> <tt class="py-string">'-c'</tt><tt class="py-op">,</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">,</tt><tt class="py-string">'--nosetup'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sdproc</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-string">'./slavedriver.py'</tt><tt class="py-op">,</tt><tt class="py-string">'%s:%s'</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">localip</tt><tt class="py-op">,</tt><tt class="py-name">confport</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Variable pypln.servers.ventilator.context=pypln.servers.ventilator-module.html#context,Variable pypln.sinks.dummy_sink.context=pypln.sinks.dummy_sink-module.html#context,Variable pypln.sinks.mongo_insert_sink.context=pypln.sinks.mongo_insert_sink-module.html#context,Variable pypln.sinks.mongo_update_sink.context=pypln.sinks.mongo_update_sink-module.html#context,Variable pypln.sinks.raw_document_sink.context=pypln.sinks.raw_document_sink-module.html#context,Variable pypln.workers.enc_detect_worker.context=pypln.workers.enc_detect_worker-module.html#context,Variable pypln.workers.mime_detect_worker.context=pypln.workers.mime_detect_worker-module.html#context,Variable pypln.workers.palavras_worker.context=pypln.workers.palavras_worker-module.html#context,Variable pypln.workers.parser_worker.context=pypln.workers.parser_worker-module.html#context,Variable pypln.workers.pdfconv_worker.context=pypln.workers.pdfconv_worker-module.html#context,Variable pypln.workers.tagger_worker.context=pypln.workers.tagger_worker-module.html#context"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-9', 'context', 'link-9');">context</a></tt> <tt class="py-op">=</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">Context</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name"><a title="pypln.testing.zmqtesting" class="py-name" href="#" onclick="return doclink('link-10', 'zmqtesting', 'link-7');">zmqtesting</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Function pypln.testing.zmqtesting.make_sock()=pypln.testing.zmqtesting-module.html#make_sock"><a title="pypln.testing.zmqtesting.make_sock" class="py-name" href="#" onclick="return doclink('link-11', 'make_sock', 'link-11');">make_sock</a></tt><tt class="py-op">(</tt><tt id="link-12" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-12', 'context', 'link-9');">context</a></tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-13', 'context', 'link-9');">context</a></tt><tt class="py-op">,</tt> <tt class="py-name">sock_type</tt><tt class="py-op">=</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REQ</tt><tt class="py-op">,</tt> <tt class="py-name">connect</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-name">localip</tt><tt class="py-op">,</tt> <tt class="py-name">replyport</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="pypln.testing.zmqtesting" class="py-name" href="#" onclick="return doclink('link-14', 'zmqtesting', 'link-7');">zmqtesting</a></tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="pypln.testing.zmqtesting.make_sock" class="py-name" href="#" onclick="return doclink('link-15', 'make_sock', 'link-11');">make_sock</a></tt><tt class="py-op">(</tt><tt id="link-16" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-16', 'context', 'link-9');">context</a></tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-17', 'context', 'link-9');">context</a></tt><tt class="py-op">,</tt> <tt class="py-name">sock_type</tt><tt class="py-op">=</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REQ</tt><tt class="py-op">,</tt> <tt class="py-name">connect</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-name">localip</tt><tt class="py-op">,</tt> <tt class="py-name">statusport</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-comment">#        self.status_sock = self.context.socket(zmq.SUB)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-comment">#        self.status_sock.connect('tcp://%s:%s'%(localip,statusport))</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pull_from_streamer_sock</tt> <tt class="py-op">=</tt> <tt id="link-18" class="py-name"><a title="pypln.testing.zmqtesting" class="py-name" href="#" onclick="return doclink('link-18', 'zmqtesting', 'link-7');">zmqtesting</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="pypln.testing.zmqtesting.make_sock" class="py-name" href="#" onclick="return doclink('link-19', 'make_sock', 'link-11');">make_sock</a></tt><tt class="py-op">(</tt><tt id="link-20" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-20', 'context', 'link-9');">context</a></tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-21', 'context', 'link-9');">context</a></tt><tt class="py-op">,</tt> <tt class="py-name">sock_type</tt><tt class="py-op">=</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PULL</tt><tt class="py-op">,</tt> <tt class="py-name">connect</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-name">localip</tt><tt class="py-op">,</tt> <tt class="py-name">streamerpushport</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm.tearDown"></a><div id="TestManagerComm.tearDown-def"><a name="L40"></a><tt class="py-lineno"> 40</tt> <a class="py-toggle" href="#" id="TestManagerComm.tearDown-toggle" onclick="return toggle('TestManagerComm.tearDown');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#tearDown">tearDown</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.tearDown-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.tearDown-expanded"><a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pull_from_streamer_sock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">kill</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">,</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGKILL</tt><tt class="py-op">)</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">kill</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sdproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">,</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGKILL</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">terminate</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sdproc</tt><tt class="py-op">.</tt><tt class="py-name">terminate</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-22', 'context', 'link-9');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">term</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm.test_manager_send_one_message"></a><div id="TestManagerComm.test_manager_send_one_message-def"><a name="L50"></a><tt class="py-lineno"> 50</tt> <a class="py-toggle" href="#" id="TestManagerComm.test_manager_send_one_message-toggle" onclick="return toggle('TestManagerComm.test_manager_send_one_message');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#test_manager_send_one_message">test_manager_send_one_message</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.test_manager_send_one_message-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.test_manager_send_one_message-expanded"><a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-op">{</tt><tt class="py-string">'jobid'</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ans'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'Job queued'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm.testing_sending_many_messages"></a><div id="TestManagerComm.testing_sending_many_messages-def"><a name="L55"></a><tt class="py-lineno"> 55</tt> <a class="py-toggle" href="#" id="TestManagerComm.testing_sending_many_messages-toggle" onclick="return toggle('TestManagerComm.testing_sending_many_messages');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#testing_sending_many_messages">testing_sending_many_messages</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.testing_sending_many_messages-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.testing_sending_many_messages-expanded"><a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-name">msgs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">{</tt><tt class="py-string">'jobid'</tt><tt class="py-op">:</tt><tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-string">'data'</tt><tt class="py-op">:</tt><tt class="py-string">'fksdjfhlaksf'</tt><tt class="py-op">}</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">10</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msgs</tt><tt class="py-op">)</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ans'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'Job queued'</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-comment">#send again</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msgs</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ans'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'Job queued'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm.test_job_control"></a><div id="TestManagerComm.test_job_control-def"><a name="L65"></a><tt class="py-lineno"> 65</tt> <a class="py-toggle" href="#" id="TestManagerComm.test_job_control-toggle" onclick="return toggle('TestManagerComm.test_job_control');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#test_job_control">test_job_control</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.test_job_control-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.test_job_control-expanded"><a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-name">msgs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">{</tt><tt class="py-string">'jobid'</tt><tt class="py-op">:</tt><tt class="py-name">i</tt><tt class="py-op">,</tt> <tt class="py-string">'data'</tt><tt class="py-op">:</tt><tt class="py-string">'fksdjfhlaksf'</tt><tt class="py-op">}</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-number">10</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msgs</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ans'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-string">'Job queued'</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">"trying to get status"</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Method pypln.testing.zmqtesting.ProcessTest.send()=pypln.testing.zmqtesting.ProcessTest-class.html#send"><a title="pypln.testing.zmqtesting.ProcessTest.send" class="py-name" href="#" onclick="return doclink('link-23', 'send', 'link-23');">send</a></tt><tt class="py-op">(</tt><tt class="py-string">"status"</tt><tt class="py-op">)</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-string">'cluster'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-string">'active jobs'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'cluster'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">dict</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'active jobs'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">list</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerComm.test_streamer"></a><div id="TestManagerComm.test_streamer-def"><a name="L78"></a><tt class="py-lineno"> 78</tt> <a class="py-toggle" href="#" id="TestManagerComm.test_streamer-toggle" onclick="return toggle('TestManagerComm.test_streamer');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerComm-class.html#test_streamer">test_streamer</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerComm.test_streamer-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerComm.test_streamer-expanded"><a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-op">{</tt><tt class="py-string">'jobid'</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">req_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pull_from_streamer_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-string">'jobid'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line"> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line"><tt class="py-comment">#    def test_get_SD_status(self):</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line"><tt class="py-comment">#        """</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"><tt class="py-comment">#        trying to get SD status</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line"><tt class="py-comment">#        """</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"><tt class="py-comment">#        self.status_sock.send("status")</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line"><tt class="py-comment">#        msg = self.status_sock.recv_json()</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line"><tt class="py-comment">#        self.assertTrue(isinstance(msg['cluster'],dict))</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line"><tt class="py-comment">#        print msg</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"><tt class="py-comment">#        self.assertTrue(len(msg['cluster'])&gt;0)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line"> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerInst"></a><div id="TestManagerInst-def"><a name="L96"></a><tt class="py-lineno"> 96</tt> <a class="py-toggle" href="#" id="TestManagerInst-toggle" onclick="return toggle('TestManagerInst');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerInst-class.html">TestManagerInst</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerInst-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestManagerInst-expanded"><a name="TestManagerInst.test_load_config_file"></a><div id="TestManagerInst.test_load_config_file-def"><a name="L97"></a><tt class="py-lineno"> 97</tt> <a class="py-toggle" href="#" id="TestManagerInst.test_load_config_file-toggle" onclick="return toggle('TestManagerInst.test_load_config_file');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerInst-class.html#test_load_config_file">test_load_config_file</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerInst.test_load_config_file-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerInst.test_load_config_file-expanded"><a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-name">M</tt> <tt class="py-op">=</tt> <tt id="link-24" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager" class="py-name" href="#" onclick="return doclink('link-24', 'Manager', 'link-1');">Manager</a></tt><tt class="py-op">(</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">,</tt><tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'cluster'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'zeromq'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'authentication'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'streamer'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'slavedriver'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'worker'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">has_section</tt><tt class="py-op">(</tt><tt class="py-string">'sink'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"> </tt>
+<a name="TestManagerInst.test_socket_binding"></a><div id="TestManagerInst.test_socket_binding-def"><a name="L107"></a><tt class="py-lineno">107</tt> <a class="py-toggle" href="#" id="TestManagerInst.test_socket_binding-toggle" onclick="return toggle('TestManagerInst.test_socket_binding');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestManagerInst-class.html#test_socket_binding">test_socket_binding</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestManagerInst.test_socket_binding-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestManagerInst.test_socket_binding-expanded"><a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-name">M</tt> <tt class="py-op">=</tt> <tt id="link-25" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager" class="py-name" href="#" onclick="return doclink('link-25', 'Manager', 'link-1');">Manager</a></tt><tt class="py-op">(</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">,</tt><tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-name">p</tt> <tt class="py-op">=</tt> <tt class="py-name">psutil</tt><tt class="py-op">.</tt><tt class="py-name">Process</tt><tt class="py-op">(</tt><tt class="py-name">M</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-name">cons</tt> <tt class="py-op">=</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">get_connections</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">cons</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">cons</tt><tt class="py-op">)</tt><tt class="py-op">&gt;=</tt><tt class="py-number">5</tt><tt class="py-op">)</tt> <tt class="py-comment">#there are a couple of other sockets which get opened but are not related to pypln</tt> </tt>
+</div></div><a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line"> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"> </tt>
+<a name="TestSlavedriverInst"></a><div id="TestSlavedriverInst-def"><a name="L116"></a><tt class="py-lineno">116</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst-toggle" onclick="return toggle('TestSlavedriverInst');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html">TestSlavedriverInst</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="TestSlavedriverInst-expanded"><a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line"><tt class="py-docstring">    tests related with Slavedriver class instantiation</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="TestSlavedriverInst.setUp"></a><div id="TestSlavedriverInst.setUp-def"><a name="L120"></a><tt class="py-lineno">120</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst.setUp-toggle" onclick="return toggle('TestSlavedriverInst.setUp');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html#setUp">setUp</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst.setUp-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestSlavedriverInst.setUp-expanded"><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt> <tt class="py-op">=</tt> <tt class="py-name">ConfigParser</tt><tt class="py-op">.</tt><tt class="py-name">ConfigParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">read</tt><tt class="py-op">(</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-name">statusport</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'statusport'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-string">'./cmanager.py'</tt><tt class="py-op">,</tt> <tt class="py-string">'-c'</tt><tt class="py-op">,</tt><tt class="py-string">'pypln.test.conf'</tt><tt class="py-op">,</tt><tt class="py-string">'--nosetup'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localip</tt> <tt class="py-op">=</tt> <tt id="link-26" class="py-name"><a title="pypln.apps.cluster.cmanager.get_ipv4_address
+pypln.apps.cluster.slavedriver.get_ipv4_address" class="py-name" href="#" onclick="return doclink('link-26', 'get_ipv4_address', 'link-2');">get_ipv4_address</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-27', 'context', 'link-9');">context</a></tt> <tt class="py-op">=</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">Context</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt> <tt class="py-op">=</tt> <tt id="link-28" class="py-name"><a title="pypln.testing.zmqtesting" class="py-name" href="#" onclick="return doclink('link-28', 'zmqtesting', 'link-7');">zmqtesting</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="pypln.testing.zmqtesting.make_sock" class="py-name" href="#" onclick="return doclink('link-29', 'make_sock', 'link-11');">make_sock</a></tt><tt class="py-op">(</tt><tt id="link-30" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-30', 'context', 'link-9');">context</a></tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-31', 'context', 'link-9');">context</a></tt><tt class="py-op">,</tt> <tt class="py-name">sock_type</tt><tt class="py-op">=</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REQ</tt><tt class="py-op">,</tt> <tt class="py-name">connect</tt><tt class="py-op">=</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localip</tt><tt class="py-op">,</tt> <tt class="py-name">statusport</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"> </tt>
+<a name="TestSlavedriverInst.tearDown"></a><div id="TestSlavedriverInst.tearDown-def"><a name="L129"></a><tt class="py-lineno">129</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst.tearDown-toggle" onclick="return toggle('TestSlavedriverInst.tearDown');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html#tearDown">tearDown</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst.tearDown-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestSlavedriverInst.tearDown-expanded"><a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-32', 'context', 'link-9');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">term</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">        <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">kill</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">,</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGTERM</tt><tt class="py-op">)</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">terminate</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">        <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">kill</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">managerproc</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">,</tt><tt class="py-name">signal</tt><tt class="py-op">.</tt><tt class="py-name">SIGKILL</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"> </tt>
+<a name="TestSlavedriverInst.test_fetch_conf"></a><div id="TestSlavedriverInst.test_fetch_conf-def"><a name="L137"></a><tt class="py-lineno">137</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst.test_fetch_conf-toggle" onclick="return toggle('TestSlavedriverInst.test_fetch_conf');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html#test_fetch_conf">test_fetch_conf</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst.test_fetch_conf-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestSlavedriverInst.test_fetch_conf-expanded"><a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">        <tt class="py-name">SD</tt> <tt class="py-op">=</tt> <tt id="link-33" class="py-name"><a title="pypln.apps.cluster.slavedriver.SlaveDriver" class="py-name" href="#" onclick="return doclink('link-33', 'SlaveDriver', 'link-4');">SlaveDriver</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localip</tt><tt class="py-op">+</tt><tt class="py-string">":"</tt><tt class="py-op">+</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">,</tt><tt class="py-name">dict</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-string">'master_ip'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt>
+<a name="TestSlavedriverInst.test_socket_binding"></a><div id="TestSlavedriverInst.test_socket_binding-def"><a name="L142"></a><tt class="py-lineno">142</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst.test_socket_binding-toggle" onclick="return toggle('TestSlavedriverInst.test_socket_binding');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html#test_socket_binding">test_socket_binding</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst.test_socket_binding-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestSlavedriverInst.test_socket_binding-expanded"><a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">        <tt class="py-name">SD</tt> <tt class="py-op">=</tt> <tt id="link-34" class="py-name"><a title="pypln.apps.cluster.slavedriver.SlaveDriver" class="py-name" href="#" onclick="return doclink('link-34', 'SlaveDriver', 'link-4');">SlaveDriver</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localip</tt><tt class="py-op">+</tt><tt class="py-string">":"</tt><tt class="py-op">+</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-name">p</tt> <tt class="py-op">=</tt> <tt class="py-name">psutil</tt><tt class="py-op">.</tt><tt class="py-name">Process</tt><tt class="py-op">(</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">        <tt class="py-name">cons</tt> <tt class="py-op">=</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">get_connections</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-name">cons</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">cons</tt><tt class="py-op">)</tt><tt class="py-op">&gt;=</tt><tt class="py-number">5</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"> </tt>
+<a name="TestSlavedriverInst.test_handle_checkin"></a><div id="TestSlavedriverInst.test_handle_checkin-def"><a name="L149"></a><tt class="py-lineno">149</tt> <a class="py-toggle" href="#" id="TestSlavedriverInst.test_handle_checkin-toggle" onclick="return toggle('TestSlavedriverInst.test_handle_checkin');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.test_cluster.TestSlavedriverInst-class.html#test_handle_checkin">test_handle_checkin</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestSlavedriverInst.test_handle_checkin-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="TestSlavedriverInst.test_handle_checkin-expanded"><a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">        <tt class="py-name">SD</tt> <tt class="py-op">=</tt> <tt id="link-35" class="py-name"><a title="pypln.apps.cluster.slavedriver.SlaveDriver" class="py-name" href="#" onclick="return doclink('link-35', 'SlaveDriver', 'link-4');">SlaveDriver</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localip</tt><tt class="py-op">+</tt><tt class="py-string">":"</tt><tt class="py-op">+</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">,</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">        <tt class="py-name">SD</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name" targets="Method pypln.apps.cluster.slavedriver.SlaveDriver.listen()=pypln.apps.cluster.slavedriver.SlaveDriver-class.html#listen"><a title="pypln.apps.cluster.slavedriver.SlaveDriver.listen" class="py-name" href="#" onclick="return doclink('link-36', 'listen', 'link-36');">listen</a></tt><tt class="py-op">(</tt><tt class="py-number">5</tt><tt class="py-op">)</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">        <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">sleep</tt><tt class="py-op">(</tt><tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="pypln.testing.zmqtesting.ProcessTest.send" class="py-name" href="#" onclick="return doclink('link-37', 'send', 'link-23');">send</a></tt><tt class="py-op">(</tt><tt class="py-string">"status"</tt><tt class="py-op">)</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">status_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt><tt class="py-op">,</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'cluster'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'pid'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertTrue</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'cluster'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-name">SD</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">has_key</tt><tt class="py-op">(</tt><tt class="py-string">'last_reported'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt><tt class="py-string">"Manager did not get status message"</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line"> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line"> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line"> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line"> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">    <tt class="py-name">unittest</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name" targets="Function pypln.Monitors.webmonitor.monitor.main()=pypln.Monitors.webmonitor.monitor-module.html#main,Function pypln.apps.cluster.cmanager.main()=pypln.apps.cluster.cmanager-module.html#main,Function pypln.apps.cluster.slavedriver.main()=pypln.apps.cluster.slavedriver-module.html#main"><a title="pypln.Monitors.webmonitor.monitor.main
+pypln.apps.cluster.cmanager.main
+pypln.apps.cluster.slavedriver.main" class="py-name" href="#" onclick="return doclink('link-38', 'main', 'link-38');">main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:29:00 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

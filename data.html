@@ -1,0 +1,138 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Data Gathering and Importing &mdash; PyPLN v0.1.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.1.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyPLN v0.1.1 documentation" href="index.html" />
+    <link rel="prev" title="Storage Backend" href="storage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="storage.html" title="Storage Backend"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="data-gathering-and-importing">
+<h1>Data Gathering and Importing<a class="headerlink" href="#data-gathering-and-importing" title="Permalink to this headline">¶</a></h1>
+<p>The main goal of PyPLN is to analyze textual data coming from all kinds of documents. Therefore, an essencial pre-requisite to its use is
+gathering some collection of documents which can then be imported to PyPLN Mongodb document store in order to be analyzed.</p>
+<p>To help achieve this goal, PyPLN provides some tools for data gathering and importing. Here we will cover some of these tools and also describe some of the already supported sources of documents that one might want to tap into.</p>
+<div class="section" id="document-sources">
+<h2>Document Sources<a class="headerlink" href="#document-sources" title="Permalink to this headline">¶</a></h2>
+<p>The sources described here are already supported for fetching and importing, or are in the process of analysis to be included among the fully supported sources. Those in development shold be clearly marked so.</p>
+<div class="section" id="scientific-publications">
+<h3>Scientific Publications<a class="headerlink" href="#scientific-publications" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt><em>PubMedCentral</em> (In development)</dt>
+<dd>This repository contais close to 2 million articles from multiple open access <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/journals/?filter=t1#csvfile">journals</a>. The ful text of the articles is available via <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/tools/ftp/">FTP</a> (for full text, PDFs, and supplementary data files, if any) or through an <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/tools/oai/">OAI service</a> for full articles in XML format.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="document-gathering-tools">
+<h2>Document Gathering Tools<a class="headerlink" href="#document-gathering-tools" title="Permalink to this headline">¶</a></h2>
+<p>Automatic download of documents require some kind of software which is normally distributed along with PyPLN sources. Listed Below are the document fetching tools already available with a link to their full documentation.</p>
+</div>
+<div class="section" id="document-importing-tools">
+<h2>Document Importing Tools<a class="headerlink" href="#document-importing-tools" title="Permalink to this headline">¶</a></h2>
+<p>For every document type, an importing tool is required to add the document do aour Mongodb store. Listed below are the importing tools already available with a link to their full documentation.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Data Gathering and Importing</a><ul>
+<li><a class="reference internal" href="#document-sources">Document Sources</a><ul>
+<li><a class="reference internal" href="#scientific-publications">Scientific Publications</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#document-gathering-tools">Document Gathering Tools</a></li>
+<li><a class="reference internal" href="#document-importing-tools">Document Importing Tools</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="storage.html"
+                        title="previous chapter">Storage Backend</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/data.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="storage.html" title="Storage Backend"
+             >previous</a> |</li>
+        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, Flávio Codeço Coelho.
+      Last updated on May 13, 2012.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+    </div>
+  </body>
+</html>

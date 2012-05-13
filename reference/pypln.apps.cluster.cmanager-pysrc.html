@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.apps.cluster.cmanager</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.apps-module.html">Package&nbsp;apps</a> ::
+        <a href="pypln.apps.cluster-module.html">Package&nbsp;cluster</a> ::
+        Module&nbsp;cmanager
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.apps.cluster.cmanager-module.html">Module pypln.apps.cluster.cmanager</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">u"""</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">This executable is the manager of a pypln cluster. All tasks should be started through it and are</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">monitorable/controllable through it.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-docstring">Cluster configuration must be specified on a config file pypln.conf</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-docstring">with at least the following sections:</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-docstring">[cluster]</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-docstring">master_ip = 127.0.0.1</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-docstring">nodes = ['127.0.0.1', '10.250.46.208'] # list of IPs to add to PyPLN cluster</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-docstring">[cluster]</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-docstring">[authentication]</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">sshkey =</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">[zeromq]</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring"># number of threads per context</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">iothreads = 1</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-docstring">[manager]</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-docstring">pushport = 5570</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-docstring">replyport = 5550</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-docstring">sd_subport = 5562</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-docstring">conf_reply = 5551</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-docstring">statusport = 5552</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-docstring">#Daemon configuration</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-docstring">[streamer]</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-docstring"># Streamer ports must be in the range 5570-9</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-docstring">pullport = 5570</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"><tt class="py-docstring">pushport = 5571</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt class="py-docstring">subport = 5573</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-docstring">[slavedriver]</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"><tt class="py-docstring"># Slavedrivers ports should be in the range 5560-9</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"><tt class="py-docstring">confport = 5551</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt class="py-docstring">pullport = 5571</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-docstring">pushport = 5561</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt class="py-docstring">pubport = 5562</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-docstring">subport = 5563</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-docstring">[worker]</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-docstring">[sink]</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-docstring">pubport=</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"><tt class="py-docstring">license: GPL v3 or later</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"><tt class="py-docstring">__date__ = 4 / 23 / 12</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"><tt class="py-name">__docformat__</tt> <tt class="py-op">=</tt> <tt class="py-string">"restructuredtext en"</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line"> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">ConfigParser</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">fabric</tt><tt class="py-op">.</tt><tt class="py-name">api</tt> <tt class="py-keyword">import</tt>   <tt class="py-name">execute</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">fabric</tt><tt class="py-op">.</tt><tt class="py-name">api</tt> <tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.run()=pypln.apps.cluster.cmanager.Manager-class.html#run,Method pypln.testing.zmqtesting.ProcessTest.run()=pypln.testing.zmqtesting.ProcessTest-class.html#run"><a title="pypln.apps.cluster.cmanager.Manager.run
+pypln.testing.zmqtesting.ProcessTest.run" class="py-name" href="#" onclick="return doclink('link-0', 'run', 'link-0');">run</a></tt> <tt class="py-keyword">as</tt> <tt class="py-name">frun</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">zmq</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">core</tt><tt class="py-op">.</tt><tt class="py-name">error</tt> <tt class="py-keyword">import</tt> <tt class="py-name">ZMQError</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">argparse</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">devices</tt> <tt class="py-keyword">import</tt>  <tt class="py-name">ThreadDevice</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line"><tt class="py-comment">#from mongoengine import connect</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pymongo</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Connection</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-keyword">import</tt>  <tt class="py-name">subprocess</tt><tt class="py-op">,</tt> <tt class="py-name">re</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">os</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">time</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">datetime</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-1" class="py-name" targets="Package pypln=pypln-module.html"><a title="pypln" class="py-name" href="#" onclick="return doclink('link-1', 'pypln', 'link-1');">pypln</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module pypln.logger=pypln.logger-module.html"><a title="pypln.logger" class="py-name" href="#" onclick="return doclink('link-2', 'logger', 'link-2');">logger</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Function pypln.logger.make_log()=pypln.logger-module.html#make_log"><a title="pypln.logger.make_log" class="py-name" href="#" onclick="return doclink('link-3', 'make_log', 'link-3');">make_log</a></tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-comment"># Setting up the logger</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt id="link-4" class="py-name" targets="Variable pypln.apps.cluster.cmanager.log=pypln.apps.cluster.cmanager-module.html#log,Variable pypln.apps.cluster.slavedriver.log=pypln.apps.cluster.slavedriver-module.html#log"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-4', 'log', 'link-4');">log</a></tt> <tt class="py-op">=</tt> <tt id="link-5" class="py-name"><a title="pypln.logger.make_log" class="py-name" href="#" onclick="return doclink('link-5', 'make_log', 'link-3');">make_log</a></tt><tt class="py-op">(</tt><tt class="py-string">"Manager"</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line"> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"><tt class="py-keyword">global</tt> <tt id="link-6" class="py-name" targets="Variable pypln.apps.cluster.cmanager.streamerpid=pypln.apps.cluster.cmanager-module.html#streamerpid"><a title="pypln.apps.cluster.cmanager.streamerpid" class="py-name" href="#" onclick="return doclink('link-6', 'streamerpid', 'link-6');">streamerpid</a></tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"><tt id="link-7" class="py-name"><a title="pypln.apps.cluster.cmanager.streamerpid" class="py-name" href="#" onclick="return doclink('link-7', 'streamerpid', 'link-6');">streamerpid</a></tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line"> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line"> </tt>
+<a name="Manager"></a><div id="Manager-def"><a name="L82"></a><tt class="py-lineno"> 82</tt> <a class="py-toggle" href="#" id="Manager-toggle" onclick="return toggle('Manager');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html">Manager</a><tt class="py-op">(</tt><tt class="py-base-class">object</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Manager-expanded"><a name="Manager.__init__"></a><div id="Manager.__init__-def"><a name="L83"></a><tt class="py-lineno"> 83</tt> <a class="py-toggle" href="#" id="Manager.__init__-toggle" onclick="return toggle('Manager.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">configfile</tt><tt class="py-op">=</tt><tt class="py-string">'/etc/pypln.conf'</tt><tt class="py-op">,</tt><tt class="py-param">bootstrap</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.__init__-expanded"><a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line"><tt class="py-docstring">        Manager daemon which acts as cluster controller</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line"><tt class="py-docstring">        :param configfile: path to pypln.conf</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line"><tt class="py-docstring">        :param bootstrap: if a cluster should be bootstrapped upon instantiation</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pid</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">getpid</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt> <tt class="py-op">=</tt> <tt class="py-name">ConfigParser</tt><tt class="py-op">.</tt><tt class="py-name">ConfigParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">read</tt><tt class="py-op">(</tt><tt class="py-name">configfile</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nodes</tt> <tt class="py-op">=</tt> <tt class="py-name">eval</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'cluster'</tt><tt class="py-op">,</tt><tt class="py-string">'nodes'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">active_jobs</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt> <tt class="py-op">=</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">items</tt><tt class="py-op">(</tt><tt class="py-string">'manager'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name" targets="Function pypln.apps.cluster.cmanager.get_ipv4_address()=pypln.apps.cluster.cmanager-module.html#get_ipv4_address,Function pypln.apps.cluster.slavedriver.get_ipv4_address()=pypln.apps.cluster.slavedriver-module.html#get_ipv4_address"><a title="pypln.apps.cluster.cmanager.get_ipv4_address
+pypln.apps.cluster.slavedriver.get_ipv4_address" class="py-name" href="#" onclick="return doclink('link-8', 'get_ipv4_address', 'link-8');">get_ipv4_address</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'master_ip'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">stayalive</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">db</tt> <tt class="py-op">=</tt> <tt class="py-name">Connection</tt><tt class="py-op">(</tt><tt class="py-name">host</tt><tt class="py-op">=</tt><tt class="py-string">'localhost'</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">PYPLN</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line"> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.bind()=pypln.apps.cluster.cmanager.Manager-class.html#bind"><a title="pypln.apps.cluster.cmanager.Manager.bind" class="py-name" href="#" onclick="return doclink('link-9', 'bind', 'link-9');">bind</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-comment">#Start the Streamer</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-10" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.setup_streamer()=pypln.apps.cluster.cmanager.Manager-class.html#setup_streamer"><a title="pypln.apps.cluster.cmanager.Manager.setup_streamer" class="py-name" href="#" onclick="return doclink('link-10', 'setup_streamer', 'link-10');">setup_streamer</a></tt><tt class="py-op">(</tt><tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">items</tt><tt class="py-op">(</tt><tt class="py-string">'streamer'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt id="link-11" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-11', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Done setting up Streamer"</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">bootstrap</tt><tt class="py-op">:</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.__bootstrap_cluster()=pypln.apps.cluster.cmanager.Manager-class.html#__bootstrap_cluster"><a title="pypln.apps.cluster.cmanager.Manager.__bootstrap_cluster" class="py-name" href="#" onclick="return doclink('link-12', '__bootstrap_cluster', 'link-12');">__bootstrap_cluster</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">            <tt id="link-13" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-13', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Done bootstrapping cluster"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line"> </tt>
+<a name="Manager.run"></a><div id="Manager.run-def"><a name="L113"></a><tt class="py-lineno">113</tt> <a class="py-toggle" href="#" id="Manager.run-toggle" onclick="return toggle('Manager.run');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#run">run</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.run-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.run-expanded"><a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line"><tt class="py-docstring">        Infinite loop listening to request</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line"><tt class="py-docstring">        :return:</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt id="link-14" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-14', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Starting run loop"</tt><tt class="py-op">)</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line"><tt class="py-comment">#        print "Starting run loop"</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">            <tt class="py-keyword">while</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">stayalive</tt><tt class="py-op">:</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">                <tt class="py-name">socks</tt> <tt class="py-op">=</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt><tt class="py-op">.</tt><tt class="py-name">poll</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-15" class="py-name" targets="Module pypln.Monitors.webmonitor.monitor=pypln.Monitors.webmonitor.monitor-module.html"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-15', 'monitor', 'link-15');">monitor</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">socks</tt> <tt class="py-keyword">and</tt> <tt class="py-name">socks</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-16', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">:</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line"><tt class="py-comment">#                    print "monitor"</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">                    <tt class="py-name">jobmsg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-17', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.process_jobs()=pypln.apps.cluster.cmanager.Manager-class.html#process_jobs"><a title="pypln.apps.cluster.cmanager.Manager.process_jobs" class="py-name" href="#" onclick="return doclink('link-18', 'process_jobs', 'link-18');">process_jobs</a></tt><tt class="py-op">(</tt><tt class="py-name">jobmsg</tt><tt class="py-op">)</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-19', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-op">{</tt><tt class="py-string">'ans'</tt><tt class="py-op">:</tt><tt class="py-string">'Job queued'</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"><tt class="py-comment">#                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"><tt class="py-comment">##                    self.monitor.send_json("{ans:'Job queued'}")</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line"> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt> <tt class="py-keyword">in</tt> <tt class="py-name">socks</tt> <tt class="py-keyword">and</tt> <tt class="py-name">socks</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">:</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"><tt class="py-comment">#                    print "conf"</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">                    <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">                    <tt class="py-name">configmsg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.handle_checkins()=pypln.apps.cluster.cmanager.Manager-class.html#handle_checkins"><a title="pypln.apps.cluster.cmanager.Manager.handle_checkins" class="py-name" href="#" onclick="return doclink('link-20', 'handle_checkins', 'link-20');">handle_checkins</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">configmsg</tt><tt class="py-op">)</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-comment">#                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-comment">#                    self.confport.send_json(configmsg)</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt> <tt class="py-keyword">in</tt> <tt class="py-name">socks</tt> <tt class="py-keyword">and</tt> <tt class="py-name">socks</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">                    <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">.</tt><tt id="link-21" class="py-name" targets="Method pypln.testing.zmqtesting.ProcessTest.recv()=pypln.testing.zmqtesting.ProcessTest-class.html#recv"><a title="pypln.testing.zmqtesting.ProcessTest.recv" class="py-name" href="#" onclick="return doclink('link-21', 'recv', 'link-21');">recv</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"><tt class="py-comment">#                    json.dumps({'cluster':self.node_registry,'active jobs':self.active_jobs})</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-op">{</tt><tt class="py-string">'cluster'</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt><tt class="py-op">,</tt><tt class="py-string">'active jobs'</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">active_jobs</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">                    <tt class="py-keyword">print</tt> <tt class="py-name">msg</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line"> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt> <tt class="py-keyword">in</tt> <tt class="py-name">socks</tt> <tt class="py-keyword">and</tt> <tt class="py-name">socks</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">:</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line"><tt class="py-comment">#                    print "SD"</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">                    <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">.</tt><tt class="py-name">recv_json</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line"><tt class="py-comment">#                    print msg</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">                    <tt id="link-22" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-22', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Status received: %s"</tt><tt class="py-op">%</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">                    <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-23" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.handle_slavedriver_status()=pypln.apps.cluster.cmanager.Manager-class.html#handle_slavedriver_status"><a title="pypln.apps.cluster.cmanager.Manager.handle_slavedriver_status" class="py-name" href="#" onclick="return doclink('link-23', 'handle_slavedriver_status', 'link-23');">handle_slavedriver_status</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line"> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">KeyboardInterrupt</tt> <tt class="py-keyword">as</tt> <tt class="py-name">e</tt><tt class="py-op">:</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">            <tt id="link-24" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-24', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">warning</tt><tt class="py-op">(</tt><tt class="py-string">"Manager coming down due to %s"</tt><tt class="py-op">%</tt><tt class="py-name">e</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">ZMQError</tt> <tt class="py-keyword">as</tt> <tt class="py-name">z</tt><tt class="py-op">:</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">            <tt id="link-25" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-25', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">error</tt><tt class="py-op">(</tt><tt class="py-string">"Failed messaging: %s"</tt><tt class="py-op">%</tt><tt class="py-name">z</tt><tt class="py-op">)</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"Failed messaging: %s"</tt><tt class="py-op">%</tt><tt class="py-name">z</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt class="py-keyword">finally</tt><tt class="py-op">:</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">"======&gt; Manager coming down"</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">            <tt id="link-26" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-26', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">warning</tt><tt class="py-op">(</tt><tt class="py-string">"Closing sockets"</tt><tt class="py-op">)</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-27', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pusher</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">timeout</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Variable pypln.servers.ventilator.context=pypln.servers.ventilator-module.html#context,Variable pypln.sinks.dummy_sink.context=pypln.sinks.dummy_sink-module.html#context,Variable pypln.sinks.mongo_insert_sink.context=pypln.sinks.mongo_insert_sink-module.html#context,Variable pypln.sinks.mongo_update_sink.context=pypln.sinks.mongo_update_sink-module.html#context,Variable pypln.sinks.raw_document_sink.context=pypln.sinks.raw_document_sink-module.html#context,Variable pypln.workers.enc_detect_worker.context=pypln.workers.enc_detect_worker-module.html#context,Variable pypln.workers.mime_detect_worker.context=pypln.workers.mime_detect_worker-module.html#context,Variable pypln.workers.palavras_worker.context=pypln.workers.palavras_worker-module.html#context,Variable pypln.workers.parser_worker.context=pypln.workers.parser_worker-module.html#context,Variable pypln.workers.pdfconv_worker.context=pypln.workers.pdfconv_worker-module.html#context,Variable pypln.workers.tagger_worker.context=pypln.workers.tagger_worker-module.html#context"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-28', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">term</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line"><tt class="py-comment">#            if self.streamerdevice:</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line"><tt class="py-comment">#                self.streamerdevice.join()</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">            <tt id="link-29" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-29', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">warning</tt><tt class="py-op">(</tt><tt class="py-string">"Exiting"</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">            <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line"> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line"> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line"> </tt>
+<a name="Manager.bind"></a><div id="Manager.bind-def"><a name="L175"></a><tt class="py-lineno">175</tt> <a class="py-toggle" href="#" id="Manager.bind-toggle" onclick="return toggle('Manager.bind');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#bind">bind</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.bind-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.bind-expanded"><a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line"><tt class="py-docstring">        Create and bind all sockets</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line"><tt class="py-docstring">        :return:</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-30" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-30', 'context', 'link-28');">context</a></tt> <tt class="py-op">=</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">Context</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">            <tt class="py-comment"># Socket to reply to job requests</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-31', 'monitor', 'link-15');">monitor</a></tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-32" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-32', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REP</tt><tt class="py-op">)</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-33', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">.</tt><tt id="link-34" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager.bind" class="py-name" href="#" onclick="return doclink('link-34', 'bind', 'link-9');">bind</a></tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'replyport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">            <tt class="py-comment"># Socket to reply to configuration requests</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-35', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REP</tt><tt class="py-op">)</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager.bind" class="py-name" href="#" onclick="return doclink('link-36', 'bind', 'link-9');">bind</a></tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">            <tt class="py-comment"># Socket to push jobs to streamer</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pusher</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-37" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-37', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PUSH</tt><tt class="py-op">)</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pusher</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'pushport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">            <tt class="py-comment"># Socket to subscribe to subscribe to multiple slavedrivers publishing status messages</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-38', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">SUB</tt><tt class="py-op">)</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">node</tt> <tt class="py-keyword">in</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nodes</tt><tt class="py-op">:</tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">node</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'sd_subport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">.</tt><tt class="py-name">setsockopt</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">SUBSCRIBE</tt><tt class="py-op">,</tt> <tt class="py-string">""</tt><tt class="py-op">)</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">            <tt class="py-comment"># Socket to send manager status reports</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-39" class="py-name"><a title="pypln.servers.ventilator.context
+pypln.sinks.dummy_sink.context
+pypln.sinks.mongo_insert_sink.context
+pypln.sinks.mongo_update_sink.context
+pypln.sinks.raw_document_sink.context
+pypln.workers.enc_detect_worker.context
+pypln.workers.mime_detect_worker.context
+pypln.workers.palavras_worker.context
+pypln.workers.parser_worker.context
+pypln.workers.pdfconv_worker.context
+pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-39', 'context', 'link-28');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">REP</tt><tt class="py-op">)</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">.</tt><tt id="link-40" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager.bind" class="py-name" href="#" onclick="return doclink('link-40', 'bind', 'link-9');">bind</a></tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'statusport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">            <tt class="py-comment"># Initialize poll set to listen on multiple channels at once</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt> <tt class="py-op">=</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">Poller</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt><tt class="py-op">.</tt><tt class="py-name">register</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-41" class="py-name"><a title="pypln.Monitors.webmonitor.monitor" class="py-name" href="#" onclick="return doclink('link-41', 'monitor', 'link-15');">monitor</a></tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">|</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLOUT</tt><tt class="py-op">)</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt><tt class="py-op">.</tt><tt class="py-name">register</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">confport</tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">|</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLOUT</tt><tt class="py-op">)</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt><tt class="py-op">.</tt><tt class="py-name">register</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">statussock</tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLOUT</tt><tt class="py-op">|</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">)</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">poller</tt><tt class="py-op">.</tt><tt class="py-name">register</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub_slavedriver_sock</tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">|</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLOUT</tt><tt class="py-op">)</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">ZMQError</tt> <tt class="py-keyword">as</tt> <tt class="py-name">z</tt><tt class="py-op">:</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">            <tt id="link-42" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-42', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">error</tt><tt class="py-op">(</tt><tt class="py-string">"Failed Binding ports: %s"</tt><tt class="py-op">%</tt><tt class="py-name">z</tt><tt class="py-op">)</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">            <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">        <tt id="link-43" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-43', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Finished Binding the sockets"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line"> </tt>
+<a name="Manager.handle_checkins"></a><div id="Manager.handle_checkins-def"><a name="L210"></a><tt class="py-lineno">210</tt> <a class="py-toggle" href="#" id="Manager.handle_checkins-toggle" onclick="return toggle('Manager.handle_checkins');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#handle_checkins">handle_checkins</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">msg</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.handle_checkins-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.handle_checkins-expanded"><a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line"><tt class="py-docstring">        Handle the checkin messages from slavedrivers adding their information to a registry of nodes</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line"><tt class="py-docstring">        :param msg: Slavedriver's checkin message</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line"><tt class="py-docstring">        :return: `configmsg` Slavedriver configuration dict extended with manager's ipaddress</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'type'</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-string">'slavedriver'</tt><tt class="py-op">:</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">            <tt class="py-name">configmsg</tt> <tt class="py-op">=</tt> <tt class="py-name">dict</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">items</tt><tt class="py-op">(</tt><tt class="py-string">'slavedriver'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">            <tt class="py-name">configmsg</tt><tt class="py-op">[</tt><tt class="py-string">'master_ip'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt><tt class="py-op">[</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ip'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'.'</tt><tt class="py-op">,</tt><tt class="py-string">' '</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">msg</tt> <tt class="py-comment">#Mongodb doesn't accept keys containing '.'</tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">configmsg</tt> </tt>
+</div><a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line"> </tt>
+<a name="Manager.handle_slavedriver_status"></a><div id="Manager.handle_slavedriver_status-def"><a name="L222"></a><tt class="py-lineno">222</tt> <a class="py-toggle" href="#" id="Manager.handle_slavedriver_status-toggle" onclick="return toggle('Manager.handle_slavedriver_status');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#handle_slavedriver_status">handle_slavedriver_status</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">msg</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.handle_slavedriver_status-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.handle_slavedriver_status-expanded"><a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line"><tt class="py-docstring">        Updates self.node_registry and copies it to Mongodb: PYPLN.Stats</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line"><tt class="py-docstring">        :param msg: Report from slavedriver processes</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line"><tt class="py-docstring">        :return:</tt> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L228"></a><tt class="py-lineno">228</tt>  <tt class="py-line">        <tt class="py-name">time_stamp</tt> <tt class="py-op">=</tt> <tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">now</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">        <tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'time_stamp'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">time_stamp</tt><tt class="py-op">.</tt><tt class="py-name">isoformat</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt><tt class="py-op">[</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ip'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'.'</tt><tt class="py-op">,</tt><tt class="py-string">' '</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-string">'last_report'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">msg</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line">        <tt id="link-44" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-44', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"updated node_registry %s"</tt><tt class="py-op">%</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt><tt class="py-op">)</tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">db</tt><tt class="py-op">.</tt><tt class="py-name">Stats</tt><tt class="py-op">.</tt><tt class="py-name">insert</tt><tt class="py-op">(</tt><tt class="py-op">{</tt><tt class="py-string">"cluster"</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">node_registry</tt><tt class="py-op">,</tt><tt class="py-string">"active jobs"</tt><tt class="py-op">:</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">active_jobs</tt><tt class="py-op">,</tt><tt class="py-string">"time_stamp"</tt><tt class="py-op">:</tt><tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">mktime</tt><tt class="py-op">(</tt><tt class="py-name">time_stamp</tt><tt class="py-op">.</tt><tt class="py-name">timetuple</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">        <tt id="link-45" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-45', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">'Saved status msg from %s'</tt><tt class="py-op">%</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'ip'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line"><tt class="py-comment">#        print self.node_registry</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line"> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line"> </tt>
+<a name="Manager.__bootstrap_cluster"></a><div id="Manager.__bootstrap_cluster-def"><a name="L237"></a><tt class="py-lineno">237</tt> <a class="py-toggle" href="#" id="Manager.__bootstrap_cluster-toggle" onclick="return toggle('Manager.__bootstrap_cluster');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#__bootstrap_cluster">__bootstrap_cluster</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.__bootstrap_cluster-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.__bootstrap_cluster-expanded"><a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">        <tt class="py-docstring">u"""</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line"><tt class="py-docstring">        Connect to the nodes and make sure they are ready to join the cluster</tt> </tt>
+<a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line"><tt class="py-docstring">        :return:</tt> </tt>
+<a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-46" class="py-name" targets="Method pypln.apps.cluster.cmanager.Manager.__deploy_slaves()=pypln.apps.cluster.cmanager.Manager-class.html#__deploy_slaves"><a title="pypln.apps.cluster.cmanager.Manager.__deploy_slaves" class="py-name" href="#" onclick="return doclink('link-46', '__deploy_slaves', 'link-46');">__deploy_slaves</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line"> </tt>
+<a name="Manager.setup_streamer"></a><div id="Manager.setup_streamer-def"><a name="L244"></a><tt class="py-lineno">244</tt> <a class="py-toggle" href="#" id="Manager.setup_streamer-toggle" onclick="return toggle('Manager.setup_streamer');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#setup_streamer">setup_streamer</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">opts</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.setup_streamer-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.setup_streamer-expanded"><a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">        <tt class="py-comment">#TODO: to have this as a ProcessDevice, One needs to figure out how to kill it when manager ends.</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt>  <tt class="py-op">=</tt> <tt class="py-name">ThreadDevice</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">STREAMER</tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PULL</tt><tt class="py-op">,</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PUSH</tt><tt class="py-op">)</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line"><tt class="py-comment">#        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)</tt> </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt class="py-name">bind_in</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">opts</tt><tt class="py-op">[</tt><tt class="py-string">'pullport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt class="py-name">bind_out</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://%s:%s"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">,</tt><tt class="py-name">opts</tt><tt class="py-op">[</tt><tt class="py-string">'pushport'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt class="py-name">setsockopt_in</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">IDENTITY</tt><tt class="py-op">,</tt> <tt class="py-string">'PULL'</tt><tt class="py-op">)</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt class="py-name">setsockopt_out</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">IDENTITY</tt><tt class="py-op">,</tt> <tt class="py-string">'PUSH'</tt><tt class="py-op">)</tt> </tt>
+<a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">.</tt><tt id="link-47" class="py-name" targets="Method pypln.sinks.base.BaseSink.start()=pypln.sinks.base.BaseSink-class.html#start,Method pypln.sinks.dummy_sink.DummySink.start()=pypln.sinks.dummy_sink.DummySink-class.html#start,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.start()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.start()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#start,Method pypln.sinks.raw_document_sink.RawDocumentSink.start()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#start,Method pypln.workers.base.BaseWorker.start()=pypln.workers.base.BaseWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.dummy_worker.DummyWorker.start()=pypln.workers.dummy_worker.DummyWorker-class.html#start,Method pypln.workers.enc_detect_worker.EncodingWorker.start()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#start,Method pypln.workers.mime_detect_worker.MimeWorker.start()=pypln.workers.mime_detect_worker.MimeWorker-class.html#start,Method pypln.workers.palavras_worker.Palavras_worker.start()=pypln.workers.palavras_worker.Palavras_worker-class.html#start,Method pypln.workers.parser_worker.ParserWorker.start()=pypln.workers.parser_worker.ParserWorker-class.html#start"><a title="pypln.sinks.base.BaseSink.start
+pypln.sinks.dummy_sink.DummySink.start
+pypln.sinks.mongo_insert_sink.MongoInsertSink.start
+pypln.sinks.mongo_update_sink.MongoUpdateSink.start
+pypln.sinks.raw_document_sink.RawDocumentSink.start
+pypln.workers.base.BaseWorker.start
+pypln.workers.base.PushPullWorker.start
+pypln.workers.dummy_worker.DummyWorker.start
+pypln.workers.enc_detect_worker.EncodingWorker.start
+pypln.workers.mime_detect_worker.MimeWorker.start
+pypln.workers.palavras_worker.Palavras_worker.start
+pypln.workers.parser_worker.ParserWorker.start" class="py-name" href="#" onclick="return doclink('link-47', 'start', 'link-47');">start</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line"> </tt>
+<a name="L254"></a><tt class="py-lineno">254</tt>  <tt class="py-line"> </tt>
+<a name="Manager.process_jobs"></a><div id="Manager.process_jobs-def"><a name="L255"></a><tt class="py-lineno">255</tt> <a class="py-toggle" href="#" id="Manager.process_jobs-toggle" onclick="return toggle('Manager.process_jobs');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#process_jobs">process_jobs</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt><tt class="py-param">msg</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.process_jobs-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.process_jobs-expanded"><a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line"><tt class="py-docstring">        Process jobs received</tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line"><tt class="py-docstring">        :param msg: json string speciying the job</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line">        <tt class="py-name">dispatch_time</tt> <tt class="py-op">=</tt> <tt class="py-name">time</tt><tt class="py-op">.</tt><tt class="py-name">asctime</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">,</tt><tt class="py-name">list</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L262"></a><tt class="py-lineno">262</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">m</tt> <tt class="py-keyword">in</tt> <tt class="py-name">msg</tt><tt class="py-op">:</tt> </tt>
+<a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line"><tt class="py-comment">#                print m</tt> </tt>
+<a name="L264"></a><tt class="py-lineno">264</tt>  <tt class="py-line">                <tt class="py-name">m</tt><tt class="py-op">[</tt><tt class="py-string">'dispatched_on'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">dispatch_time</tt> </tt>
+<a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pusher</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">m</tt><tt class="py-op">)</tt> </tt>
+<a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">active_jobs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">m</tt><tt class="py-op">)</tt> </tt>
+<a name="L267"></a><tt class="py-lineno">267</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line">            <tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'dispatched_on'</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">dispatch_time</tt> </tt>
+<a name="L269"></a><tt class="py-lineno">269</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">pusher</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L270"></a><tt class="py-lineno">270</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">active_jobs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
+<a name="L271"></a><tt class="py-lineno">271</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">streamerdevice</tt><tt class="py-op">:</tt> </tt>
+<a name="L272"></a><tt class="py-lineno">272</tt>  <tt class="py-line">            <tt id="link-48" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-48', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"sent msg to streamer"</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L273"></a><tt class="py-lineno">273</tt>  <tt class="py-line"> </tt>
+<a name="L274"></a><tt class="py-lineno">274</tt>  <tt class="py-line"> </tt>
+<a name="L275"></a><tt class="py-lineno">275</tt>  <tt class="py-line"> </tt>
+<a name="Manager.__deploy_slaves"></a><div id="Manager.__deploy_slaves-def"><a name="L276"></a><tt class="py-lineno">276</tt> <a class="py-toggle" href="#" id="Manager.__deploy_slaves-toggle" onclick="return toggle('Manager.__deploy_slaves');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager.Manager-class.html#__deploy_slaves">__deploy_slaves</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Manager.__deploy_slaves-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Manager.__deploy_slaves-expanded"><a name="L277"></a><tt class="py-lineno">277</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L278"></a><tt class="py-lineno">278</tt>  <tt class="py-line"><tt class="py-docstring">        Start slavedrivers on slavenodes</tt> </tt>
+<a name="L279"></a><tt class="py-lineno">279</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L280"></a><tt class="py-lineno">280</tt>  <tt class="py-line">        <tt class="py-name">nodes</tt> <tt class="py-op">=</tt> <tt class="py-name">set</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nodes</tt><tt class="py-op">)</tt> <tt class="py-comment">#avoid duplicate ips</tt> </tt>
+<a name="L281"></a><tt class="py-lineno">281</tt>  <tt class="py-line">        <tt id="link-49" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-49', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"About to start %s slavedriver(s)"</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">nodes</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L282"></a><tt class="py-lineno">282</tt>  <tt class="py-line">        <tt class="py-name">execute</tt><tt class="py-op">(</tt><tt id="link-50" class="py-name" targets="Function pypln.apps.cluster.cmanager.spawn_slave()=pypln.apps.cluster.cmanager-module.html#spawn_slave"><a title="pypln.apps.cluster.cmanager.spawn_slave" class="py-name" href="#" onclick="return doclink('link-50', 'spawn_slave', 'link-50');">spawn_slave</a></tt><tt class="py-op">,</tt><tt class="py-name">hosts</tt><tt class="py-op">=</tt><tt class="py-name">list</tt><tt class="py-op">(</tt><tt class="py-name">nodes</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">masteruri</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ipaddress</tt><tt class="py-op">+</tt><tt class="py-string">':'</tt><tt class="py-op">+</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">localconf</tt><tt class="py-op">[</tt><tt class="py-string">'conf_reply'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L283"></a><tt class="py-lineno">283</tt>  <tt class="py-line"> </tt>
+<a name="spawn_slave"></a><div id="spawn_slave-def"><a name="L284"></a><tt class="py-lineno">284</tt> <a class="py-toggle" href="#" id="spawn_slave-toggle" onclick="return toggle('spawn_slave');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager-module.html#spawn_slave">spawn_slave</a><tt class="py-op">(</tt><tt class="py-param">masteruri</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="spawn_slave-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="spawn_slave-expanded"><a name="L285"></a><tt class="py-lineno">285</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L286"></a><tt class="py-lineno">286</tt>  <tt class="py-line"><tt class="py-docstring">    Fabric task to spawn a slavedriver on remote node</tt> </tt>
+<a name="L287"></a><tt class="py-lineno">287</tt>  <tt class="py-line"><tt class="py-docstring">    :param masteruri:</tt> </tt>
+<a name="L288"></a><tt class="py-lineno">288</tt>  <tt class="py-line"><tt class="py-docstring">    :return:</tt> </tt>
+<a name="L289"></a><tt class="py-lineno">289</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L290"></a><tt class="py-lineno">290</tt>  <tt class="py-line">    <tt class="py-name">frun</tt><tt class="py-op">(</tt><tt class="py-string">'nohup slavedriver %s &amp;'</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-name">masteruri</tt><tt class="py-op">,</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L291"></a><tt class="py-lineno">291</tt>  <tt class="py-line">    <tt id="link-51" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-51', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">debug</tt><tt class="py-op">(</tt><tt class="py-string">"Spawned Slavedriver."</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L292"></a><tt class="py-lineno">292</tt>  <tt class="py-line"> </tt>
+<a name="L293"></a><tt class="py-lineno">293</tt>  <tt class="py-line"> </tt>
+<a name="L294"></a><tt class="py-lineno">294</tt>  <tt class="py-line"><tt class="py-comment">#@atexit.register</tt> </tt>
+<a name="L295"></a><tt class="py-lineno">295</tt>  <tt class="py-line"><tt class="py-comment">#def cleanup():</tt> </tt>
+<a name="L296"></a><tt class="py-lineno">296</tt>  <tt class="py-line"><tt class="py-comment">#    if self.streamerdevice:</tt> </tt>
+<a name="L297"></a><tt class="py-lineno">297</tt>  <tt class="py-line"><tt class="py-comment">#        self.streamerdevice.join()</tt> </tt>
+<a name="L298"></a><tt class="py-lineno">298</tt>  <tt class="py-line"><tt class="py-comment">##        os.kill(streamerpid,signal.SIGKILL)</tt> </tt>
+<a name="L299"></a><tt class="py-lineno">299</tt>  <tt class="py-line"> </tt>
+<a name="get_ipv4_address"></a><div id="get_ipv4_address-def"><a name="L300"></a><tt class="py-lineno">300</tt> <a class="py-toggle" href="#" id="get_ipv4_address-toggle" onclick="return toggle('get_ipv4_address');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager-module.html#get_ipv4_address">get_ipv4_address</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="get_ipv4_address-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="get_ipv4_address-expanded"><a name="L301"></a><tt class="py-lineno">301</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L302"></a><tt class="py-lineno">302</tt>  <tt class="py-line"><tt class="py-docstring">    Returns IPv4 address(es) of current machine.</tt> </tt>
+<a name="L303"></a><tt class="py-lineno">303</tt>  <tt class="py-line"><tt class="py-docstring">    :return:</tt> </tt>
+<a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L305"></a><tt class="py-lineno">305</tt>  <tt class="py-line">    <tt class="py-name">p</tt> <tt class="py-op">=</tt> <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-op">[</tt><tt class="py-string">"ifconfig"</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">stdout</tt><tt class="py-op">=</tt><tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">PIPE</tt><tt class="py-op">)</tt> </tt>
+<a name="L306"></a><tt class="py-lineno">306</tt>  <tt class="py-line">    <tt class="py-name">ifc_resp</tt> <tt class="py-op">=</tt> <tt class="py-name">p</tt><tt class="py-op">.</tt><tt class="py-name">communicate</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L307"></a><tt class="py-lineno">307</tt>  <tt class="py-line">    <tt class="py-name">patt</tt> <tt class="py-op">=</tt> <tt class="py-name">re</tt><tt class="py-op">.</tt><tt class="py-name">compile</tt><tt class="py-op">(</tt><tt class="py-string">r'inet\s*\w*\S*:\s*(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'</tt><tt class="py-op">)</tt> </tt>
+<a name="L308"></a><tt class="py-lineno">308</tt>  <tt class="py-line">    <tt class="py-name">resp</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">ip</tt> <tt class="py-keyword">for</tt> <tt class="py-name">ip</tt> <tt class="py-keyword">in</tt> <tt class="py-name">patt</tt><tt class="py-op">.</tt><tt class="py-name">findall</tt><tt class="py-op">(</tt><tt class="py-name">ifc_resp</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> <tt class="py-keyword">if</tt> <tt class="py-name">ip</tt> <tt class="py-op">!=</tt> <tt class="py-string">'127.0.0.1'</tt><tt class="py-op">]</tt> </tt>
+<a name="L309"></a><tt class="py-lineno">309</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">resp</tt> <tt class="py-op">==</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L310"></a><tt class="py-lineno">310</tt>  <tt class="py-line">        <tt id="link-52" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-52', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">warning</tt><tt class="py-op">(</tt><tt class="py-string">"Couldn't determine IP Address, using 127.0.0.1."</tt><tt class="py-op">)</tt> </tt>
+<a name="L311"></a><tt class="py-lineno">311</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">'127.0.0.1'</tt> </tt>
+<a name="L312"></a><tt class="py-lineno">312</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">resp</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+</div><a name="L313"></a><tt class="py-lineno">313</tt>  <tt class="py-line"> </tt>
+<a name="main"></a><div id="main-def"><a name="L314"></a><tt class="py-lineno">314</tt> <a class="py-toggle" href="#" id="main-toggle" onclick="return toggle('main');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.apps.cluster.cmanager-module.html#main">main</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="main-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="main-expanded"><a name="L315"></a><tt class="py-lineno">315</tt>  <tt class="py-line">    <tt id="link-53" class="py-name" targets="Module pypln.apps.parser=pypln.apps.parser-module.html"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-53', 'parser', 'link-53');">parser</a></tt> <tt class="py-op">=</tt> <tt class="py-name">argparse</tt><tt class="py-op">.</tt><tt class="py-name">ArgumentParser</tt><tt class="py-op">(</tt><tt class="py-name">description</tt><tt class="py-op">=</tt><tt class="py-string">"Starts PyPLN's cluster manager"</tt><tt class="py-op">)</tt> </tt>
+<a name="L316"></a><tt class="py-lineno">316</tt>  <tt class="py-line">    <tt id="link-54" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-54', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--conf'</tt><tt class="py-op">,</tt> <tt class="py-string">'-c'</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Config file"</tt><tt class="py-op">,</tt><tt class="py-name">required</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L317"></a><tt class="py-lineno">317</tt>  <tt class="py-line">    <tt id="link-55" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-55', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--nosetup'</tt><tt class="py-op">,</tt><tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'store_false'</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Don't try to setup cluster"</tt><tt class="py-op">)</tt> </tt>
+<a name="L318"></a><tt class="py-lineno">318</tt>  <tt class="py-line">    <tt id="link-56" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-56', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--verbose'</tt><tt class="py-op">,</tt> <tt class="py-string">'-v'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'count'</tt><tt class="py-op">,</tt> </tt>
+<a name="L319"></a><tt class="py-lineno">319</tt>  <tt class="py-line">        <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG"</tt><tt class="py-op">)</tt> </tt>
+<a name="L320"></a><tt class="py-lineno">320</tt>  <tt class="py-line">    <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt id="link-57" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-57', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">parse_args</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L321"></a><tt class="py-lineno">321</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L322"></a><tt class="py-lineno">322</tt>  <tt class="py-line">        <tt id="link-58" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-58', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">ERROR</tt><tt class="py-op">)</tt> </tt>
+<a name="L323"></a><tt class="py-lineno">323</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L324"></a><tt class="py-lineno">324</tt>  <tt class="py-line">        <tt id="link-59" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-59', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">WARNING</tt><tt class="py-op">)</tt> </tt>
+<a name="L325"></a><tt class="py-lineno">325</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">==</tt> <tt class="py-number">2</tt><tt class="py-op">:</tt> </tt>
+<a name="L326"></a><tt class="py-lineno">326</tt>  <tt class="py-line">        <tt id="link-60" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-60', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L327"></a><tt class="py-lineno">327</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">&gt;=</tt> <tt class="py-number">3</tt><tt class="py-op">:</tt> </tt>
+<a name="L328"></a><tt class="py-lineno">328</tt>  <tt class="py-line">        <tt id="link-61" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-61', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt id="link-62" class="py-name" targets="Variable pypln.Monitors.webmonitor.settings.DEBUG=pypln.Monitors.webmonitor.settings-module.html#DEBUG"><a title="pypln.Monitors.webmonitor.settings.DEBUG" class="py-name" href="#" onclick="return doclink('link-62', 'DEBUG', 'link-62');">DEBUG</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L329"></a><tt class="py-lineno">329</tt>  <tt class="py-line">    <tt class="py-name">M</tt> <tt class="py-op">=</tt> <tt id="link-63" class="py-name" targets="Class pypln.apps.cluster.cmanager.Manager=pypln.apps.cluster.cmanager.Manager-class.html"><a title="pypln.apps.cluster.cmanager.Manager" class="py-name" href="#" onclick="return doclink('link-63', 'Manager', 'link-63');">Manager</a></tt><tt class="py-op">(</tt><tt class="py-name">configfile</tt><tt class="py-op">=</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">conf</tt><tt class="py-op">,</tt><tt class="py-name">bootstrap</tt><tt class="py-op">=</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">nosetup</tt><tt class="py-op">)</tt> </tt>
+<a name="L330"></a><tt class="py-lineno">330</tt>  <tt class="py-line">    <tt class="py-name">M</tt><tt class="py-op">.</tt><tt id="link-64" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager.run
+pypln.testing.zmqtesting.ProcessTest.run" class="py-name" href="#" onclick="return doclink('link-64', 'run', 'link-0');">run</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L331"></a><tt class="py-lineno">331</tt>  <tt class="py-line"> </tt>
+<a name="L332"></a><tt class="py-lineno">332</tt>  <tt class="py-line"> </tt>
+<a name="L333"></a><tt class="py-lineno">333</tt>  <tt class="py-line"><tt class="py-keyword">if</tt>  <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L334"></a><tt class="py-lineno">334</tt>  <tt class="py-line">    <tt id="link-65" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-65', 'parser', 'link-53');">parser</a></tt> <tt class="py-op">=</tt> <tt class="py-name">argparse</tt><tt class="py-op">.</tt><tt class="py-name">ArgumentParser</tt><tt class="py-op">(</tt><tt class="py-name">description</tt><tt class="py-op">=</tt><tt class="py-string">"Starts PyPLN's cluster manager"</tt><tt class="py-op">)</tt> </tt>
+<a name="L335"></a><tt class="py-lineno">335</tt>  <tt class="py-line">    <tt id="link-66" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-66', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--conf'</tt><tt class="py-op">,</tt> <tt class="py-string">'-c'</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Config file"</tt><tt class="py-op">,</tt><tt class="py-name">required</tt><tt class="py-op">=</tt><tt class="py-name">True</tt><tt class="py-op">)</tt> </tt>
+<a name="L336"></a><tt class="py-lineno">336</tt>  <tt class="py-line">    <tt id="link-67" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-67', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--nosetup'</tt><tt class="py-op">,</tt><tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'store_false'</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Don't try to setup cluster"</tt><tt class="py-op">)</tt> </tt>
+<a name="L337"></a><tt class="py-lineno">337</tt>  <tt class="py-line">    <tt id="link-68" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-68', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'--verbose'</tt><tt class="py-op">,</tt> <tt class="py-string">'-v'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'count'</tt><tt class="py-op">,</tt> </tt>
+<a name="L338"></a><tt class="py-lineno">338</tt>  <tt class="py-line">        <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG"</tt><tt class="py-op">)</tt> </tt>
+<a name="L339"></a><tt class="py-lineno">339</tt>  <tt class="py-line">    <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt id="link-69" class="py-name"><a title="pypln.apps.parser" class="py-name" href="#" onclick="return doclink('link-69', 'parser', 'link-53');">parser</a></tt><tt class="py-op">.</tt><tt class="py-name">parse_args</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L340"></a><tt class="py-lineno">340</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L341"></a><tt class="py-lineno">341</tt>  <tt class="py-line">        <tt id="link-70" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-70', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">ERROR</tt><tt class="py-op">)</tt> </tt>
+<a name="L342"></a><tt class="py-lineno">342</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">==</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L343"></a><tt class="py-lineno">343</tt>  <tt class="py-line">        <tt id="link-71" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-71', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">WARNING</tt><tt class="py-op">)</tt> </tt>
+<a name="L344"></a><tt class="py-lineno">344</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">==</tt> <tt class="py-number">2</tt><tt class="py-op">:</tt> </tt>
+<a name="L345"></a><tt class="py-lineno">345</tt>  <tt class="py-line">        <tt id="link-72" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-72', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L346"></a><tt class="py-lineno">346</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt> <tt class="py-op">&gt;=</tt> <tt class="py-number">3</tt><tt class="py-op">:</tt> </tt>
+<a name="L347"></a><tt class="py-lineno">347</tt>  <tt class="py-line">        <tt id="link-73" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log" class="py-name" href="#" onclick="return doclink('link-73', 'log', 'link-4');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt id="link-74" class="py-name"><a title="pypln.Monitors.webmonitor.settings.DEBUG" class="py-name" href="#" onclick="return doclink('link-74', 'DEBUG', 'link-62');">DEBUG</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L348"></a><tt class="py-lineno">348</tt>  <tt class="py-line">    <tt class="py-name">M</tt> <tt class="py-op">=</tt> <tt id="link-75" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager" class="py-name" href="#" onclick="return doclink('link-75', 'Manager', 'link-63');">Manager</a></tt><tt class="py-op">(</tt><tt class="py-name">configfile</tt><tt class="py-op">=</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">conf</tt><tt class="py-op">,</tt><tt class="py-name">bootstrap</tt><tt class="py-op">=</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">nosetup</tt><tt class="py-op">)</tt> </tt>
+<a name="L349"></a><tt class="py-lineno">349</tt>  <tt class="py-line">    <tt class="py-name">M</tt><tt class="py-op">.</tt><tt id="link-76" class="py-name"><a title="pypln.apps.cluster.cmanager.Manager.run
+pypln.testing.zmqtesting.ProcessTest.run" class="py-name" href="#" onclick="return doclink('link-76', 'run', 'link-0');">run</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L350"></a><tt class="py-lineno">350</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:29:00 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

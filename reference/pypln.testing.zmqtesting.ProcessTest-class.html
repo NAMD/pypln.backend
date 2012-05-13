@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.testing.zmqtesting.ProcessTest</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.testing-module.html">Package&nbsp;testing</a> ::
+        <a href="pypln.testing.zmqtesting-module.html">Module&nbsp;zmqtesting</a> ::
+        Class&nbsp;ProcessTest
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class ProcessTest</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_pypln_te_5" name="uml_class_diagram_for_pypln_te_5">
+<area shape="rect" id="node22" href="pypln.testing.zmqtesting.ProcessTest-class.html#send" title="JSON&#45;encodes body, concatenates it with header, appends extra_data and sends it as multipart message over socket." alt="" coords="17,39,297,57"/>
+<area shape="rect" id="node22" href="pypln.testing.zmqtesting.ProcessTest-class.html#recv" title="Receives and returns a multipart message from socket and tries to JSON&#45;decode the item at position json_load_index (defaults to &#45;1; the last element in the list). The original byte string will be replaced by the loaded object. Set json_load_index to None to get the original, unchanged message." alt="" coords="17,57,297,76"/>
+<area shape="rect" id="node22" href="pypln.testing.zmqtesting.ProcessTest-class.html#run" title="Iterates over the testfunc generator and executes all actions it yields. Results will be sent back into the generator." alt="" coords="17,76,297,95"/>
+<area shape="rect" id="node1" href="pypln.testing.zmqtesting.ProcessTest-class.html" title="Base class for process tests. It offers basic actions for sending and receiving messages and implements the run methods that handles the actual test generators." alt="" coords="5,6,309,101"/>
+</map>
+  <img src="uml_class_diagram_for_pypln_te_5.gif" alt='' usemap="#uml_class_diagram_for_pypln_te_5" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+Base class for process tests. It offers basic actions for sending and
+receiving messages and implements the <em>run</em> methods that handles the
+actual test generators.
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="pypln.testing.zmqtesting.ProcessTest-class.html#send" class="summary-sig-name">send</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">socket</span>,
+        <span class="summary-sig-arg">header</span>,
+        <span class="summary-sig-arg">body</span>,
+        <span class="summary-sig-arg">extra_data</span>=<span class="summary-sig-default">[]</span>)</span><br />
+      JSON-encodes <em>body</em>, concatenates it with <em>header</em>, appends
+<em>extra_data</em> and sends it as multipart message over <em>socket</em>.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest.send">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="recv"></a><span class="summary-sig-name">recv</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">socket</span>,
+        <span class="summary-sig-arg">json_load_index</span>=<span class="summary-sig-default">-1</span>)</span><br />
+      Receives and returns a multipart message from <em>socket</em> and tries to
+JSON-decode the item at position <em>json_load_index</em> (defaults to <tt class="rst-docutils literal"><span class="pre">-1</span></tt>;
+the last element in the list). The original byte string will be
+replaced by the loaded object. Set <em>json_load_index</em> to <tt class="rst-docutils literal">None</tt> to get
+the original, unchanged message.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest.recv">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="pypln.testing.zmqtesting.ProcessTest-class.html#run" class="summary-sig-name">run</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">testfunc</span>)</span><br />
+      Iterates over the <em>testfunc</em> generator and executes all actions it
+yields. Results will be sent back into the generator.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest.run">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__init__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="send"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">send</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">socket</span>,
+        <span class="sig-arg">header</span>,
+        <span class="sig-arg">body</span>,
+        <span class="sig-arg">extra_data</span>=<span class="sig-default">[]</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest.send">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>JSON-encodes <em>body</em>, concatenates it with <em>header</em>, appends
+<em>extra_data</em> and sends it as multipart message over <em>socket</em>.</p>
+<p><em>header</em> and <em>extra_data</em> should be lists containg byte objects or
+objects implementing the buffer interface (like NumPy arrays).</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="run"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">run</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">testfunc</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="pypln.testing.zmqtesting-pysrc.html#ProcessTest.run">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  Iterates over the <em>testfunc</em> generator and executes all actions it
+yields. Results will be sent back into the generator.
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>testfunc</code></strong> (generatorfunction) - A generator function that yields tuples containing
+an action keyword, which should be a function of this or
+the inheriting class (like <tt class="rst-docutils literal">send</tt> or <tt class="rst-docutils literal">recv</tt>) and additional
+parameters that will be passed to that function, e.g.:
+<tt class="rst-docutils literal">('send', socket_obj, <span class="pre">['header'],</span> 'body')</tt></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:29:00 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

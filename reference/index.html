@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;pypln
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PACKAGE DESCRIPTION ==================== -->
+<h1 class="epydoc">Package pypln</h1><p class="nomargin-top"><span class="codelink"><a href="pypln-pysrc.html">source&nbsp;code</a></span></p>
+<p>PyPLN -- Distributed text processing pipeline.</p>
+
+<!-- ==================== SUBMODULES ==================== -->
+<a name="section-Submodules"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Submodules</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Submodules"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr><td class="summary">
+  <ul class="nomargin">
+    <li> <strong class="uidlink"><a href="pypln.Monitors-module.html">pypln.Monitors</a></strong>: <em class="summary">This package contains code implementing realtime monitoring tools 
+        for the Pipeline</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor-module.html">pypln.Monitors.webmonitor</a></strong>: <em class="summary">Please describe this module.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor.monitor-module.html">pypln.Monitors.webmonitor.monitor</a></strong>: <em class="summary">Web app to monitor PyPLN cluster</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor.settings-module.html">pypln.Monitors.webmonitor.settings</a></strong>    </li>
+    </ul>
+    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps-module.html">pypln.apps</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.apps.cleaner-module.html">pypln.apps.cleaner</a></strong>: <em class="summary">This script contains a number of cleanup functions which are 
+        intended to be run as a cron job with arguments indicating the type
+        of cleanup to do.</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.cluster-module.html">pypln.apps.cluster</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.apps.cluster.cmanager-module.html">pypln.apps.cluster.cmanager</a></strong>: <em class="summary">This executable is the manager of a pypln cluster. All tasks should be started through it and are
+monitorable/controllable through it.</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.cluster.slavedriver-module.html">pypln.apps.cluster.slavedriver</a></strong>: <em class="summary">Created on 27/04/12
+by fccoelho
+license: GPL V3 or Later</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.cluster.test_cluster-module.html">pypln.apps.cluster.test_cluster</a></strong>: <em class="summary">Testing module for cmanager.py</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.clusterer-module.html">pypln.apps.clusterer</a></strong>: <em class="summary">Applies the clustering</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.extractor-module.html">pypln.apps.extractor</a></strong>: <em class="summary">New Document processor</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.frequency_counter-module.html">pypln.apps.frequency_counter</a></strong>: <em class="summary">This script Created on 28/09/11 by flavio</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.parser-module.html">pypln.apps.parser</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.apps.postagger-module.html">pypln.apps.postagger</a></strong>: <em class="summary">Part of speech tagger based on NLTK
+Created on 27/09/11
+by flavio</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.logger-module.html">pypln.logger</a></strong>: <em class="summary">Define logger infrastructure for the cluster</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.servers-module.html">pypln.servers</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.servers.baseapp-module.html">pypln.servers.baseapp</a></strong>: <em class="summary">Basic application setup classes</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.servers.ventilator-module.html">pypln.servers.ventilator</a></strong>: <em class="summary">Task ventilator
+Binds PUSH socket to <a class="rst-rst-reference external rst-reference external" href="tcp://localhost:5557" target="_top">tcp://localhost:5557</a>
+Sends batch of tasks to workers via that socket
+Adapted from 0MQ tutorial (&quot;The Guide&quot;)</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.sinks-module.html">pypln.sinks</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.sinks.base-module.html">pypln.sinks.base</a></strong>: <em class="summary">Base classes for sinks</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.sinks.dummy_sink-module.html">pypln.sinks.dummy_sink</a></strong>: <em class="summary">Task sink Binds PULL socket to tcp://localhost:5558 Collects 
+        results from workers via that socket</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.sinks.mongo_insert_sink-module.html">pypln.sinks.mongo_insert_sink</a></strong>: <em class="summary">Sink to save documents in a MongoDb Collection</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.sinks.mongo_update_sink-module.html">pypln.sinks.mongo_update_sink</a></strong>: <em class="summary">Created on 28/09/11
+by flavio</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.sinks.raw_document_sink-module.html">pypln.sinks.raw_document_sink</a></strong>: <em class="summary">Document sink Binds PULL socket to tcp://localhost:5558 Collects 
+        text from workers via that socket and stores in the Document 
+        database</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores-module.html">pypln.stores</a></strong>: <em class="summary">This package contains code defining persistent stores which can be 
+        used by the sinks to  save  data to, and by the servers to fetch 
+        data for further processing</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.stores.filestor-module.html">pypln.stores.filestor</a></strong>: <em class="summary">Configures an interface for accessing files in MongoDb's GridFS</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores.mongocorpus-module.html">pypln.stores.mongocorpus</a></strong>: <em class="summary">This module implements a MongoDB backed NLTK Corpus reader.</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores.mongostore-module.html">pypln.stores.mongostore</a></strong>: <em class="summary">Define a Mongo Document database for storing raw text documents and
+        metadata</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.test_messaging-module.html">pypln.test_messaging</a></strong>: <em class="summary">Test module for testing worker spawning and killing workers and 
+        sinks</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.test_worker_processes-module.html">pypln.test_worker_processes</a></strong>: <em class="summary">This testing module contains tests of the process methods of 
+        workers These methods should be called directly, with a message, to
+        avoid the need of starting ventilators and worker processes 
+        communicating through ZMQ</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.testing-module.html">pypln.testing</a></strong>: <em class="summary">Please describe this module.</em>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.testing.zmqtesting-module.html">pypln.testing.zmqtesting</a></strong>: <em class="summary">This module contains various functions and classes to support testing.
+Lifted from <a class="rst-rst-reference external rst-reference external" href="https://bitbucket.org/ssc/pyzmq-article/src/tip/example_app/test/support.py" target="_top">https://bitbucket.org/ssc/pyzmq-article/src/tip/example_app/test/support.py</a></em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers-module.html">pypln.workers</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.workers.base-module.html">pypln.workers.base</a></strong>: <em class="summary">Base classes for workers</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.dummy_worker-module.html">pypln.workers.dummy_worker</a></strong>: <em class="summary">Task worker Connects PULL socket to tcp://localhost:5557 Collects 
+        workloads from ventilator via that socket Connects PUSH socket to 
+        tcp://localhost:5558 Sends results to sink via that socket</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.enc_detect_worker-module.html">pypln.workers.enc_detect_worker</a></strong>: <em class="summary">Character encoding detection worker</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.highlighter_worker-module.html">pypln.workers.highlighter_worker</a></strong>: <em class="summary">This worker highlights words on a document using html and CSS.</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.mime_detect_worker-module.html">pypln.workers.mime_detect_worker</a></strong>: <em class="summary">Mimetype detection worker</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.palavras_worker-module.html">pypln.workers.palavras_worker</a></strong>: <em class="summary">class: palavras_worker connect worker to palavras (bick), and 
+        return annotation Author: Agnaldo L Martins (agnaldo@toptc.com.br)</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.parser_worker-module.html">pypln.workers.parser_worker</a></strong>: <em class="summary">Text parsing worker</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.pdfconv_worker-module.html">pypln.workers.pdfconv_worker</a></strong>: <em class="summary">PDF to text conversion worker</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.tagger_worker-module.html">pypln.workers.tagger_worker</a></strong>: <em class="summary">This worker does Part of speech tagging.</em>    </li>
+    </ul>
+    </li>
+  </ul></td></tr>
+</table>
+
+<br />
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="pv"></a><span class="summary-name">pv</span> = <code title="[int(v) for v in version.pyzmq_version().split('.')]">[int(v) for v in version.pyzmq_version().split('.')]</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="zv"></a><span class="summary-name">zv</span> = <code title="[int(v) for v in version.zmq_version().split('.')]">[int(v) for v in version.zmq_version().split('.')]</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="pypln-module.html#TASK_TYPES" class="summary-name">TASK_TYPES</a> = <code title="{1: {'name': 'mimetype detection', 'worker': 'mime_detect_worker', 'si\
+nk': 'mimetype_sink'}, 2: {'name': 'Encoding detection', 'worker': 'en\
+c_detect_worker', 'sink': 'encoding_sink'}, 3: {'name': 'PDF to Text C\
+onversion', 'worker': 'pdfconv_worker', 'sink': 'document_sink'},}">{1: {'name': 'mimetype detection', 'worker': 'mim<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="pypln-module.html#PORTS" class="summary-name">PORTS</a> = <code title="{'ventilator push': 5557, 'worker push': 5558, 'ventilator pub': 5559,\
+ 'sink pub': 5560,}">{'ventilator push': 5557, 'worker push': 5558, 'ventil<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="TASK_TYPES"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">TASK_TYPES</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+{1: {'name': 'mimetype detection', 'worker': 'mime_detect_worker', 'si<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+nk': 'mimetype_sink'}, 2: {'name': 'Encoding detection', 'worker': 'en<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+c_detect_worker', 'sink': 'encoding_sink'}, 3: {'name': 'PDF to Text C<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+onversion', 'worker': 'pdfconv_worker', 'sink': 'document_sink'},}
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="PORTS"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">PORTS</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+{'ventilator push': 5557, 'worker push': 5558, 'ventilator pub': 5559,<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ 'sink pub': 5560,}
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 13 11:28:59 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
