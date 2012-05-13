@@ -26,12 +26,23 @@ Db = Connection()[app.config['DATABASE']]
 
 @app.route("/")
 def dashboard():
-    info = Db.Stats.find_one(fields=['cluster'])
+    info = Db.Stats.find_one(fields=['cluster'],sort=[("time_stamp",-1)])
     number_nodes = len(info['cluster'])
+    # Summing up resources
+    resources = {'nodes':number_nodes,'cpus':0,'memory':0}
+    for k,v in info['cluster'].iteritems():
+        resources['cpus'] += v['system']['cpus']
+        resources['memory'] += v['system']['memory']['total']
+
     with open("/tmp/pypln.log") as f:
         logs = f.readlines()
     logs.reverse() # Latest entries first
-    return render_template('index.html',logs=logs,n_nodes = number_nodes,nrows=number_nodes/2,nnames=info['cluster'].keys())
+    return render_template('index.html',logs=logs,
+        n_nodes = number_nodes,
+        nrows=number_nodes/2,
+        nnames=info['cluster'].keys(),
+        resources = resources,
+    )
 
 @app.route("/_get_stats")
 def get_cluster_stats():

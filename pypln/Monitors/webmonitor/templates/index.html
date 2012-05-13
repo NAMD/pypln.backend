@@ -53,9 +53,6 @@
     </div>
 
     <div class="container">
-        <div class="alert" id="data_debug">
-
-        </div>
 
       <div class="hero-unit">
         <h2>Cluster Load</h2>
@@ -93,8 +90,13 @@
         </div>
         <div class="span4">
           <h2>Cluster Resources</h2>
-           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+            <h4>Nodes</h4>
+            <p>{{resources.nodes}}</p>
+            <h4>CPUs</h4>
+            <p>{{resources.cpus}}</p>
+            <h4>Total Memory</h4>
+            <p>{{ resources.memory/1048576 }} MB</p>
+            <p><a class="btn" href="#">View details &raquo;</a></p>
        </div>
         <div class="span4">
           <h2>Logs</h2>
@@ -174,7 +176,6 @@
                 xaxis: { show: true ,mode: "time",timeformat: "%y/%m/%d-%H:%M:%S"}
                 };
                 $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
-                    $("#data_debug").text(data)
                     for (var i = 0 ; i<{{ n_nodes }} ; i++){
                         var nnames = [{% for n in nnames %}"{{ n|safe }}",{% endfor %}]
 //                alert(data[nnames[0]].data)
