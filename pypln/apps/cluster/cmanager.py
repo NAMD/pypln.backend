@@ -56,17 +56,20 @@ __date__ = 4 / 23 / 12
 __docformat__ = "restructuredtext en"
 
 import ConfigParser
-from fabric.api import local, abort, execute
+from fabric.api import   execute
+from fabric.api import run as frun
 import zmq
 from zmq.core.error import ZMQError
 import argparse
-from zmq.devices import ProcessDevice, ThreadDevice
-from zmq.devices.monitoredqueuedevice import ProcessMonitoredQueue
-import multiprocessing
-import socket, subprocess, re
-import sys, os, signal, atexit
+from zmq.devices import  ThreadDevice
+#from mongoengine import connect
+from pymongo import Connection
+import  subprocess, re
+import sys, os
 import time
-from logger import make_log
+import datetime
+import logging
+from pypln.logger import make_log
 
 # Setting up the logger
 log = make_log("Manager")
@@ -75,13 +78,15 @@ log = make_log("Manager")
 global streamerpid
 streamerpid = None
 
+
 class Manager(object):
-    def __init__(self, configfile='/etc/pypln.conf',bootstrap=False):
+    def __init__(self, configfile='/etc/pypln.conf',bootstrap=True):
         """
         Manager daemon which acts as cluster controller
         :param configfile: path to pypln.conf
         :param bootstrap: if a cluster should be bootstrapped upon instantiation
         """
+        self.pid = os.getpid()
         self.config = ConfigParser.ConfigParser()
         self.config.read(configfile)
         self.nodes = eval(self.config.get('cluster','nodes'))
@@ -92,14 +97,17 @@ class Manager(object):
         self.localconf['master_ip'] = self.ipaddress
         self.stayalive = True
         self.streamerdevice = None
+        self.db = Connection(host='localhost').PYPLN
 
         self.bind()
 
         #Start the Streamer
         self.setup_streamer(dict(self.config.items('streamer')))
+        log.debug("Done setting up Streamer")
 
         if bootstrap:
             self.__bootstrap_cluster()
+            log.debug("Done bootstrapping cluster")
 
 
     def run(self):
@@ -107,64 +115,62 @@ class Manager(object):
         Infinite loop listening to request
         :return:
         """
+        log.debug("Starting run loop")
+#        print "Starting run loop"
         try:
             while self.stayalive:
-#                print "====> Publishing status"
                 socks = dict(self.poller.poll())
                 if self.monitor in socks and socks[self.monitor] == zmq.POLLIN:
+#                    print "monitor"
                     jobmsg = self.monitor.recv_json()
                     self.process_jobs(jobmsg)
                     self.monitor.send_json({'ans':'Job queued'})
 #                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
-#                    pass
 ##                    self.monitor.send_json("{ans:'Job queued'}")
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
+#                    print "conf"
                     msg = self.confport.recv_json()
                     configmsg = self.handle_checkins(msg)
                     self.confport.send_json(configmsg)
 #                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
 #                    self.confport.send_json(configmsg)
+
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
-#                    print "====> Sending status"
                     msg = self.statussock.recv()
+#                    json.dumps({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
+                    print msg,self.node_registry
 
-                if self.sub_slaved_port in socks and socks[self.sub_slaved_port] == zmq.POLLIN:
-                    print "==> receiving pubs from sds"
-                    msg = self.sub_slaved_port.recv_json()
-                    log.info("Status received: %s"%msg)
-                    print msg
+                if self.sub_slavedriver_sock in socks and socks[self.sub_slavedriver_sock] == zmq.POLLIN:
+#                    print "SD"
+                    msg = self.sub_slavedriver_sock.recv_json()
+#                    print msg
+                    log.debug("Status received: %s"%msg)
+                    self.handle_slavedriver_status(msg)
 
-        except (KeyboardInterrupt, SystemExit):
-            log.info("Manager coming down")
+
+        except KeyboardInterrupt as e:
+            log.warning("Manager coming down due to %s"%e)
         except ZMQError as z:
-            log.error("Failed messaging: %"%z)
-            print "Failed messaging: %"%z
+            log.error("Failed messaging: %s"%z)
+            print "Failed messaging: %s"%z
         finally:
             print "======> Manager coming down"
-            log.warning("Manager coming down")
+            log.warning("Closing sockets")
             self.monitor.close()
             self.confport.close()
             self.pusher.close()
             self.statussock.close()
-            self.sub_slaved_port.close()
+            self.sub_slavedriver_sock.close()
+            self.streamerdevice.join(timeout=1)
             self.context.term()
-            if self.streamerdevice:
-                self.streamerdevice.join()
+#            if self.streamerdevice:
+#                self.streamerdevice.join()
+            log.warning("Exiting")
             sys.exit()
 
-    def handle_checkins(self,msg):
-        """
-        Handle the checkin messages from slavedrivers adding their information to a registry of nodes
-        :param msg: checkin message
-        :return:
-        """
-        if msg['type'] == 'slavedriver':
-            configmsg = dict(self.config.items('slavedriver'))
-            configmsg['master_ip'] = self.ipaddress
-            self.node_registry[msg['ip']] = msg
-        return configmsg
+
 
     def bind(self):
         """
@@ -182,11 +188,12 @@ class Manager(object):
             # Socket to push jobs to streamer
             self.pusher = self.context.socket(zmq.PUSH)
             self.pusher.connect("tcp://%s:%s"%(self.ipaddress,self.localconf['pushport']))
-            # Socket to subscribe to subscribe to  slavedrivers status messages
-            for ip in self.nodes:
-                self.sub_slaved_port = self.context.socket(zmq.SUB)
-                self.sub_slaved_port.connect("tcp://%s:%s"%(ip,self.localconf['sd_subport']))
-            # Socket to send status reports
+            # Socket to subscribe to subscribe to multiple slavedrivers publishing status messages
+            self.sub_slavedriver_sock = self.context.socket(zmq.SUB)
+            for node in self.nodes:
+                self.sub_slavedriver_sock.connect("tcp://%s:%s"%(node,self.localconf['sd_subport']))
+                self.sub_slavedriver_sock.setsockopt(zmq.SUBSCRIBE, "")
+            # Socket to send manager status reports
             self.statussock = self.context.socket(zmq.REP)
             self.statussock.bind("tcp://%s:%s"%(self.ipaddress,self.localconf['statusport']))
             # Initialize poll set to listen on multiple channels at once
@@ -194,9 +201,37 @@ class Manager(object):
             self.poller.register(self.monitor, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.confport, zmq.POLLIN|zmq.POLLOUT)
             self.poller.register(self.statussock, zmq.POLLOUT|zmq.POLLIN)
-            self.poller.register(self.sub_slaved_port, zmq.POLLIN)
-        except ZMQError:
+            self.poller.register(self.sub_slavedriver_sock, zmq.POLLIN|zmq.POLLOUT)
+        except ZMQError as z:
+            log.error("Failed Binding ports: %s"%z)
             sys.exit(1)
+        log.debug("Finished Binding the sockets")
+
+    def handle_checkins(self,msg):
+        """
+        Handle the checkin messages from slavedrivers adding their information to a registry of nodes
+        :param msg: Slavedriver's checkin message
+        :return: `configmsg` Slavedriver configuration dict extended with manager's ipaddress
+        """
+        if msg['type'] == 'slavedriver':
+            configmsg = dict(self.config.items('slavedriver'))
+            configmsg['master_ip'] = self.ipaddress
+            self.node_registry[msg['ip'].replace('.',' ')] = msg #Mongodb doesn't accept keys containing '.'
+        return configmsg
+
+    def handle_slavedriver_status(self,msg):
+        """
+        Updates self.node_registry and copies it to Mongodb: PYPLN.Stats
+        :param msg: Report from slavedriver processes
+        :return:
+        """
+        time_stamp = datetime.datetime.now()
+        msg['time_stamp'] = time_stamp.isoformat()
+        self.node_registry[msg['ip'].replace('.',' ')]['last_report'] = msg
+        log.debug("updated node_registry %s"%self.node_registry)
+        self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":time.mktime(time_stamp.timetuple())})
+        log.debug('Saved status msg from %s'%msg['ip'])
+#        print self.node_registry
 
 
     def __bootstrap_cluster(self):
@@ -207,12 +242,11 @@ class Manager(object):
         self.__deploy_slaves()
 
     def setup_streamer(self,opts):
-        ipaddress = get_ipv4_address()
         #TODO: to have this as a ProcessDevice, One needs to figure out how to kill it when manager ends.
         self.streamerdevice  = ThreadDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
 #        self.streamerdevice  = ProcessDevice(zmq.STREAMER, zmq.PULL, zmq.PUSH)
-        self.streamerdevice.bind_in("tcp://%s:%s"%(ipaddress,opts['pullport']))
-        self.streamerdevice.bind_out("tcp://%s:%s"%(ipaddress,opts['pushport']))
+        self.streamerdevice.bind_in("tcp://%s:%s"%(self.ipaddress,opts['pullport']))
+        self.streamerdevice.bind_out("tcp://%s:%s"%(self.ipaddress,opts['pushport']))
         self.streamerdevice.setsockopt_in(zmq.IDENTITY, 'PULL')
         self.streamerdevice.setsockopt_out(zmq.IDENTITY, 'PUSH')
         self.streamerdevice.start()
@@ -235,7 +269,7 @@ class Manager(object):
             self.pusher.send_json(msg)
             self.active_jobs.append(msg)
         if self.streamerdevice:
-            log.info("sent msg to streamer")
+            log.debug("sent msg to streamer")
 
 
 
@@ -243,7 +277,9 @@ class Manager(object):
         """
         Start slavedrivers on slavenodes
         """
-        execute(spawn_slave,hosts=self.nodes,masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
+        nodes = set(self.nodes) #avoid duplicate ips
+        log.debug("About to start %s slavedriver(s)"%(len(nodes)))
+        execute(spawn_slave,hosts=list(nodes), masteruri=self.ipaddress+':'+self.localconf['conf_reply'])
 
 def spawn_slave(masteruri):
     """
@@ -251,8 +287,9 @@ def spawn_slave(masteruri):
     :param masteruri:
     :return:
     """
-    sdproc = subprocess.Popen(['./slavedriver.py','tcp://%s'%(masteruri)])
-    return sdproc.pid
+    frun('nohup slavedriver %s &'%(masteruri,))
+    log.debug("Spawned Slavedriver.")
+
 
 #@atexit.register
 #def cleanup():
@@ -274,10 +311,39 @@ def get_ipv4_address():
         return '127.0.0.1'
     return resp[0]
 
+def main():
+    parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
+    parser.add_argument('--conf', '-c', help="Config file",required=True)
+    parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")
+    parser.add_argument('--verbose', '-v', action='count',
+        help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
+    args = parser.parse_args()
+    if args.verbose is None:
+        log.setLevel(logging.ERROR)
+    elif args.verbose == 1:
+        log.setLevel(logging.WARNING)
+    elif args.verbose == 2:
+        log.setLevel(logging.INFO)
+    elif args.verbose >= 3:
+        log.setLevel(logging.DEBUG)
+    M = Manager(configfile=args.conf,bootstrap=args.nosetup)
+    M.run()
+
+
 if  __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Starts PyPLN's cluster manager")
     parser.add_argument('--conf', '-c', help="Config file",required=True)
     parser.add_argument('--nosetup',action='store_false', help="Don't try to setup cluster")
+    parser.add_argument('--verbose', '-v', action='count',
+        help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
     args = parser.parse_args()
+    if args.verbose is None:
+        log.setLevel(logging.ERROR)
+    elif args.verbose == 1:
+        log.setLevel(logging.WARNING)
+    elif args.verbose == 2:
+        log.setLevel(logging.INFO)
+    elif args.verbose >= 3:
+        log.setLevel(logging.DEBUG)
     M = Manager(configfile=args.conf,bootstrap=args.nosetup)
     M.run()
