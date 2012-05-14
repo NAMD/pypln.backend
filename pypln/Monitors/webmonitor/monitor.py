@@ -34,10 +34,10 @@ def dashboard():
         resources['cpus'] += v['system']['cpus']
         resources['memory'] += v['system']['memory']['total']
 
-    with open("/tmp/pypln.log") as f:
-        logs = f.readlines()
-    logs.reverse() # Latest entries first
-    return render_template('index.html',logs=logs,
+#    with open("/tmp/pypln.log") as f:
+#        logs = f.readlines()
+#    logs.reverse() # Latest entries first
+    return render_template('index.html',logs=[],
         n_nodes = number_nodes,
         nrows=number_nodes/2,
         nnames=info['cluster'].keys(),
@@ -93,9 +93,10 @@ def get_logs():
     for i in logs:
         i.pop('_id')
         #converting to javascript timestamps which are in milisecconds
-        i['timestamp'] = time.mktime(i['timestamp'].as_datetime().timetuple())*1000
+        i['timest'] = i['timestamp'].as_datetime().isoformat()
+        i.pop('timestamp')
         l.append(i)
-    return jsonify(logs=l)
+    return json.dumps(l)
 
 
 def main():

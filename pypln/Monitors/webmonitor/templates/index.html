@@ -60,8 +60,12 @@
           <div class="row">
               <div class="span12">
               <div class="row">
-                  <div class="span6" ><p>{{i}}</p><div id="placeholder{{ loop.index0*2 }}" style="width:400px;height:200px;"></div></div>
-                  <div class="span6"><p>{{i}}</p><div id="placeholder{{ loop.index0*2+1 }}" style="width:400px;height:200px;"></div></div>
+                  <div class="span6" ><p>{{i}}
+                    </p><div id="placeholder{{ loop.index0*2 }}" style="width:400px;height:200px;"></div>
+                  </div>
+                  <div class="span6"><p>{{i}}
+                    </p><div id="placeholder{{ loop.index0*2+1 }}" style="width:400px;height:200px;"></div>
+                  </div>
               </div>
               </div>
           </div>
@@ -81,11 +85,12 @@
                 <li>
                     <a href="#">Next</a>
                 </li>
+           </ol>
                <div id="joblist">
 
                </div>
 
-           </ol>
+
           <p><a class="btn" href="#">View details &raquo;</a></p>
         </div>
         <div class="span4">
@@ -113,25 +118,29 @@
                 <li>
                     <a href="#">Next</a>
                 </li>
-            {% for l in logs %}
-                {% if 'INFO' in l%}
-                    <li><a class="close" data-dismiss="alert" href="#">×</a>
-                        <div class="alert alert-info">{{l}}</div></li>
-                {% elif 'WARNING' in l %}
-                    <li><a class="close" data-dismiss="alert" href="#">×</a>
-                        <div class="alert alert-block">{{l}}</div></li>
-                {% elif 'ERROR' in l %}
-                <li><a class="close" data-dismiss="alert" href="#">×</a>
-                    <div class="alert alert-error">{{l}}</div></li>
-                {% elif 'DEBUG' in l %}
-                <li><a class="close" data-dismiss="alert" href="#">×</a>
-                    <div class="alert alert-success">{{l}}></div></li>
-                {% else %}
-
-                <li>{{l}}</li>
-                {% endif %}
-            {% endfor %}
             </ul>
+                <div id="loglist">
+
+                </div>
+            <!--{% for l in logs %}-->
+                <!--{% if 'INFO' in l%}-->
+                    <!--<li><a class="close" data-dismiss="alert" href="#">×</a>-->
+                        <!--<div class="alert alert-info">{{l}}</div></li>-->
+                <!--{% elif 'WARNING' in l %}-->
+                    <!--<li><a class="close" data-dismiss="alert" href="#">×</a>-->
+                        <!--<div class="alert alert-block">{{l}}</div></li>-->
+                <!--{% elif 'ERROR' in l %}-->
+                <!--<li><a class="close" data-dismiss="alert" href="#">×</a>-->
+                    <!--<div class="alert alert-error">{{l}}</div></li>-->
+                <!--{% elif 'DEBUG' in l %}-->
+                <!--<li><a class="close" data-dismiss="alert" href="#">×</a>-->
+                    <!--<div class="alert alert-success">{{l}}></div></li>-->
+                <!--{% else %}-->
+
+                <!--<li>{{l}}</li>-->
+                <!--{% endif %}-->
+            <!--{% endfor %}-->
+
           <p><a class="btn" href="#">Expanded View &raquo;</a></p>
         </div>
       </div>
@@ -178,18 +187,41 @@
                 $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
                     for (var i = 0 ; i<{{ n_nodes }} ; i++){
                         var nnames = [{% for n in nnames %}"{{ n|safe }}",{% endfor %}]
-//                alert(data[nnames[0]].data)
                         $.plot($("#placeholder"+i), data[nnames[i]], options)
                     }
                 });
             }
             function update_logs(){
-                $.getJSON($SCRIPT_ROOT + '/_get_logs',{},function(logs){})
+
+                $.getJSON($SCRIPT_ROOT + '/_get_logs',{},function(logs){
+//                    $('#loglist').append(logs.length)
+                    $('#loglist').html(' ')
+                    for (var i=0 ; i < logs.length ; i++) {
+                        var l = logs[i];
+                        var logbot = '</div>';
+//                        $('#loglist').append(logtop+'<h4 class="alert-info">'+ l.loggerName+'-'+ l.level+'</h4>'+ l.message+logbot);
+                        if (l.level.indexOf("INFO") >= 0){
+                            var logtop = '<div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">×</a>';
+                            $('#loglist').append(logtop+'<h4 class="alert-info">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
+
+                        else if (l.level.indexOf('WARNING') >= 0){
+                            var logtop = '<div class="alert alert-warning"><a class="close" data-dismiss="alert" href="#">×</a>';
+                            $('#loglist').append(logtop+'<h4 class="alert-warning">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
+                        else if (l.level.indexOf('ERROR') >= 0){
+                            var logtop = '<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">×</a>';
+                            $('#loglist').append(logtop+'<h4 class="alert-error">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
+
+                        else if (l.level.indexOf('DEBUG') >= 0){
+                            var logtop = '<div class="alert alert-success"><a class="close" data-dismiss="alert" href="#">×</a>';
+                            $('#loglist').append(logtop+'<h4 class="alert-success">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
+
+                    }
+                });
 
             }
             function update_jobs(){
                 $.getJSON($SCRIPT_ROOT + '/_get_active_jobs',{},function(jobs){
-                    for (i=0;i<jobs.length;i++){
+                    for (var i=0;i<jobs.length;i++){
                         $('#joblist').append('<li>'+jobs[i].toString()+'</li>')
                     }
                 })
@@ -197,7 +229,7 @@
 
 
             // setup control widget
-            var updateInterval = 500;
+            var updateInterval = 1000;
             $("#updateInterval").val(updateInterval).change(function () {
                 var v = $(this).val();
                 if (v && !isNaN(+v)) {
@@ -210,16 +242,13 @@
                 }
             });
 
-            // setup plot
-
-//            setTimeout(get_ts_data, updateInterval);
-
             function update() {
+                update_logs();
                 get_ts_data();
-                update_logs()
-                update_jobs()
+                update_jobs();
                 setTimeout(update, updateInterval);
             }
+//        $('#loglist').append('hello')
             update();
         });
 </script>
