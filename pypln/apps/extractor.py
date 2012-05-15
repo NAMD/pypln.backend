@@ -49,6 +49,7 @@ def scan_dir(path, db, recurse=False):
             if fid != None:
                 doc = fs.fs.get(fid)
                 docdict[mt].append(doc.md5)
+            #TODO: maybe handle the case when the files are already on gridfs but have not been extracted yet
     return docdict
 
 def scan_gridfs(db,host):
@@ -105,6 +106,7 @@ if __name__=="__main__":
     parser.add_argument('-d', '--db', required=True, help="Database in which to deposit the texts")
     parser.add_argument('-c', '--col', required=True, help="Collection in which to deposit the texts")
     parser.add_argument('-g','--gfs', help=" Scan griGridFS under db. Overrides path")
+    #TODO: change -g argument to a count based one
     parser.add_argument( 'path', metavar='p', type=directory, help="Path of directory to scan for documents")
 
     args = parser.parse_args()
