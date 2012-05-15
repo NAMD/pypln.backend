@@ -27,13 +27,14 @@ class PDFConverterWorker(PushPullWorker):
         gridfs = filestor.FS(msg['database'],msg['collection'])
         pdf= gridfs.fs.get_last_version(md5=msg['md5'])
 #        print msg['md5']
+        msgout = {'fail':1}
         try :
             fi = pdf.read()
             p = subprocess.Popen(['pdftotext','-q','-','-'],stdin=subprocess.PIPE,  stdout=subprocess.PIPE)
             stdout, stderr = p.communicate(input=fi)
             # Also get file Metadata
-            q = subprocess.Popen(['pdfinfo','-meta','-','-'],stdin=subprocess.PIPE,  stdout=subprocess.PIPE)
-            metadata, mderr = p.communicate(input=fi)
+            q = subprocess.Popen(['pdfinfo','-meta','-'],stdin=subprocess.PIPE,  stdout=subprocess.PIPE)
+            metadata, mderr = q.communicate(input=fi)
             metadata = self.parse_metadata(metadata)
             if not (stdout and metadata):
                 msgout = {'fail':1}
@@ -43,12 +44,30 @@ class PDFConverterWorker(PushPullWorker):
                               'database':msg['database'],'collection':msg['collection']}
                 else:
                     msgout = {'fail':1}
-                    p.kill()
-                    q.kill()
-        except OSError:
-            p.kill()
-            q.kill()
+                    try:
+                        p.kill()
+                        q.kill()
+                    except OSError:
+                        pass
+                        #process is already dead
+
+        except ValueError:
             msgout = {'fail':1}
+            try:
+                p.kill()
+                q.kill()
+            except OSError:
+                pass
+                #process is already dead
+        except OSError:
+            msgout = {'fail':1}
+            try:
+                p.kill()
+                q.kill()
+            except OSError:
+                pass
+                #process is already dead
+
         finally:
             self.sender.send_json(msgout)
         return msgout

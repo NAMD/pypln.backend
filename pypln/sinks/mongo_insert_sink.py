@@ -52,17 +52,17 @@ class MongoInsertSink(BaseSink):
         self.batchsz
         """
 #        print msg
-        coll = collection(msg.pop('database'),msg.pop('collection'))
+        self.coll = collection(msg.pop('database'),msg.pop('collection'))
         self.insertlist.append(msg)
         
         if len(self.insertlist) > self.batchsz:
             print "==> inserting...", 
-            coll.insert(self.insertlist)
+            self.coll.insert(self.insertlist)
             self.insertlist = []
     def flush(self):
         print "--> sink flushing"
         if self.insertlist:
-            coll.insert(self.insertlist)
+            self.coll.insert(self.insertlist)
             
 if __name__=="__main__":
     S=MongoInsertSink()

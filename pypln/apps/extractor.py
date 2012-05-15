@@ -18,7 +18,6 @@ import sys,argparse
 from collections import defaultdict
 import mimetypes
 from multiprocessing import Process
-from subprocess import Popen
 from pypln.servers.ventilator import Ventilator
 from pypln.servers.baseapp import TaskVentilator
 from pypln.stores.filestor import FS
@@ -56,6 +55,9 @@ def scan_gridfs(db,host):
     """
     scans gridfs under a given database and returns
     a dictionary of files by mimetype
+    :param db: Database where to look for gridfs
+    :param host: Host where to find Mongodb
+    :return: Dictionary of documents by mimetype
     """
     #TODO: maybe it's better to identify files by ID in both these scan functions.
     docdict = defaultdict(lambda:[])
@@ -63,34 +65,22 @@ def scan_gridfs(db,host):
     fs = FS(db,True)
     cursor = files.find()
     for f in cursor:
-        mt = mimetypes.guess_type(f)['filename']#classify documents by mimetype
-        doc = fs.get(f['_id'])
+        mt = mimetypes.guess_type(f['filename'])[0]#classify documents by mimetype
+        doc = fs.fs.get(f['_id'])
         docdict[mt].append(doc.md5)
     return docdict
-    
-def setup_workers(nw=5):
-    """
-    Start the worker processes
-    """
-    WP = [Process(target=PDFConverterWorker()) for i in range(nw)]
-    [p.start() for p in WP]
-    #WP = [Popen(['python', '../pypln/workers/pdfconv_worker.py'], stdout=None) for i in range(nw)]
-    return WP
-    
-def setup_sink():
-    """
-    Start ns sink process(es)
-    """
-    SP = [Process(target=MongoInsertSink())]
-    SP[0].start()
-    #SP = [Popen(['python', '../pypln/sinks/mongo_insert_sink.py'], stdout=None)]
-    return SP
 
-def extract(path,nw=10):
-    #TODO: Currently broken. Implement a generic text extractor worker which is mimetype aware
-    pdf_ext_vent = Ventilator(pushport=5557, pubport=5559, subport=5560)
+
+def extract(path,vent):
+    """
+    Extract texts from file under a given path or on gridfs
+    """
+    pdf_ext_vent = vent#Ventilator(pushport=5557, pubport=5559, subport=5560)
     time.sleep(1)
-    docs = scan_dir(path, args.db)
+    if args.gfs is None:
+        docs = scan_dir(path, args.db)
+    else:
+        docs = scan_gridfs(args.db,args.host)
     print "number of PDFs ",len(docs['application/pdf'])
     msgs = []
     for v in docs['application/pdf']:
@@ -124,14 +114,11 @@ if __name__=="__main__":
     else:
         p= "/home/flavio/Documentos/Reprints/"
 
-    ports = {'ventilator':(5557,5559,5559), # pushport,pubport,subport
-             'worker':(5564,5561,5563),          # pushport,pullport,subport
-             'sink':(5564,5563,5562)   # pullport,pubport,subport
-    }
 
-    tv = TaskVentilator(Ventilator,PDFConverterWorker,MongoInsertSink,10,ports)
-    sinks = setup_sink()
-    workers = setup_workers(8)
-    extract(args.path,8)
+    tv = TaskVentilator(Ventilator,PDFConverterWorker,MongoInsertSink,10)
+    vent, ws, sink = tv.spawn()
+#    sinks = setup_sink()
+#    workers = setup_workers(8)
+    extract(args.path,vent)
 
 
