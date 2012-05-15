@@ -29,32 +29,39 @@ class TaskVentilator(object):
         :return: None
         """
         if not ports:
-            ports = self.find_ports()
+            self.ports = ports = self.find_ports()
         self.ventilator = ventilator_class(pushport=ports['ventilator'][0],pubport=ports['ventilator'][1],subport=ports['ventilator'][2])
         self.workers = [worker_class(pushport=ports['worker'][0],pullport=ports['worker'][1],subport=ports['worker'][2]) for i in xrange(nw)]
         self.sink = sink_class(pullport=ports['sink'][0],pubport=ports['sink'][1],subport=ports['sink'][2])
 
     @classmethod
-    def find_ports(self, range=(5500,5600)):
+    def find_ports(self, rng=(5500,5600)):
         """
         Generate port set for this pattern by searching available ports
-        :param range: tuple with range of ports to search
+        This pattern require a total of 4 ports.
+        :param rng: tuple with range of ports to search
         :return: Dictionary with ports for all processes: {'ventilator':(pushport,pubport,subport),
         'worker':(pushport,pullport,subport),
         'sink':(pullport,pubport,subport)}
         """
         nm = nmap.PortScanner()
-        nm.scan('127.0.0.1', '%s-%s'%range)
+        nm.scan('127.0.0.1', '%s-%s'%rng)
         allp = nm['127.0.0.1'].all_protocols()
-        openports = {} if 'tcp' not in allp else nm['127.0.0.1'][tcp]
+        openports = {} if 'tcp' not in allp else nm['127.0.0.1']['tcp']
         ports = {}
-        ports
+        available = []
+        for p in range(*rng):
+            if p not in openports:
+                available.append(p)
+            if len(available) == 4:
+                break
+        ports['ventilator'] = (available[0],available[1],available[2])
+        ports['worker'] = (available[3],available[0],available[2])
+        ports['sink'] = (available[3],available[2],available[1])
+
+        return ports
 
 
-        ports = {'ventilator':(5557,5559,5559), # pushport,pubport,subport
-             'worker':(5564,5561,5563),          # pushport,pullport,subport
-             'sink':(5564,5563,5562)   # pullport,pubport,subport
-    }
 
     def spawn(self):
         """
