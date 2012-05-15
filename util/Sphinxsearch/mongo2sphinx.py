@@ -27,6 +27,7 @@ schema_head = """<sphinx:schema>
                     <sphinx:attr name="collection" type="string"/>
                     <sphinx:attr name="_id" type="string"/>
                     """
+#TODO: Allow for user specified extra sphinx:attr
 
 def get_schema_tag(head,fields):
     """
