@@ -124,6 +124,12 @@ if __name__=="__main__":
     else:
         p= "/home/flavio/Documentos/Reprints/"
 
+    ports = {'ventilator':(5557,5559,5559), # pushport,pubport,subport
+             'worker':(5564,5561,5563),          # pushport,pullport,subport
+             'sink':(5564,5563,5562)   # pullport,pubport,subport
+    }
+
+    tv = TaskVentilator(Ventilator,PDFConverterWorker,MongoInsertSink,10,ports)
     sinks = setup_sink()
     workers = setup_workers(8)
     extract(args.path,8)
