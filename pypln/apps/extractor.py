@@ -20,6 +20,7 @@ import mimetypes
 from multiprocessing import Process
 from subprocess import Popen
 from pypln.servers.ventilator import Ventilator
+from pypln.servers.baseapp import TaskVentilator
 from pypln.stores.filestor import FS
 from pypln.workers.pdfconv_worker import PDFConverterWorker
 from pypln.sinks.mongo_insert_sink import MongoInsertSink
