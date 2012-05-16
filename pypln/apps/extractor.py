@@ -17,14 +17,12 @@ import os
 import sys,argparse
 from collections import defaultdict
 import mimetypes
-from multiprocessing import Process
-from subprocess import Popen
 from pypln.servers.ventilator import Ventilator
+from pypln.servers.baseapp import TaskVentilator
 from pypln.stores.filestor import FS
-from pypln.workers.pdfconv_worker import PDFConverterWorker
 from pypln.sinks.mongo_insert_sink import MongoInsertSink
 from pymongo import Connection
-from pypln.workers.pdfconv_worker import PDFConverterWorker
+from pypln.workers.docconv_worker import DocConverterWorker
 import time
 
 def scan_dir(path, db, recurse=False):
@@ -32,6 +30,7 @@ def scan_dir(path, db, recurse=False):
     Scans a directory, adds files to the GridFS and returns
     dictionary of files by mimetype
     """
+#    print "==> scanning file system..."
     fs = FS(db,True)
     docdict = defaultdict(lambda:[])
     for p, dirs, files in os.walk(path):
@@ -49,51 +48,45 @@ def scan_dir(path, db, recurse=False):
             if fid != None:
                 doc = fs.fs.get(fid)
                 docdict[mt].append(doc.md5)
+            #TODO: maybe handle the case when the files are already on gridfs but have not been extracted yet
     return docdict
 
 def scan_gridfs(db,host):
     """
     scans gridfs under a given database and returns
     a dictionary of files by mimetype
+    :param db: Database where to look for gridfs
+    :param host: Host where to find Mongodb
+    :return: Dictionary of documents by mimetype
     """
     #TODO: maybe it's better to identify files by ID in both these scan functions.
+#    print "==> scanning gridfs..."
     docdict = defaultdict(lambda:[])
     files = Connection('127.0.0.1')[db].fs.files
-    fs = FS(db,True)
+    fs = FS(db)
     cursor = files.find()
     for f in cursor:
-        mt = mimetypes.guess_type(f)['filename']#classify documents by mimetype
-        doc = fs.get(f['_id'])
+        mt = mimetypes.guess_type(f['filename'])[0]#classify documents by mimetype
+        doc = fs.fs.get(f['_id'])
         docdict[mt].append(doc.md5)
     return docdict
-    
-def setup_workers(nw=5):
-    """
-    Start the worker processes
-    """
-    WP = [Process(target=PDFConverterWorker()) for i in range(nw)]
-    [p.start() for p in WP]
-    #WP = [Popen(['python', '../pypln/workers/pdfconv_worker.py'], stdout=None) for i in range(nw)]
-    return WP
-    
-def setup_sink():
-    """
-    Start ns sink process(es)
-    """
-    SP = [Process(target=MongoInsertSink())]
-    SP[0].start()
-    #SP = [Popen(['python', '../pypln/sinks/mongo_insert_sink.py'], stdout=None)]
-    return SP
 
-def extract(path,nw=10):
-    #TODO: Currently broken. Implement a generic text extractor worker which is mimetype aware
-    pdf_ext_vent = Ventilator(pushport=5557, pubport=5559, subport=5560)
+
+def extract(path,vent):
+    """
+    Extract texts from file under a given path or on gridfs
+    """
+    pdf_ext_vent = vent
     time.sleep(1)
-    docs = scan_dir(path, args.db)
-    print "number of PDFs ",len(docs['application/pdf'])
+    if not args.gfs:
+        docs = scan_dir(path, args.db)
+    else:
+        docs = scan_gridfs(args.db,args.host)
+#    print "number of PDFs ",len(docs['application/pdf'])
     msgs = []
-    for v in docs['application/pdf']:
-        msgs.append({'database':args.db,'collection':args.col,'md5':v})
+    for k,v in docs.iteritems():#['application/pdf']:
+        for d in v:
+            msgs.append({'database':args.db,'collection':args.col,'md5':d,'mimetype':k})
     pdf_ext_vent.push_load(msgs)
 
 def directory(d):
@@ -113,7 +106,7 @@ if __name__=="__main__":
     parser.add_argument('-H', '--host', default='127.0.0.1', help='Host ip of the MongoDB server.')
     parser.add_argument('-d', '--db', required=True, help="Database in which to deposit the texts")
     parser.add_argument('-c', '--col', required=True, help="Collection in which to deposit the texts")
-    parser.add_argument('-g','--gfs', help=" Scan griGridFS under db. Overrides path")
+    parser.add_argument('-g','--gfs', action='store_true',help="Scan griGridFS under db. ignores path")
     parser.add_argument( 'path', metavar='p', type=directory, help="Path of directory to scan for documents")
 
     args = parser.parse_args()
@@ -123,8 +116,11 @@ if __name__=="__main__":
     else:
         p= "/home/flavio/Documentos/Reprints/"
 
-    sinks = setup_sink()
-    workers = setup_workers(8)
-    extract(args.path,8)
+
+    tv = TaskVentilator(Ventilator,DocConverterWorker,MongoInsertSink,10)
+    vent, ws, sink = tv.spawn()
+#    sinks = setup_sink()
+#    workers = setup_workers(8)
+    extract(args.path,vent)
 
 

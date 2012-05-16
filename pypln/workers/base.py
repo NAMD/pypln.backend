@@ -70,12 +70,18 @@ class PushPullWorker(BaseWorker):
     """
     def __init__(self, pullport=5557, pushport=5558, subport=5560):
         """
+        All workers of this type must define three sockets for communication:
+        :param pullport: Port through which incoming jobs arrive from ventilator
+        :param pushport: Port through which results are forwarded to sink
+        :param subport: Port to listen for control messages
         """
         self.pullport = pullport
         self.pushport = pushport
         self.subport = subport
         # call base class constructor
         BaseWorker.__init__(self,subport=self.subport)
+
+
 
         
     def __call__(self, *args, **kwargs):

@@ -81,6 +81,16 @@ class TestManagerComm(unittest.TestCase):
         msg = self.pull_from_streamer_sock.recv_json()
         self.assertTrue(msg.has_key('jobid'))
 
+
+    def test_get_SD_status(self):
+        # trying to get SD status
+        self.status_sock.send("status")
+
+        msg = self.status_sock.recv_json()
+        self.assertTrue(isinstance(msg['cluster'],dict))
+        print msg
+        self.assertTrue(len(msg['cluster'])>0)
+
 #    def test_get_SD_status(self):
 #        """
 #        trying to get SD status
@@ -90,6 +100,7 @@ class TestManagerComm(unittest.TestCase):
 #        self.assertTrue(isinstance(msg['cluster'],dict))
 #        print msg
 #        self.assertTrue(len(msg['cluster'])>0)
+
 
 
 
