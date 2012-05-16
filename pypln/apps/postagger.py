@@ -38,7 +38,7 @@ def tag_collection(host='127.0.0.1',port=27017,db='test',collection='Docs',field
     for t in cursor:
 #        print "updating %s of %s"%(i,rd)
         lang = 'en' if 'lang' not in t else t['lang']
-        msgs.append({'database':db,'collection':collection,'text':t['text'],'lang':lang,'_id':t['_id']})
+        msgs.append({'database':db,'collection':collection,'text':t['text'],'lang':lang,'_id':str(t['_id'])})
 #        tt = tag_text(t['text'], lang)
 #        try:
 #            coll.update({'_id':t['_id']},{'$set':{"tagged_text":tt}})
@@ -71,11 +71,7 @@ if __name__=="__main__":
     parser.add_argument('--field', '-f', help="Host")
     args = parser.parse_args()#    print args, args.prune
 
-    ports = {'ventilator':(5557,5559,5559), # pushport,pubport,subport
-        'worker':(5564,5561,5563),          # pushport,pullport,subport
-        'sink':(5564,5563,5562)   # pullport,pubport,subport
-        }
 
-    tv = TaskVentilator(Ventilator,POSTaggerWorker,MongoUpdateSink,10,ports)
+    tv = TaskVentilator(Ventilator,POSTaggerWorker,MongoUpdateSink,10)
     vent, ws, sink = tv.spawn()
     tag_collection(db=args.db,collection=args.col)

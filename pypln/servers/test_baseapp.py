@@ -14,6 +14,10 @@ from pypln.sinks.dummy_sink import DummySink
 
 class TestTaskVentilator(unittest.TestCase):
     def test_instantiate(self):
+        """
+        Tests also the automatic port alocation
+        :return:
+        """
         tv = TaskVentilator(Ventilator,DummyWorker,DummySink,10)
         self.assertEqual(tv.ports['ventilator'][0], tv.ports['worker'][1])
         self.assertEqual(tv.ports['ventilator'][1], tv.ports['sink'][2])

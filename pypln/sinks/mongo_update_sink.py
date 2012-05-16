@@ -45,13 +45,13 @@ class MongoUpdateSink(BaseSink):
         Update documents in the database in batches of size
         self.batchsz
         """
-        #FIXME: broken code: replace check below by try/except using explicit Exceptions from Pymongo
-        if not (msg['database'] in databases and msg['collection'] in collections):
+        if not (msg['database'] in databases and msg['collection'] in conn[msg['database']].collection_names()):
             print "Either database %s or collection %s do not exist."%(msg['database'],msg['collection'])
             return
         coll = conn[msg['database']][msg['collection']]
         try:
             coll.update(msg['spec'],msg['update'],multi=msg['multi'])
+            print "Updated"
         except TypeError:
             print "bad spec or update command."
         except OperationFailure:
