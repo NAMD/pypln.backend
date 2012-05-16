@@ -17,14 +17,12 @@ import os
 import sys,argparse
 from collections import defaultdict
 import mimetypes
-from multiprocessing import Process
 from pypln.servers.ventilator import Ventilator
 from pypln.servers.baseapp import TaskVentilator
 from pypln.stores.filestor import FS
-from pypln.workers.pdfconv_worker import PDFConverterWorker
 from pypln.sinks.mongo_insert_sink import MongoInsertSink
 from pymongo import Connection
-from pypln.workers.pdfconv_worker import PDFConverterWorker
+from pypln.workers.docconv_worker import DocConverterWorker
 import time
 
 def scan_dir(path, db, recurse=False):
@@ -78,7 +76,7 @@ def extract(path,vent):
     """
     pdf_ext_vent = vent#Ventilator(pushport=5557, pubport=5559, subport=5560)
     time.sleep(1)
-    if args.gfs is None:
+    if args.gfs:
         docs = scan_dir(path, args.db)
     else:
         docs = scan_gridfs(args.db,args.host)
@@ -105,8 +103,7 @@ if __name__=="__main__":
     parser.add_argument('-H', '--host', default='127.0.0.1', help='Host ip of the MongoDB server.')
     parser.add_argument('-d', '--db', required=True, help="Database in which to deposit the texts")
     parser.add_argument('-c', '--col', required=True, help="Collection in which to deposit the texts")
-    parser.add_argument('-g','--gfs', help=" Scan griGridFS under db. Overrides path")
-    #TODO: change -g argument to a count based one
+    parser.add_argument('-g','--gfs', action='store_true',help="Scan griGridFS under db. ignores path")
     parser.add_argument( 'path', metavar='p', type=directory, help="Path of directory to scan for documents")
 
     args = parser.parse_args()
@@ -117,7 +114,7 @@ if __name__=="__main__":
         p= "/home/flavio/Documentos/Reprints/"
 
 
-    tv = TaskVentilator(Ventilator,PDFConverterWorker,MongoInsertSink,10)
+    tv = TaskVentilator(Ventilator,DocConverterWorker,MongoInsertSink,10)
     vent, ws, sink = tv.spawn()
 #    sinks = setup_sink()
 #    workers = setup_workers(8)

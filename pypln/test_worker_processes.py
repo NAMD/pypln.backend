@@ -11,7 +11,7 @@ __author__ = 'fccoelho'
 
 import unittest
 from workers.highlighter_worker import HighlighterWorker
-from workers.pdfconv_worker import PDFConverterWorker
+from workers.docconv_worker import DocConverterWorker
 
 class TestHighlighterWorker(unittest.TestCase):
     def setUp(self):
@@ -34,7 +34,7 @@ class TestHighlighterWorker(unittest.TestCase):
 
 class TestPDFWorker(unittest.TestCase):
     def setUp(self):
-        self.PC = PDFConverterWorker()
+        self.PC = DocConverterWorker()
     def tearDown(self):
         pass
     def test_parse_metadata(self):

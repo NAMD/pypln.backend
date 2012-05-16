@@ -6,6 +6,10 @@ import gridfs
 from gridfs.errors import FileExists
 import os
 from bson.errors import InvalidStringData
+from pypln.logger import make_log
+
+# Setting up the logger
+log = make_log(__name__)
 
 
 
@@ -32,13 +36,13 @@ class FS:
         fn = os.path.split(fname)[1]
         if self.fs.exists(filename=fn):
             #FIXME: this is subject to name collision of different files
-            print "file already in GridFS"
+            log.warning("file already in GridFS")
             return
         with open(fname, 'r') as f:
             try:
                 fid = self.fs.put(f, filename=fn)
             except FileExists:
-                print "File %s has already been Processed, skipping."%fn
+                log.warning("File %s has already been Processed, skipping."%fn)
                 fid = None
             except InvalidStringData as err:
                 print err,  fn

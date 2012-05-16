@@ -11,7 +11,7 @@ from pypln.stores import filestor
 
 context = zmq.Context()
 
-class PDFConverterWorker(PushPullWorker):
+class DocConverterWorker(PushPullWorker):
     """
     Worker to extract text from PDF files
     Expects to receive  messages with the following format:
@@ -92,5 +92,5 @@ class PDFConverterWorker(PushPullWorker):
 
 if __name__=="__main__":
     # this is run when worker is spawned directly from the console
-    W=PDFConverterWorker()
+    W=DocConverterWorker()
     W()
