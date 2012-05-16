@@ -62,9 +62,11 @@ class DocConverterWorker(PushPullWorker):
             if not (stdout and metadata):
                 msgout = {'fail':1}
             else:
-                if not stderr and not mderr:
-                    msgout = {'filename':fileobj.filename,'text':stdout.strip(),'file_metadata':metadata,
+                if not stderr:
+                    msgout = {'filename':fileobj.filename,'text':stdout.strip(),
                               'database':msg['database'],'collection':msg['collection']}
+                    if not mderr:
+                        msgout['file_metadata'] = metadata
                 else:
                     msgout = {'fail':1}
                     try:
