@@ -51,6 +51,7 @@ class MongoInsertSink(BaseSink):
         Write documents in the database and collection in batches of size
         self.batchsz
         """
+        #TODO: check for duplicates
 #        print msg
         self.coll = collection(msg.pop('database'),msg.pop('collection'))
         self.insertlist.append(msg)

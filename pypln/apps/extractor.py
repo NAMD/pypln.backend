@@ -30,7 +30,7 @@ def scan_dir(path, db, recurse=False):
     Scans a directory, adds files to the GridFS and returns
     dictionary of files by mimetype
     """
-    print "==> scanning file system..."
+#    print "==> scanning file system..."
     fs = FS(db,True)
     docdict = defaultdict(lambda:[])
     for p, dirs, files in os.walk(path):
@@ -60,10 +60,10 @@ def scan_gridfs(db,host):
     :return: Dictionary of documents by mimetype
     """
     #TODO: maybe it's better to identify files by ID in both these scan functions.
-    print "==> scanning gridfs..."
+#    print "==> scanning gridfs..."
     docdict = defaultdict(lambda:[])
     files = Connection('127.0.0.1')[db].fs.files
-    fs = FS(db,True)
+    fs = FS(db)
     cursor = files.find()
     for f in cursor:
         mt = mimetypes.guess_type(f['filename'])[0]#classify documents by mimetype
@@ -76,16 +76,17 @@ def extract(path,vent):
     """
     Extract texts from file under a given path or on gridfs
     """
-    pdf_ext_vent = vent#Ventilator(pushport=5557, pubport=5559, subport=5560)
+    pdf_ext_vent = vent
     time.sleep(1)
     if not args.gfs:
         docs = scan_dir(path, args.db)
     else:
         docs = scan_gridfs(args.db,args.host)
-    print "number of PDFs ",len(docs['application/pdf'])
+#    print "number of PDFs ",len(docs['application/pdf'])
     msgs = []
-    for v in docs['application/pdf']:
-        msgs.append({'database':args.db,'collection':args.col,'md5':v})
+    for k,v in docs.iteritems():#['application/pdf']:
+        for d in v:
+            msgs.append({'database':args.db,'collection':args.col,'md5':d,'mimetype':k})
     pdf_ext_vent.push_load(msgs)
 
 def directory(d):
