@@ -30,6 +30,7 @@ def scan_dir(path, db, recurse=False):
     Scans a directory, adds files to the GridFS and returns
     dictionary of files by mimetype
     """
+    print "==> scanning file system..."
     fs = FS(db,True)
     docdict = defaultdict(lambda:[])
     for p, dirs, files in os.walk(path):
@@ -59,6 +60,7 @@ def scan_gridfs(db,host):
     :return: Dictionary of documents by mimetype
     """
     #TODO: maybe it's better to identify files by ID in both these scan functions.
+    print "==> scanning gridfs..."
     docdict = defaultdict(lambda:[])
     files = Connection('127.0.0.1')[db].fs.files
     fs = FS(db,True)
@@ -76,7 +78,7 @@ def extract(path,vent):
     """
     pdf_ext_vent = vent#Ventilator(pushport=5557, pubport=5559, subport=5560)
     time.sleep(1)
-    if args.gfs:
+    if not args.gfs:
         docs = scan_dir(path, args.db)
     else:
         docs = scan_gridfs(args.db,args.host)
