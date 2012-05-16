@@ -13,6 +13,7 @@ from base import PushPullWorker
 from nltk import pos_tag, word_tokenize
 from nltk.data import LazyLoader
 from nltk.tag import tuple2str
+from zmq import ZMQError
 
 context = zmq.Context()
 
@@ -45,7 +46,7 @@ class POSTaggerWorker(PushPullWorker):
             tagged_text = ' '.join([tuple2str(t) for t in tokens])
             msgout = {"database":msg['database'],"collection":msg['collection'],"spec":{"_id":msg['_id']},"update":{"$set":{'tagged_text':tagged_text}},"multi":False}
             self.sender.send_json(msgout)
-        except:
+        except ZMQError:
             self.sender.send_json({'fail':1})
 
 if __name__=="__main__":

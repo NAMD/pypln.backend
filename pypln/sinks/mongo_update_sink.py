@@ -10,6 +10,8 @@ __docformat__ = "restructuredtext en"
 from pypln.stores.mongostore import conn,databases,collection
 import zmq
 from base import BaseSink
+from bson.objectid import ObjectId
+from pymongo.errors import OperationFailure
 
 context = zmq.Context()
 
@@ -45,6 +47,7 @@ class MongoUpdateSink(BaseSink):
         Update documents in the database in batches of size
         self.batchsz
         """
+        msg['spec']["_id"] = ObjectId(msg['spec']["_id"])
         if not (msg['database'] in databases and msg['collection'] in conn[msg['database']].collection_names()):
             print "Either database %s or collection %s do not exist."%(msg['database'],msg['collection'])
             return
