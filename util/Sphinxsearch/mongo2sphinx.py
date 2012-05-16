@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 """
-This is a script to serialize a query in MongoDB to xml so that it can be indexed by sphinxsearch
-XML is output as a stream in order to keep memory usage
+This is a script to serialize a query in MongoDB to XML so that it can be indexed by SphinxSearch.
+XML is output as a stream in order to keep memory usage low.
 
-the output of this file os compatible with xmlpipe2:
+The output of this file is compatible with xmlpipe2:
 http://sphinxsearch.com/docs/2.0.1/xmlpipe2.html
 
-see mongo2sphinx --help for usage information.
+See mongo2sphinx --help for usage information.
 
 Created on 03/10/11
 by flavio
@@ -27,7 +27,7 @@ schema_head = """<sphinx:schema>
                     <sphinx:attr name="collection" type="string"/>
                     <sphinx:attr name="_id" type="string"/>
                     """
-#TODO: Allow for user specified extra sphinx:attr
+#TODO: Allow for user-defined extra sphinx:attr
 
 def get_schema_tag(head,fields):
     """
@@ -39,7 +39,7 @@ def get_schema_tag(head,fields):
 
 def serialize(doc,id):
     """
-    Receives raw MongoDB document data and returns xml.
+    Receives raw MongoDB document data and returns XML.
     SphinxSearch demands that each document is identified by
     an unique unsigned integer `id`. We use a counter for this.
     """
@@ -55,7 +55,7 @@ def serialize(doc,id):
 
 def query(db, collection, fields,host='127.0.0.1', port=27017):
     """
-    Given a mongo db a collection and a list of fields,writes a stream of xml to stdout
+    Given a mongo db, a collection and a list of fields, writes a stream of XML to stdout
     """
     conn = Connection(host,port)
     coll = conn[db][collection]
