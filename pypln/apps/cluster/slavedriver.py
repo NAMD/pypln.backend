@@ -27,7 +27,7 @@ class SlaveDriver(object):
     def __init__(self, master_uri):
         """
         SlaveDriver
-        :param opts: dictionary with parameters from pypln.conf
+        :param master_uri: URI of the Manager configuration server
         :return:
         """
 #        print master_uri
@@ -102,7 +102,7 @@ class SlaveDriver(object):
                     if self.process.get_cpu_percent() < 0.5:
                         msg = self.pullsock.recv_json(zmq.NOBLOCK)
                         self.handle_job()
-                        log.debug("Slavedriver got %s"%msg)
+
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
 #                    print "sent msg... ", loops
                     self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,
@@ -124,7 +124,9 @@ class SlaveDriver(object):
     def handle_job(self,msg):
         """
         Deploy an app based on job type
+        :param msg: JSON message received containing necessarily a job_type key which will specifiy which app will be launched to handle the job.
         """
+        log.debug("Slavedriver got %s"%msg)
 
 
 def main(d=False):
