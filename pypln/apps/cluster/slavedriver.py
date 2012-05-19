@@ -98,10 +98,11 @@ class SlaveDriver(object):
             while loops != n: # Needed for finite runs in testing situations
                 socks = dict(self.poller.poll())
                 if self.pullsock in socks and socks[self.pullsock] == zmq.POLLIN:
-#                    print "Slavedriver listening... ",msg
-                    msg = self.pullsock.recv_json(zmq.NOBLOCK)
-#                    print "Slavedriver got ",msg
-                    log.debug("Slavedriver got %s"%msg)
+                    # Only get new job if not very busy
+                    if self.process.get_cpu_percent() < 0.5:
+                        msg = self.pullsock.recv_json(zmq.NOBLOCK)
+                        self.handle_job()
+                        log.debug("Slavedriver got %s"%msg)
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
 #                    print "sent msg... ", loops
                     self.pubsock.send_json({'ip':self.ipaddress,'pid':self.pid,
@@ -119,6 +120,12 @@ class SlaveDriver(object):
             self.pubsock.close()
             self.context.term()
             sys.exit()
+
+    def handle_job(self,msg):
+        """
+        Deploy an app based on job type
+        """
+
 
 def main(d=False):
     """
