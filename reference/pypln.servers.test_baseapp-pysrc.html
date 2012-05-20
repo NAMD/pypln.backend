@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.servers.test_baseapp</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.servers-module.html">Package&nbsp;servers</a> ::
+        Module&nbsp;test_baseapp
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.servers.test_baseapp-module.html">Module pypln.servers.test_baseapp</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">u"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">Testing module for cmanager.py</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">license: GPL v3 or later</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-name">__docformat__</tt> <tt class="py-op">=</tt> <tt class="py-string">"restructuredtext en"</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">unittest</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module pypln.servers.baseapp=pypln.servers.baseapp-module.html"><a title="pypln.servers.baseapp" class="py-name" href="#" onclick="return doclink('link-0', 'baseapp', 'link-0');">baseapp</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Class pypln.servers.baseapp.TaskVentilator=pypln.servers.baseapp.TaskVentilator-class.html"><a title="pypln.servers.baseapp.TaskVentilator" class="py-name" href="#" onclick="return doclink('link-1', 'TaskVentilator', 'link-1');">TaskVentilator</a></tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-2" class="py-name" targets="Package pypln=pypln-module.html"><a title="pypln" class="py-name" href="#" onclick="return doclink('link-2', 'pypln', 'link-2');">pypln</a></tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Package pypln.servers=pypln.servers-module.html"><a title="pypln.servers" class="py-name" href="#" onclick="return doclink('link-3', 'servers', 'link-3');">servers</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module pypln.servers.ventilator=pypln.servers.ventilator-module.html"><a title="pypln.servers.ventilator" class="py-name" href="#" onclick="return doclink('link-4', 'ventilator', 'link-4');">ventilator</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class pypln.servers.ventilator.Ventilator=pypln.servers.ventilator.Ventilator-class.html"><a title="pypln.servers.ventilator.Ventilator" class="py-name" href="#" onclick="return doclink('link-5', 'Ventilator', 'link-5');">Ventilator</a></tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name"><a title="pypln" class="py-name" href="#" onclick="return doclink('link-6', 'pypln', 'link-2');">pypln</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Package pypln.workers=pypln.workers-module.html"><a title="pypln.workers" class="py-name" href="#" onclick="return doclink('link-7', 'workers', 'link-7');">workers</a></tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Module pypln.workers.dummy_worker=pypln.workers.dummy_worker-module.html"><a title="pypln.workers.dummy_worker" class="py-name" href="#" onclick="return doclink('link-8', 'dummy_worker', 'link-8');">dummy_worker</a></tt> <tt class="py-keyword">import</tt> <tt id="link-9" class="py-name" targets="Class pypln.workers.dummy_worker.DummyWorker=pypln.workers.dummy_worker.DummyWorker-class.html"><a title="pypln.workers.dummy_worker.DummyWorker" class="py-name" href="#" onclick="return doclink('link-9', 'DummyWorker', 'link-9');">DummyWorker</a></tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-10" class="py-name"><a title="pypln" class="py-name" href="#" onclick="return doclink('link-10', 'pypln', 'link-2');">pypln</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Package pypln.sinks=pypln.sinks-module.html"><a title="pypln.sinks" class="py-name" href="#" onclick="return doclink('link-11', 'sinks', 'link-11');">sinks</a></tt><tt class="py-op">.</tt><tt id="link-12" class="py-name" targets="Module pypln.sinks.dummy_sink=pypln.sinks.dummy_sink-module.html"><a title="pypln.sinks.dummy_sink" class="py-name" href="#" onclick="return doclink('link-12', 'dummy_sink', 'link-12');">dummy_sink</a></tt> <tt class="py-keyword">import</tt> <tt id="link-13" class="py-name" targets="Class pypln.sinks.dummy_sink.DummySink=pypln.sinks.dummy_sink.DummySink-class.html"><a title="pypln.sinks.dummy_sink.DummySink" class="py-name" href="#" onclick="return doclink('link-13', 'DummySink', 'link-13');">DummySink</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"> </tt>
+<a name="TestTaskVentilator"></a><div id="TestTaskVentilator-def"><a name="L15"></a><tt class="py-lineno">15</tt> <a class="py-toggle" href="#" id="TestTaskVentilator-toggle" onclick="return toggle('TestTaskVentilator');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.servers.test_baseapp.TestTaskVentilator-class.html">TestTaskVentilator</a><tt class="py-op">(</tt><tt class="py-base-class">unittest</tt><tt class="py-op">.</tt><tt class="py-base-class">TestCase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTaskVentilator-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="TestTaskVentilator-expanded"><a name="TestTaskVentilator.test_instantiate"></a><div id="TestTaskVentilator.test_instantiate-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="TestTaskVentilator.test_instantiate-toggle" onclick="return toggle('TestTaskVentilator.test_instantiate');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.servers.test_baseapp.TestTaskVentilator-class.html#test_instantiate">test_instantiate</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="TestTaskVentilator.test_instantiate-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="TestTaskVentilator.test_instantiate-expanded"><a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring">        Tests also the automatic port alocation</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">        :return:</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">        <tt class="py-name">tv</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="pypln.servers.baseapp.TaskVentilator" class="py-name" href="#" onclick="return doclink('link-14', 'TaskVentilator', 'link-1');">TaskVentilator</a></tt><tt class="py-op">(</tt><tt id="link-15" class="py-name"><a title="pypln.servers.ventilator.Ventilator" class="py-name" href="#" onclick="return doclink('link-15', 'Ventilator', 'link-5');">Ventilator</a></tt><tt class="py-op">,</tt><tt id="link-16" class="py-name"><a title="pypln.workers.dummy_worker.DummyWorker" class="py-name" href="#" onclick="return doclink('link-16', 'DummyWorker', 'link-9');">DummyWorker</a></tt><tt class="py-op">,</tt><tt id="link-17" class="py-name"><a title="pypln.sinks.dummy_sink.DummySink" class="py-name" href="#" onclick="return doclink('link-17', 'DummySink', 'link-13');">DummySink</a></tt><tt class="py-op">,</tt><tt class="py-number">10</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'ventilator'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'worker'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'ventilator'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'sink'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'worker'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'sink'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'worker'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'sink'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">assertEqual</tt><tt class="py-op">(</tt><tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'ventilator'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">tv</tt><tt class="py-op">.</tt><tt class="py-name">ports</tt><tt class="py-op">[</tt><tt class="py-string">'worker'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sun May 20 15:24:02 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

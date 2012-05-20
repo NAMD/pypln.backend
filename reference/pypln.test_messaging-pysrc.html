@@ -122,12 +122,13 @@
 <a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nw</tt> <tt class="py-op">=</tt> <tt class="py-number">4</tt> </tt>
 <a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">        <tt class="py-comment">#spawn 4 workers</tt> </tt>
 <a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">ws</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">Process</tt><tt class="py-op">(</tt><tt class="py-name">target</tt><tt class="py-op">=</tt><tt id="link-12" class="py-name"><a title="pypln.workers.dummy_worker.DummyWorker" class="py-name" href="#" onclick="return doclink('link-12', 'DummyWorker', 'link-5');">DummyWorker</a></tt><tt class="py-op">(</tt><tt class="py-name">pushport</tt><tt class="py-op">=</tt><tt class="py-number">5564</tt><tt class="py-op">,</tt><tt class="py-name">pullport</tt><tt class="py-op">=</tt><tt class="py-number">5561</tt><tt class="py-op">,</tt><tt class="py-name">subport</tt><tt class="py-op">=</tt><tt class="py-number">5563</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">nw</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> </tt>
-<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">        <tt class="py-op">[</tt><tt class="py-name">p</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Method pypln.sinks.base.BaseSink.start()=pypln.sinks.base.BaseSink-class.html#start,Method pypln.sinks.dummy_sink.DummySink.start()=pypln.sinks.dummy_sink.DummySink-class.html#start,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.start()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.start()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#start,Method pypln.sinks.raw_document_sink.RawDocumentSink.start()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#start,Method pypln.workers.base.BaseWorker.start()=pypln.workers.base.BaseWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.dummy_worker.DummyWorker.start()=pypln.workers.dummy_worker.DummyWorker-class.html#start,Method pypln.workers.enc_detect_worker.EncodingWorker.start()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#start,Method pypln.workers.mime_detect_worker.MimeWorker.start()=pypln.workers.mime_detect_worker.MimeWorker-class.html#start,Method pypln.workers.palavras_worker.Palavras_worker.start()=pypln.workers.palavras_worker.Palavras_worker-class.html#start,Method pypln.workers.parser_worker.ParserWorker.start()=pypln.workers.parser_worker.ParserWorker-class.html#start"><a title="pypln.sinks.base.BaseSink.start
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">        <tt class="py-op">[</tt><tt class="py-name">p</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Method pypln.sinks.base.BaseSink.start()=pypln.sinks.base.BaseSink-class.html#start,Method pypln.sinks.dummy_sink.DummySink.start()=pypln.sinks.dummy_sink.DummySink-class.html#start,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.start()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.start()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#start,Method pypln.sinks.raw_document_sink.RawDocumentSink.start()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#start,Method pypln.workers.base.BaseWorker.start()=pypln.workers.base.BaseWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.dummy_worker.DummyWorker.start()=pypln.workers.dummy_worker.DummyWorker-class.html#start,Method pypln.workers.enc_detect_worker.EncodingWorker.start()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#start,Method pypln.workers.mime_detect_worker.MimeWorker.start()=pypln.workers.mime_detect_worker.MimeWorker-class.html#start,Method pypln.workers.palavras_worker.Palavras_worker.start()=pypln.workers.palavras_worker.Palavras_worker-class.html#start,Method pypln.workers.parser_worker.ParserWorker.start()=pypln.workers.parser_worker.ParserWorker-class.html#start"><a title="pypln.sinks.base.BaseSink.start
 pypln.sinks.dummy_sink.DummySink.start
 pypln.sinks.mongo_insert_sink.MongoInsertSink.start
 pypln.sinks.mongo_update_sink.MongoUpdateSink.start
 pypln.sinks.raw_document_sink.RawDocumentSink.start
 pypln.workers.base.BaseWorker.start
+pypln.workers.base.PushPullWorker.start
 pypln.workers.base.PushPullWorker.start
 pypln.workers.dummy_worker.DummyWorker.start
 pypln.workers.enc_detect_worker.EncodingWorker.start
@@ -144,6 +145,7 @@ pypln.sinks.mongo_insert_sink.MongoInsertSink.start
 pypln.sinks.mongo_update_sink.MongoUpdateSink.start
 pypln.sinks.raw_document_sink.RawDocumentSink.start
 pypln.workers.base.BaseWorker.start
+pypln.workers.base.PushPullWorker.start
 pypln.workers.base.PushPullWorker.start
 pypln.workers.dummy_worker.DummyWorker.start
 pypln.workers.enc_detect_worker.EncodingWorker.start
@@ -216,7 +218,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 13 11:29:00 2012
+    Generated by Epydoc 3.0.1 on Sun May 20 15:24:02 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -80,16 +80,16 @@ pypln.workers.base" class="py-name" href="#" onclick="return doclink('link-0', '
 </div><div id="DummyWorker2-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="DummyWorker2-expanded"><a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
 <a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">    Dummy worker function, works better with multiprocessing</tt> </tt>
 <a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
-<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Variable pypln.servers.ventilator.context=pypln.servers.ventilator-module.html#context,Variable pypln.sinks.dummy_sink.context=pypln.sinks.dummy_sink-module.html#context,Variable pypln.sinks.mongo_insert_sink.context=pypln.sinks.mongo_insert_sink-module.html#context,Variable pypln.sinks.mongo_update_sink.context=pypln.sinks.mongo_update_sink-module.html#context,Variable pypln.sinks.raw_document_sink.context=pypln.sinks.raw_document_sink-module.html#context,Variable pypln.workers.enc_detect_worker.context=pypln.workers.enc_detect_worker-module.html#context,Variable pypln.workers.mime_detect_worker.context=pypln.workers.mime_detect_worker-module.html#context,Variable pypln.workers.palavras_worker.context=pypln.workers.palavras_worker-module.html#context,Variable pypln.workers.parser_worker.context=pypln.workers.parser_worker-module.html#context,Variable pypln.workers.pdfconv_worker.context=pypln.workers.pdfconv_worker-module.html#context,Variable pypln.workers.tagger_worker.context=pypln.workers.tagger_worker-module.html#context"><a title="pypln.servers.ventilator.context
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Variable pypln.servers.ventilator.context=pypln.servers.ventilator-module.html#context,Variable pypln.sinks.dummy_sink.context=pypln.sinks.dummy_sink-module.html#context,Variable pypln.sinks.mongo_insert_sink.context=pypln.sinks.mongo_insert_sink-module.html#context,Variable pypln.sinks.mongo_update_sink.context=pypln.sinks.mongo_update_sink-module.html#context,Variable pypln.sinks.raw_document_sink.context=pypln.sinks.raw_document_sink-module.html#context,Variable pypln.workers.docconv_worker.context=pypln.workers.docconv_worker-module.html#context,Variable pypln.workers.enc_detect_worker.context=pypln.workers.enc_detect_worker-module.html#context,Variable pypln.workers.mime_detect_worker.context=pypln.workers.mime_detect_worker-module.html#context,Variable pypln.workers.palavras_worker.context=pypln.workers.palavras_worker-module.html#context,Variable pypln.workers.parser_worker.context=pypln.workers.parser_worker-module.html#context,Variable pypln.workers.tagger_worker.context=pypln.workers.tagger_worker-module.html#context"><a title="pypln.servers.ventilator.context
 pypln.sinks.dummy_sink.context
 pypln.sinks.mongo_insert_sink.context
 pypln.sinks.mongo_update_sink.context
 pypln.sinks.raw_document_sink.context
+pypln.workers.docconv_worker.context
 pypln.workers.enc_detect_worker.context
 pypln.workers.mime_detect_worker.context
 pypln.workers.palavras_worker.context
 pypln.workers.parser_worker.context
-pypln.workers.pdfconv_worker.context
 pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-3', 'context', 'link-3');">context</a></tt> <tt class="py-op">=</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">Context</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
 <a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">    <tt class="py-name">pid</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">getpid</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
 <a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt class="py-name">stayalive</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
@@ -99,11 +99,11 @@ pypln.sinks.dummy_sink.context
 pypln.sinks.mongo_insert_sink.context
 pypln.sinks.mongo_update_sink.context
 pypln.sinks.raw_document_sink.context
+pypln.workers.docconv_worker.context
 pypln.workers.enc_detect_worker.context
 pypln.workers.mime_detect_worker.context
 pypln.workers.palavras_worker.context
 pypln.workers.parser_worker.context
-pypln.workers.pdfconv_worker.context
 pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-4', 'context', 'link-3');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">SUB</tt><tt class="py-op">)</tt> </tt>
 <a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">    <tt class="py-name">sub</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://127.0.0.1:%s"</tt><tt class="py-op">%</tt><tt class="py-number">5560</tt><tt class="py-op">)</tt> </tt>
 <a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt class="py-name">sub</tt><tt class="py-op">.</tt><tt class="py-name">setsockopt</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">SUBSCRIBE</tt><tt class="py-op">,</tt><tt class="py-string">"sink-finished"</tt><tt class="py-op">)</tt> <tt class="py-comment">#only sub to msgs starting with "sink-finished"</tt> </tt>
@@ -113,11 +113,11 @@ pypln.sinks.dummy_sink.context
 pypln.sinks.mongo_insert_sink.context
 pypln.sinks.mongo_update_sink.context
 pypln.sinks.raw_document_sink.context
+pypln.workers.docconv_worker.context
 pypln.workers.enc_detect_worker.context
 pypln.workers.mime_detect_worker.context
 pypln.workers.palavras_worker.context
 pypln.workers.parser_worker.context
-pypln.workers.pdfconv_worker.context
 pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-5', 'context', 'link-3');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PULL</tt><tt class="py-op">)</tt> </tt>
 <a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">    <tt class="py-name">receiver</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://127.0.0.1:%s"</tt><tt class="py-op">%</tt><tt class="py-number">5557</tt><tt class="py-op">)</tt> </tt>
 <a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">    <tt class="py-comment"># Socket to send messages to</tt> </tt>
@@ -126,11 +126,11 @@ pypln.sinks.dummy_sink.context
 pypln.sinks.mongo_insert_sink.context
 pypln.sinks.mongo_update_sink.context
 pypln.sinks.raw_document_sink.context
+pypln.workers.docconv_worker.context
 pypln.workers.enc_detect_worker.context
 pypln.workers.mime_detect_worker.context
 pypln.workers.palavras_worker.context
 pypln.workers.parser_worker.context
-pypln.workers.pdfconv_worker.context
 pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return doclink('link-6', 'context', 'link-3');">context</a></tt><tt class="py-op">.</tt><tt class="py-name">socket</tt><tt class="py-op">(</tt><tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">PUSH</tt><tt class="py-op">)</tt> </tt>
 <a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-name">sender</tt><tt class="py-op">.</tt><tt class="py-name">connect</tt><tt class="py-op">(</tt><tt class="py-string">"tcp://127.0.0.1:%s"</tt><tt class="py-op">%</tt><tt class="py-number">5558</tt><tt class="py-op">)</tt> </tt>
 <a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-comment"># Initialize poll set to listen on two channels at once</tt> </tt>
@@ -174,19 +174,20 @@ pypln.workers.tagger_worker.context" class="py-name" href="#" onclick="return do
 <a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-string">'jobid'</tt> <tt class="py-keyword">in</tt> <tt class="py-name">msg</tt><tt class="py-op">:</tt> <tt class="py-comment"># startup message</tt> </tt>
 <a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">                    <tt class="py-keyword">print</tt> <tt class="py-string">"starting job %s"</tt><tt class="py-op">%</tt><tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'jobid'</tt><tt class="py-op">]</tt> </tt>
 <a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">                    <tt class="py-keyword">continue</tt> </tt>
-<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Method pypln.sinks.base.BaseSink.process()=pypln.sinks.base.BaseSink-class.html#process,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.process()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#process,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.process()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#process,Method pypln.sinks.raw_document_sink.RawDocumentSink.process()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#process,Method pypln.workers.base.BaseWorker.process()=pypln.workers.base.BaseWorker-class.html#process,Method pypln.workers.base.PushPullWorker.process()=pypln.workers.base.PushPullWorker-class.html#process,Method pypln.workers.dummy_worker.DummyWorker.process()=pypln.workers.dummy_worker.DummyWorker-class.html#process,Method pypln.workers.enc_detect_worker.EncodingWorker.process()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#process,Method pypln.workers.highlighter_worker.HighlighterWorker.process()=pypln.workers.highlighter_worker.HighlighterWorker-class.html#process,Method pypln.workers.mime_detect_worker.MimeWorker.process()=pypln.workers.mime_detect_worker.MimeWorker-class.html#process,Method pypln.workers.palavras_worker.Palavras_worker.process()=pypln.workers.palavras_worker.Palavras_worker-class.html#process,Method pypln.workers.parser_worker.ParserWorker.process()=pypln.workers.parser_worker.ParserWorker-class.html#process,Method pypln.workers.pdfconv_worker.PDFConverterWorker.process()=pypln.workers.pdfconv_worker.PDFConverterWorker-class.html#process,Method pypln.workers.tagger_worker.POSTaggerWorker.process()=pypln.workers.tagger_worker.POSTaggerWorker-class.html#process"><a title="pypln.sinks.base.BaseSink.process
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Method pypln.sinks.base.BaseSink.process()=pypln.sinks.base.BaseSink-class.html#process,Method pypln.sinks.base.BaseSink.process()=pypln.sinks.base.BaseSink-class.html#process,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.process()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#process,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.process()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#process,Method pypln.sinks.raw_document_sink.RawDocumentSink.process()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#process,Method pypln.workers.base.BaseWorker.process()=pypln.workers.base.BaseWorker-class.html#process,Method pypln.workers.base.PushPullWorker.process()=pypln.workers.base.PushPullWorker-class.html#process,Method pypln.workers.docconv_worker.DocConverterWorker.process()=pypln.workers.docconv_worker.DocConverterWorker-class.html#process,Method pypln.workers.dummy_worker.DummyWorker.process()=pypln.workers.dummy_worker.DummyWorker-class.html#process,Method pypln.workers.enc_detect_worker.EncodingWorker.process()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#process,Method pypln.workers.highlighter_worker.HighlighterWorker.process()=pypln.workers.highlighter_worker.HighlighterWorker-class.html#process,Method pypln.workers.mime_detect_worker.MimeWorker.process()=pypln.workers.mime_detect_worker.MimeWorker-class.html#process,Method pypln.workers.palavras_worker.Palavras_worker.process()=pypln.workers.palavras_worker.Palavras_worker-class.html#process,Method pypln.workers.parser_worker.ParserWorker.process()=pypln.workers.parser_worker.ParserWorker-class.html#process,Method pypln.workers.tagger_worker.POSTaggerWorker.process()=pypln.workers.tagger_worker.POSTaggerWorker-class.html#process"><a title="pypln.sinks.base.BaseSink.process
+pypln.sinks.base.BaseSink.process
 pypln.sinks.mongo_insert_sink.MongoInsertSink.process
 pypln.sinks.mongo_update_sink.MongoUpdateSink.process
 pypln.sinks.raw_document_sink.RawDocumentSink.process
 pypln.workers.base.BaseWorker.process
 pypln.workers.base.PushPullWorker.process
+pypln.workers.docconv_worker.DocConverterWorker.process
 pypln.workers.dummy_worker.DummyWorker.process
 pypln.workers.enc_detect_worker.EncodingWorker.process
 pypln.workers.highlighter_worker.HighlighterWorker.process
 pypln.workers.mime_detect_worker.MimeWorker.process
 pypln.workers.palavras_worker.Palavras_worker.process
 pypln.workers.parser_worker.ParserWorker.process
-pypln.workers.pdfconv_worker.PDFConverterWorker.process
 pypln.workers.tagger_worker.POSTaggerWorker.process" class="py-name" href="#" onclick="return doclink('link-8', 'process', 'link-8');">process</a></tt><tt class="py-op">(</tt><tt class="py-name">msg</tt><tt class="py-op">)</tt> </tt>
 <a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub</tt> <tt class="py-keyword">in</tt> <tt class="py-name">socks</tt> <tt class="py-keyword">and</tt> <tt class="py-name">socks</tt><tt class="py-op">[</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-name">zmq</tt><tt class="py-op">.</tt><tt class="py-name">POLLIN</tt><tt class="py-op">:</tt> </tt>
 <a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line">                <tt class="py-name">msg</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="pypln.testing.zmqtesting.ProcessTest.recv" class="py-name" href="#" onclick="return doclink('link-9', 'recv', 'link-7');">recv</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
@@ -245,7 +246,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 13 11:29:01 2012
+    Generated by Epydoc 3.0.1 on Sun May 20 15:24:02 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
