@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 Testing module for cmanager.py
 
 license: GPL v3 or later
@@ -86,23 +86,33 @@ class TestManagerComm(unittest.TestCase):
         self.status_sock.send("status")
         msg = self.status_sock.recv_json()
         self.assertTrue(isinstance(msg['cluster'], dict))
-        self.assertTrue(len(msg['cluster']) > 0)
+        self.assertTrue(len(msg['cluster']) > 0,msg="Cluster status dict is empty: {0}".format(msg))
 
 
 class TestManagerInst(unittest.TestCase):
-    def test_load_config_file(self):
-        M = Manager('tests/pypln.test.conf',False)
-        self.assertTrue(M.config.has_section('cluster'))
-        self.assertTrue(M.config.has_section('zeromq'))
-        self.assertTrue(M.config.has_section('authentication'))
-        self.assertTrue(M.config.has_section('streamer'))
-        self.assertTrue(M.config.has_section('slavedriver'))
-        self.assertTrue(M.config.has_section('worker'))
-        self.assertTrue(M.config.has_section('sink'))
+    def setUp(self):
+        self.M = Manager('tests/pypln.test.conf',False)
 
-    @unittest.skip('Failing with "address already in use"')
+    def tearDown(self):
+        self.M.monitor.close()
+        self.M.confport.close()
+        self.M.pusher.close()
+        self.M.statussock.close()
+        self.M.sub_slavedriver_sock.close()
+        self.M.streamerdevice.join(timeout=1)
+        self.M.context.term()
+
+    def test_load_config_file(self):
+        self.assertTrue(self.M.config.has_section('cluster'))
+        self.assertTrue(self.M.config.has_section('zeromq'))
+        self.assertTrue(self.M.config.has_section('authentication'))
+        self.assertTrue(self.M.config.has_section('streamer'))
+        self.assertTrue(self.M.config.has_section('slavedriver'))
+        self.assertTrue(self.M.config.has_section('worker'))
+        self.assertTrue(self.M.config.has_section('sink'))
+
+#    @unittest.skip('Failing with "address already in use"')
     def test_socket_binding(self):
-        self.M = Manager('tests/pypln.test.conf', False)
         p = psutil.Process(self.M.pid)
         cons = p.get_connections()
         len_cons = len(cons)
