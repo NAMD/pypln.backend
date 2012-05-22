@@ -15,8 +15,8 @@ from nltk.data import LazyLoader
 from nltk.tag import tuple2str
 from zmq import ZMQError
 
-context = zmq.Context()
 
+context = zmq.Context()
 eng_sent_tokenizer = LazyLoader('tokenizers/punkt/english.pickle')
 port_sent_tokenizer = LazyLoader('tokenizers/punkt/portuguese.pickle')
 #TODO: alow the usage of PaLavras when tagging portuguese texts
@@ -30,26 +30,21 @@ class POSTaggerWorker(PushPullWorker):
     """
 
     def process(self,msg):
-        """
-        Does the POS tagging
-        """
+        """Does the POS tagging"""
         try:
             if msg['lang'] == 'en':
                 sents = eng_sent_tokenizer.tokenize(msg['text'])
             elif msg['lang'] == 'pt':
                 sents = port_sent_tokenizer.tokenize(msg['text'])
-            
             tokens = []
             for s in sents:
                 tokens.extend(pos_tag(word_tokenize(s)))
-
             tagged_text = ' '.join([tuple2str(t) for t in tokens])
-            msgout = {"database":msg['database'],"collection":msg['collection'],"spec":{"_id":msg['_id']},"update":{"$set":{'tagged_text':tagged_text}},"multi":False}
+            msgout = {"database": msg['database'],
+                      "collection": msg['collection'],
+                      "spec": {"_id": msg['_id']},
+                      "update": {"$set": {'tagged_text': tagged_text}},
+                      "multi":False}
             self.sender.send_json(msgout)
         except ZMQError:
-            self.sender.send_json({'fail':1})
-
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    W = POSTaggerWorker()
-    W()
+            self.sender.send_json({'fail': 1})

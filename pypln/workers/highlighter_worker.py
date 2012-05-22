@@ -43,8 +43,3 @@ class HighlighterWorker(PushPullWorker):
             #this is necessary so that we can test this method without starting the worker as a daemon
             pass
         return msgout #for testing purposes
-
-if __name__== '__main__':
-    # this is run when worker is spawned directly from the console
-    worker = HighlighterWorker()
-    worker.start()

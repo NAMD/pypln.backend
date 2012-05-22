@@ -48,7 +48,3 @@ class Palavras_worker(PushPullWorker):
        msgout = msg.update({'text': stdout})
        if not stderr:
            self.sender.send_unicode(msgout, encoding='utf-8')
-
-if __name__== '__main__':
-    worker = Palavras_worker()
-    worker.start()

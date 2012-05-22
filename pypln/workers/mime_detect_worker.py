@@ -29,8 +29,3 @@ class MimeWorker(PushPullWorker):
         mt = mimetypes.guess_type(msg)
         #TODO: figure out a way to report a failure
         self.sender.send_unicode(mt[0],encoding='utf-8')
-
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    W=MimeWorker()
-    W.start()

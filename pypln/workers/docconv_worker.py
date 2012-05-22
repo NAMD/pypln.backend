@@ -148,10 +148,3 @@ class DocConverterWorker(PushPullWorker):
             k, v = l[:l.index(':')], l[l.index(':')+1:]
             d[k.strip()] = v.strip()
         return d
-
-
-
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    W=DocConverterWorker()
-    W()

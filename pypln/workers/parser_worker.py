@@ -35,8 +35,7 @@ class ParserWorker(PushPullWorker):
                 # print self.pid, " Done after processing %s messages"%msgproc
                 break
 
-
-    def process(self,msg):
+    def process(self, msg):
         """
         Tries to convert a pdf to a text file using the unix command
         pdftotext.
@@ -44,11 +43,12 @@ class ParserWorker(PushPullWorker):
         """
         pdf = filestor.fs.get_last_version(md5=msg['text'])
         try :
-            p = subprocess.Popen(['pdftotext','-q','-','-'],stdin=subprocess.PIPE,  stdout=subprocess.PIPE)
+            p = subprocess.Popen(['pdftotext', '-q', '-', '-'],
+                                 stdin=subprocess.PIPE, stdout=subprocess.PIPE)
             stdout, stderr = p.communicate(input=pdf.read())
         except OSError:
             p.kill()
-            self.sender.send_json({'fail':1})
+            self.sender.send_json({'fail': 1})
             return
         # Assumes encoding is utf-8 which is not guaranteed. Although pdftotext attempts to convert to utf-8 it may not work.
         if not stdout:
@@ -60,10 +60,3 @@ class ParserWorker(PushPullWorker):
             else:
                 self.sender.send_json({'fail':1})
                 p.kill()
-
-
-
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    W=PDFConverterWorker()
-    W.start()

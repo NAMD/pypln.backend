@@ -35,8 +35,3 @@ class EncodingWorker(PushPullWorker):
             self.sender.send_unicode(enc[0],encoding='utf-8')
         else:
             pass
-
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    worker = EncodingWorker()
-    worker.start()

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 """
  Task worker
@@ -81,8 +80,3 @@ def DummyWorker2():
             msg = sub.recv()
             # print '{}: {}'.format(pid, msg)
             break
-
-
-if __name__=="__main__":
-    worker = DummyWorker()
-    worker()
