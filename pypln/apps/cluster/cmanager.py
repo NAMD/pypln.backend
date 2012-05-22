@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-u"""
+"""
 This executable is the manager of a pypln cluster. All tasks should be started through it and are
 monitorable/controllable through it.
 
