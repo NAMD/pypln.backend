@@ -10,8 +10,9 @@ by Flávio Codeço Coelho
 __author__ = 'fccoelho'
 
 import unittest
-from workers.highlighter_worker import HighlighterWorker
-from workers.docconv_worker import DocConverterWorker
+from pypln.workers.highlighter_worker import HighlighterWorker
+from pypln.workers.docconv_worker import DocConverterWorker
+
 
 class TestHighlighterWorker(unittest.TestCase):
     def setUp(self):
@@ -20,7 +21,9 @@ class TestHighlighterWorker(unittest.TestCase):
         pass
 
     def test_single_wordlist(self):
-        msg = {'text':['atirei','o','pau','no','gato'],'wordlists':{'um':['pau','gato']}}
+        msg = {'text': ['atirei', 'o', 'pau', 'no', 'gato'],
+               'wordlists': {'um': ['pau', 'gato']}
+        }
         res = self.W.process(msg)
         self.assertDictEqual(res,{'highlighted_text':['atirei','o','<span class="tagged" title="um"><b>pau</b></span>',
                                                   'no','<span class="tagged" title="um"><b>gato</b></span>']})
@@ -35,8 +38,7 @@ class TestHighlighterWorker(unittest.TestCase):
 class TestPDFWorker(unittest.TestCase):
     def setUp(self):
         self.PC = DocConverterWorker()
-    def tearDown(self):
-        pass
+
     def test_parse_metadata(self):
         md = """Title:          mve_848.dvi
 Creator:        dvips 5.83 Copyright 1998 Radical Eye Software
@@ -65,6 +67,3 @@ PDF version:    1.3
         }
         mdict = self.PC.parse_metadata(md)
         self.assertDictEqual(mdict,expected)
-
-if __name__ == '__main__':
-    unittest.main()
