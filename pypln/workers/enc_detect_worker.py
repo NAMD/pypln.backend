@@ -38,5 +38,5 @@ class EncodingWorker(PushPullWorker):
 
 if __name__=="__main__":
     # this is run when worker is spawned directly from the console
-    W=EncodingWorker()
-    W.start()
+    worker = EncodingWorker()
+    worker.start()

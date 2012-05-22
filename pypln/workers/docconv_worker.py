@@ -18,10 +18,10 @@ class DocConverterWorker(PushPullWorker):
     Expects to receive  messages with the following format:
     {'md5':..., 'filename':..., 'date':,'mimetype':...} or {'jobid':n}
     """
-                
+
     def process(self,msg):
         """
-        Tries to convert a pdf to a text file using the unix command 
+        Tries to convert a pdf to a text file using the unix command
         pdftotext.
         msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}
         """

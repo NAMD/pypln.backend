@@ -55,6 +55,6 @@ if __name__=="__main__":
     parser.add_argument('--port', '-p', help="Host")
     parser.add_argument('--field', '-f', help="Host")
     args = parser.parse_args()
-    
+
     #frequency(db='Results',collection='Documentos')
     frequency(db=args.db,host=args.host,port=args.port,collection=args.col,fields=args.field)

@@ -17,16 +17,13 @@ import time
 from collections import defaultdict
 
 
-
-
 app = Flask(__name__)
 app.config.from_pyfile('settings.py')
-
 Db = Connection()[app.config['DATABASE']]
 
 @app.route("/")
 def dashboard():
-    info = Db.Stats.find_one(fields=['cluster'],sort=[("time_stamp",-1)])
+    info = Db.Stats.find_one(fields=['cluster'], sort=[("time_stamp", -1)])
     number_nodes = len(info['cluster'])
     # Summing up resources
     resources = {'nodes':number_nodes,'cpus':0,'memory':0}
@@ -50,10 +47,10 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    stats = Db.Stats.find(fields=['cluster','active_jobs','time_stamp']).sort("time_stamp",-1).limit(100)
+    stats = Db.Stats.find(fields=['cluster', 'active_jobs', 'time_stamp']).sort("time_stamp", -1).limit(100)
     e = []
-    timeseries = defaultdict(lambda:{}) #using a dictionary here to eliminate messages from the same second
-    ts = defaultdict(lambda:[])
+    timeseries = defaultdict(lambda: {}) #using a dictionary here to eliminate messages from the same second
+    ts = defaultdict(lambda: [])
     for d in stats:
         for k,v in d['cluster'].iteritems():
             timeseries[k][int(d['time_stamp'])*1000]=[v['last_report']['status']['cpu']*100,v['last_report']['status']['memory']*100]
@@ -78,9 +75,8 @@ def get_jobs():
     Returns a list of active jobs
     :return:JSON
     """
-    status = Db.Stats.find_one(fields=['active jobs','time_stamp'],sort=[("time_stamp",-1)])
+    status = Db.Stats.find_one(fields=['active jobs', 'time_stamp'], sort=[("time_stamp", -1)])
     return jsonify(jobs=status['active jobs'])
-
 
 @app.route("/_get_logs")
 def get_logs():

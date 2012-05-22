@@ -3,7 +3,7 @@
 """
 New Document processor
 
-This app scans a directory and submits new/changed documents to the 
+This app scans a directory and submits new/changed documents to the
 preprocessing pipeline
 Which will perform, in order:
 * mimetype detection
@@ -11,10 +11,11 @@ Which will perform, in order:
 * text extraction and conversion if necessary
 * Storage of extracted text in database
 """
-__docformat__ = "restructuredtext en"
+
+__docformat__ = "reStructuredText en"
 
 import os
-import sys,argparse
+import sys, argparse
 from collections import defaultdict
 import mimetypes
 from pypln.servers.ventilator import Ventilator
@@ -51,7 +52,7 @@ def scan_dir(path, db, recurse=False):
             #TODO: maybe handle the case when the files are already on gridfs but have not been extracted yet
     return docdict
 
-def scan_gridfs(db,host):
+def scan_gridfs(db, host):
     """
     scans gridfs under a given database and returns
     a dictionary of files by mimetype

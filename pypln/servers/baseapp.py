@@ -2,13 +2,12 @@
 """
 Basic application setup classes
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = 'fccoelho'
 
 from multiprocessing import Process, ProcessError
 import nmap
-
-
 
 
 class TaskVentilator(object):
@@ -30,9 +29,16 @@ class TaskVentilator(object):
         """
         if not ports:
             self.ports = ports = self.find_ports()
-        self.ventilator = ventilator_class(pushport=ports['ventilator'][0],pubport=ports['ventilator'][1],subport=ports['ventilator'][2])
-        self.workers = [worker_class(pushport=ports['worker'][0],pullport=ports['worker'][1],subport=ports['worker'][2]) for i in xrange(nw)]
-        self.sink = sink_class(pullport=ports['sink'][0],pubport=ports['sink'][1],subport=ports['sink'][2])
+        self.ventilator = ventilator_class(pushport=ports['ventilator'][0],
+                                           pubport=ports['ventilator'][1],
+                                           subport=ports['ventilator'][2])
+        self.workers = [worker_class(pushport=ports['worker'][0],
+                                     pullport=ports['worker'][1],
+                                     subport=ports['worker'][2]) \
+                        for i in xrange(nw)]
+        self.sink = sink_class(pullport=ports['sink'][0],
+                               pubport=ports['sink'][1],
+                               subport=ports['sink'][2])
 
     @classmethod
     def find_ports(self, rng=(5500,5600)):
@@ -45,7 +51,7 @@ class TaskVentilator(object):
         'sink':(pullport,pubport,subport)}
         """
         nm = nmap.PortScanner()
-        nm.scan('127.0.0.1', '%s-%s'%rng)
+        nm.scan('127.0.0.1', '%s-%s' % rng)
         allp = nm['127.0.0.1'].all_protocols()
         openports = {} if 'tcp' not in allp else nm['127.0.0.1']['tcp']
         ports = {}
@@ -55,23 +61,21 @@ class TaskVentilator(object):
                 available.append(p)
             if len(available) == 4:
                 break
-        ports['ventilator'] = (available[0],available[1],available[2])
-        ports['worker'] = (available[3],available[0],available[2])
-        ports['sink'] = (available[3],available[2],available[1])
-
+        ports['ventilator'] = (available[0], available[1],available[2])
+        ports['worker'] = (available[3], available[0], available[2])
+        ports['sink'] = (available[3], available[2], available[1])
         return ports
-
-
 
     def spawn(self):
         """
         Start the subprocesses.
-
-        :return: (ventilator,[w1,w2,...,wn],sink) All but ventilator are Process objects
+        :return: (ventilator, [w1, w2, ..., wn], sink)
+                  All but ventilator are Process objects
         """
 #        v= Process(target=self.ventilator, name="ventilator")
-        w =[Process(target=w,name="worker-%d"%i) for i,w in enumerate(self.workers)]
-        [p.start() for p in w]
-        s = Process(target=self.sink,name="sink")
+        w = [Process(target=w, name="worker-%d" % i) for i, w in enumerate(self.workers)]
+        for p in w:
+            p.start()
+        s = Process(target=self.sink, name="sink")
         s.start()
-        return self.ventilator,w,s
+        return self.ventilator, w, s

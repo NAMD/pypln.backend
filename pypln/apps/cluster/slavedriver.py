@@ -129,21 +129,15 @@ class SlaveDriver(object):
         log.debug("Slavedriver got %s"%msg)
 
 
-def main(d=False):
+def main():
     """
 
-    :param d: Flag to specify if the process should be daemonized or not
     :return:
     """
     if len(sys.argv) < 2:
         sys.exit("Master URI not specified")
-    if d:
-        with daemon.DaemonContext():
-            SD = SlaveDriver(master_uri=sys.argv[1])
-            SD.listen(0)
-    else:
-        SD = SlaveDriver(master_uri=sys.argv[1])
-        SD.listen(0)
+    SD = SlaveDriver(master_uri=sys.argv[1])
+    SD.listen(0)
 
 def get_ipv4_address():
     """
@@ -160,11 +154,6 @@ def get_ipv4_address():
     return resp[0]
 
 if __name__=='__main__':
-    import daemon
     if len(sys.argv) < 2:
         sys.exit(1)
-    main(False)
-
-
-
-
+    main()

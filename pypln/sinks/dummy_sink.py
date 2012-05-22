@@ -26,15 +26,15 @@ class DummySink(BaseSink):
         while self.stayalive:
             s = self.receiver.recv_json()
             total_results += 1
-            print "#",
+            # print "#",
             if total_results == num_tasks:
                 for i in xrange(10):
                     self.pub.send("sink-finished:%s"%total_results)
                     time.sleep(.1)
-                print "==> sink-finished:%s"%total_results
+                # print "==> sink-finished:{}".format(total_results)
                 break
 
-        
-if __name__=="__main__":
-    S=DummySink()
-    S()
+
+if __name__== '__main__':
+    sink = DummySink()
+    sink()

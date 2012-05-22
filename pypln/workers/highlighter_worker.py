@@ -45,7 +45,7 @@ class HighlighterWorker(PushPullWorker):
             pass
         return msgout #for testing purposes
 
-if __name__=="__main__":
+if __name__== '__main__':
     # this is run when worker is spawned directly from the console
-    W = HighlighterWorker()
-    W.start()
+    worker = HighlighterWorker()
+    worker.start()

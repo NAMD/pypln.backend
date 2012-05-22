@@ -56,7 +56,7 @@ __date__ = 4 / 23 / 12
 __docformat__ = "restructuredtext en"
 
 import ConfigParser
-from fabric.api import   execute
+from fabric.api import execute
 from fabric.api import run as frun
 import zmq
 from zmq.core.error import ZMQError
@@ -98,7 +98,6 @@ class Manager(object):
         self.stayalive = True
         self.streamerdevice = None
         self.db = Connection(host='localhost').PYPLN
-
         self.bind()
 
         #Start the Streamer
@@ -169,8 +168,6 @@ class Manager(object):
 #                self.streamerdevice.join()
             log.warning("Exiting")
             sys.exit()
-
-
 
     def bind(self):
         """
@@ -271,8 +268,6 @@ class Manager(object):
         if self.streamerdevice:
             log.debug("sent msg to streamer")
 
-
-
     def __deploy_slaves(self):
         """
         Start slavedrivers on slavenodes
@@ -289,7 +284,6 @@ def spawn_slave(masteruri):
     """
     frun('nohup slavedriver %s &'%(masteruri,))
     log.debug("Spawned Slavedriver.")
-
 
 #@atexit.register
 #def cleanup():
@@ -337,13 +331,8 @@ if  __name__ == '__main__':
     parser.add_argument('--verbose', '-v', action='count',
         help="Control the logging verbosity. -v:WARNING and ERROR; -vv: add INFO; -vvv: add DEBUG")
     args = parser.parse_args()
-    if args.verbose is None:
-        log.setLevel(logging.ERROR)
-    elif args.verbose == 1:
-        log.setLevel(logging.WARNING)
-    elif args.verbose == 2:
-        log.setLevel(logging.INFO)
-    elif args.verbose >= 3:
-        log.setLevel(logging.DEBUG)
-    M = Manager(configfile=args.conf,bootstrap=args.nosetup)
+    log_levels = {None: logging.ERROR, 1: logging.WARNING, 2: logging.INFO,
+                  3: logging.DEBUG}
+    log.setLevel(log_levels[args.verbose])
+    M = Manager(configfile=args.conf, bootstrap=args.nosetup)
     M.run()

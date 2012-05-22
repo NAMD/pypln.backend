@@ -26,14 +26,14 @@ class BaseWorker(object):
         self.pid = os.getpid()
         # Set up a SUB channel to get information about task queue completion
         self.sub = self.context.socket(zmq.SUB)
-        self.sub.connect("tcp://127.0.0.1:%s"%(self.subport))
-        self.sub.setsockopt(zmq.SUBSCRIBE,"sink-finished") #only sub to msgs starting with "sink-finished"
+        self.sub.connect("tcp://127.0.0.1:{}".format(self.subport))
+        self.sub.setsockopt(zmq.SUBSCRIBE, "sink-finished") #only sub to msgs starting with "sink-finished"
 
         self.start()
 
     def stop(self):
         self.stayalive = False
-        
+
     def start(self):
         """
         Starts listening on receiver port for messages
@@ -93,14 +93,14 @@ class PushPullWorker(BaseWorker):
         self.pid = os.getpid()
         # Set up a SUB channel to get information about task queue completion
         self.sub = self.context.socket(zmq.SUB)
-        self.sub.connect("tcp://127.0.0.1:%s"%(self.subport))
+        self.sub.connect("tcp://127.0.0.1:{}".format(self.subport))
         self.sub.setsockopt(zmq.SUBSCRIBE,"sink-finished") #only sub to msgs starting with "sink-finished"
         # Socket to receive messages on
         self.receiver = self.context.socket(zmq.PULL)
-        self.receiver.connect("tcp://127.0.0.1:%s"%self.pullport)
+        self.receiver.connect("tcp://127.0.0.1:{}".format(self.pullport))
         # Socket to send messages to
         self.sender = self.context.socket(zmq.PUSH)
-        self.sender.connect("tcp://127.0.0.1:%s"%self.pushport)
+        self.sender.connect("tcp://127.0.0.1:{}".format(self.pushport))
         # Initialize poll set to listen on two channels at once
         self.poller = zmq.Poller()
         self.poller.register(self.receiver, zmq.POLLIN)
@@ -113,7 +113,7 @@ class PushPullWorker(BaseWorker):
         Starts listening on receiver port for messages
         this method maybe overloaded by specific workers
         """
-        
+
         while self.stayalive:
             socks = dict(self.poller.poll())
             if self.receiver in socks and socks[self.receiver] == zmq.POLLIN:

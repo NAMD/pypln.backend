@@ -24,14 +24,14 @@ def DummyWorker2():
     stayalive = True
     # Set up a SUB channel to get information about task queue completion
     sub = context.socket(zmq.SUB)
-    sub.connect("tcp://127.0.0.1:%s"%5560)
-    sub.setsockopt(zmq.SUBSCRIBE,"sink-finished") #only sub to msgs starting with "sink-finished"
+    sub.connect("tcp://127.0.0.1:{}".format(5560))
+    sub.setsockopt(zmq.SUBSCRIBE, "sink-finished") # only sub to msgs starting with "sink-finished"
     # Socket to receive messages on
     receiver = context.socket(zmq.PULL)
-    receiver.connect("tcp://127.0.0.1:%s"%5557)
+    receiver.connect("tcp://127.0.0.1:{}".format(5557))
     # Socket to send messages to
     sender = context.socket(zmq.PUSH)
-    sender.connect("tcp://127.0.0.1:%s"%5558)
+    sender.connect("tcp://127.0.0.1:{}".format(5558))
     # Initialize poll set to listen on two channels at once
     poller = zmq.Poller()
     poller.register(receiver, zmq.POLLIN)

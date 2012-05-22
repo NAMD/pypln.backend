@@ -26,33 +26,29 @@ class Palavras_worker(PushPullWorker):
 
    def process (msg):
        """
-        Tries to convert a txt to a noted text using the cat command 
+        Tries to convert a txt to a noted text using the cat command
         msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}
 
-    all possibles parameters are:
-        cat teste.org.txt | /opt/palavras/por.pl 
-    cat teste.org.txt | /opt/palavras/por.pl --dep 
-    cat teste.org.txt | /opt/palavras/por.pl --sem
-    cat teste.org.txt | /opt/palavras/por.pl --morf
-    cat teste.org.txt | /opt/palavras/por.pl --syn
-    cat teste.org.txt | /opt/palavras/por.pl --sem |/opt/palavras/bin/cg2dep ptt
-    cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/visldep2malt
-    cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/visldep2malt | /opt/palavras/bin/extra2sem
-    cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/dep2tree_pt
-    cat teste.org.txt | /opt/palavras/por.pl | perl -wnpe 's/^=//;' |/opt/palavras/bin/visl2tiger.pl | /opt/palavras/bin/extra2sem
+        All possibles parameters are:
+            cat teste.org.txt | /opt/palavras/por.pl
+            cat teste.org.txt | /opt/palavras/por.pl --dep
+            cat teste.org.txt | /opt/palavras/por.pl --sem
+            cat teste.org.txt | /opt/palavras/por.pl --morf
+            cat teste.org.txt | /opt/palavras/por.pl --syn
+            cat teste.org.txt | /opt/palavras/por.pl --sem | /opt/palavras/bin/cg2dep ptt
+            cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/visldep2malt
+            cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/visldep2malt | /opt/palavras/bin/extra2sem
+            cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/dep2tree_pt
+            cat teste.org.txt | /opt/palavras/por.pl | perl -wnpe 's/^=//;' | /opt/palavras/bin/visl2tiger.pl | /opt/palavras/bin/extra2sem
         """
-       p = subprocess.Popen(['cat' ,msg, '/opt/palavras/por.pl'], stdout=subprocess.PIPE)
+       p = subprocess.Popen(['cat', msg, '/opt/palavras/por.pl'], stdout=subprocess.PIPE)
        stdout, stderr = p.communicate()
-       # Assumes encoding is utf-8 which is not guaranteed. Although pdftotext attempts to convert to utf-8 it may not work.
-       msgout = msg.update({'text':stdout}) 
+       # Assumes encoding is utf-8 which is not guaranteed.
+       # Although pdftotext attempts to convert to utf-8 it may not work.
+       msgout = msg.update({'text': stdout})
        if not stderr:
-           self.sender.send_unicode(msgout,encoding='utf-8')
-       
-if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    S=Palavras_worker()
-    S.start()
+           self.sender.send_unicode(msgout, encoding='utf-8')
 
-
-
-
+if __name__== '__main__':
+    worker = Palavras_worker()
+    worker.start()
