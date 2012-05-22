@@ -1,4 +1,5 @@
 pyzmq
+nltk
 nose
 fabric
 pymongo

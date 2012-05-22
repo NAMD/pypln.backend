@@ -19,13 +19,6 @@ class testWorkerModules(unittest.TestCase):
         self.nw = 4
         #spawn 4 workers
         self.ws = [Popen(['python', 'pypln/workers/dummy_worker.py'], stdout=None) for i in range(self.nw)]
-        #~ self.ws = []
-        #~ for i in range(self.nw):
-            #~ w = DummyWorker2
-            #~ P = Process(target=w)
-            #~ P.start()
-            #~ self.ws.append(P)
-        #TODO: delete?
 
         #spawn a sink
         self.sink = Popen(['python', 'pypln/sinks/dummy_sink.py'], stdout=None)

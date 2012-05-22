@@ -14,8 +14,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="logo.svg"
-   inkscape:export-filename="/home/fccoelho/Documentos/Projects_software/pypln/doc/logo.png"
+   sodipodi:docname="logo_simples.svg"
+   inkscape:export-filename="/home/fccoelho/Documentos/Projects_software/pypln/doc/logo_simples.png"
    inkscape:export-xdpi="249.97377"
    inkscape:export-ydpi="249.97377">
   <defs
@@ -160,7 +160,7 @@
     </g>
     <g
        id="g3043-8"
-       transform="matrix(0.20123749,0.20158411,-0.24115776,0.2407431,305.06628,33.354)"
+       transform="matrix(0.20123749,0.20158411,-0.24115776,0.2407431,305.06628,31.354)"
        style="fill:#008000;fill-opacity:0.58712116">
       <path
          inkscape:connector-curvature="0"

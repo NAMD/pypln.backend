@@ -82,8 +82,6 @@ class SlaveDriver(object):
         except ZMQError:
             log.error("Failed to start poller")
 
-#        if RUN: #For some strange reason this if is always failing
-#            self.listen(0)
 
 
 
@@ -101,7 +99,7 @@ class SlaveDriver(object):
                     # Only get new job if not very busy
                     if self.process.get_cpu_percent() < 0.5:
                         msg = self.pullsock.recv_json(zmq.NOBLOCK)
-                        self.handle_job()
+                        self.handle_job(msg)
 
                 if self.pubsock in socks and socks[self.pubsock] == zmq.POLLOUT:
 #                    print "sent msg... ", loops

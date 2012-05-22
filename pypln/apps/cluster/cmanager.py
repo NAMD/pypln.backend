@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-u"""
+"""
 This executable is the manager of a pypln cluster. All tasks should be started through it and are
 monitorable/controllable through it.
 
@@ -124,20 +124,15 @@ class Manager(object):
                     jobmsg = self.monitor.recv_json()
                     self.process_jobs(jobmsg)
                     self.monitor.send_json({'ans':'Job queued'})
-#                if self.monitor in socks and socks[self.monitor] == zmq.POLLOUT:
-##                    self.monitor.send_json("{ans:'Job queued'}")
 
                 if self.confport in socks and socks[self.confport] == zmq.POLLIN:
 #                    print "conf"
                     msg = self.confport.recv_json()
                     configmsg = self.handle_checkins(msg)
                     self.confport.send_json(configmsg)
-#                if self.confport in socks and socks[self.confport] == zmq.POLLOUT:
-#                    self.confport.send_json(configmsg)
 
                 if self.statussock in socks and socks[self.statussock] == zmq.POLLIN:
                     msg = self.statussock.recv()
-#                    json.dumps({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     #print msg,self.node_registry
 
@@ -225,14 +220,14 @@ class Manager(object):
         time_stamp = datetime.datetime.now()
         msg['time_stamp'] = time_stamp.isoformat()
         self.node_registry[msg['ip'].replace('.',' ')]['last_report'] = msg
-        log.debug("updated node_registry %s"%self.node_registry)
+        log.debug("updated node_registry {0}".format(self.node_registry))
         self.db.Stats.insert({"cluster":self.node_registry,"active jobs":self.active_jobs,"time_stamp":time.mktime(time_stamp.timetuple())})
         log.debug('Saved status msg from %s'%msg['ip'])
 #        print self.node_registry
 
 
     def __bootstrap_cluster(self):
-        u"""
+        """
         Connect to the nodes and make sure they are ready to join the cluster
         :return:
         """
@@ -285,6 +280,7 @@ def spawn_slave(masteruri):
     frun('nohup slavedriver %s &'%(masteruri,))
     log.debug("Spawned Slavedriver.")
 
+#Perform cleanups at process exit. Maintained here if the need arises
 #@atexit.register
 #def cleanup():
 #    if self.streamerdevice:
