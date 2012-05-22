@@ -32,16 +32,16 @@ def frequency(host='127.0.0.1',port=27017,db='test',collection='Docs',fields=['t
     i = 1
     cursor = coll.find({"freqdist":None},fields=fields+['lang'])
     rd = cursor.count()
-    print "%s  documents need analysis"%rd
+    # print "%s  documents need analysis"%rd
     for t in cursor:
-        print "updating %s of %s"%(i,rd)
+        # print "updating %s of %s"%(i,rd)
         lang = 'en' if 'lang' not in t else t['lang']
         fd = FreqDist(word_tokenize(t['text']))#.encode('utf8')))
         try:
             di = OrderedDict(fd).items()
             coll.update({'_id':t['_id']},{'$set':{"freqdist":di}})#cPickle.dumps(fd)
         except OperationFailure:
-            print "failed updating document: %s"%t['_id']
+            # print "failed updating document: %s"%t['_id']
         i +=1
 
 def conditional_frequency(text):

@@ -14,7 +14,37 @@ import zmq
 from base import PushPullWorker, BaseWorker
 
 
-#context = zmq.Context()
+class DummyWorker(PushPullWorker):
+    """
+    Dummy worker class which does nothing.
+    Currenty just for testing purposes.
+    """
+
+    def start(self):
+        self.pid = os.getpid() #updating pid in case of fork
+        # Process tasks forever
+        # print "Worker {} up!".format(self.pid)
+        while self.stayalive:
+#            msg = self.receiver.recv_json()
+#            print msg
+            socks = dict(self.poller.poll())
+            if self.receiver in socks and socks[self.receiver] == zmq.POLLIN:
+                msg = self.receiver.recv_json()
+                # print "worker {} received: {}".format(self.pid, msg)
+#                if not msg: break # no more tasks left?
+                if 'jobid' in msg: # startup message
+                    # print "starting job {}".format(msg['jobid'])
+                    continue
+                self.process(msg)
+            if self.sub in socks and socks[self.sub] == zmq.POLLIN:
+                msg = self.sub.recv()
+                # print '{}: {}'.format(self.pid, msg)
+                break
+#            print socks
+
+    def process(self,msg):
+        self.sender.send_json(msg)
+
 def DummyWorker2():
     """
     Dummy worker function, works better with multiprocessing
@@ -42,54 +72,17 @@ def DummyWorker2():
         socks = dict(poller.poll(100))
         if receiver in socks and socks[receiver] == zmq.POLLIN:
             msg = receiver.recv_json()
-            print pid,  msg
+            # print '{}: {}'.format(pid, msg)
             if not msg: break # no more tasks left?
             if 'jobid' in msg: # startup message
-                print "starting job %s"%msg['jobid']
+                # print "starting job {}".format(msg['jobid'])
                 continue
         if sub in socks and socks[sub] == zmq.POLLIN:
             msg = sub.recv()
-            print pid,":",  msg
+            # print '{}: {}'.format(pid, msg)
             break
 
-class DummyWorker(PushPullWorker):
-    """
-    Dummy worker class which does nothing.
-    Currenty just for testing purposes.
-    """
 
-    def start(self):
-        self.pid = os.getpid() #updating pid in case of fork
-        # Process tasks forever
-        print "Worker ",self.pid,  " up!"
-        while self.stayalive:
-#            msg = self.receiver.recv_json()
-#            print msg
-            socks = dict(self.poller.poll())
-            if self.receiver in socks and socks[self.receiver] == zmq.POLLIN:
-                msg = self.receiver.recv_json()
-                print "worker ", self.pid, "received ",msg
-#                if not msg: break # no more tasks left?
-                if 'jobid' in msg: # startup message
-                    print "starting job %s"%msg['jobid']
-                    continue
-                self.process(msg)
-            if self.sub in socks and socks[self.sub] == zmq.POLLIN:
-                msg = self.sub.recv()
-                print self.pid,": ",  msg
-                break
-#            print socks
-
-
-        
-    def process(self,msg):
-        # Simple progress indicator for the viewer
-#        sys.stdout.write(',')
-#        sys.stdout.flush()
-        # Send results to sink
-        self.sender.send_json(msg)
-            
 if __name__=="__main__":
-    # this is run when worker is spawned directly from the console
-    W=DummyWorker()
-    W()
+    worker = DummyWorker()
+    worker()

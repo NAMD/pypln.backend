@@ -35,8 +35,8 @@ class DocConverterWorker(PushPullWorker):
                 msgout = self.extract_txt_plain(fileobject,msg)
             elif msg['mimetype'] == "text/html":
                 msgout = self.extract_txt_html(fileobject,msg)
-            else:
-                print "mimetype %s not recognized"%msg['mimetype']
+            # else:
+                # print "mimetype %s not recognized"%msg['mimetype']
         except NoFile:
             msgout = {'fail':1}
 
@@ -100,7 +100,7 @@ class DocConverterWorker(PushPullWorker):
         :param fileobj: file object
         :return: msgout dictionary
         """
-        print "==> extracting text"
+        # print "==> extracting text"
         text = fileobj.read()
         msgout = {'filename':fileobj.filename,'text':text.strip(),'database':msg['database'],'collection':msg['collection']}
         return msgout
@@ -111,7 +111,7 @@ class DocConverterWorker(PushPullWorker):
         :param fileobj: file object
         :return: msgout dictionary
         """
-        print "==> extracting html"
+        # print "==> extracting html"
         text = fileobj.read()
         try :
             p1 = subprocess.Popen(["html2text"], stdin=subprocess.PIPE,stdout=subprocess.PIPE)

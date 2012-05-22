@@ -33,7 +33,7 @@ def tag_collection(host='127.0.0.1',port=27017,db='test',collection='Docs',field
     i = 1
     cursor = coll.find({'tagged_text':None},fields=fields)
     rd = cursor.count()
-    print "%s documents need tagging"%rd
+    # print "%s documents need tagging"%rd
     msgs = []
     for t in cursor:
 #        print "updating %s of %s"%(i,rd)
@@ -69,8 +69,8 @@ if __name__=="__main__":
     parser.add_argument('--host', '-H', help="Host")
     parser.add_argument('--port', '-p', help="Host")
     parser.add_argument('--field', '-f', help="Host")
-    args = parser.parse_args()#    print args, args.prune
-
+    args = parser.parse_args()
+    # print args, args.prune
 
     tv = TaskVentilator(Ventilator,POSTaggerWorker,MongoUpdateSink,10)
     vent, ws, sink = tv.spawn()

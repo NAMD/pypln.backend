@@ -29,18 +29,16 @@ class MongoUpdateSink(BaseSink):
         """
         num_tasks = int(self.hear.recv().split("|")[-1])
         # Process tasks forever
-        print "Sink starting, waiting for %s tasks"%num_tasks
+        #print "Sink starting, waiting for %s tasks"%num_tasks
         total_results = 1
         for i in range(num_tasks):
             msg = self.receiver.recv_json()
-            if 'fail' in msg:
-                print "failed task #%s"%total_results
-            else:
+            if 'fail' not in msg:
                 self.process(msg)
             total_results += 1
 
         self.pub.send("sink-finished:%s"%total_results)
-        print "==> sink-finished:%s"%total_results
+        #print "==> sink-finished:%s"%total_results
 
     def process(self, msg):
         """
@@ -49,18 +47,18 @@ class MongoUpdateSink(BaseSink):
         """
         msg['spec']["_id"] = ObjectId(msg['spec']["_id"])
         if not (msg['database'] in databases and msg['collection'] in conn[msg['database']].collection_names()):
-            print "Either database %s or collection %s do not exist."%(msg['database'],msg['collection'])
+            #print "Either database %s or collection %s do not exist."%(msg['database'],msg['collection'])
             return
         coll = conn[msg['database']][msg['collection']]
         try:
             coll.update(msg['spec'],msg['update'],multi=msg['multi'])
-            print "Updated"
+            #print "Updated"
         except TypeError:
-            print "bad spec or update command."
+            #print "bad spec or update command."
         except OperationFailure:
-            print "failed updating document: %s"%t['_id']
+            #print "failed updating document: %s"%t['_id']
 
 
-if __name__=="__main__":
-    S=MongoUpdateSink()
-    S.start()
+if __name__== '__main__':
+    sink = MongoUpdateSink()
+    sink.start()

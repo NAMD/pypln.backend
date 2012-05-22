@@ -19,12 +19,12 @@ class MimeWorker(PushPullWorker):
                 self.process(msg)
             if self.hear in socks and socks[self.hear] == zmq.POLLIN:
                 msg = self.hear.recv()
-                print msg
+                # print msg
                 break
-                
+
     def process(self,msg):
         """
-        Tries to detect the mimetype based on filename or 
+        Tries to detect the mimetype based on filename or
         """
         mt = mimetypes.guess_type(msg)
         #TODO: figure out a way to report a failure

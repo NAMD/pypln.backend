@@ -29,14 +29,13 @@ class HighlighterWorker(PushPullWorker):
             for k,wl in msg['wordlists'].items():
                 if word in wl:
                     word_tagged = '<span class="tagged" title="%s"><b>'+word+'</b></span>'
-                    print k
+                    # print k
                     belongs.append(k)
-                print "==>",k, belongs, word
+                # print "==>",k, belongs, word
             if belongs:
                 new_text.append(word_tagged%(','.join(belongs)))
             else:
                 new_text.append(word)
-
         msgout = {'highlighted_text':new_text}
         try:
             self.sender.send_json(msgout)

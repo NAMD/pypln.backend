@@ -43,5 +43,5 @@ class Ventilator(object):
             self.pub.send("task-sent:%s|%s"%(i+1,len(messages))) # publishes that it has sent this task
 
         m = self.hear.recv()
-        print "ventilator: ", m
+        # print "ventilator: ", m
         #TODO: check if there is a better way to check if the queue is empty

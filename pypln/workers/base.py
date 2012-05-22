@@ -41,29 +41,29 @@ class BaseWorker(object):
         Runs forever until msg is received on the self.sub channel
         """
         # Process tasks forever
-        print self.pid,  " starting"
+        # print self.pid,  " starting"
         msgproc = 0
         while self.stayalive:
             socks = dict(self.poller.poll())
             if self.receiver in socks and socks[self.receiver] == zmq.POLLIN:
                 msg = self.receiver.recv_json()
                 if 'jobid' in msg: # startup message
-                    print "starting job %s"%msg['jobid']
+                    # print "starting job {}".format(msg['jobid'])
                     self.sender.send_json({'fail':1})
                 else:
                     self.process(msg)
                 msgproc += 1
             if self.sub in socks and socks[self.sub] == zmq.POLLIN:
                 msg = self.sub.recv()
-                print self.pid, " Done after processing %s messages"%msgproc
+                # print self.pid, "Done after processing {} messages".format(msgproc)
                 break
-            
+
     def process(self,msg):
         """
         This method must be overloaded by derived workers
         """
         raise NotImplementedError
-    
+
 class PushPullWorker(BaseWorker):
     """
     Base class for worker which user the push-pull protocol
@@ -83,7 +83,7 @@ class PushPullWorker(BaseWorker):
 
 
 
-        
+
     def __call__(self, *args, **kwargs):
         """
         worker instances can be started by direct calling
@@ -123,11 +123,9 @@ class PushPullWorker(BaseWorker):
                 self.process(msg)
             if self.sub in socks and socks[self.sub] == zmq.POLLIN:
                 msg = self.sub.recv()
-                print msg
+                # print msg
                 break
 
-
-    
     def process(self,msg):
         """
         This method must be overloaded by derived workers

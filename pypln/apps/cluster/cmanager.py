@@ -139,7 +139,7 @@ class Manager(object):
                     msg = self.statussock.recv()
 #                    json.dumps({'cluster':self.node_registry,'active jobs':self.active_jobs})
                     self.statussock.send_json({'cluster':self.node_registry,'active jobs':self.active_jobs})
-                    print msg,self.node_registry
+                    #print msg,self.node_registry
 
                 if self.sub_slavedriver_sock in socks and socks[self.sub_slavedriver_sock] == zmq.POLLIN:
 #                    print "SD"
@@ -153,9 +153,9 @@ class Manager(object):
             log.warning("Manager coming down due to %s"%e)
         except ZMQError as z:
             log.error("Failed messaging: %s"%z)
-            print "Failed messaging: %s"%z
+            #print "Failed messaging: %s"%z
         finally:
-            print "======> Manager coming down"
+            #print "======> Manager coming down"
             log.warning("Closing sockets")
             self.monitor.close()
             self.confport.close()

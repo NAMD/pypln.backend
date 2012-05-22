@@ -14,11 +14,9 @@ from base import BaseSink
 context = zmq.Context()
 class DummySink(BaseSink):
     def start(self):
-        """
-        starts results receiving
-        """
+        """starts results receiving"""
         self.pid = os.getpid()
-        print "Sink %s starting..."%self.pid
+        # print "Sink {} starting...".format(self.pid)
         num_tasks = int(self.hear.recv().split("|")[-1])
 
         # Process tasks forever

@@ -45,6 +45,6 @@ class FS:
                 log.warning("File %s has already been Processed, skipping."%fn)
                 fid = None
             except InvalidStringData as err:
-                print err,  fn
+                # print err,  fn
                 fid = None
         return fid

@@ -21,7 +21,7 @@ class Palavras_worker(PushPullWorker):
                 self.process(msg)
             if self.hear in socks and socks[self.hear] == zmq.POLLIN:
                 msg = self.hear.recv_json()
-                print msg
+                # print msg
                 break
 
    def process (msg):

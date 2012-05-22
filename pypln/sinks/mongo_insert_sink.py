@@ -26,25 +26,25 @@ class MongoInsertSink(BaseSink):
         """
         num_tasks = int(self.hear.recv().split("|")[-1])
         # Process tasks forever
-        print "Sink starting, waiting for %s tasks"%num_tasks
+        # print "Sink starting, waiting for %s tasks"%num_tasks
         total_results = 0
         for i in range(num_tasks):
             msg = self.receiver.recv_json()
             try:
-                print total_results+1, msg['filename']
+                filename = msg['filename']
             except KeyError:
                 self.flush()
             if 'fail' in msg:
-                print "failed conversion"
+                # print "failed conversion"
                 self.flush()
             else:
                 self.process(msg)
             total_results += 1
-            
-        
+
+
         self.flush() # Always flush before exiting
         self.pub.send("sink-finished:%s"%total_results)
-        print "==> sink-finished:%s"%total_results
+        # print "==> sink-finished:%s"%total_results
 
     def process(self,  msg):
         """
@@ -52,19 +52,20 @@ class MongoInsertSink(BaseSink):
         self.batchsz
         """
         #TODO: check for duplicates
-#        print msg
+        # print msg
         self.coll = collection(msg.pop('database'),msg.pop('collection'))
         self.insertlist.append(msg)
-        
+
         if len(self.insertlist) > self.batchsz:
-            print "==> inserting...", 
+            #print "==> inserting...",
             self.coll.insert(self.insertlist)
             self.insertlist = []
     def flush(self):
-        print "--> sink flushing"
+        #print "--> sink flushing"
         if self.insertlist:
             self.coll.insert(self.insertlist)
-            
-if __name__=="__main__":
-    S=MongoInsertSink()
-    S()
+
+
+if __name__== '__main__':
+    sink = MongoInsertSink()
+    sink()
