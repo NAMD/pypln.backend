@@ -139,13 +139,13 @@ class TestSlavedriverInst(unittest.TestCase):
         self.managerproc.terminate()
         os.kill(self.managerproc.pid, signal.SIGKILL)
 
-    @unittest.skip('Failing with "address already in use"')
+#    @unittest.skip('Failing with "address already in use"')
     def test_fetch_conf(self):
         SD = SlaveDriver(self.localip + ":" + self.config.get('manager', 'conf_reply'))
         self.assertTrue(isinstance(SD.localconf,dict))
         self.assertTrue(SD.localconf.has_key('master_ip'))
 
-    @unittest.skip('Failing with "address already in use"')
+#    @unittest.skip('Failing with "address already in use"')
     def test_socket_binding(self):
         SD = SlaveDriver(self.localip + ":" + self.config.get('manager', 'conf_reply'))
         p = psutil.Process(SD.pid)

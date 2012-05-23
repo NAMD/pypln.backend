@@ -5,9 +5,6 @@ Created on 26/06/2011
 @author: Flávio Codeço Coelho
 '''
 
-#from ez_setup import use_setuptools
-#use_setuptools()
-
 from setuptools import setup, find_packages
 
 
@@ -22,6 +19,7 @@ setup(name='pypln',
             'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager:main',
                                'slavedriver = pypln.apps.cluster.slavedriver:main',
                                'pypln-monitor = pypln.Monitors.webmonitor.monitor:main',
+                               'pypln-extractor = pypln.apps.extractor:main'
             ]
         },
         packages = find_packages(),

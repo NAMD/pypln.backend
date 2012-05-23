@@ -72,12 +72,12 @@ def scan_gridfs(db, host):
         docdict[mt].append(doc.md5)
     return docdict
 
-def extract(path, vent):
+def extract(args, vent):
     """Extract texts from file under a given path or on GridFS"""
     pdf_ext_vent = vent
     time.sleep(1)
     if not args.gfs:
-        docs = scan_dir(path, args.db)
+        docs = scan_dir(args.path, args.db)
     else:
         docs = scan_gridfs(args.db, args.host)
 #    print "number of PDFs ", len(docs['application/pdf'])
@@ -95,9 +95,9 @@ def directory(d):
     else:
         raise argparse.ArgumentTypeError('{} is not a directory'.format(d))
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser(description='Scans a directory tree or gridfs distributed file system looking for files to convert to text')
-    #group = parser.add_mutually_exclusive_group(required=True)
     parser.add_argument('-H', '--host', default='127.0.0.1', help='Host ip of the MongoDB server.')
     parser.add_argument('-d', '--db', required=True, help='Database in which to deposit the texts')
     parser.add_argument('-c', '--col', required=True, help="Collection in which to deposit the texts")
@@ -107,6 +107,8 @@ if __name__ == '__main__':
 
     tv = TaskVentilator(Ventilator, DocConverterWorker, MongoInsertSink, 10)
     vent, ws, sink = tv.spawn()
-#    sinks = setup_sink()
-#    workers = setup_workers(8)
-    extract(args.path, vent)
+    extract(args, vent)
+
+
+if __name__ == '__main__':
+    main()
