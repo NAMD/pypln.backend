@@ -1,0 +1,133 @@
+{% load cms_tags sekizai_tags %}
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+<!doctype html>
+<html>
+    <head>
+        {% block head %}
+        <meta charset="utf-8"/>
+        <title>Text Analysis Workbench</title>
+        <style>@import "/static_extra/lib/themes/claro/claro.css";@import "/static_extra/css/app.css";@import "/static_extra/lib/dojo/dojo/resources/dojo.css";
+        </style>
+        <script type="text/javascript" src="/static_extra/lib/maqetta/maqetta.js"></script>
+        <script type="text/javascript" djConfig="parseOnLoad: true" src="/static_extra/lib/dojo/dojo/dojo.js"></script>
+        <!--<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.1/dojo/dojo.xd.js" type="text/javascript"></script>-->
+        <script type="text/javascript">
+        dojo.require('dijit.MenuBar');
+        dojo.require('dijit.PopupMenuBarItem');
+        dojo.require('dijit.MenuItem');
+        dojo.require('dijit.Menu');
+        dojo.require('dijit.layout.BorderContainer');
+        dojo.require('dijit.layout.ContentPane');
+        dojo.require('dijit.layout.TabContainer');
+        dojo.require('dijit.form.Button');
+        </script>
+        <script type="text/javascript" src="/static_extra/lib/maqetta/States.js"></script>
+        {% endblock %}
+        {% block head2 %}
+        {% endblock  %}
+        {% render_block "css" %}
+    </head>
+
+<body class="claro" dvFlowLayout="true" data-davinci-ws="collapse" id="myapp">
+
+{% cms_toolbar %}
+
+<div dojoType="dijit.layout.BorderContainer" design="headline" persist="false" gutters="true" style="width: 100%; height: 100%; min-width: 1em; min-height: 1em;">
+<div dojoType="dijit.layout.ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="top" splitter="true" style="height: auto; width: auto;" doLayout="false">
+    <header class="title">
+        <h1>Text Analytics Workbench</h1>
+        <table style="width: auto; height: auto;">
+           <tbody>
+             <tr>
+                <td>
+                    <a href="/"><input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="Home" iconClass="dijitNoIcon"></input></a>
+                </td>
+                <td>
+                    <a href="/taw"><input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="Workbench" iconClass="dijitNoIcon"></input></a>
+                </td>
+                <td>
+                    <a href="/taw/library"><input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="Document Library" iconClass="dijitNoIcon"></input></a>
+                </td>
+                <td>
+                    <a href="/about"><input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="About" iconClass="dijitNoIcon"></input></a>
+                </td>
+                <td>
+                    <a href="/"><input type="button" dojoType="dijit.form.Button" disabled="false" intermediateChanges="false" label="Contact" iconClass="dijitNoIcon"></input></a>
+                </td>
+             </tr>
+           </tbody>
+        </table>
+    </header>
+
+</div>
+  <div dojoType="dijit.layout.ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="bottom" splitter="true" style="height: auto; width: 732px;" doLayout="false">
+      {% block footer %}
+            <p>
+                <img src="/static_extra/images/leximath_peq.jpg">
+            </p>
+      {% endblock %}
+  </div>
+  <div dojoType="dijit.layout.ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="right" splitter="true" doLayout="false" style="width:196px;">
+   <h3>
+     Statistics</h3>
+   <div style="width: auto; height: auto;"></div>
+  </div>
+    <div dojoType="dijit.layout.ContentPane" extractContent="false" preventCache="false" preload="false" refreshOnShow="false" region="center" splitter="false" style="height: auto; width: 630px;" doLayout="false">
+
+        {% block content %}
+            <div class="text1">
+                <header>
+                    <hgroup>
+                        <h1>Welcome to Text Analytics Workbench</h1>
+                        <h3>Here you can leverage advanced computational linguistics  tools to analyze collections of textual documents </h3>
+                    </hgroup>
+                </header>
+            </div>
+        {% endblock %}
+    </div>
+</div>
+{% render_block "js" %}
+</body>
+    <script type="text/javascript">
+        function store_pos(position){
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            // upload coordinates to server
+            data = {
+                "lat": latitude,
+                "lon": longitude
+            }
+            $.post('/setlocation', data)
+        }
+
+        function get_location(){
+            if (Modernizr.geolocation) {
+				//alert('getting position')
+                navigator.geolocation.getCurrentPosition(store_pos);
+            }
+            else {
+                // no native support; maybe try Gears?
+            }
+        }
+
+        function handle_error(err){
+            if (err.code == 1) {
+                // alert('user said no!')
+            }
+            else
+                if (err.code == 2) {
+                //alert('Position unavailable!')
+                }
+                else
+                    if (err.code == 3) {
+                    //alert('timeout')
+                    }
+                    else
+                        if (err.code == 0) {
+                        //alert('unknown error!')
+                        }
+        }
+    </script>
+</html>
