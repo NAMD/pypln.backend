@@ -96,19 +96,10 @@ def directory(d):
         raise argparse.ArgumentTypeError('{} is not a directory'.format(d))
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Scans a directory tree or gridfs distributed file system looking for files to convert to text')
-    parser.add_argument('-H', '--host', default='127.0.0.1', help='Host ip of the MongoDB server.')
-    parser.add_argument('-d', '--db', required=True, help='Database in which to deposit the texts')
-    parser.add_argument('-c', '--col', required=True, help="Collection in which to deposit the texts")
-    parser.add_argument('-g', '--gfs', action='store_true',help="Scan griGridFS under db. ignores path")
-    parser.add_argument('path', metavar='p', type=directory, help="Path of directory to scan for documents")
-    args = parser.parse_args()
-
+def main(args):
     tv = TaskVentilator(Ventilator, DocConverterWorker, MongoInsertSink, 10)
     vent, ws, sink = tv.spawn()
     extract(args, vent)
 
 
-if __name__ == '__main__':
-    main()
+
