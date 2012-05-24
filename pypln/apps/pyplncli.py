@@ -12,6 +12,13 @@ __docformat__ = 'restructuredtext en'
 import argparse
 import extractor
 
+def directory(d):
+    """Check if path is a directory"""
+    if os.path.isdir(d):
+        return d
+    else:
+        raise argparse.ArgumentTypeError('{} is not a directory'.format(d))
+
 def main():
     parser = argparse.ArgumentParser(prog=__name__)
     subparsers = parser.add_subparsers(title="subcommands",
