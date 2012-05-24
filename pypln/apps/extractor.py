@@ -88,12 +88,6 @@ def extract(args, vent):
                          'md5': d, 'mimetype': k})
     pdf_ext_vent.push_load(msgs)
 
-def directory(d):
-    """Check if path is a directory"""
-    if os.path.isdir(d):
-        return d
-    else:
-        raise argparse.ArgumentTypeError('{} is not a directory'.format(d))
 
 
 def main(args):
