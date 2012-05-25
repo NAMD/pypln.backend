@@ -1,0 +1,11 @@
+.*.sw?
+*~
+*.pyc
+.coverage
+reg_settings.py
+dist/*
+build/*
+pypln.egg-info/*
+MANIFEST
+.idea/*
+.directory

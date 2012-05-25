@@ -4,17 +4,15 @@ Basic application setup classes
 """
 
 __docformat__ = "restructuredtext en"
-__author__ = 'fccoelho'
 
 from multiprocessing import Process, ProcessError
 import nmap
 
 
 class TaskVentilator(object):
-    """
-    Class that sets up a task ventilator pattern
-    """
-    def __init__(self,ventilator_class,worker_class,sink_class,nw,ports={}):
+    """Class that sets up a task ventilator pattern"""
+    def __init__(self, ventilator_class, worker_class, sink_class, nw,
+                 ports={}):
         """
         Starts all the processes necessary for the ventilator pattern.
 
@@ -41,7 +39,7 @@ class TaskVentilator(object):
                                subport=ports['sink'][2])
 
     @classmethod
-    def find_ports(self, rng=(5500,5600)):
+    def find_ports(self, rng=(5500, 5600)):
         """
         Generate port set for this pattern by searching available ports
         This pattern require a total of 4 ports.
@@ -51,7 +49,7 @@ class TaskVentilator(object):
         'sink':(pullport,pubport,subport)}
         """
         nm = nmap.PortScanner()
-        nm.scan('127.0.0.1', '%s-%s' % rng)
+        nm.scan('127.0.0.1', '{}-{}'.format(*rng))
         allp = nm['127.0.0.1'].all_protocols()
         openports = {} if 'tcp' not in allp else nm['127.0.0.1']['tcp']
         ports = {}
@@ -61,7 +59,7 @@ class TaskVentilator(object):
                 available.append(p)
             if len(available) == 4:
                 break
-        ports['ventilator'] = (available[0], available[1],available[2])
+        ports['ventilator'] = (available[0], available[1], available[2])
         ports['worker'] = (available[3], available[0], available[2])
         ports['sink'] = (available[3], available[2], available[1])
         return ports
@@ -72,10 +70,11 @@ class TaskVentilator(object):
         :return: (ventilator, [w1, w2, ..., wn], sink)
                   All but ventilator are Process objects
         """
-#        v= Process(target=self.ventilator, name="ventilator")
-        w = [Process(target=w, name="worker-%d" % i) for i, w in enumerate(self.workers)]
-        for p in w:
-            p.start()
-        s = Process(target=self.sink, name="sink")
-        s.start()
-        return self.ventilator, w, s
+        workers = []
+        for index, worker in enumerate(self.workers):
+            process = Process(target=worker, name='worker-{}'.format(index))
+            workers.append(process)
+            process.start()
+        sink = Process(target=self.sink, name='sink')
+        sink.start()
+        return self.ventilator, workers, sink

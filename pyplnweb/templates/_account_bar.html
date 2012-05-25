@@ -1,0 +1,19 @@
+<ul class="secondary-nav">
+    {% if user.is_authenticated %}
+        <li>
+            <a href="#" class="menu">{{ user }}</a>
+            <ul class="menu-dropdown">
+                <li><a href="{% url acct_email %}">Account</a></li>
+                {% if user.is_staff %}
+                    <li><a href="/admin/">Admin</a></li>
+                {% endif %}
+                <li class="divider"></li>
+                <li><a href="{% url acct_logout %}">Logout</a></li>
+            </ul>
+        </li>
+    {% else %}
+        <li><a href="{% url acct_login %}">Log In</a></li>
+        <li><p>or</p></li>
+        <li><a href="{% url acct_signup %}">Sign Up</a></li>
+    {% endif %}
+</ul>

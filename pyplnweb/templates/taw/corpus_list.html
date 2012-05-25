@@ -1,0 +1,41 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+
+{% block head_title %}{% trans "Corpus List" %}{% endblock %}
+{% block extra_head%}
+    <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+    <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet"></link>
+    <link href="{{ STATIC_URL }}css/ui-darkness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
+    <script type="text/javascript">
+        var cTable;
+        $(document).ready(function(){
+            cTable = $("#cTable").dataTable({
+                "bJQueryUI": true,
+            })
+        });
+    </script>
+{% endblock %}
+
+
+{% block body %}
+<h2>Corpora</h2>
+    <table id="cTable">
+        <thead>
+        <tr>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Description" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for corpus in object_list %}
+        <tr>
+            <td>{{ corpus.title }}</td>
+            <td>{{ corpus.description }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

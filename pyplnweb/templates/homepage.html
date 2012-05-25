@@ -1,0 +1,43 @@
+{% extends "banner_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+{% load dajaxice_templatetags %}
+
+{% block head_title %}{% trans "Welcome" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block banner %}
+    <h1>{% trans "Text Analytics Workbench" %}</h1>
+    <p>
+        {% blocktrans %}
+        <b><a href="/taw/">TAW</a></b> is a <a href="http://leximath.com.br/">Leximath</a>
+        product intended to provide easy to use, web based tools to analyze text. By
+        integrating numerous text mining and Natural language processing tools,
+        You can easily analyze and manage from single documents to large collections of texts.
+        {% endblocktrans %}
+    </p>
+    
+    <h2>Overview of Text Analytics Workbench</h2>
+    <p>
+        {% blocktrans %}
+        TAW is a multi user tool. To use it you must create an account (If you don't have one already) and start your
+            own analytical projects.
+        {% endblocktrans %}
+    </p>
+    
+    {% if user.is_authenticated %}
+        {% url what_next as what_next_url %}
+        <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}" class="btn primary large">What Next</a>?{% endblocktrans %}</p>
+    {% else %}
+        {% url acct_login as login_url %}
+        {% ifsetting ACCOUNT_OPEN_SIGNUP %}
+            {% url acct_signup as signup_url %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn">Log In</a> or <a href="{{ signup_url }}" class="btn primary">Sign Up</a> to try out the site.{% endblocktrans %}</p>
+        {% else %}
+            <p>{% blocktrans %}You can <a href="{{ login_url }}" class="btn primary large">Log In</a> to try out TAW.{% endblocktrans %}</p>
+        {% endifsetting %}
+    {% endif %}
+{% endblock %}
