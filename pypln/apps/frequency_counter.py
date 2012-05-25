@@ -35,16 +35,19 @@ def frequency(args, vent):
 
     """
     conn = Connection(host=args.host,port=args.port)
-    coll = conn[args.db][args.collection]
+    coll = conn[args.db][args.col]
     i = 1
-    cursor = coll.find({"freqdist":None},fields=args.fields+['lang'])
+    if args.incr:
+        cursor = coll.find({"freqdist":None},fields=[args.field]+['lang'])
+    else:
+        cursor = coll.find(fields=[args.field]+['lang'])
     rd = cursor.count()
     log.info("{0} documents queued for term frequency analysis.".format(rd))
     msgload = []
     for t in cursor:
         msg = {'database' : args.db,
                'collection' : args.col,
-               'text':args.field,
+               'text':t[args.field],
                '_id':str(t['_id'])
                }
         msgload.append(msg)
