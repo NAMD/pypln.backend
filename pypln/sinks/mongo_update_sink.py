@@ -12,6 +12,9 @@ import zmq
 from base import BaseSink
 from bson.objectid import ObjectId
 from pymongo.errors import OperationFailure
+from pypln.logger import make_log
+
+log = make_log(__name__)
 
 context = zmq.Context()
 
@@ -52,11 +55,13 @@ class MongoUpdateSink(BaseSink):
         coll = conn[msg['database']][msg['collection']]
         try:
             coll.update(msg['spec'],msg['update'],multi=msg['multi'])
-            #print "Updated"
+            log.debug("Updated")
         except TypeError:
+            log.error("bad spec or update command.")
             #print "bad spec or update command."
         except OperationFailure:
-            #print "failed updating document: %s"%t['_id']
+            log.error("failed updating document: {0}".format(msg['_id']))
+
 
 
 if __name__== '__main__':
