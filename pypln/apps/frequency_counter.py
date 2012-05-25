@@ -13,48 +13,51 @@ from pymongo.errors import OperationFailure
 import cPickle
 import argparse
 from collections import OrderedDict
+from pypln.logger import make_log
+from pypln.workers.frequency_worker import FreqDistWorker
+from pypln.servers.ventilator import Ventilator
+from pypln.servers.baseapp import TaskVentilator
+from pypln.sinks.mongo_update_sink import MongoUpdateSink
 from bson import BSON
 from bson.son import SON
+
+log = make_log(__name__)
 
 #tokenizer = {'en':LazyLoader('tokenizers/punkt/english.pickle'),
 #             'pt':LazyLoader('tokenizers/punkt/portuguese.pickle')}
 
 #TODO: implement the possibility to run as a single process or to call workers to do the work in parallel
 
-def frequency(host='127.0.0.1',port=27017,db='test',collection='Docs',fields=['text']):
+def frequency(args, vent):
     """
     Calculate frequency distribution (dictionary) of words of each document of the collection and store it
     as a list of items.
 
     """
-    conn = Connection(host=host,port=port)
-    coll = conn[db][collection]
+    conn = Connection(host=args.host,port=args.port)
+    coll = conn[args.db][args.collection]
     i = 1
-    cursor = coll.find({"freqdist":None},fields=fields+['lang'])
+    cursor = coll.find({"freqdist":None},fields=args.fields+['lang'])
     rd = cursor.count()
-    # print "%s  documents need analysis"%rd
+    log.info("{0} documents queued for term frequency analysis.".format(rd))
+    msgload = []
     for t in cursor:
-        # print "updating %s of %s"%(i,rd)
-        lang = 'en' if 'lang' not in t else t['lang']
-        fd = FreqDist(word_tokenize(t['text']))#.encode('utf8')))
-        try:
-            di = OrderedDict(fd).items()
-            coll.update({'_id':t['_id']},{'$set':{"freqdist":di}})#cPickle.dumps(fd)
-        except OperationFailure:
-            # print "failed updating document: %s"%t['_id']
-        i +=1
+        msg = {'database' : args.db,
+               'collection' : args.col,
+               'text':args.field,
+               '_id':str(t['_id'])
+               }
+        msgload.append(msg)
+        if len(msgload) == 50:
+            vent.push_load(msgload)
+            msgload = []
+    if msgload:
+        vent.push_load(msgload)
+    log.info("Done pushing frequency analysis jobs.")
 
-def conditional_frequency(text):
-    pass
+def main(args):
+    tv = TaskVentilator(Ventilator,FreqDistWorker,MongoUpdateSink,10)
+    vent = tv.spawn()[0]
+    frequency(args, vent)
 
-if __name__=="__main__":
-    parser = argparse.ArgumentParser(description='Perform word frequency analysis on a database collection')
-    parser.add_argument('--db', '-d', help="Database")
-    parser.add_argument('--col', '-c', help="Collection")
-    parser.add_argument('--host', '-H', help="Host")
-    parser.add_argument('--port', '-p', help="Host")
-    parser.add_argument('--field', '-f', help="Host")
-    args = parser.parse_args()
 
-    #frequency(db='Results',collection='Documentos')
-    frequency(db=args.db,host=args.host,port=args.port,collection=args.col,fields=args.field)
