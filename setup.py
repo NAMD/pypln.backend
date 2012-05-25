@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='pypln', 
-        version  = '0.3.1',
+        version  = '0.3.2',
         author = 'Flávio Codeço Coelho', 
         author_email = 'fccoelho@gmail.com', 
         url = 'http://code.google.com/p/pypln/',
@@ -19,7 +19,7 @@ setup(name='pypln',
             'console_scripts':['pypln-manager = pypln.apps.cluster.cmanager:main',
                                'slavedriver = pypln.apps.cluster.slavedriver:main',
                                'pypln-monitor = pypln.Monitors.webmonitor.monitor:main',
-                               'pypln-extractor = pypln.apps.extractor:main'
+                               'pypln = pypln.apps.pyplncli:main'
             ]
         },
         packages = find_packages(),
