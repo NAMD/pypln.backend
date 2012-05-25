@@ -44,6 +44,7 @@ def main():
     parser_freq.add_argument('--host', '-H', help="Mongodb Host")
     parser_freq.add_argument('--port', '-p', help="Host port")
     parser_freq.add_argument('--field', '-f', help="field with the text to be analysed")
+    parser_freq.add_argument('--incr', '-i', action="store_true", help="Analyse only new (no yet analyzed) texts ")
     parser_freq.set_defaults(func=frequency_counter.main)
 
 
