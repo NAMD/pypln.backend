@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 Testing module for cmanager.py
 
 license: GPL v3 or later
