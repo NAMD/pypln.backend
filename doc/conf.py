@@ -31,6 +31,11 @@ autodoc_member_order = 'groupwise'
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
+#TODO: Make this work for integrating epydoc generated api docs with sphinx
+#epydoc_mapping = {
+#    '/_static/api/': [r'pypln\.'],
+#    }
+
 # The suffix of source filenames.
 source_suffix = '.rst'
 
