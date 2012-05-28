@@ -10,3 +10,5 @@ log4mongo
 epydoc
 sphinx
 python-nmap
+rdflib
+rdfextras
