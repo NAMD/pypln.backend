@@ -3,8 +3,6 @@
 {% load i18n %}
 {% load ifsetting_tag %}
 
-{% load dajaxice_templatetags %}
-
 {% block head_title %}{% trans "Welcome" %}{% endblock %}
 
 {% block extra_head %}
@@ -12,16 +10,12 @@
     <!--<script src="{{ STATIC_URL }}js/jquery-ui-1.8.16.custom.min.js"></script>-->
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
     <link href="{{ STATIC_URL }}css/ui-darkness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-    {% dajaxice_js_import %}
 {% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block banner %}
-
-
 {% endblock %}
-
 
 {% block body %}
     <div id="tabs">
@@ -54,5 +48,3 @@
         });
     </script>
 {% endblock %}
-
-

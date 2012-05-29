@@ -2,7 +2,6 @@
 
 {% load i18n %}
 {% load ifsetting_tag %}
-{% load dajaxice_templatetags %}
 
 
 {% block head_title %}{% trans "Document List" %}{% endblock %}
@@ -10,8 +9,6 @@
     <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
     <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet"></link>
     <link href="{{ STATIC_URL }}css/ui-darkness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
-    <script src="{{ STATIC_URL }}js/jquery.dajax.core.js" type="text/javascript" charset="utf-8"></script>
-    {% dajaxice_js_import %}
     <style type="text/css">
         tr.even.row_selected td{
             background-color: #B0BED9;
@@ -52,20 +49,18 @@
                 "bScrollCollapse": true,
                 //"sDom": '<"top"i>rt<"bottom"flp><"clear">'
             });
-            cTable = $("#cTable").dataTable({})
+            cTable = $("#cTable").dataTable({});
         } );
         function add_docs_callback(data){
-            show_corpora()
+            show_corpora();
         };
         function fnGetSelected( oTableLocal ) {
             var aReturn = new Array();
             var aTrs = oTableLocal.fnGetNodes();
 
-            for ( var i=0 ; i<aTrs.length ; i++ )
-            {
-                if ( $(aTrs[i]).hasClass('row_selected') )
-                {
-                    aReturn.push( oTable._(aTrs[i]) );
+            for ( var i=0 ; i < aTrs.length; i++) {
+                if ($(aTrs[i]).hasClass('row_selected')) {
+                    aReturn.push(oTable._(aTrs[i]));
                 }
             }
             $('#table tbody tr').removeClass('row_selected')
@@ -77,20 +72,8 @@
             var db = {{ db|safe }};
             var coll = {{ collection|safe }}
             var corpus = [];
-            for (var i=0 ; i<aTrs.length ; i++){
-                if ($(aTrs[i]).hasClass('row_selected')){
-                    corpus = cTable._(aTrs[i])
-                    aReturn = fnGetSelected(oTable)
-                    if (aReturn.length == 0){
-                        alert("{% trans 'You must select at least one document to add!' %}");
-                        return corpus
-                    }
-                    Dajaxice.taw.add_doclist_to_corpus(add_docs_callback,{'docs':aReturn,'keys':keys, 'corpus':corpus[0][0],'db':db,'coll':coll})
-                }
-            }
-            return corpus
+            return corpus;
         }
-
     </script>
 {% endblock %}
 
@@ -133,30 +116,30 @@
             </tbody>
         </table>
         <br><br>
-        <input name="Add" value="{% trans 'Add' %}" onclick="getSelectedCorpus(cTable)">
+        <input name="Add" value="{% trans 'Add' %}">
         <input name="Cancel" value="{% trans 'Cancel' %}" onclick="$('#corpora').hide()">
-        <input name="createNewCorpus" value="{% trans 'Create New Corpus' %}" onclick="$('#corpusform').show();$('#corpora').hide();">
+        <input name="createNewCorpus" value="{% trans 'Create New Corpus' %}" onclick="$('#corpusform').show(); $('#corpora').hide();">
     </div>
     <div id="corpusform">
         <form action="/taw/createcorpus/" method="post">{% csrf_token %}
             {{ corpusform.as_p }}
             <input type="hidden" value="{{ database|safe }}" name="database"/>
             <input type="hidden" value="{{ collection|safe }}" name="collection"/>
-            <input type="hidden" value=fnGetSelected(oTable) name="documents"/>
+            <input type="hidden" name="documents"/>
             <input type="submit" value="{% trans 'Create and Add Selected docs' %}" />
-            <input type="button" value="{% trans 'Cancel' %}" onclick="$('#corpusform').hide();$('#corpora').show();"/>
+            <input type="button" value="{% trans 'Cancel' %}" onclick="$('#corpusform').hide(); $('#corpora').show();"/>
         </form>
     </div>
     <script type="text/javascript">
         function show_corpora(){
-            $( "#corpora" ).show()//"drop",{}, 500, callback)
-            cTable.fnAdjustColumnSizing()
+          $("#corpora").show()
+          cTable.fnAdjustColumnSizing();
         }
         //callback function to bring a hidden box back
         function callback() {
           setTimeout(function() {
-                $( "#corpora:visible" ).removeAttr( "style" ).fadeOut();
-            }, 2000 );
+                $("#corpora:visible").removeAttr("style").fadeOut();
+            }, 2000);
         };
     </script>
     {% endif %}
