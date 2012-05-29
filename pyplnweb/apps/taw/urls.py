@@ -12,12 +12,11 @@ from django.views.generic import ListView
 from taw.models import Document, Corpus, Glossario
 
 
-
-urlpatterns = patterns('taw.views', #this is the prefix to the views below:e.g. taw.views.main
-    url(r"^$","main"),
-    url(r"^documents/$",ListView.as_view(model=Document,)),
-    url(r"^corpora/$", ListView.as_view(model=Corpus,)),
-    url(r'^collections/$','collection_browse'),
-    url(r'^collections/(?P<dbname>\w+)/(?P<collname>\w+)/$','document_browse'),
-    url(r'^createcorpus/$','create_corpus'),
-    )
+urlpatterns = patterns('taw.views', #this is the prefix to the views below:(eg. taw.views.main)
+    url(r'^$', "main"),
+    url(r'^corpora/$',  ListView.as_view(model=Corpus,)),
+    url(r'^documents/$', ListView.as_view(model=Document,)),
+    url(r'^collections/$', 'collection_browse'),
+    url(r'^collections/(?P<dbname>\w+)/(?P<collname>\w+)/$', 'document_browse'),
+    url(r'^createcorpus/$', 'create_corpus'),
+)
