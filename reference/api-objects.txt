@@ -61,10 +61,6 @@ pypln.apps.pyplncli.main	pypln.apps.pyplncli-module.html#main
 pypln.logger	pypln.logger-module.html
 pypln.logger.make_log	pypln.logger-module.html#make_log
 pypln.logger.config	pypln.logger-module.html#config
-pypln.reg_settings	pypln.reg_settings-module.html
-pypln.reg_settings.tests	pypln.reg_settings-module.html#tests
-pypln.reg_settings.should_fail	pypln.reg_settings-module.html#should_fail
-pypln.reg_settings.options	pypln.reg_settings-module.html#options
 pypln.servers	pypln.servers-module.html
 pypln.servers.baseapp	pypln.servers.baseapp-module.html
 pypln.servers.ventilator	pypln.servers.ventilator-module.html
