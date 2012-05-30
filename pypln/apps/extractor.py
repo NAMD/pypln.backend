@@ -33,7 +33,7 @@ def scan_dir(path, db, recurse=False):
     dictionary of files by mimetype
     """
 #    print "==> scanning file system..."
-    fs = FS(db, True)
+    fs = FS(database=db, create=True)
     docdict = defaultdict(lambda: [])
     for p, dirs, files in os.walk(path):
         if not recurse:
@@ -64,7 +64,7 @@ def scan_gridfs(db, host):
     #TODO: maybe it's better to identify files by ID in both these scan functions.
     docdict = defaultdict(lambda: [])
     files = Connection(host)[db].fs.files
-    fs = FS(db)
+    fs = FS(database=db)
     cursor = files.find()
     for f in cursor:
         mt = mimetypes.guess_type(f['filename'])[0] # classify documents by mimetype

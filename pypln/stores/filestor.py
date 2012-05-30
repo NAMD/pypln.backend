@@ -12,26 +12,31 @@ from hashlib import md5
 # Setting up the logger
 log = make_log(__name__)
 
-#TODO: write tests for this class
-
 class FS:
-    def __init__(self,host, port, usr, pw, Database, create = False):
+    def __init__(self,database,host='127.0.0.1', port=27017, usr=None, pw=None, create = False):
         """
         Sets up a connection to a gridFS on a given database
         if the database does not exist and create=True,
         the Database is also created
+        :param Database: Database on which to look for GridFS
         :param host: Host of the Mongodb
         :param port: Port of Mongodb
         :param usr: user authorized for the connection
         :param pw: password for the authorized user
-        :param Database: Database on which to look for GridFS
         :param create: whether to create a file storage if it doesn't exist
         """
-        conn = Connection()
-        if Database not in conn.database_names():
+        self.conn = Connection(host=host,port=port)
+        if database not in self.conn.database_names():
             if not create:
                 raise NameError('Database does not exist. \nCall get_FS with create=True if you want to create it.')
-        self.fs = gridfs.GridFS(conn[Database])
+            else:
+                self.db = self.conn[database]
+                if usr and pw:
+                    self.db.add_user(usr,pw)
+        self.db = self.conn[database]
+        if usr and pw:
+            self.db.authenticate(usr,pw)
+        self.fs = gridfs.GridFS(self.db)
 
 
     def _rename(self,fn):
@@ -77,3 +82,10 @@ class FS:
                 log.error("Invalid string data for file {0}".format(fn))
                 fid = None
         return fid
+
+    def drop(self):
+        """
+        Drops the file storage
+        :return:
+        """
+        self.db.drop_collection('fs')

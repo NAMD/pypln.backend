@@ -13,6 +13,8 @@ import argparse
 # importing existing apps
 import extractor
 import frequency_counter
+import postagger
+import os
 
 def directory(d):
     """Check if path is a directory"""
@@ -47,6 +49,14 @@ def main():
     parser_freq.add_argument('--incr', '-i', action="store_true", help="Analyse only new (no yet analyzed) texts ")
     parser_freq.set_defaults(func=frequency_counter.main)
 
+    # Part-of-Speech Tagger
+    pos_parser = subparsers.add_parser("POSTag",description='Perform POS tagging on a database collection')
+    pos_parser.add_argument('--db', '-d', help="Database",required=True)
+    pos_parser.add_argument('--col', '-c', help="Collection",required=True)
+    pos_parser.add_argument('--host', '-H', help="Host")
+    pos_parser.add_argument('--port', '-p', help="Host")
+    pos_parser.add_argument('--field', '-f', help="Host")
+    pos_parser.set_defaults(func=postagger.main)
 
     # Call the subcommand
     args = parser.parse_args()
