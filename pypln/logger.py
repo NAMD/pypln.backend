@@ -27,7 +27,10 @@ def make_log(name):
     """
     log = logging.getLogger(name)
     level_dict = {'debug':logging.DEBUG,'info':logging.INFO,'warning':logging.WARNING,'error':logging.ERROR}
-    log.setLevel(level_dict[config])
+    try:
+        log.setLevel(level_dict[config.get('logging','loglevel')])
+    except KeyError:
+        log.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # Add the log message handler to the logger
     fhandler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
