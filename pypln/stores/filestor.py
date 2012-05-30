@@ -27,14 +27,18 @@ class FS:
         :param pw: password for the authorized user
         :param create: whether to create a file storage if it doesn't exist
         """
-        conn = Connection(host=host,port=port)
-        if database not in conn.database_names():
+        self.conn = Connection(host=host,port=port)
+        if database not in self.conn.database_names():
             if not create:
                 raise NameError('Database does not exist. \nCall get_FS with create=True if you want to create it.')
-        db = conn[database]
+            else:
+                self.db = self.conn[database]
+                if usr and pw:
+                    self.db.add_user(usr,pw)
+        self.db = self.conn[database]
         if usr and pw:
-            db.authenticate(usr,pw)
-        self.fs = gridfs.GridFS(db)
+            self.db.authenticate(usr,pw)
+        self.fs = gridfs.GridFS(self.db)
 
 
     def _rename(self,fn):
@@ -80,3 +84,10 @@ class FS:
                 log.error("Invalid string data for file {0}".format(fn))
                 fid = None
         return fid
+
+    def drop(self):
+        """
+        Drops the file storage
+        :return:
+        """
+        self.db.drop_collection('fs')
