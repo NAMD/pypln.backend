@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-u"""
+"""
 Define logger infrastructure for the cluster
-
 
 license: GPL v3 or later
 4/30/12
@@ -12,7 +11,10 @@ __docformat__ = "restructuredtext en"
 import logging
 import logging.handlers
 from log4mongo.handlers import MongoHandler
-import datetime
+import ConfigParser
+
+#TODO: change conf path to definitive  one
+config = ConfigParser.ConfigParser('../../tests/pypln.test.conf')
 
 
 # Setting up the logger
@@ -30,6 +32,5 @@ def make_log(name):
     handler.setFormatter(formatter)
     log.addHandler(handler)
     log.addHandler(MongoHandler(host='localhost', database_name='PYPLN'))
-    #TODO: use configuration file
     #TODO: Maybe use zmq.loghandler
     return log
