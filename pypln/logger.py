@@ -14,7 +14,8 @@ from log4mongo.handlers import MongoHandler
 import ConfigParser
 
 #TODO: change conf path to definitive  one
-config = ConfigParser.ConfigParser('../../tests/pypln.test.conf')
+config = ConfigParser.ConfigParser()
+config.read('../../tests/pypln.test.conf')
 
 
 # Setting up the logger
