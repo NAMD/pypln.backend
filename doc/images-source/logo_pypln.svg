@@ -14,10 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="logo.svg"
-   inkscape:export-filename="/home/fccoelho/Documentos/Projects_software/pypln/doc/logo.png"
-   inkscape:export-xdpi="249.97377"
-   inkscape:export-ydpi="249.97377">
+   sodipodi:docname="logo_pypln.svg">
   <defs
      id="defs4">
     <inkscape:path-effect
@@ -139,86 +136,9 @@
          x="113.91549"
          y="268.51508"
          style="-inkscape-font-specification:Mai Tai;font-family:Mai Tai;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal">PyPLN</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:arial;-inkscape-font-specification:arial"
-       x="141.74989"
-       y="268.18964"
-       id="text2989"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan2991"
-         x="141.74989"
-         y="268.18964">e</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
-       x="155.20477"
-       y="259.37762"
-       id="text2993"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan2995"
-         x="155.20477"
-         y="259.37762">i</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:arial;-inkscape-font-specification:arial"
-       x="170.22742"
-       y="268.13449"
-       id="text2989-0"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan2991-5"
-         x="170.22742"
-         y="268.13449">e</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:tb-rl;fill:#666666;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
-       x="165.62755"
-       y="266.95782"
-       id="text3018"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3020"
-         x="286.95065"
-         y="145.63475">atural</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:tb-rl;fill:#666666;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
-       x="154.44675"
-       y="266.8631"
-       id="text3022"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3024"
-         x="321.53534"
-         y="99.774498">anguage</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:tb-rl;fill:#666666;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
-       x="140.16444"
-       y="267.38773"
-       id="text3045"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3047"
-         x="329.83194"
-         y="77.720245">rocessing</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:6px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:tb-rl;fill:#666666;fill-opacity:1;stroke:none;font-family:Arial;-inkscape-font-specification:Arial Bold"
-       x="128.6404"
-       y="275.15973"
-       id="text3049"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan3051"
-         x="274.08774"
-         y="129.7124">thon</tspan></text>
     <g
        id="g3043"
-       transform="matrix(-0.24496436,-0.14534492,0.17387806,-0.29305413,47.592044,531.00045)"
+       transform="matrix(-0.24496436,-0.14534492,0.17387806,-0.29305413,47.592044,513.00045)"
        style="fill:#ff0000;fill-opacity:0.58712116">
       <path
          inkscape:connector-curvature="0"
@@ -237,7 +157,7 @@
     </g>
     <g
        id="g3043-8"
-       transform="matrix(0.20123749,0.20158411,-0.24115776,0.2407431,303.06628,43.354)"
+       transform="matrix(0.20123749,0.20158411,-0.24115776,0.2407431,305.06628,31.354)"
        style="fill:#008000;fill-opacity:0.58712116">
       <path
          inkscape:connector-curvature="0"

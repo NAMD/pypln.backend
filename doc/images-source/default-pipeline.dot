@@ -1,0 +1,28 @@
+digraph G {
+    rankdir = "LR";
+    node [shape=rect, color=grey, fontsize=10];
+
+    subgraph cluster_0 {
+        label = "Conversion";
+        "Convert to text";
+    }
+
+    subgraph cluster_1 {
+        label = "Basic NLP";
+        "Tokenization";
+    }
+
+    subgraph cluster_2 {
+        label = "Document analysis";
+        "Sentence split" -> "Part-of-speech tagging";
+        "FreqDist";
+        "Ngram";
+    }
+
+    "Add document" -> "Convert to text" -> "Tokenization";
+    "Tokenization" -> "Sentence split";
+    "Tokenization" -> "FreqDist";
+    "Tokenization" -> "Ngram";
+
+    "Add document" [shape=plaintext];
+}
