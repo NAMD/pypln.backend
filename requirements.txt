@@ -12,4 +12,3 @@ sphinx
 python-nmap
 rdflib
 rdfextras
-python-nmap
