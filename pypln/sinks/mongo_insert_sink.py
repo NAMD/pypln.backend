@@ -35,7 +35,7 @@ class MongoInsertSink(BaseSink):
             except KeyError:
                 self.flush()
             if 'fail' in msg:
-                # print "failed conversion"
+                self.pub.send("job-failed:")
                 self.flush()
             else:
                 self.process(msg)
