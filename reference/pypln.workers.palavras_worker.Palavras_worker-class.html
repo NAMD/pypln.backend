@@ -60,17 +60,17 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Palavras_worker</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.workers.palavras_worker-pysrc.html#Palavras_worker">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_pypln_wo_8" name="uml_class_diagram_for_pypln_wo_8">
-<area shape="rect" id="node43" href="pypln.workers.palavras_worker.Palavras_worker-class.html#start" title="Starts listening on receiver port for messages this method maybe overloaded by specific workers" alt="" coords="143,212,241,231"/>
-<area shape="rect" id="node43" href="pypln.workers.palavras_worker.Palavras_worker-class.html#process" title="Tries to convert a txt to a noted text using the cat command &#160;&#160;&#160;&#160;&#160;msg must be the a JSON object with the following structure: {&#39;md5&#39;:..., &#39;filename&#39;:..., &#39;date&#39;:}" alt="" coords="143,231,241,249"/>
+<center>  <map id="uml_class_diagram_for_pypln_wo_9" name="uml_class_diagram_for_pypln_wo_9">
+<area shape="rect" id="node35" href="pypln.workers.palavras_worker.Palavras_worker-class.html#start" title="Starts listening on receiver port for messages this method maybe overloaded by specific workers" alt="" coords="143,212,241,231"/>
+<area shape="rect" id="node35" href="pypln.workers.palavras_worker.Palavras_worker-class.html#process" title="Tries to convert a txt to a noted text using the cat command msg must be the a JSON object with the following structure: {&#39;md5&#39;:..., &#39;filename&#39;:..., &#39;date&#39;:}" alt="" coords="143,231,241,249"/>
 <area shape="rect" id="node1" href="pypln.workers.palavras_worker.Palavras_worker-class.html" title="pypln.workers.palavras_worker.Palavras_worker" alt="" coords="131,179,253,255"/>
-<area shape="rect" id="node44" href="javascript:void(0);" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,116,365,135"/>
-<area shape="rect" id="node44" href="javascript:void(0);" title="worker instances can be started by direct calling This is for compatibility with multiprocessing.Process" alt="" coords="17,135,365,153"/>
-<area shape="rect" id="node2" href="javascript:void(0);" title="Base class for worker which user the push&#45;pull protocol" alt="" coords="5,83,376,159"/>
-<area shape="rect" id="node45" href="javascript:void(0);" title="pypln.workers.base.BaseWorker.stop" alt="" coords="139,39,245,57"/>
-<area shape="rect" id="node3" href="javascript:void(0);" title="pypln.workers.base.BaseWorker" alt="" coords="127,6,257,63"/>
+<area shape="rect" id="node36" href="pypln.workers.base.PushPullWorker-class.html#__init__" title="All workers of this type must define three sockets for communication: &#160;:param pullport: Port through which incoming jobs arrive from ventilator &#160;:param pushport: Port through which results are forwarded to sink :param &#160;subport: Port to listen for control messages" alt="" coords="17,116,365,135"/>
+<area shape="rect" id="node36" href="pypln.workers.base.PushPullWorker-class.html#__call__" title="worker instances can be started by direct calling This is for compatibility with multiprocessing.Process" alt="" coords="17,135,365,153"/>
+<area shape="rect" id="node2" href="pypln.workers.base.PushPullWorker-class.html" title="Base class for worker which user the push&#45;pull protocol" alt="" coords="5,83,376,159"/>
+<area shape="rect" id="node37" href="pypln.workers.base.BaseWorker-class.html#stop" title="pypln.workers.base.BaseWorker.stop" alt="" coords="139,39,245,57"/>
+<area shape="rect" id="node3" href="pypln.workers.base.BaseWorker-class.html" title="pypln.workers.base.BaseWorker" alt="" coords="127,6,257,63"/>
 </map>
-  <img src="uml_class_diagram_for_pypln_wo_8.gif" alt='' usemap="#uml_class_diagram_for_pypln_wo_8" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_pypln_wo_9.gif" alt='' usemap="#uml_class_diagram_for_pypln_wo_9" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -116,8 +116,8 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="pypln.workers.palavras_worker.Palavras_worker-class.html#process" class="summary-sig-name">process</a>(<span class="summary-sig-arg">msg</span>)</span><br />
-      Tries to convert a txt to a noted text using the cat command 
-    msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}</td>
+      Tries to convert a txt to a noted text using the cat command
+msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="pypln.workers.palavras_worker-pysrc.html#Palavras_worker.process">source&nbsp;code</a></span>
             
@@ -129,12 +129,12 @@
   </tr>
   <tr>
     <td colspan="2" class="summary">
-    <p class="indent-wrapped-lines"><b>Inherited from <code>base.PushPullWorker</code></b>:
-      <code>__call__</code>,
-      <code>__init__</code>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pypln.workers.base.PushPullWorker-class.html">base.PushPullWorker</a></code></b>:
+      <code><a href="pypln.workers.base.PushPullWorker-class.html#__call__">__call__</a></code>,
+      <code><a href="pypln.workers.base.PushPullWorker-class.html#__init__">__init__</a></code>
       </p>
-    <p class="indent-wrapped-lines"><b>Inherited from <code>base.BaseWorker</code></b>:
-      <code>stop</code>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pypln.workers.base.BaseWorker-class.html">base.BaseWorker</a></code></b>:
+      <code><a href="pypln.workers.base.BaseWorker-class.html#stop">stop</a></code>
       </p>
     <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
       <code>__delattr__</code>,
@@ -236,21 +236,20 @@
   
   <pre class="literalblock">
 
-    Tries to convert a txt to a noted text using the cat command 
-    msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}
+Tries to convert a txt to a noted text using the cat command
+msg must be the a JSON object with the following structure: {'md5':..., 'filename':..., 'date':}
 
-all possibles parameters are:
-    cat teste.org.txt | /opt/palavras/por.pl 
-cat teste.org.txt | /opt/palavras/por.pl --dep 
-cat teste.org.txt | /opt/palavras/por.pl --sem
-cat teste.org.txt | /opt/palavras/por.pl --morf
-cat teste.org.txt | /opt/palavras/por.pl --syn
-cat teste.org.txt | /opt/palavras/por.pl --sem |/opt/palavras/bin/cg2dep ptt
-cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/visldep2malt
-cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/visldep2malt | /opt/palavras/bin/extra2sem
-cat teste.org.txt | /opt/palavras/por.pl |/opt/palavras/bin/dep2tree_pt
-cat teste.org.txt | /opt/palavras/por.pl | perl -wnpe 's/^=//;' |/opt/palavras/bin/visl2tiger.pl | /opt/palavras/bin/extra2sem
-    
+All possibles parameters are:
+    cat teste.org.txt | /opt/palavras/por.pl
+    cat teste.org.txt | /opt/palavras/por.pl --dep
+    cat teste.org.txt | /opt/palavras/por.pl --sem
+    cat teste.org.txt | /opt/palavras/por.pl --morf
+    cat teste.org.txt | /opt/palavras/por.pl --syn
+    cat teste.org.txt | /opt/palavras/por.pl --sem | /opt/palavras/bin/cg2dep ptt
+    cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/visldep2malt
+    cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/visldep2malt | /opt/palavras/bin/extra2sem
+    cat teste.org.txt | /opt/palavras/por.pl | /opt/palavras/bin/dep2tree_pt
+    cat teste.org.txt | /opt/palavras/por.pl | perl -wnpe 's/^=//;' | /opt/palavras/bin/visl2tiger.pl | /opt/palavras/bin/extra2sem
 
 </pre>
   <dl class="fields">
@@ -292,7 +291,7 @@ cat teste.org.txt | /opt/palavras/por.pl | perl -wnpe 's/^=//;' |/opt/palavras/b
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 20 15:24:01 2012
+    Generated by Epydoc 3.0.1 on Wed May 30 18:07:21 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

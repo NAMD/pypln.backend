@@ -90,39 +90,21 @@ pypln.workers.base" class="py-name" href="#" onclick="return doclink('link-0', '
 <a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">k</tt><tt class="py-op">,</tt><tt class="py-name">wl</tt> <tt class="py-keyword">in</tt> <tt class="py-name">msg</tt><tt class="py-op">[</tt><tt class="py-string">'wordlists'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">items</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
 <a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">word</tt> <tt class="py-keyword">in</tt> <tt class="py-name">wl</tt><tt class="py-op">:</tt> </tt>
 <a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">                    <tt class="py-name">word_tagged</tt> <tt class="py-op">=</tt> <tt class="py-string">'&lt;span class="tagged" title="%s"&gt;&lt;b&gt;'</tt><tt class="py-op">+</tt><tt class="py-name">word</tt><tt class="py-op">+</tt><tt class="py-string">'&lt;/b&gt;&lt;/span&gt;'</tt> </tt>
-<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">                    <tt class="py-keyword">print</tt> <tt class="py-name">k</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">                    <tt class="py-comment"># print k</tt> </tt>
 <a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">                    <tt class="py-name">belongs</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">k</tt><tt class="py-op">)</tt> </tt>
-<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">"==&gt;"</tt><tt class="py-op">,</tt><tt class="py-name">k</tt><tt class="py-op">,</tt> <tt class="py-name">belongs</tt><tt class="py-op">,</tt> <tt class="py-name">word</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">                <tt class="py-comment"># print "==&gt;",k, belongs, word</tt> </tt>
 <a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">belongs</tt><tt class="py-op">:</tt> </tt>
 <a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">                <tt class="py-name">new_text</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">word_tagged</tt><tt class="py-op">%</tt><tt class="py-op">(</tt><tt class="py-string">','</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">belongs</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
 <a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
 <a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">                <tt class="py-name">new_text</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">word</tt><tt class="py-op">)</tt> </tt>
-<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"> </tt>
-<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">        <tt class="py-name">msgout</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'highlighted_text'</tt><tt class="py-op">:</tt><tt class="py-name">new_text</tt><tt class="py-op">}</tt> </tt>
-<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
-<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sender</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msgout</tt><tt class="py-op">)</tt> </tt>
-<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">AttributeError</tt><tt class="py-op">:</tt> </tt>
-<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">            <tt class="py-comment">#this is necessary so that we can test this method without starting the worker as a daemon</tt> </tt>
-<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt> </tt>
-<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">msgout</tt> <tt class="py-comment">#for testing purposes</tt> </tt>
-</div></div><a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"> </tt>
-<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt><tt class="py-op">==</tt><tt class="py-string">"__main__"</tt><tt class="py-op">:</tt> </tt>
-<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">    <tt class="py-comment"># this is run when worker is spawned directly from the console</tt> </tt>
-<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">    <tt class="py-name">W</tt> <tt class="py-op">=</tt> <tt id="link-2" class="py-name" targets="Class pypln.workers.highlighter_worker.HighlighterWorker=pypln.workers.highlighter_worker.HighlighterWorker-class.html"><a title="pypln.workers.highlighter_worker.HighlighterWorker" class="py-name" href="#" onclick="return doclink('link-2', 'HighlighterWorker', 'link-2');">HighlighterWorker</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">    <tt class="py-name">W</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Method pypln.sinks.base.BaseSink.start()=pypln.sinks.base.BaseSink-class.html#start,Method pypln.sinks.dummy_sink.DummySink.start()=pypln.sinks.dummy_sink.DummySink-class.html#start,Method pypln.sinks.mongo_insert_sink.MongoInsertSink.start()=pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start,Method pypln.sinks.mongo_update_sink.MongoUpdateSink.start()=pypln.sinks.mongo_update_sink.MongoUpdateSink-class.html#start,Method pypln.sinks.raw_document_sink.RawDocumentSink.start()=pypln.sinks.raw_document_sink.RawDocumentSink-class.html#start,Method pypln.workers.base.BaseWorker.start()=pypln.workers.base.BaseWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.base.PushPullWorker.start()=pypln.workers.base.PushPullWorker-class.html#start,Method pypln.workers.dummy_worker.DummyWorker.start()=pypln.workers.dummy_worker.DummyWorker-class.html#start,Method pypln.workers.enc_detect_worker.EncodingWorker.start()=pypln.workers.enc_detect_worker.EncodingWorker-class.html#start,Method pypln.workers.mime_detect_worker.MimeWorker.start()=pypln.workers.mime_detect_worker.MimeWorker-class.html#start,Method pypln.workers.palavras_worker.Palavras_worker.start()=pypln.workers.palavras_worker.Palavras_worker-class.html#start,Method pypln.workers.parser_worker.ParserWorker.start()=pypln.workers.parser_worker.ParserWorker-class.html#start"><a title="pypln.sinks.base.BaseSink.start
-pypln.sinks.dummy_sink.DummySink.start
-pypln.sinks.mongo_insert_sink.MongoInsertSink.start
-pypln.sinks.mongo_update_sink.MongoUpdateSink.start
-pypln.sinks.raw_document_sink.RawDocumentSink.start
-pypln.workers.base.BaseWorker.start
-pypln.workers.base.PushPullWorker.start
-pypln.workers.base.PushPullWorker.start
-pypln.workers.dummy_worker.DummyWorker.start
-pypln.workers.enc_detect_worker.EncodingWorker.start
-pypln.workers.mime_detect_worker.MimeWorker.start
-pypln.workers.palavras_worker.Palavras_worker.start
-pypln.workers.parser_worker.ParserWorker.start" class="py-name" href="#" onclick="return doclink('link-3', 'start', 'link-3');">start</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
-<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">        <tt class="py-name">msgout</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'highlighted_text'</tt><tt class="py-op">:</tt><tt class="py-name">new_text</tt><tt class="py-op">}</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">sender</tt><tt class="py-op">.</tt><tt class="py-name">send_json</tt><tt class="py-op">(</tt><tt class="py-name">msgout</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">AttributeError</tt><tt class="py-op">:</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">            <tt class="py-comment">#this is necessary so that we can test this method without starting the worker as a daemon</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">            <tt class="py-keyword">pass</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">msgout</tt> <tt class="py-comment">#for testing purposes</tt> </tt>
+</div></div><a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -160,7 +142,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 20 15:24:02 2012
+    Generated by Epydoc 3.0.1 on Wed May 30 18:07:21 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

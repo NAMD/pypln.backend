@@ -58,52 +58,77 @@
 <h1 class="epydoc">Source Code for <a href="pypln.logger-module.html">Module pypln.logger</a></h1>
 <pre class="py-src">
 <a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># -*- coding: utf-8 -*-</tt> </tt>
-<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">u"""</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
 <a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">Define logger infrastructure for the cluster</tt> </tt>
 <a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
-<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">license: GPL v3 or later</tt> </tt>
-<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">4/30/12</tt> </tt>
-<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
-<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"> </tt>
-<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-name">__docformat__</tt> <tt class="py-op">=</tt> <tt class="py-string">"restructuredtext en"</tt> </tt>
-<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"> </tt>
-<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
-<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt> </tt>
-<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">log4mongo</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt> <tt class="py-keyword">import</tt> <tt class="py-name">MongoHandler</tt> </tt>
-<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">datetime</tt> </tt>
-<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"> </tt>
-<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-comment"># Setting up the logger</tt> </tt>
-<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">license: GPL v3 or later</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">4/30/12</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-name">__docformat__</tt> <tt class="py-op">=</tt> <tt class="py-string">"restructuredtext en"</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">log4mongo</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt> <tt class="py-keyword">import</tt> <tt class="py-name">MongoHandler</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">ConfigParser</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-comment">#TODO: change conf path to definitive  one</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable pypln.logger.config=pypln.logger-module.html#config"><a title="pypln.logger.config" class="py-name" href="#" onclick="return doclink('link-0', 'config', 'link-0');">config</a></tt> <tt class="py-op">=</tt> <tt class="py-name">ConfigParser</tt><tt class="py-op">.</tt><tt class="py-name">ConfigParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt id="link-1" class="py-name"><a title="pypln.logger.config" class="py-name" href="#" onclick="return doclink('link-1', 'config', 'link-0');">config</a></tt><tt class="py-op">.</tt><tt class="py-name">read</tt><tt class="py-op">(</tt><tt class="py-string">'../../tests/pypln.test.conf'</tt><tt class="py-op">)</tt> </tt>
 <a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"> </tt>
 <a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"> </tt>
-<a name="make_log"></a><div id="make_log-def"><a name="L21"></a><tt class="py-lineno">21</tt> <a class="py-toggle" href="#" id="make_log-toggle" onclick="return toggle('make_log');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.logger-module.html#make_log">make_log</a><tt class="py-op">(</tt><tt class="py-param">name</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
-</div><div id="make_log-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="make_log-expanded"><a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
-<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-docstring">    Sets up the logger for eah module</tt> </tt>
-<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-docstring">    :param name: Norammyl passed the name of the module so that we know where tha message comes from.</tt> </tt>
-<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-docstring">    :return: Logger object</tt> </tt>
-<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
-<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">    <tt id="link-0" class="py-name" targets="Variable pypln.apps.cluster.cmanager.log=pypln.apps.cluster.cmanager-module.html#log,Variable pypln.apps.cluster.slavedriver.log=pypln.apps.cluster.slavedriver-module.html#log,Variable pypln.stores.filestor.log=pypln.stores.filestor-module.html#log"><a title="pypln.apps.cluster.cmanager.log
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-comment"># Setting up the logger</tt> </tt>
+<a name="make_log"></a><div id="make_log-def"><a name="L22"></a><tt class="py-lineno">22</tt> <a class="py-toggle" href="#" id="make_log-toggle" onclick="return toggle('make_log');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.logger-module.html#make_log">make_log</a><tt class="py-op">(</tt><tt class="py-param">name</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="make_log-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="make_log-expanded"><a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-docstring">    Sets up the logger for eah module</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-docstring">    :param name: Norammyl passed the name of the module so that we know where tha message comes from.</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-docstring">    :return: Logger object</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt id="link-2" class="py-name" targets="Variable pypln.apps.cluster.cmanager.log=pypln.apps.cluster.cmanager-module.html#log,Variable pypln.apps.cluster.slavedriver.log=pypln.apps.cluster.slavedriver-module.html#log,Variable pypln.apps.frequency_counter.log=pypln.apps.frequency_counter-module.html#log,Variable pypln.apps.postagger.log=pypln.apps.postagger-module.html#log,Variable pypln.sinks.mongo_update_sink.log=pypln.sinks.mongo_update_sink-module.html#log,Variable pypln.stores.filestor.log=pypln.stores.filestor-module.html#log"><a title="pypln.apps.cluster.cmanager.log
 pypln.apps.cluster.slavedriver.log
-pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-0', 'log', 'link-0');">log</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-name">name</tt><tt class="py-op">)</tt> </tt>
-<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">    <tt id="link-1" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-2', 'log', 'link-2');">log</a></tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">getLogger</tt><tt class="py-op">(</tt><tt class="py-name">name</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">    <tt class="py-name">level_dict</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'debug'</tt><tt class="py-op">:</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt id="link-3" class="py-name" targets="Variable pypln.Monitors.webmonitor.settings.DEBUG=pypln.Monitors.webmonitor.settings-module.html#DEBUG"><a title="pypln.Monitors.webmonitor.settings.DEBUG" class="py-name" href="#" onclick="return doclink('link-3', 'DEBUG', 'link-3');">DEBUG</a></tt><tt class="py-op">,</tt><tt class="py-string">'info'</tt><tt class="py-op">:</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">,</tt><tt class="py-string">'warning'</tt><tt class="py-op">:</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">WARNING</tt><tt class="py-op">,</tt><tt class="py-string">'error'</tt><tt class="py-op">:</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">ERROR</tt><tt class="py-op">}</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">    <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">        <tt id="link-4" class="py-name"><a title="pypln.apps.cluster.cmanager.log
 pypln.apps.cluster.slavedriver.log
-pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-1', 'log', 'link-0');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Variable pypln.Monitors.webmonitor.settings.DEBUG=pypln.Monitors.webmonitor.settings-module.html#DEBUG"><a title="pypln.Monitors.webmonitor.settings.DEBUG" class="py-name" href="#" onclick="return doclink('link-2', 'DEBUG', 'link-2');">DEBUG</a></tt><tt class="py-op">)</tt> </tt>
-<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">    <tt class="py-name">formatter</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">Formatter</tt><tt class="py-op">(</tt><tt class="py-string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</tt><tt class="py-op">)</tt> </tt>
-<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">    <tt class="py-comment"># Add the log message handler to the logger</tt> </tt>
-<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">    <tt class="py-name">handler</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt><tt class="py-op">.</tt><tt class="py-name">RotatingFileHandler</tt><tt class="py-op">(</tt><tt class="py-string">'/tmp/pypln.log'</tt><tt class="py-op">,</tt> <tt class="py-name">maxBytes</tt><tt class="py-op">=</tt><tt class="py-number">200000</tt><tt class="py-op">,</tt> <tt class="py-name">backupCount</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
-<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">    <tt class="py-name">handler</tt><tt class="py-op">.</tt><tt class="py-name">setFormatter</tt><tt class="py-op">(</tt><tt class="py-name">formatter</tt><tt class="py-op">)</tt> </tt>
-<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">    <tt id="link-3" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-4', 'log', 'link-2');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">level_dict</tt><tt class="py-op">[</tt><tt id="link-5" class="py-name"><a title="pypln.logger.config" class="py-name" href="#" onclick="return doclink('link-5', 'config', 'link-0');">config</a></tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'logging'</tt><tt class="py-op">,</tt><tt class="py-string">'loglevel'</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">    <tt class="py-keyword">except</tt> <tt class="py-name">KeyError</tt><tt class="py-op">:</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt id="link-6" class="py-name"><a title="pypln.apps.cluster.cmanager.log
 pypln.apps.cluster.slavedriver.log
-pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-3', 'log', 'link-0');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">handler</tt><tt class="py-op">)</tt> </tt>
-<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt id="link-4" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-6', 'log', 'link-2');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">setLevel</tt><tt class="py-op">(</tt><tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">INFO</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-name">formatter</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">Formatter</tt><tt class="py-op">(</tt><tt class="py-string">'%(asctime)s - %(name)s - %(levelname)s - %(message)s'</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-comment"># Add the log message handler to the logger</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">    <tt class="py-name">fhandler</tt> <tt class="py-op">=</tt> <tt class="py-name">logging</tt><tt class="py-op">.</tt><tt class="py-name">handlers</tt><tt class="py-op">.</tt><tt class="py-name">RotatingFileHandler</tt><tt class="py-op">(</tt><tt class="py-string">'/tmp/pypln.log'</tt><tt class="py-op">,</tt> <tt class="py-name">maxBytes</tt><tt class="py-op">=</tt><tt class="py-number">200000</tt><tt class="py-op">,</tt> <tt class="py-name">backupCount</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">    <tt class="py-name">fhandler</tt><tt class="py-op">.</tt><tt class="py-name">setFormatter</tt><tt class="py-op">(</tt><tt class="py-name">formatter</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">    <tt id="link-7" class="py-name"><a title="pypln.apps.cluster.cmanager.log
 pypln.apps.cluster.slavedriver.log
-pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-4', 'log', 'link-0');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">MongoHandler</tt><tt class="py-op">(</tt><tt class="py-name">host</tt><tt class="py-op">=</tt><tt class="py-string">'localhost'</tt><tt class="py-op">,</tt><tt class="py-name">database_name</tt><tt class="py-op">=</tt><tt class="py-string">'PYPLN'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
-<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-comment">#TODO: Maybe use zmq.loghandler</tt> </tt>
-<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-5" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-7', 'log', 'link-2');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">fhandler</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">    <tt id="link-8" class="py-name"><a title="pypln.apps.cluster.cmanager.log
 pypln.apps.cluster.slavedriver.log
-pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-5', 'log', 'link-0');">log</a></tt> </tt>
-</div><a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-8', 'log', 'link-2');">log</a></tt><tt class="py-op">.</tt><tt class="py-name">addHandler</tt><tt class="py-op">(</tt><tt class="py-name">MongoHandler</tt><tt class="py-op">(</tt><tt class="py-name">host</tt><tt class="py-op">=</tt><tt class="py-string">'localhost'</tt><tt class="py-op">,</tt> <tt class="py-name">database_name</tt><tt class="py-op">=</tt><tt class="py-string">'PYPLN'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">    <tt class="py-comment">#TODO: Maybe use zmq.loghandler</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-9" class="py-name"><a title="pypln.apps.cluster.cmanager.log
+pypln.apps.cluster.slavedriver.log
+pypln.apps.frequency_counter.log
+pypln.apps.postagger.log
+pypln.sinks.mongo_update_sink.log
+pypln.stores.filestor.log" class="py-name" href="#" onclick="return doclink('link-9', 'log', 'link-2');">log</a></tt> </tt>
+</div><a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"> </tt><script type="text/javascript">
 <!--
 expandto(location.href);
 // -->
@@ -141,7 +166,7 @@ expandto(location.href);
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 20 15:24:02 2012
+    Generated by Epydoc 3.0.1 on Wed May 30 18:07:21 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

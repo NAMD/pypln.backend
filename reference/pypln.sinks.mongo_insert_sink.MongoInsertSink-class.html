@@ -61,16 +61,16 @@
 <h1 class="epydoc">Class MongoInsertSink</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.sinks.mongo_insert_sink-pysrc.html#MongoInsertSink">source&nbsp;code</a></span></p>
 <center>
 <center>  <map id="uml_class_diagram_for_pypln_si_3" name="uml_class_diagram_for_pypln_si_3">
-<area shape="rect" id="node11" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#insertlist" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.insertlist" alt="" coords="129,145,245,164"/>
-<area shape="rect" id="node11" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#batchsz" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.batchsz" alt="" coords="129,164,245,183"/>
-<area shape="rect" id="node11" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start" title="Save msg in a collection in a database in MongoDB msg must be a json doc of the form {&#39;database&#39;:&#39;...&#39;,&#39;collection&#39;:&#39;&#39;,&#39;filename&#39;:&#39;...&#39;,&#39;text&#39;:&#39;...&#39;} or {&#39;fail&#39;:1}" alt="" coords="129,185,245,204"/>
-<area shape="rect" id="node11" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#process" title="Write documents in the database and collection in batches of size self.batchsz" alt="" coords="129,204,245,223"/>
-<area shape="rect" id="node11" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#flush" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.flush" alt="" coords="129,223,245,241"/>
+<area shape="rect" id="node7" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#insertlist" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.insertlist" alt="" coords="129,145,245,164"/>
+<area shape="rect" id="node7" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#batchsz" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.batchsz" alt="" coords="129,164,245,183"/>
+<area shape="rect" id="node7" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#start" title="Save msg in a collection in a database in MongoDB msg must be a json doc of the form {&#39;database&#39;:&#39;...&#39;,&#39;collection&#39;:&#39;&#39;,&#39;filename&#39;:&#39;...&#39;,&#39;text&#39;:&#39;...&#39;} or {&#39;fail&#39;:1}" alt="" coords="129,185,245,204"/>
+<area shape="rect" id="node7" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#process" title="Write documents in the database and collection in batches of size self.batchsz" alt="" coords="129,204,245,223"/>
+<area shape="rect" id="node7" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html#flush" title="pypln.sinks.mongo_insert_sink.MongoInsertSink.flush" alt="" coords="129,223,245,241"/>
 <area shape="rect" id="node1" href="pypln.sinks.mongo_insert_sink.MongoInsertSink-class.html" title="Sink to insert documents in MongoDb" alt="" coords="117,121,256,247"/>
-<area shape="rect" id="node12" href="javascript:void(0);" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,39,359,57"/>
-<area shape="rect" id="node12" href="javascript:void(0);" title="pypln.sinks.base.BaseSink.__call__" alt="" coords="17,57,359,76"/>
-<area shape="rect" id="node12" href="javascript:void(0);" title="pypln.sinks.base.BaseSink.stop" alt="" coords="17,76,359,95"/>
-<area shape="rect" id="node2" href="javascript:void(0);" title="pypln.sinks.base.BaseSink" alt="" coords="5,6,371,101"/>
+<area shape="rect" id="node8" href="pypln.sinks.base.BaseSink-class.html#__init__" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,39,359,57"/>
+<area shape="rect" id="node8" href="pypln.sinks.base.BaseSink-class.html#__call__" title="pypln.sinks.base.BaseSink.__call__" alt="" coords="17,57,359,76"/>
+<area shape="rect" id="node8" href="pypln.sinks.base.BaseSink-class.html#stop" title="pypln.sinks.base.BaseSink.stop" alt="" coords="17,76,359,95"/>
+<area shape="rect" id="node2" href="pypln.sinks.base.BaseSink-class.html" title="pypln.sinks.base.BaseSink" alt="" coords="5,6,371,101"/>
 </map>
   <img src="uml_class_diagram_for_pypln_si_3.gif" alt='' usemap="#uml_class_diagram_for_pypln_si_3" ismap="ismap" class="graph-without-title" />
 </center>
@@ -151,10 +151,10 @@ self.batchsz</td>
   </tr>
   <tr>
     <td colspan="2" class="summary">
-    <p class="indent-wrapped-lines"><b>Inherited from <code>base.BaseSink</code></b>:
-      <code>__call__</code>,
-      <code>__init__</code>,
-      <code>stop</code>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pypln.sinks.base.BaseSink-class.html">base.BaseSink</a></code></b>:
+      <code><a href="pypln.sinks.base.BaseSink-class.html#__call__">__call__</a></code>,
+      <code><a href="pypln.sinks.base.BaseSink-class.html#__init__">__init__</a></code>,
+      <code><a href="pypln.sinks.base.BaseSink-class.html#stop">stop</a></code>
       </p>
     <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
       <code>__delattr__</code>,
@@ -328,7 +328,7 @@ self.batchsz
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 20 15:24:01 2012
+    Generated by Epydoc 3.0.1 on Wed May 30 18:07:21 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

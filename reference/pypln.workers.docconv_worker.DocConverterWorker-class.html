@@ -61,18 +61,18 @@
 <h1 class="epydoc">Class DocConverterWorker</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.workers.docconv_worker-pysrc.html#DocConverterWorker">source&nbsp;code</a></span></p>
 <center>
 <center>  <map id="uml_class_diagram_for_pypln_wo_3" name="uml_class_diagram_for_pypln_wo_3">
-<area shape="rect" id="node28" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#process" title="Tries to convert a pdf to a text file using the unix command pdftotext. msg must be the a JSON object with the following structure: {&#39;md5&#39;:..., &#39;filename&#39;:..., &#39;date&#39;:}" alt="" coords="88,231,296,249"/>
-<area shape="rect" id="node28" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_pdf" title="Extract text from files of the application/pdf mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,249,296,268"/>
-<area shape="rect" id="node28" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_txt_plain" title="Extract text from files of the txt/plain mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,268,296,287"/>
-<area shape="rect" id="node28" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_txt_html" title="Extract text from files of the txt/html mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,287,296,305"/>
-<area shape="rect" id="node28" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#parse_metadata" title="Extracts the metadata and inserts it in a dictionary :param md: :return: dictionary with the metadata" alt="" coords="88,305,296,324"/>
+<area shape="rect" id="node17" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#process" title="Tries to convert a pdf to a text file using the unix command pdftotext. msg must be the a JSON object with the following structure: {&#39;md5&#39;:..., &#39;filename&#39;:..., &#39;date&#39;:}" alt="" coords="88,231,296,249"/>
+<area shape="rect" id="node17" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_pdf" title="Extract text from files of the application/pdf mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,249,296,268"/>
+<area shape="rect" id="node17" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_txt_plain" title="Extract text from files of the txt/plain mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,268,296,287"/>
+<area shape="rect" id="node17" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#extract_txt_html" title="Extract text from files of the txt/html mmimetype :param fileobj: file object :return: msgout dictionary" alt="" coords="88,287,296,305"/>
+<area shape="rect" id="node17" href="pypln.workers.docconv_worker.DocConverterWorker-class.html#parse_metadata" title="Extracts the metadata and inserts it in a dictionary :param md: :return: dictionary with the metadata" alt="" coords="88,305,296,324"/>
 <area shape="rect" id="node1" href="pypln.workers.docconv_worker.DocConverterWorker-class.html" title="Worker to extract text from PDF, text, and html files Expects to receive messages with the following format: {&#39;md5&#39;:..., &#39;filename&#39;:..., &#39;date&#39;:,&#39;mimetype&#39;:...} or {&#39;jobid&#39;:n}" alt="" coords="76,198,308,330"/>
-<area shape="rect" id="node29" href="javascript:void(0);" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,116,365,135"/>
-<area shape="rect" id="node29" href="javascript:void(0);" title="worker instances can be started by direct calling This is for compatibility with multiprocessing.Process" alt="" coords="17,135,365,153"/>
-<area shape="rect" id="node29" href="javascript:void(0);" title="Starts listening on receiver port for messages this method maybe overloaded by specific workers" alt="" coords="17,153,365,172"/>
-<area shape="rect" id="node2" href="javascript:void(0);" title="Base class for worker which user the push&#45;pull protocol" alt="" coords="5,83,376,178"/>
-<area shape="rect" id="node30" href="javascript:void(0);" title="pypln.workers.base.BaseWorker.stop" alt="" coords="139,39,245,57"/>
-<area shape="rect" id="node3" href="javascript:void(0);" title="pypln.workers.base.BaseWorker" alt="" coords="127,6,257,63"/>
+<area shape="rect" id="node18" href="pypln.workers.base.PushPullWorker-class.html#__init__" title="All workers of this type must define three sockets for communication: &#160;:param pullport: Port through which incoming jobs arrive from ventilator &#160;:param pushport: Port through which results are forwarded to sink :param &#160;subport: Port to listen for control messages" alt="" coords="17,116,365,135"/>
+<area shape="rect" id="node18" href="pypln.workers.base.PushPullWorker-class.html#__call__" title="worker instances can be started by direct calling This is for compatibility with multiprocessing.Process" alt="" coords="17,135,365,153"/>
+<area shape="rect" id="node18" href="pypln.workers.base.PushPullWorker-class.html#start" title="Starts listening on receiver port for messages this method maybe overloaded by specific workers" alt="" coords="17,153,365,172"/>
+<area shape="rect" id="node2" href="pypln.workers.base.PushPullWorker-class.html" title="Base class for worker which user the push&#45;pull protocol" alt="" coords="5,83,376,178"/>
+<area shape="rect" id="node19" href="pypln.workers.base.BaseWorker-class.html#stop" title="pypln.workers.base.BaseWorker.stop" alt="" coords="139,39,245,57"/>
+<area shape="rect" id="node3" href="pypln.workers.base.BaseWorker-class.html" title="pypln.workers.base.BaseWorker" alt="" coords="127,6,257,63"/>
 </map>
   <img src="uml_class_diagram_for_pypln_wo_3.gif" alt='' usemap="#uml_class_diagram_for_pypln_wo_3" ismap="ismap" class="graph-without-title" />
 </center>
@@ -204,13 +204,13 @@ msg must be the a JSON object with the following structure: {'md5':..., 'filenam
   </tr>
   <tr>
     <td colspan="2" class="summary">
-    <p class="indent-wrapped-lines"><b>Inherited from <code>base.PushPullWorker</code></b>:
-      <code>__call__</code>,
-      <code>__init__</code>,
-      <code>start</code>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pypln.workers.base.PushPullWorker-class.html">base.PushPullWorker</a></code></b>:
+      <code><a href="pypln.workers.base.PushPullWorker-class.html#__call__">__call__</a></code>,
+      <code><a href="pypln.workers.base.PushPullWorker-class.html#__init__">__init__</a></code>,
+      <code><a href="pypln.workers.base.PushPullWorker-class.html#start">start</a></code>
       </p>
-    <p class="indent-wrapped-lines"><b>Inherited from <code>base.BaseWorker</code></b>:
-      <code>stop</code>
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="pypln.workers.base.BaseWorker-class.html">base.BaseWorker</a></code></b>:
+      <code><a href="pypln.workers.base.BaseWorker-class.html#stop">stop</a></code>
       </p>
     <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
       <code>__delattr__</code>,
@@ -329,7 +329,7 @@ msg must be the a JSON object with the following structure: {'md5':..., 'filenam
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun May 20 15:24:01 2012
+    Generated by Epydoc 3.0.1 on Wed May 30 18:07:21 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
