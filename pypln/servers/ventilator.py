@@ -29,7 +29,8 @@ class Ventilator(object):
         # Set up a SUB channel to get information about task completion
         self.hear = context.socket(zmq.SUB)
         self.hear.connect("tcp://127.0.0.1:%s"%(subport))
-        self.hear.setsockopt(zmq.SUBSCRIBE,"sink-finished") #only hear to msgs starting with "sink-finished"
+        self.hear.setsockopt(zmq.SUBSCRIBE,"sink-finished:") #only hear to msgs starting with "sink-finished"
+        self.hear.setsockopt(zmq.SUBSCRIBE,"job-failed:") #only hear to msgs starting with "sink-finished"
 
     def push_load(self,messages=[],  jobid=0):
         """
