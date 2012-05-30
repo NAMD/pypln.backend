@@ -26,12 +26,13 @@ def make_log(name):
     :return: Logger object
     """
     log = logging.getLogger(name)
-    log.setLevel(logging.DEBUG)
+    level_dict = {'debug':logging.DEBUG,'info':logging.INFO,'warning':logging.WARNING,'error':logging.ERROR}
+    log.setLevel(level_dict[config])
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # Add the log message handler to the logger
-    handler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
-    handler.setFormatter(formatter)
-    log.addHandler(handler)
+    fhandler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
+    fhandler.setFormatter(formatter)
+    log.addHandler(fhandler)
     log.addHandler(MongoHandler(host='localhost', database_name='PYPLN'))
     #TODO: Maybe use zmq.loghandler
     return log
