@@ -12,8 +12,6 @@ from hashlib import md5
 # Setting up the logger
 log = make_log(__name__)
 
-#TODO: write tests for this class
-
 class FS:
     def __init__(self,database,host='127.0.0.1', port=27017, usr=None, pw=None, create = False):
         """
