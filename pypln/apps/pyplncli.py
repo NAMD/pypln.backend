@@ -13,6 +13,7 @@ import argparse
 # importing existing apps
 import extractor
 import frequency_counter
+import os
 
 def directory(d):
     """Check if path is a directory"""
