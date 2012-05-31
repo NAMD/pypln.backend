@@ -15,7 +15,8 @@ import ConfigParser
 
 #TODO: change conf path to definitive  one
 config = ConfigParser.ConfigParser()
-config.read('../../tests/pypln.test.conf')
+#the line below is very dangerous because is does not raise error if config file does not exist
+config.read('../tests/pypln.test.conf')
 
 
 # Setting up the logger
