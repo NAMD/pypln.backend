@@ -34,7 +34,8 @@ def make_log(name):
         log.setLevel(logging.INFO)
     except ConfigParser.NoSectionError:
         #TODO: this exception should be removed when false NoSectionErrors are diagnosed and eliminated
-        print config._sections
+#        print config._sections
+        pass
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # Add the log message handler to the logger
     fhandler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
