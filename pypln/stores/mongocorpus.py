@@ -53,12 +53,3 @@ class MongoDBCorpusReader(object):
     def sents(self):
         return LazyConcatenation(LazyMap(self._sent_tokenize,self.text()))
 
-
-if __name__== '__main__':
-    reader = MongoDBCorpusReader(db='Results', collection='Documentos',
-                                 field='text')
-    # print reader.sents()
-    # print reader.words(), type(reader.words())
-    # print FreqDist(reader.words())
-    # print len(reader.text())
-    # print reader.text()[1]
