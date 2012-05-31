@@ -14,6 +14,9 @@ from nltk.data import LazyLoader
 from nltk.tokenize import TreebankWordTokenizer
 from nltk import FreqDist
 from nltk.util import AbstractLazySequence, LazyMap, LazyConcatenation
+from pypln.logger import make_log
+
+log = make_log(__name__)
 
 class MongoDBLazySequence(AbstractLazySequence):
     """
