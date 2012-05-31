@@ -2,4 +2,7 @@ test:
 	@clear
 	@python `which nosetests` -dv
 
-.PHONY:	test
+doc:
+	./make-docs.sh -vg
+
+.PHONY:	test doc
