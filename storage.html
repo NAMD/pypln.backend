@@ -50,21 +50,86 @@
             
   <div class="section" id="storage-backend">
 <h1>Storage Backend<a class="headerlink" href="#storage-backend" title="Permalink to this headline">¶</a></h1>
-<p>PyPLN can make use of various storage formats for both documents and analytical results. Since PyPLN is built with distributed processing in mind. The configuration of storage backends should, whenever possible be distributed as well. That is all databases should be available to workers and sinks as local resources, but at the same  time be part of a distributed infrastructure, being equally available to all machines in the cluster.</p>
-<p>Whenever possible, we will use MongoDb Document database to handle storage, due to simplicity of its deployment and usage on distributed environments.</p>
+<p>PyPLN can make use of various storage formats for both documents and analytical
+results. Since PyPLN is built with distributed processing in mind, the
+configuration of storage backends should, whenever possible be distributed as
+well. That is all databases should be available to workers and sinks as local
+resources, but at the same time be part of a distributed infrastructure, being
+equally available to all machines in the cluster.</p>
+<p>Whenever possible, we will use MongoDB document database to handle storage,
+due to simplicity of its deployment and usage on distributed environments.</p>
 <div class="section" id="file-storage">
 <h2>File Storage<a class="headerlink" href="#file-storage" title="Permalink to this headline">¶</a></h2>
-<p>For PyPLN, document storage happens at more than one stage of of the pipeline. At the beginning, we have the document files in their original formats prior to the text extraction phase. To avoid resorting to specific implementations of distributed filesystems, we use instead GridFS which transparently handles distribution of files across the cluster without the need of extra configurations.</p>
+<p>For PyPLN, document storage happens at more than one stage of of the pipeline.
+At the beginning, we have the document files in their original formats prior to
+the text extraction phase. To avoid resorting to specific implementations of
+distributed filesystems, we use instead MongoDB&#8217;s GridFS which transparently
+handles distribution of files across the cluster without the need of extra
+configurations.</p>
 </div>
 <div class="section" id="document-storage">
 <h2>Document Storage<a class="headerlink" href="#document-storage" title="Permalink to this headline">¶</a></h2>
-<p>For storing the raw text  versions of the files, PyPLN takes advantage of the schemaless nature of MongoDb. MongoDb Collections are sets of JSON (BSON) object, which in our case will be constructed gradually. Initially a text Document in a Mongo collection will have only one these fields:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;filename&#39;</span><span class="p">:</span><span class="s">&#39;mydoc.pdf&#39;</span><span class="p">,</span>
-    <span class="s">&#39;text&#39;</span><span class="p">:</span><span class="s">&#39;...&#39;</span>
+<p>For storing the raw text versions of the files and its analysis, PyPLN takes
+advantage of the schemaless nature of MongoDB. MongoDB collections are sets of
+JSON objects (which are stored internally in a binary format called BSON),
+which in our case will be constructed gradually. Initially a document in a
+MongoDB collection will have only one these fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;...&#39;</span><span class="p">),</span>
+ <span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;test.pdf&#39;</span><span class="p">,</span>
+          <span class="s">&#39;created_on&#39;</span><span class="p">:</span> <span class="s">&#39;2012-05-29&#39;</span><span class="p">,</span>
+         <span class="p">},</span>
+ <span class="s">&#39;analysis&#39;</span><span class="p">:</span> <span class="p">{},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Later down the pipeline, pre-processed versions of the text can be stored for further analysys.</p>
+<p>When this document passes for a pipeline, each node of the pipeline (we call
+these nodes &#8220;apps&#8221;) will do some kind of analysis in the document and
+optionally store more information. For example:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">extractor</span></tt> app extracts text from PDF files;</li>
+<li><tt class="docutils literal"><span class="pre">tokenizer</span></tt> app extracts tokens from text;</li>
+<li><tt class="docutils literal"><span class="pre">freqdist</span></tt> app extracts frequency distribution of tokens in the text;</li>
+<li><tt class="docutils literal"><span class="pre">pos</span></tt> app extracts do the part-of-speech tagging;</li>
+<li>and so on...</li>
+</ul>
+<div class="figure">
+<img alt="_images/default-pipeline.png" src="_images/default-pipeline.png" />
+<p class="caption">The PyPLN&#8217;s default pipeline</p>
+</div>
+<p>Each of these new data will be available at the dictionary <tt class="docutils literal"><span class="pre">analysis</span></tt>, inside
+the MongoDB&#8217;s document, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;...&#39;</span><span class="p">),</span>
+ <span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;test.pdf&#39;</span><span class="p">,</span>
+          <span class="s">&#39;created_on&#39;</span><span class="p">:</span> <span class="s">&#39;2012-05-29&#39;</span><span class="p">,</span>
+          <span class="s">&#39;Author&#39;</span><span class="p">:</span> <span class="s">u&#39;Álvaro Justen&#39;</span><span class="p">,</span>
+          <span class="s">&#39;Paper format&#39;</span><span class="p">:</span> <span class="s">&#39;A4&#39;</span><span class="p">,</span>
+         <span class="p">},</span>
+ <span class="s">&#39;analysis&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;This is a sentence, this is a test.&#39;</span><span class="p">,</span>
+              <span class="s">&#39;tokens&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;This&#39;</span><span class="p">,</span> <span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;is&#39;</span><span class="p">,</span>
+                         <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">],</span>
+              <span class="s">&#39;freqdist&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                           <span class="p">(</span><span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                           <span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span>
+              <span class="s">&#39;pos&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;This&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;VBZ&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span>
+                      <span class="p">(</span><span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="s">&#39;NN&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span>
+                      <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;VBZ&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;NN&#39;</span><span class="p">),</span>
+                      <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)],</span>
+ <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In the example above, each app created an entry in <tt class="docutils literal"><span class="pre">analysis</span></tt> key of
+MongoDB&#8217;s document (<tt class="docutils literal"><span class="pre">extractor</span></tt> created <tt class="docutils literal"><span class="pre">text</span></tt>, <tt class="docutils literal"><span class="pre">tokenizer</span></tt> created
+<tt class="docutils literal"><span class="pre">tokens</span></tt>, <tt class="docutils literal"><span class="pre">freqdist</span></tt> created <tt class="docutils literal"><span class="pre">freqdist</span></tt> and <tt class="docutils literal"><span class="pre">pos</span></tt> created <tt class="docutils literal"><span class="pre">pos</span></tt>).
+An app can also add file meta-information, for example, extractor can add
+<tt class="docutils literal"><span class="pre">document['meta']['Author']</span></tt> and <tt class="docutils literal"><span class="pre">document['meta']['Paper</span> <span class="pre">format']</span></tt> since
+it&#8217;s available in PDF meta-data and can be used for further analysis.</p>
+<p>In the interface between the pipeline and the app must be a way to the app
+to define which keys will be (optionally) created in <tt class="docutils literal"><span class="pre">document['analysis']</span></tt>
+and <tt class="docutils literal"><span class="pre">document['meta']</span></tt>.</p>
 </div>
 </div>
 
@@ -75,7 +140,7 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
-              <img class="logo" src="_static/logo_simples.png" alt="Logo"/>
+              <img class="logo" src="_static/logo_pypln.png" alt="Logo"/>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
@@ -131,7 +196,7 @@
     </div>
     <div class="footer">
         &copy; Copyright 2011, Flávio Codeço Coelho.
-      Last updated on May 30, 2012.
+      Last updated on May 31, 2012.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
     </div>
   </body>
