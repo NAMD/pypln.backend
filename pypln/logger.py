@@ -15,7 +15,8 @@ import ConfigParser
 
 #TODO: change conf path to definitive  one
 config = ConfigParser.ConfigParser()
-config.read('../../tests/pypln.test.conf')
+#the line below is very dangerous because is does not raise error if config file does not exist
+config.read('../tests/pypln.test.conf')
 
 
 # Setting up the logger
@@ -31,6 +32,9 @@ def make_log(name):
         log.setLevel(level_dict[config.get('logging','loglevel')])
     except KeyError:
         log.setLevel(logging.INFO)
+    except ConfigParser.NoSectionError:
+        #TODO: this exception should be removed when false NoSectionErrors are diagnosed and eliminated
+        print config._sections
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     # Add the log message handler to the logger
     fhandler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)

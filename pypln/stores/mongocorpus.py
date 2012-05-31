@@ -14,6 +14,9 @@ from nltk.data import LazyLoader
 from nltk.tokenize import TreebankWordTokenizer
 from nltk import FreqDist
 from nltk.util import AbstractLazySequence, LazyMap, LazyConcatenation
+from pypln.logger import make_log
+
+log = make_log(__name__)
 
 class MongoDBLazySequence(AbstractLazySequence):
     """
@@ -50,12 +53,3 @@ class MongoDBCorpusReader(object):
     def sents(self):
         return LazyConcatenation(LazyMap(self._sent_tokenize,self.text()))
 
-
-if __name__== '__main__':
-    reader = MongoDBCorpusReader(db='Results', collection='Documentos',
-                                 field='text')
-    # print reader.sents()
-    # print reader.words(), type(reader.words())
-    # print FreqDist(reader.words())
-    # print len(reader.text())
-    # print reader.text()[1]
