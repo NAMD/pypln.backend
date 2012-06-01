@@ -50,10 +50,13 @@ if __name__ == '__main__':
     client.connect(('localhost', 5555), ('localhost', 5556))
     time_to_sleep = 0.1
 
+    connection = Connection()
+    collection = connection.pypln.documents
+
     my_jobs = []
     for i in range(10):
         client.manager_api.send_json({'command': 'add job',
-                                      'job': 'testing {}'.format(i)})
+                                      'worker': 'tokenizer'})
         message = client.manager_api.recv_json()
         logger.info('Received from Manager API: {}'.format(message))
 
@@ -76,4 +79,4 @@ if __name__ == '__main__':
                 if not my_jobs:
                     break
     except KeyboardInterrupt:
-        self.close_sockets()
+        client.close_sockets()

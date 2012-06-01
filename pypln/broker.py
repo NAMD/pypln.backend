@@ -4,16 +4,11 @@
 from time import sleep
 from multiprocessing import Process, Queue, cpu_count
 import zmq
+from pymongo import Connection
+from bson.objectid import ObjectId
 from client import ManagerClient
+import workers
 
-
-def sleep_worker(queue):
-    import time
-    print '[SleepWorker] Received from queue:', queue.get()
-    time.sleep(2)
-    print '[SleepWorker] Finished running'
-    queue.put(True)
-    queue.put(True)
 
 class ManagerBroker(ManagerClient):
     def __init__(self, logger=None, logger_name='ManagerBroker',
@@ -23,8 +18,25 @@ class ManagerBroker(ManagerClient):
         self.max_jobs = cpu_count()
         self.time_to_sleep = 0.1
 
+    def connect_to_database(self):
+        conf = self.config['db']
+        self.mongo_connection = Connection(conf['host'], conf['port'])
+        self.db = self.mongo_connection[conf['database']]
+        if 'username' in conf and 'password' in conf and conf['username'] and \
+           conf['password']:
+               self.db.authenticate(conf['username'], conf['password'])
+        self.collection = self.db[conf['collection']]
+
+    def get_configuration(self):
+        self.manager_api.send_json({'command': 'get configuration'})
+        self.config = self.manager_api.recv_json()
+        self.logger.info('Got configuration from Manager')
+        self.connect_to_database()
+        self.logger.debug('Configuration received: {}'.format(self.config))
+
     def connect(self, api_host_port, broadcast_host_port):
         super(ManagerBroker, self).connect(api_host_port, broadcast_host_port)
+        self.get_configuration()
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
 
     def start_job(self, job_spec):
@@ -41,7 +53,7 @@ class ManagerBroker(ManagerClient):
             self.manager_api.send_json({'command': 'get job'})
             message = self.manager_api.recv_json()
             self.logger.info('Received from Manager API: {}'.format(message))
-            if message['job'] is not None:
+            if message['worker'] is not None:
                 self.jobs.append(message)
                 self.start_job(message)
             else:
@@ -74,8 +86,7 @@ class ManagerBroker(ManagerClient):
                     self.logger.info('Job finished: {}'.format(job))
                     result = job['queue'].get()
                     self.manager_api.send_json({'command': 'finished job',
-                                                'job id': job['job']['job id'],
-                                                'result': result})
+                                                'job id': job['job id'],})
                     result = self.manager_api.recv_json()
                     self.logger.info('Result: {}'.format(result))
                     self.jobs.remove(job)

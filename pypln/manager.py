@@ -49,18 +49,24 @@ class Manager(object):
                 else:
                     self.logger.info('Manager API received: {}'.format(message))
                     command = message['command']
-                    if command == 'add job':
+                    if command == 'get configuration':
+                        self.api.send_json({'db': {'host': 'localhost',
+                                                   'port': 27017,
+                                                   'database': 'pypln',
+                                                   'collection': 'documents'}})
+                    elif command == 'add job':
                         message['job id'] = uuid.uuid4().hex
+                        del message['command']
                         self.job_queue.put(message)
                         self.api.send_json({'answer': 'job accepted',
                                             'job id': message['job id']})
                         self.broadcast.send('new job')
                     elif command == 'get job':
                         if self.job_queue.empty():
-                            self.api.send_json({'job': None})
+                            self.api.send_json({'worker': None})
                         else:
                             job = self.job_queue.get()
-                            self.api.send_json({'job': job})
+                            self.api.send_json(job)
                     elif command == 'finished job':
                         self.api.send_json({'answer': 'good job!'})
                         new_message = 'job finished: {}'.format(message['job id'])
