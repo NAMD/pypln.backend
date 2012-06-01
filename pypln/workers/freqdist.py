@@ -5,7 +5,7 @@ __meta__ = {'work on': 'document',
             'provides': ['freqdist'],}
 
 def main(document):
-    tokens = document['analysis']['tokens']
+    tokens = document['tokens']
     frequency_distribution = {token: tokens.count(token) \
                               for token in set(tokens)}
     fd = frequency_distribution.items()

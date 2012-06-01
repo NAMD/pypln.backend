@@ -46,9 +46,13 @@ class ManagerBroker(ManagerClient):
             #TODO: send a 'rejecting job' request to Manager
             return
         self.logger.debug('Starting worker "{}" for document "{}"'.format(job['worker'], job['document']))
+        required_fields = workers.available[job['worker']]['requires']
+        fields = set(['meta'] + required_fields)
+        document = self.collection.find({'_id': ObjectId(job['document'])},
+                                        fields=fields)[0]
         queue = Queue()
         queue.put(job['worker'])
-        queue.put(self.collection.find({'_id': ObjectId(job['document'])})[0])
+        queue.put(document)
         process = Process(target=workers.wrapper, args=(queue, ))
         job['queue'] = queue
         job['process'] = process
@@ -92,9 +96,12 @@ class ManagerBroker(ManagerClient):
                     job['process'].join()
                     self.logger.info('Job finished: {}'.format(job))
                     result = job['queue'].get()
+                    update_keys = workers.available[job['worker']]['provides']
+                    for key in result.keys():
+                        if key not in update_keys:
+                            del result[key]
                     self.collection.update({'_id': ObjectId(job['document'])},
                                            result)
-                    #TODO: update only 'provides'
                     self.manager_api.send_json({'command': 'finished job',
                                                 'job id': job['job id'],})
                     result = self.manager_api.recv_json()

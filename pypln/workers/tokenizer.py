@@ -8,5 +8,5 @@ __meta__ = {'work on': 'document',
             'provides': ['tokens'],}
 
 def main(document):
-    text = document['analysis']['text']
+    text = document['text']
     return {'tokens': word_tokenize(text)}
