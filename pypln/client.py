@@ -38,6 +38,7 @@ class ManagerClient(object):
 if __name__ == '__main__':
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
+    from pymongo import Connection
 
 
     logger = Logger('ManagerClient')
@@ -55,8 +56,11 @@ if __name__ == '__main__':
 
     my_jobs = []
     for i in range(10):
+        text = 'The sky is blue and this is the {}th document.'.format(i)
+        doc_id = collection.insert({'meta': {}, 'analysis': {'text': text}})
         client.manager_api.send_json({'command': 'add job',
-                                      'worker': 'tokenizer'})
+                                      'worker': 'tokenizer',
+                                      'document': str(doc_id)})
         message = client.manager_api.recv_json()
         logger.info('Received from Manager API: {}'.format(message))
 

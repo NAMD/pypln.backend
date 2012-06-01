@@ -39,14 +39,21 @@ class ManagerBroker(ManagerClient):
         self.get_configuration()
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
 
-    def start_job(self, job_spec):
+    def start_job(self, job):
+        if 'worker' not in job or 'document' not in job or \
+           job['worker'] not in workers.available:
+            self.logger.info('Rejecting job: {}'.format(job))
+            #TODO: send a 'rejecting job' request to Manager
+            return
+        self.logger.debug('Starting worker "{}" for document "{}"'.format(job['worker'], job['document']))
         queue = Queue()
-        process = Process(target=sleep_worker, args=(queue, ))
-        job_spec['queue'] = queue
-        job_spec['process'] = process
-        queue.put(job_spec['job'])
+        queue.put(job['worker'])
+        queue.put(self.collection.find({'_id': ObjectId(job['document'])})[0])
+        process = Process(target=workers.wrapper, args=(queue, ))
+        job['queue'] = queue
+        job['process'] = process
         process.start()
-        self.logger.info('Process started')
+        self.logger.info('Worker started')
 
     def get_a_job(self):
         for i in range(self.max_jobs - len(self.jobs)):
@@ -69,7 +76,7 @@ class ManagerBroker(ManagerClient):
             return True
 
     def finished_jobs(self):
-        return [job for job in self.jobs if job['queue'].qsize() > 1]
+        return [job for job in self.jobs if job['queue'].qsize() > 2]
 
     def full_of_jobs(self):
         return len(self.jobs) >= self.max_jobs
@@ -85,6 +92,9 @@ class ManagerBroker(ManagerClient):
                     job['process'].join()
                     self.logger.info('Job finished: {}'.format(job))
                     result = job['queue'].get()
+                    self.collection.update({'_id': ObjectId(job['document'])},
+                                           result)
+                    #TODO: update only 'provides'
                     self.manager_api.send_json({'command': 'finished job',
                                                 'job id': job['job id'],})
                     result = self.manager_api.recv_json()

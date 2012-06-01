@@ -36,6 +36,10 @@ for filename in glob('{}/*.py'.format(current_dir)):
                                     }
 
 def wrapper(queue):
+    #TODO: should receive the document or database's configuration?
+    #      Note that if a worker should process a big document or an entire
+    #      corpus, it's better to received database's configuration and pass to
+    #      worker only an lazy iterator for the collection (pymongo's cursor)
     worker, document = queue.get(), queue.get()
     result = available[worker]['main'](document)
     queue.put(result)
