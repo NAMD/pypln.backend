@@ -101,7 +101,7 @@ class ManagerBroker(ManagerClient):
                         if key not in update_keys:
                             del result[key]
                     self.collection.update({'_id': ObjectId(job['document'])},
-                                           result)
+                                           {'$set': result})
                     self.manager_api.send_json({'command': 'finished job',
                                                 'job id': job['job id'],})
                     result = self.manager_api.recv_json()
