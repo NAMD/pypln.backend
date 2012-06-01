@@ -14,10 +14,12 @@ class Manager(object):
     #TODO: if processing job have timeout, remove from processing queue, add
     #      again in job_queue and announce pending job
     #TODO: get status from brokers
-    def __init__(self, logger=None, logger_name='Manager', time_to_sleep=0.1):
+    def __init__(self, config, logger=None, logger_name='Manager',
+                 time_to_sleep=0.1):
         self.job_queue = Queue()
         self.context = zmq.Context()
         self.time_to_sleep = time_to_sleep
+        self.config = config
         if logger is None:
             self.logger = Logger(logger_name)
             self.logger.addHandler(NullHandler())
@@ -50,10 +52,7 @@ class Manager(object):
                     self.logger.info('Manager API received: {}'.format(message))
                     command = message['command']
                     if command == 'get configuration':
-                        self.api.send_json({'db': {'host': 'localhost',
-                                                   'port': 27017,
-                                                   'database': 'pypln',
-                                                   'collection': 'documents'}})
+                        self.api.send_json(self.config)
                     elif command == 'add job':
                         message['job id'] = uuid.uuid4().hex
                         del message['command']
@@ -89,6 +88,8 @@ if __name__ == '__main__':
     logger.addHandler(handler)
     api_host_port = ('*', 5555)
     broadcast_host_port = ('*', 5556)
-    manager = Manager(logger)
+    config = {'db': {'host': 'localhost', 'port': 27017, 'database': 'pypln',
+                     'collection': 'documents'}}
+    manager = Manager(config, logger)
     manager.bind(api_host_port, broadcast_host_port)
     manager.run()
