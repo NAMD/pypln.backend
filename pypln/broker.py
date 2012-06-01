@@ -5,6 +5,7 @@ from time import sleep
 from multiprocessing import Process, Queue, cpu_count
 import zmq
 from pymongo import Connection
+from gridfs import GridFS
 from bson.objectid import ObjectId
 from client import ManagerClient
 import workers
@@ -28,6 +29,7 @@ class ManagerBroker(ManagerClient):
            conf['password']:
                self.db.authenticate(conf['username'], conf['password'])
         self.collection = self.db[conf['collection']]
+        self.gridfs = GridFS(self.db, conf['gridfs-collection'])
 
     def get_configuration(self):
         self.manager_api.send_json({'command': 'get configuration'})
@@ -112,9 +114,17 @@ class ManagerBroker(ManagerClient):
                     for key in result.keys():
                         if key not in update_keys:
                             del result[key]
-                    self.collection.update({'_id': ObjectId(job['document'])},
-                                           {'$set': result})
+                    worker_input = workers.available[job['worker']]['input']
+                    worker_output = workers.available[job['worker']]['output']
+                    if worker_input == worker_output == 'document':
+                        self.collection.update({'_id': ObjectId(job['document'])},
+                                               {'$set': result})
+                    elif worker_input == 'file' and worker_output == 'document':
+                        data = {'_id': ObjectId(job['document'])}
+                        data.update(result)
+                        self.collection.insert(data)
                     #TODO: safe=True
+                    #TODO: what if we have other combinations of input/output?
                     self.manager_api.send_json({'command': 'finished job',
                                                 'job id': job['job id'],})
                     result = self.manager_api.recv_json()

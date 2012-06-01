@@ -104,7 +104,7 @@ if __name__ == '__main__':
     api_host_port = ('*', 5555)
     broadcast_host_port = ('*', 5556)
     config = {'db': {'host': 'localhost', 'port': 27017, 'database': 'pypln',
-                     'collection': 'documents'}}
+                     'collection': 'documents', 'gridfs-collection': 'files'}}
     manager = Manager(config, logger)
     manager.bind(api_host_port, broadcast_host_port)
     manager.run()

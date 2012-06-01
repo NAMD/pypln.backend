@@ -99,26 +99,44 @@ class Pipeline(object):
 if __name__ == '__main__':
     #TODO: create main() function
     from logging import Logger, StreamHandler, Formatter
-    from sys import stdout
+    import os
+    from sys import stdout, argv
     from pymongo import Connection
+    from gridfs import GridFS
 
-
-    connection = Connection()
-    collection = connection.pypln.documents
-    my_docs = []
-    for i in range(1, 11):
-        text = 'The sky is blue and this is the {}th document.'.format(i)
-        doc_id = collection.insert({'meta': {}, 'text': text, 'spam': 123,
-                                    'eggs': 456, 'ham': 789})
-        my_docs.append(str(doc_id))
 
     logger = Logger('Pipeline')
     handler = StreamHandler(stdout)
     formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    workers = Worker('tokenizer').then(Worker('pos'),
-                                       Worker('freqdist'))
+    connection = Connection()
+    collection = connection.pypln.documents
+    connection.pypln.documents.drop()
+    connection.pypln.files.chunks.drop()
+    connection.pypln.files.files.drop()
+    W, W.__call__ = Worker, Worker.then
+    my_docs = []
+    if len(argv) == 1:
+        for i in range(1, 11):
+            text = 'The sky is blue and this is the {}th document.'.format(i)
+            doc_id = collection.insert({'meta': {}, 'text': text, 'spam': 123,
+                                        'eggs': 456, 'ham': 789})
+            my_docs.append(str(doc_id))
+        workers = W('tokenizer')(W('pos'),
+                                 W('freqdist'))
+    else:
+        workers = W('extractor')(W('tokenizer')(W('pos'),
+                                                W('freqdist')))
+        gridfs = GridFS(connection.pypln, 'files')
+        filenames = argv[1:]
+        logger.info('Inserting files...')
+        for filename in filenames:
+            if os.path.exists(filename):
+                logger.debug('  {}'.format(filename))
+                doc_id = gridfs.put(open(filename).read(), filename=filename)
+                my_docs.append(str(doc_id))
+
     pipeline = Pipeline(workers, ('localhost', 5555), ('localhost', 5556),
                         logger)
     pipeline.run(my_docs)

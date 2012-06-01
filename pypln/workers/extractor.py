@@ -38,7 +38,10 @@ def get_pdf_metadata(data):
     lines = data.strip().splitlines()
     metadata = {}
     for line in lines:
-        key, value = line[:line.index(':')], line[line.index(':') + 1:]
+        try:
+            key, value = line[:line.index(':')], line[line.index(':') + 1:]
+        except ValueError:
+            continue
         metadata[key.strip()] = value.strip()
     return metadata
 
