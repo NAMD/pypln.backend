@@ -1,6 +1,7 @@
 # coding: utf-8
 
-__meta__ = {'work on': 'document',
+__meta__ = {'input': 'document',
+            'output': 'document',
             'requires': ['tokens'],
             'provides': ['freqdist'],}
 

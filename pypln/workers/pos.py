@@ -3,7 +3,8 @@
 from nltk import pos_tag
 
 
-__meta__ = {'work on': 'document',
+__meta__ = {'input': 'document',
+            'output': 'document',
             'requires': ['text', 'tokens'],
             'provides': ['pos'],}
 #TODO: add 'lang' to 'requires'

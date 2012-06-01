@@ -48,14 +48,23 @@ class ManagerBroker(ManagerClient):
             #TODO: send a 'rejecting job' request to Manager
             return
         self.logger.debug('Starting worker "{}" for document "{}"'.format(job['worker'], job['document']))
-        required_fields = workers.available[job['worker']]['requires']
-        fields = set(['meta'] + required_fields)
-        #TODO: add option to get from GridFS
-        document = self.collection.find({'_id': ObjectId(job['document'])},
-                                        fields=fields)[0]
+        worker_input = workers.available[job['worker']]['input']
+        if worker_input == 'document':
+            required_fields = workers.available[job['worker']]['requires']
+            fields = set(['meta'] + required_fields)
+            #TODO: add option to get from GridFS
+            contents = self.collection.find({'_id': ObjectId(job['document'])},
+                                            fields=fields)[0]
+        elif worker_input == 'file':
+            file_data = self.gridfs.get(ObjectId(job['document']))
+            contents = {'length': file_data.length, 'md5': file_data.md5,
+                        'name': file_data.name,
+                        'upload_date': file_data.upload_date,
+                        'contents': file_data.read()}
+        #TODO: what if input is a corpus?
         queue = Queue()
         queue.put(job['worker'])
-        queue.put(document)
+        queue.put(contents)
         process = Process(target=workers.wrapper, args=(queue, ))
         job['queue'] = queue
         job['process'] = process

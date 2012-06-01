@@ -9,7 +9,7 @@ from importlib import import_module
 __all__ = ['available', 'wrapper']
 current_dir = dirname(__file__)
 required_objects = ['__meta__', 'main']
-required_meta = ['work on', 'requires', 'provides']
+required_meta = ['input', 'output', 'requires', 'provides']
 
 available = {}
 sys.path.insert(0, current_dir)
@@ -32,7 +32,8 @@ for filename in glob('{}/*.py'.format(current_dir)):
                 available[worker] = {'main': getattr(worker_module, 'main'),
                                      'requires': meta_obj['requires'],
                                      'provides': meta_obj['provides'],
-                                     'work on': meta_obj['work on'],
+                                     'input': meta_obj['input'],
+                                     'output': meta_obj['output'],
                                     }
 
 def wrapper(queue):

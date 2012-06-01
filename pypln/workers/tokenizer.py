@@ -3,7 +3,8 @@
 from nltk import word_tokenize
 
 
-__meta__ = {'work on': 'document',
+__meta__ = {'input': 'document',
+            'output': 'document',
             'requires': ['text'],
             'provides': ['tokens'],}
 
