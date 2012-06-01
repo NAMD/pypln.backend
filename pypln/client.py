@@ -2,6 +2,7 @@
 # coding: utf-8
 
 from logging import Logger, NullHandler
+from copy import copy
 import zmq
 
 
@@ -34,6 +35,66 @@ class ManagerClient(object):
         self.manager_api.close()
         self.manager_broadcast.close()
 
+class Worker(object):
+    def __init__(self, worker_name):
+        self.name = worker_name
+        self.after = []
+
+    def then(self, *after):
+        self.after = after
+        return self
+
+class Pipeline(object):
+    def __init__(self, pipeline, api_host_port, broadcast_host_port,
+                 logger=None, logger_name='Pipeline'):
+        self.client = ManagerClient(logger, logger_name)
+        self.client.connect(api_host_port, broadcast_host_port)
+        self.pipeline = pipeline
+
+    def send_job(self, worker):
+        job = {'command': 'add job', 'worker': worker.name,
+               'document': worker.document}
+        self.client.manager_api.send_json(job)
+        logger.info('Sent job: {}'.format(job))
+        message = self.client.manager_api.recv_json()
+        logger.info('Received from Manager API: {}'.format(message))
+        self.waiting[message['job id']] = worker
+        subscribe_message = 'job finished: {}'.format(message['job id'])
+        self.client.manager_broadcast.setsockopt(zmq.SUBSCRIBE,
+                                                 subscribe_message)
+        logger.info('Subscribed on Manager Broadcast to: {}'.format(subscribe_message))
+
+    def distribute(self):
+        self.waiting = {}
+        for document in self.documents:
+            worker = copy(self.pipeline)
+            worker.document = document
+            self.send_job(worker)
+
+    def run(self, documents):
+        self.documents = documents
+        self.distribute()
+        try:
+            while True:
+                try:
+                    message = self.client.manager_broadcast.recv()
+                except zmq.ZMQError:
+                    sleep(0.1)
+                    pass
+                else:
+                    logger.info('Received from Manager Broadcast: {}'.format(message))
+                    if message.startswith('job finished: '):
+                        job_id = message.split(': ')[1]
+                        worker = self.waiting[job_id]
+                        for next_worker in worker.after:
+                            next_worker.document = worker.document
+                            self.send_job(next_worker)
+                        del self.waiting[job_id]
+                    if not self.waiting.keys():
+                        break
+        except KeyboardInterrupt:
+            self.client.close_sockets()
+
 
 if __name__ == '__main__':
     from logging import Logger, StreamHandler, Formatter
@@ -41,47 +102,22 @@ if __name__ == '__main__':
     from pymongo import Connection
 
 
-    logger = Logger('ManagerClient')
+    connection = Connection()
+    collection = connection.pypln.documents
+    my_docs = []
+    for i in range(1, 11):
+        text = 'The sky is blue and this is the {}th document.'.format(i)
+        doc_id = collection.insert({'meta': {}, 'text': text, 'spam': 123,
+                                    'eggs': 456, 'ham': 789})
+        my_docs.append(str(doc_id))
+
+    logger = Logger('Pipeline')
     handler = StreamHandler(stdout)
     formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-
-    client = ManagerClient()
-    client.connect(('localhost', 5555), ('localhost', 5556))
-    time_to_sleep = 0.1
-
-    connection = Connection()
-    collection = connection.pypln.documents
-
-    my_jobs = []
-    for i in range(10):
-        text = 'The sky is blue and this is the {}th document.'.format(i)
-        doc_id = collection.insert({'meta': {}, 'text': text, 'spam': 123,
-                                    'eggs': 456, 'ham': 789})
-        client.manager_api.send_json({'command': 'add job',
-                                      'worker': 'tokenizer',
-                                      'document': str(doc_id)})
-        message = client.manager_api.recv_json()
-        logger.info('Received from Manager API: {}'.format(message))
-
-        subscribe_message = 'job finished: {}'.format(message['job id'])
-        client.manager_broadcast.setsockopt(zmq.SUBSCRIBE, subscribe_message)
-        logger.info('Subscribed on Manager Broadcast to: {}'.format(subscribe_message))
-        my_jobs.append(message['job id'])
-
-    try:
-        while True:
-            try:
-                message = client.manager_broadcast.recv()
-            except zmq.ZMQError:
-                sleep(time_to_sleep)
-                pass
-            else:
-                logger.info('Received from Manager Broadcast: {}'.format(message))
-                if message.startswith('job finished: '):
-                    my_jobs.remove(message.split(': ')[1])
-                if not my_jobs:
-                    break
-    except KeyboardInterrupt:
-        client.close_sockets()
+    workers = Worker('tokenizer').then(Worker('pos'),
+                                       Worker('freqdist'))
+    pipeline = Pipeline(workers, ('localhost', 5555), ('localhost', 5556),
+                        logger)
+    pipeline.run(my_docs)
