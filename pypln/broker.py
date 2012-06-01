@@ -11,6 +11,8 @@ import workers
 
 
 class ManagerBroker(ManagerClient):
+    #TODO: send stats to MongoDB
+    #TODO: use log4mongo
     def __init__(self, logger=None, logger_name='ManagerBroker',
                  time_to_sleep=0.1):
         ManagerClient.__init__(self, logger=logger, logger_name=logger_name)
@@ -48,6 +50,7 @@ class ManagerBroker(ManagerClient):
         self.logger.debug('Starting worker "{}" for document "{}"'.format(job['worker'], job['document']))
         required_fields = workers.available[job['worker']]['requires']
         fields = set(['meta'] + required_fields)
+        #TODO: add option to get from GridFS
         document = self.collection.find({'_id': ObjectId(job['document'])},
                                         fields=fields)[0]
         queue = Queue()
@@ -102,20 +105,21 @@ class ManagerBroker(ManagerClient):
                             del result[key]
                     self.collection.update({'_id': ObjectId(job['document'])},
                                            {'$set': result})
+                    #TODO: safe=True
                     self.manager_api.send_json({'command': 'finished job',
                                                 'job id': job['job id'],})
                     result = self.manager_api.recv_json()
                     self.logger.info('Result: {}'.format(result))
                     self.jobs.remove(job)
                     self.logger.info('Job removed')
-                    if not self.full_of_jobs():
-                        self.get_a_job()
+                    self.get_a_job()
                 sleep(self.time_to_sleep)
         except KeyboardInterrupt:
             self.close_sockets()
 
 
 if __name__ == '__main__':
+    #TODO: create a function main()
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
 

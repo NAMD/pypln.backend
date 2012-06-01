@@ -50,6 +50,7 @@ class Manager(object):
                     pass
                 else:
                     self.logger.info('Manager API received: {}'.format(message))
+                    #TODO: if 'command' not in message
                     command = message['command']
                     if command == 'get configuration':
                         self.api.send_json(self.config)
@@ -77,6 +78,7 @@ class Manager(object):
 
 
 if __name__ == '__main__':
+    #TODO: create a function main()
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
 

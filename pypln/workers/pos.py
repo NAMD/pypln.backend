@@ -6,6 +6,7 @@ from nltk import pos_tag
 __meta__ = {'work on': 'document',
             'requires': ['text', 'tokens'],
             'provides': ['pos'],}
+#TODO: add 'lang' to 'requires'
 
 def put_offset(text, tagged_text):
     result = []

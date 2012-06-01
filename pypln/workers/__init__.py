@@ -40,6 +40,8 @@ def wrapper(queue):
     #      Note that if a worker should process a big document or an entire
     #      corpus, it's better to received database's configuration and pass to
     #      worker only an lazy iterator for the collection (pymongo's cursor)
+    #TODO: create documentation about object type returned by worker (strings
+    #      must be unicode)
     worker, document = queue.get(), queue.get()
     result = available[worker]['main'](document)
     queue.put(result)

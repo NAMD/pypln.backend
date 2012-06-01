@@ -97,6 +97,7 @@ class Pipeline(object):
 
 
 if __name__ == '__main__':
+    #TODO: create main() function
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
     from pymongo import Connection
