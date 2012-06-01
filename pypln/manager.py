@@ -17,6 +17,7 @@ class Manager(object):
     def __init__(self, config, logger=None, logger_name='Manager',
                  time_to_sleep=0.1):
         self.job_queue = Queue()
+        self.pending_job_ids = []
         self.context = zmq.Context()
         self.time_to_sleep = time_to_sleep
         self.config = config
@@ -50,7 +51,10 @@ class Manager(object):
                     pass
                 else:
                     self.logger.info('Manager API received: {}'.format(message))
-                    #TODO: if 'command' not in message
+                    if 'command' not in message:
+                        self.api.send_json({'answer': 'undefined command'})
+                        self.logger.info('Message discarded: {}'.format(message))
+                        continue
                     command = message['command']
                     if command == 'get configuration':
                         self.api.send_json(self.config)
@@ -58,6 +62,7 @@ class Manager(object):
                         message['job id'] = uuid.uuid4().hex
                         del message['command']
                         self.job_queue.put(message)
+                        self.pending_job_ids.append(message['job id'])
                         self.api.send_json({'answer': 'job accepted',
                                             'job id': message['job id']})
                         self.broadcast.send('new job')
@@ -68,9 +73,17 @@ class Manager(object):
                             job = self.job_queue.get()
                             self.api.send_json(job)
                     elif command == 'finished job':
-                        self.api.send_json({'answer': 'good job!'})
-                        new_message = 'job finished: {}'.format(message['job id'])
-                        self.broadcast.send(new_message)
+                        if 'job id' not in message:
+                            self.api.send_json({'answer': 'syntax error'})
+                        else:
+                            job_id = message['job id']
+                            if job_id not in self.pending_job_ids:
+                                self.api.send_json({'answer': 'unknown job id'})
+                            else:
+                                self.pending_job_ids.remove(job_id)
+                                self.api.send_json({'answer': 'good job!'})
+                                new_message = 'job finished: {}'.format(job_id)
+                                self.broadcast.send(new_message)
                     else:
                         self.api.send_json({'answer': 'unknown command'})
         except KeyboardInterrupt:
