@@ -1,0 +1,2082 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY obo "http://purl.obolibrary.org/obo/" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY daml "http://www.daml.org/2001/03/daml+oil#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY ace_lexicon "http://attempto.ifi.uzh.ch/ace_lexicon#" >
+    <!ENTITY j.0 "http://localhost/default#Mathematical&#37;20" >
+    <!ENTITY ont "http://www.co-ode.org/ontologies/ont.owl#" >
+    <!ENTITY MathML "http://www.w3.org/Math/XMLSchema/mathml3/#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY oboInOwl "http://www.geneontology.org/formats/oboInOwl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.semanticweb.org/ontologies/2011/4/MathModels.owl#"
+     xml:base="http://www.semanticweb.org/ontologies/2011/4/MathModels.owl"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:MathML="http://www.w3.org/Math/XMLSchema/mathml3/#"
+     xmlns:j.0="http://localhost/default#Mathematical%20"
+     xmlns:daml="http://www.daml.org/2001/03/daml+oil#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:ont="http://www.co-ode.org/ontologies/ont.owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:oboInOwl="http://www.geneontology.org/formats/oboInOwl#"
+     xmlns:ace_lexicon="http://attempto.ifi.uzh.ch/ace_lexicon#">
+    <owl:Ontology rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/tip/Modeling%20Ontology/MathModels.owl">
+        <dc:creator rdf:datatype="&xsd;string">Claudia Torres Codeco</dc:creator>
+        <dc:creator rdf:datatype="&xsd;string">Flavio Codeço Coelho</dc:creator>
+        <dc:title rdf:datatype="&xsd;string">Mathematical Model Ontology</dc:title>
+        <dc:creator rdf:datatype="&xsd;string">Renato Rocha Souza</dc:creator>
+        <dc:description rdf:datatype="&xsd;string">This Ontology aims to describe the field of mathematical modeling, and provide a comprehensive classification of existing works of modeling</dc:description>
+        <owl:imports rdf:resource="http://mapekus.fiit.stuba.sk/mapekus/ontologies/v0.2/publication"/>
+        <owl:imports rdf:resource="&obo;ido.owl"/>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <owl:AnnotationProperty rdf:about="&dc;creator">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="&ace_lexicon;TV_pl"/>
+    <owl:AnnotationProperty rdf:about="&ace_lexicon;CN_pl"/>
+    <owl:AnnotationProperty rdf:about="&dc;description">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="&dc;coverage">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
+    <owl:AnnotationProperty rdf:about="&rdfs;seeAlso"/>
+    <rdf:Description rdf:about="&obo;IAO_0000412">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000125"/>
+    </rdf:Description>
+    <owl:AnnotationProperty rdf:about="&ace_lexicon;TV_sg"/>
+    <owl:AnnotationProperty rdf:about="&obo;IAO_0000118">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000125"/>
+    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="&ace_lexicon;CN_sg"/>
+    <owl:AnnotationProperty rdf:about="&dc;title">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="&ace_lexicon;TV_vbg"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#hasDimension -->
+
+    <owl:ObjectProperty rdf:about="&ont;hasDimension">
+        <ace_lexicon:TV_vbg>hasDimensioned</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>hasDimensions</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_pl>hasDimension</ace_lexicon:TV_pl>
+        <rdfs:domain rdf:resource="&ont;Mathematical_Model"/>
+        <rdfs:range rdf:resource="&ont;Space"/>
+        <rdfs:range rdf:resource="&ont;Time"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#hasSpace -->
+
+    <owl:ObjectProperty rdf:about="&ont;hasSpace">
+        <ace_lexicon:TV_pl>hasSpace</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasSpaces</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasSpaced</ace_lexicon:TV_vbg>
+        <rdfs:subPropertyOf rdf:resource="&ont;hasDimension"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#hasTime -->
+
+    <owl:ObjectProperty rdf:about="&ont;hasTime">
+        <ace_lexicon:TV_sg>hasTimes</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasTimed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasTime</ace_lexicon:TV_pl>
+        <rdfs:subPropertyOf rdf:resource="&ont;hasDimension"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#componentOf -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#componentOf">
+        <ace_lexicon:TV_pl>componentOf</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>componentOfed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>componentOfs</ace_lexicon:TV_sg>
+        <owl:inverseOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent">
+        <ace_lexicon:TV_sg>hasComponents</ace_lexicon:TV_sg>
+        <dc:coverage></dc:coverage>
+        <ace_lexicon:TV_pl>hasComponent</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>hasComponented</ace_lexicon:TV_vbg>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <ace_lexicon:TV_pl>hasContinuity</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasContinuities</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasContinuitied</ace_lexicon:TV_vbg>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition"/>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasDomain -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasDomain">
+        <ace_lexicon:TV_vbg>hasDomained</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>hasDomains</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_pl>hasDomain</ace_lexicon:TV_pl>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Complex"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integer"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Rational"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Real"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation">
+        <ace_lexicon:TV_vbg>hasEquationed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasEquation</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasEquations</ace_lexicon:TV_sg>
+        <rdfs:domain rdf:resource="&ont;Mathematical_Model"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquilibria -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquilibria">
+        <ace_lexicon:TV_sg>hasEquilibrias</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_pl>hasEquilibria</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>hasEquilibriaed</ace_lexicon:TV_vbg>
+        <rdfs:domain rdf:resource="&ont;Dynamic_Model"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasParameter -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasParameter">
+        <ace_lexicon:TV_vbg>hasParametered</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasParameter</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasParameters</ace_lexicon:TV_sg>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter"/>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRandomness -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRandomness">
+        <rdf:type rdf:resource="&owl;TransitiveProperty"/>
+        <ace_lexicon:TV_sg>hasRandomnesses</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasRandomnessed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasRandomness</ace_lexicon:TV_pl>
+        <rdfs:comment xml:lang="en">Property of variable which defines them as random variables or not</rdfs:comment>
+        <rdfs:seeAlso xml:lang="en">http://en.wikipedia.org/wiki/Random_variable</rdfs:seeAlso>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition"/>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRepresentation -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRepresentation">
+        <ace_lexicon:TV_sg>hasRepresentations</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasRepresentationed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasRepresentation</ace_lexicon:TV_pl>
+        <rdfs:domain rdf:resource="&ont;Mathematical_Model"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Algorithmic"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Mathematical"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasSource -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasSource">
+        <ace_lexicon:TV_pl>hasSource</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasSources</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasSourced</ace_lexicon:TV_vbg>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable">
+        <ace_lexicon:TV_vbg>hasVariabled</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>hasVariable</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasVariables</ace_lexicon:TV_sg>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:range rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#parameterOf -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#parameterOf">
+        <ace_lexicon:TV_vbg>parameterOfed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>parameterOf</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>parameterOfs</ace_lexicon:TV_sg>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#componentOf"/>
+        <owl:inverseOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasParameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#sourceOf -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#sourceOf">
+        <ace_lexicon:TV_pl>sourceOf</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>sourceOfed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>sourceOfs</ace_lexicon:TV_sg>
+        <owl:inverseOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasSource"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#variableOf -->
+
+    <owl:ObjectProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#variableOf">
+        <ace_lexicon:TV_pl>variableOf</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>variableOfed</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>variableOfs</ace_lexicon:TV_sg>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#componentOf"/>
+        <owl:inverseOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#IsHomogeneous -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#IsHomogeneous">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <ace_lexicon:TV_sg>IsHomogeneouses</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_pl>IsHomogeneous</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>IsHomogeneoused</ace_lexicon:TV_vbg>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComplexValue -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComplexValue">
+        <ace_lexicon:TV_pl>hasComplexValue</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>hasComplexValued</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>hasComplexValues</ace_lexicon:TV_sg>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasValue"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasIntegerValue -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasIntegerValue">
+        <ace_lexicon:TV_vbg>hasIntegerValued</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>hasIntegerValues</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_pl>hasIntegerValue</ace_lexicon:TV_pl>
+        <rdfs:range rdf:resource="&xsd;integer"/>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasValue"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRealValue -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRealValue">
+        <ace_lexicon:TV_pl>hasRealValue</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>hasRealValues</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>hasRealValued</ace_lexicon:TV_vbg>
+        <rdfs:range rdf:resource="&xsd;double"/>
+        <rdfs:subPropertyOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasValue"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasValue -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasValue">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <ace_lexicon:TV_pl>hasValue</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_vbg>hasValued</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_sg>hasValues</ace_lexicon:TV_sg>
+        <rdfs:domain rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#isAutonomous -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#isAutonomous">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <ace_lexicon:TV_vbg>isAutonomoused</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>isAutonomous</ace_lexicon:TV_pl>
+        <ace_lexicon:TV_sg>isAutonomouses</ace_lexicon:TV_sg>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#isLinear -->
+
+    <owl:DatatypeProperty rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#isLinear">
+        <rdf:type rdf:resource="&owl;FunctionalProperty"/>
+        <ace_lexicon:TV_sg>isLinears</ace_lexicon:TV_sg>
+        <ace_lexicon:TV_vbg>isLineared</ace_lexicon:TV_vbg>
+        <ace_lexicon:TV_pl>isLinear</ace_lexicon:TV_pl>
+        <rdfs:range rdf:resource="&xsd;boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Area_based -->
+
+    <owl:Class rdf:about="&ont;Area_based">
+        <rdfs:subClassOf rdf:resource="&ont;Discrete_Space"/>
+        <ace_lexicon:CN_sg>Area_based</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Area_baseds</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Continuous_Space -->
+
+    <owl:Class rdf:about="&ont;Continuous_Space">
+        <rdfs:subClassOf rdf:resource="&ont;Space"/>
+        <ace_lexicon:CN_sg>Continuous_Space</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Continuous_Spaces</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Continuous_Time -->
+
+    <owl:Class rdf:about="&ont;Continuous_Time">
+        <rdfs:subClassOf rdf:resource="&ont;Time"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="&ont;Discrete_Time"/>
+        <ace_lexicon:CN_sg>Continuous_Time</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Continuous_Times</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Continuous_Time_Model -->
+
+    <owl:Class rdf:about="&ont;Continuous_Time_Model">
+        <rdfs:subClassOf rdf:resource="&ont;Dynamic_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential-algebraic_Equation"/>
+                            <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential_Equation"/>
+                            <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Partial_Differential_Equation"/>
+                        </owl:unionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&ont;hasTime"/>
+                <owl:allValuesFrom rdf:resource="&ont;Continuous_Time"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="&ont;Discrete_Time_Model"/>
+        <ace_lexicon:CN_pl>Continuous_Time_Models</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Continuous_Time_Model</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Discrete_Space -->
+
+    <owl:Class rdf:about="&ont;Discrete_Space">
+        <rdfs:subClassOf rdf:resource="&ont;Space"/>
+        <ace_lexicon:CN_pl>Discrete_Spaces</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Discrete_Space</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Discrete_Time -->
+
+    <owl:Class rdf:about="&ont;Discrete_Time">
+        <rdfs:subClassOf rdf:resource="&ont;Time"/>
+        <ace_lexicon:CN_sg>Discrete_Time</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Discrete_Times</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Discrete_Time_Model -->
+
+    <owl:Class rdf:about="&ont;Discrete_Time_Model">
+        <rdfs:subClassOf rdf:resource="&ont;Dynamic_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&ont;hasTime"/>
+                <owl:allValuesFrom rdf:resource="&ont;Discrete_Time"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Difference_Equation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <ace_lexicon:CN_pl>Discrete_Time_Models</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Discrete_Time_Model</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Dynamic_Model -->
+
+    <owl:Class rdf:about="&ont;Dynamic_Model">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&ont;Mathematical_Model"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="&ont;hasTime"/>
+                        <owl:someValuesFrom rdf:resource="&ont;Time"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquilibria"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="&ont;Static_Model"/>
+        <ace_lexicon:CN_pl>Dynamic_Models</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Dynamic_Model</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Irregular_Steps -->
+
+    <owl:Class rdf:about="&ont;Irregular_Steps">
+        <rdfs:subClassOf rdf:resource="&ont;Discrete_Time"/>
+        <owl:disjointWith rdf:resource="&ont;Regular_Steps"/>
+        <ace_lexicon:CN_pl>Irregular_Stepses</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Irregular_Steps</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Mathematical_Model -->
+
+    <owl:Class rdf:about="&ont;Mathematical_Model">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRepresentation"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Representation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string">Archetypical model class from which all models should derive.</rdfs:comment>
+        <ace_lexicon:CN_sg>Mathematical_Model</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Mathematical_Models</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Modelling_Domain -->
+
+    <owl:Class rdf:about="&ont;Modelling_Domain">
+        <ace_lexicon:CN_pl>Modelling_Domains</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Modelling_Domain</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Point_based -->
+
+    <owl:Class rdf:about="&ont;Point_based">
+        <rdfs:subClassOf rdf:resource="&ont;Discrete_Space"/>
+        <ace_lexicon:CN_pl>Point_baseds</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Point_based</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Regular_Steps -->
+
+    <owl:Class rdf:about="&ont;Regular_Steps">
+        <rdfs:subClassOf rdf:resource="&ont;Discrete_Time"/>
+        <ace_lexicon:CN_sg>Regular_Steps</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Regular_Stepses</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Space -->
+
+    <owl:Class rdf:about="&ont;Space">
+        <ace_lexicon:CN_sg>Space</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Spaces</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Static_Model -->
+
+    <owl:Class rdf:about="&ont;Static_Model">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&ont;Mathematical_Model"/>
+                    <owl:Class>
+                        <owl:complementOf rdf:resource="&ont;Dynamic_Model"/>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <ace_lexicon:CN_pl>Static_Models</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Static_Model</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- http://www.co-ode.org/ontologies/ont.owl#Time -->
+
+    <owl:Class rdf:about="&ont;Time">
+        <ace_lexicon:CN_pl>Times</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Time</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Algebraic_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Algebraic_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <dc:description rdf:datatype="&xsd;string">In mathematics, an algebraic equation, also called polynomial equation over a given field is an equation of the form
+
+    P = Q
+
+where P and Q are (possibly multivariate) polynomials over that field. </dc:description>
+        <rdfs:seeAlso rdf:datatype="&xsd;string">http://mathworld.wolfram.com/AlgebraicEquation.html</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Algebraic_Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Algebraic_Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Algorithmic -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Algorithmic">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Representation"/>
+        <rdfs:comment rdf:datatype="&xsd;string">Model is represented as an algorithim, i.e., a set of rules</rdfs:comment>
+        <ace_lexicon:CN_sg>Algorithmic</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Algorithmics</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Complex -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Complex">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain"/>
+        <ace_lexicon:CN_pl>Complexes</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Complex</ace_lexicon:CN_sg>
+        <rdfs:comment>belonging to this class means a variable or parameter belongs to the set of Complex numbers(C)</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous"/>
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Discrete"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Value_Partition"/>
+        <ace_lexicon:CN_sg>Continuity_Partition</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Continuity_Partitions</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition"/>
+        <owl:disjointWith rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Discrete"/>
+        <ace_lexicon:CN_sg>Continuous</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Continuouses</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Deterministic_Model -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Deterministic_Model">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&ont;Mathematical_Model"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:intersectionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Class>
+                                                <owl:intersectionOf rdf:parseType="Collection">
+                                                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRandomness"/>
+                                                        <owl:allValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Nonrandom"/>
+                                                    </owl:Restriction>
+                                                </owl:intersectionOf>
+                                            </owl:Class>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:intersectionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <ace_lexicon:CN_sg>Deterministic_Model</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Deterministic_Models</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Difference_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Difference_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Difference_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_sg>Difference_Equation</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Difference_Equations</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential-algebraic_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential-algebraic_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Differential_algebraic_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Differential-algebraic_Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Differential-algebraic_Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:comment rdf:datatype="&xsd;string">A differential equation is a mathematical equation for an unknown function of one or several variables that relates the values of the function itself and its derivatives of various orders.</rdfs:comment>
+        <rdfs:seeAlso rdf:datatype="&xsd;string">http://en.wikipedia.org/wiki/Differential_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Differential_Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Differential_Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Discrete -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Discrete">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition"/>
+        <ace_lexicon:CN_pl>Discretes</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Discrete</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasParameter"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string">An equation is a mathematical statement that asserts the equality of two expressions. Equations consist of the expressions that have to be equal on opposite sides of an equal sign</rdfs:comment>
+        <rdfs:seeAlso rdf:datatype="&xsd;string">http://en.wikipedia.org/wiki/Equation</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria">
+        <ace_lexicon:CN_sg>Equilibria</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Equilibrias</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integer -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integer">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain"/>
+        <rdfs:comment>belonging to this class means a variable or parameter belongs to the set of Integer numbers (Z)</rdfs:comment>
+        <ace_lexicon:CN_pl>Integers</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Integer</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integral_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integral_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Integral_equation</rdfs:seeAlso>
+        <dc:description rdf:datatype="&xsd;string">is an equation in which an unknown function appears under an integral sign.</dc:description>
+        <ace_lexicon:CN_sg>Integral_Equation</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Integral_Equations</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integro-Differential_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Integro-Differential_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <dc:description rdf:datatype="&xsd;string">An integro-differential equation is an equation which involves both integrals and derivatives of a function.</dc:description>
+        <rdfs:seeAlso rdf:datatype="&xsd;string">http://en.wikipedia.org/wiki/Integro-differential_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Integro-Differential_Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Integro-Differential_Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Mathematical -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Mathematical">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Representation"/>
+        <rdfs:comment rdf:datatype="&xsd;string">Model is represented in standard mathematical notation, e.g.: equations</rdfs:comment>
+        <ace_lexicon:CN_sg>Mathematical</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Mathematicals</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Nonrandom -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Nonrandom">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition"/>
+        <owl:disjointWith rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Random"/>
+        <ace_lexicon:CN_sg>Nonrandom</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Nonrandoms</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain">
+        <rdfs:comment rdf:datatype="&xsd;string">Set of values from which a variable or parameter takes its values from.</rdfs:comment>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://mathworld.wolfram.com/Domain.html</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Number_Domains</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Number_Domain</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#ODE_Model -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#ODE_Model">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <owl:Class>
+                        <owl:unionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&ont;Continuous_Time_Model"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity"/>
+                                <owl:allValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous"/>
+                            </owl:Restriction>
+                        </owl:unionOf>
+                    </owl:Class>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                        <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Differential_Equation"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRepresentation"/>
+                        <owl:allValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Mathematical"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment rdf:datatype="&xsd;string">Model consisting of one or more ordinary differential equations</rdfs:comment>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Ordinary_differential_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_sg>ODE_Model</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>ODE_Models</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#PDE_Model -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#PDE_Model">
+        <rdfs:subClassOf rdf:resource="&ont;Mathematical_Model"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Partial_Differential_Equation"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable"/>
+                                <owl:someValuesFrom>
+                                    <owl:Class>
+                                        <owl:intersectionOf rdf:parseType="Collection">
+                                            <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+                                            <owl:Restriction>
+                                                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity"/>
+                                                <owl:allValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuous"/>
+                                            </owl:Restriction>
+                                        </owl:intersectionOf>
+                                    </owl:Class>
+                                </owl:someValuesFrom>
+                            </owl:Restriction>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <ace_lexicon:CN_sg>PDE_Model</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>PDE_Models</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter">
+        <owl:disjointWith rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+        <rdfs:comment rdf:datatype="&xsd;string">A Parameter is typically a constant component of a model.</rdfs:comment>
+        <ace_lexicon:CN_sg>Parameter</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Parameters</ace_lexicon:CN_pl>
+        <rdfs:seeAlso>http://en.wikipedia.org/wiki/Parameter</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Partial_Differential_Equation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Partial_Differential_Equation">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+        <dc:description rdf:datatype="&xsd;string">a type of differential equation, i.e., a relation involving an unknown function (or functions) of several independent variables and their partial derivatives with respect to those variables.</dc:description>
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Partial_differential_equation</rdfs:seeAlso>
+        <ace_lexicon:CN_pl>Partial_Differential_Equations</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Partial_Differential_Equation</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Random -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Random">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition"/>
+        <ace_lexicon:CN_pl>Randoms</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Random</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Nonrandom"/>
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Random"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Value_Partition"/>
+        <ace_lexicon:CN_pl>Randomness_Partitions</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Randomness_Partition</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Rational -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Rational">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain"/>
+        <ace_lexicon:CN_sg>Rational</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Rationals</ace_lexicon:CN_pl>
+        <rdfs:comment>belonging to this class means a variable or parameter belongs to the set of Rational numbers (Q)</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Real -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Real">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain"/>
+        <rdfs:comment>belonging to this class means a variable or parameter belongs to the set of real numbers (R)</rdfs:comment>
+        <ace_lexicon:CN_sg>Real</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Reals</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Representation -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Representation">
+        <rdfs:subClassOf>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasComponent"/>
+                        <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Parameter"/>
+                    </owl:Restriction>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string">this is how a model is formally represented. Originally, two subclasses are envisioned : mathematical and algorithmic (for computational models),</rdfs:comment>
+        <ace_lexicon:CN_sg>Representation</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Representations</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Stable_Equilibrium -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Stable_Equilibrium">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria"/>
+        <ace_lexicon:CN_pl>Stable_Equilibriums</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Stable_Equilibrium</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Stochastic_Model -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Stochastic_Model">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&ont;Mathematical_Model"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasEquation"/>
+                        <owl:someValuesFrom>
+                            <owl:Class>
+                                <owl:intersectionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equation"/>
+                                    <owl:Restriction>
+                                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasVariable"/>
+                                        <owl:someValuesFrom>
+                                            <owl:Class>
+                                                <owl:intersectionOf rdf:parseType="Collection">
+                                                    <rdf:Description rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable"/>
+                                                    <owl:Restriction>
+                                                        <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRandomness"/>
+                                                        <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Random"/>
+                                                    </owl:Restriction>
+                                                </owl:intersectionOf>
+                                            </owl:Class>
+                                        </owl:someValuesFrom>
+                                    </owl:Restriction>
+                                </owl:intersectionOf>
+                            </owl:Class>
+                        </owl:someValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <ace_lexicon:CN_pl>Stochastic_Models</ace_lexicon:CN_pl>
+        <ace_lexicon:CN_sg>Stochastic_Model</ace_lexicon:CN_sg>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Susceptible_Infected_Recovered -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Susceptible_Infected_Recovered">
+        <rdfs:seeAlso rdf:datatype="&xsd;anyURI">http://en.wikipedia.org/wiki/Epidemic_model#The_SIR_Model</rdfs:seeAlso>
+        <ace_lexicon:CN_sg>Susceptible_Infected_Recovered</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Susceptible_Infected_Recovereds</ace_lexicon:CN_pl>
+        <obo:IAO_0000118>SIR Model</obo:IAO_0000118>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Unstable_Equilibrium -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Unstable_Equilibrium">
+        <rdfs:subClassOf rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Equilibria"/>
+        <ace_lexicon:CN_sg>Unstable_Equilibrium</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Unstable_Equilibriums</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Value_Partition -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Value_Partition">
+        <ace_lexicon:CN_sg>Value_Partition</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Value_Partitions</ace_lexicon:CN_pl>
+    </owl:Class>
+    
+
+
+    <!-- https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable -->
+
+    <owl:Class rdf:about="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Variable">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasRandomness"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Randomness_Partition"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasContinuity"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Continuity_Partition"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#hasDomain"/>
+                <owl:someValuesFrom rdf:resource="https://bitbucket.org/fccoelho/math-model-ontology/raw/2973f8304c08/Modeling%20Ontology/MathModels.owl#Number_Domain"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment rdf:datatype="&xsd;string">A variable is typically a componet of a model which not known a priori, being commonly defined as a function of parameters and other variables</rdfs:comment>
+        <ace_lexicon:CN_sg>Variable</ace_lexicon:CN_sg>
+        <ace_lexicon:CN_pl>Variables</ace_lexicon:CN_pl>
+        <rdfs:seeAlso>http://en.wikipedia.org/wiki/Variable_%28mathematics%29</rdfs:seeAlso>
+    </owl:Class>
+    <rdf:Description>
+        <dc:creator rdf:datatype="&xsd;string">Claudia Torres Codeco</dc:creator>
+        <dc:creator rdf:datatype="&xsd;string">Flavio Codeco Coelho</dc:creator>
+        <dc:title rdf:datatype="&xsd;string">Mathematical Model Ontology</dc:title>
+        <rdfs:comment rdf:datatype="&xsd;string">This Ontology aims to describe the field of mathematical modeling, and provide a comprehensive classification of existing works of modeling</rdfs:comment>
+    </rdf:Description>
+    <rdf:Description>
+        <dc:creator rdf:datatype="&xsd;Name">Cláudia Torres Codeço</dc:creator>
+        <dc:creator rdf:datatype="&xsd;Name">Flávio Codeço Coelho</dc:creator>
+        <dc:title rdf:datatype="&xsd;string">Mathematical Model Ontology</dc:title>
+        <rdfs:comment rdf:datatype="&xsd;string">This Ontology aims to represent  the domain of Mathematical Modeling  as applied to Dynamic Biological systems</rdfs:comment>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0065007">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;format">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#integral_part_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#relationship">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OGMS_0000087">
+        <obo:IAO_0000412 rdf:resource="&obo;ogms.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0045087">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;language">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/UBERON#UBERON_0000178">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/UBERON"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#preceded_by">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;source">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0002443">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;rights">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#transformation_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0008150">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#has_output">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0042101">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000111">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0043093">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0051704">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000112">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000115">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#proper_part_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#part_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000117">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;identifier">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000116">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#improper_part_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#realizes">
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/NCBITaxon#NCBITaxon_33154">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/NCBITaxon"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0044411">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#positively_regulates">
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/NCBITaxon#NCBITaxon_10239">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/NCBITaxon"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0040007">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OGMS_0000045">
+        <obo:IAO_0000412 rdf:resource="&obo;ogms.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/CARO#CARO_0000000">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/CARO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;subject">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#has_role">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0016265">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#contained_in">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#bearer_of">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OGMS_0000063">
+        <obo:IAO_0000412 rdf:resource="&obo;ogms.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#inheres_in">
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/CL#CL_0000000">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/CL"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#realized_by">
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasRelatedSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasRelatedSynonym>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#has_agent">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OGMS_0000020">
+        <obo:IAO_0000412 rdf:resource="&obo;ogms.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;publisher">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#derives_from">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0032502">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/NCBITaxon#NCBITaxon_2759">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/NCBITaxon"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0044403">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#unfolds_in">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000119">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;type">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/CL#CL_0000738">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/CL"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0019815">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0044406">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0044409">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0019814">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0085030">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#results_in_formation_of">
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasExactSynonym>
+            <rdf:Description/>
+        </oboInOwl:hasExactSynonym>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0085031">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0051234">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000225">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000125"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0000003">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0032991">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0050777">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#negatively_regulates">
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/ENVO#ENVO_00002036">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/ENVO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0002250">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0051093">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;contributor">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0048525">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/TRANS#TRANS_0000002">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/TRANS"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OGMS_0000031">
+        <obo:IAO_0000412 rdf:resource="&obo;ogms.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/NCBITaxon#NCBITaxon_2">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/NCBITaxon"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/TRANS#TRANS_0000000">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/TRANS"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0100001">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000125"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0006955">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#regulates">
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description/>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/GO#GO_0006959">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/GO"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;OBI_0100026">
+        <obo:IAO_0000412 rdf:resource="&obo;obi.owl"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000232">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000122"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#has_participant">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;date">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#located_in">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="&obo;IAO_0000078">
+        <obo:IAO_0000114 rdf:resource="&obo;IAO_0000125"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.obofoundry.org/ro/ro.owl#adjacent_to">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/CHEBI#CHEBI_23367">
+        <obo:IAO_0000412 rdf:resource="http://purl.org/obo/owl/CHEBI"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="&dc;relation">
+        <rdfs:isDefinedBy rdf:resource="http://purl.org/dc/elements/1.1/"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://purl.org/obo/owl/OBO_REL#has_function">
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+        <oboInOwl:hasDefinition>
+            <rdf:Description>
+                <oboInOwl:hasDbXref>
+                    <rdf:Description/>
+                </oboInOwl:hasDbXref>
+            </rdf:Description>
+        </oboInOwl:hasDefinition>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.2.5.1912) http://owlapi.sourceforge.net -->
+

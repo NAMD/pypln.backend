@@ -12,6 +12,7 @@ import workers
 
 
 class ManagerBroker(ManagerClient):
+    #TODO: should use pypln.stores instead of pymongo directly
     #TODO: send stats to MongoDB
     #TODO: use log4mongo
     def __init__(self, logger=None, logger_name='ManagerBroker',
