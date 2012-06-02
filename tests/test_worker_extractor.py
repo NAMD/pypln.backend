@@ -39,5 +39,17 @@ class TestExtractor(unittest.TestCase):
         result = extractor.main(data)
         text = clear_text(result['text'])
         metadata = result['metadata']
+        metadata_expected = {
+                'Author':         'Álvaro Justen',
+                'Creator':        'Writer',
+                'Producer':       'LibreOffice 3.5',
+                'CreationDate':   'Fri Jun  1 17:07:57 2012',
+                'Tagged':         'no',
+                'Pages':          '1',
+                'Encrypted':      'no',
+                'Page size':      '612 x 792 pts (letter)',
+                'Optimized':      'no',
+                'PDF version':    '1.4',
+        }
         self.assertEquals(original_text, text)
-        self.assertEquals(type(metadata), dict)
+        self.assertEquals(metadata, metadata_expected)
