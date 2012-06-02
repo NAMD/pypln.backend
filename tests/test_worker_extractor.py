@@ -16,7 +16,7 @@ original_text = "This is a test file.I'm testing PyPLN extractor worker!"
 
 class TestExtractor(unittest.TestCase):
     def test_extraction_from_text_file(self):
-        filename = 'tests/test.txt'
+        filename = 'tests/data/test.txt'
         data = {'name': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
         text = clear_text(result['text'])
@@ -25,7 +25,7 @@ class TestExtractor(unittest.TestCase):
         self.assertEquals(metadata, None)
 
     def test_extraction_from_html_file(self):
-        filename = 'tests/test.html'
+        filename = 'tests/data/test.html'
         data = {'name': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
         text = clear_text(result['text'])
@@ -34,7 +34,7 @@ class TestExtractor(unittest.TestCase):
         self.assertEquals(metadata, None)
 
     def test_extraction_from_pdf_file(self):
-        filename = 'tests/test.pdf'
+        filename = 'tests/data/test.pdf'
         data = {'name': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
         text = clear_text(result['text'])

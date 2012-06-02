@@ -14,12 +14,13 @@ sleep_time_process = 0.1
 
 def run_broker(api_host_port, broadcast_host_port):
     broker = ManagerBroker()
+    sleep(0.5)
     broker.connect(api_host_port, broadcast_host_port)
     broker.run()
 
 class TestManagerBroker(unittest.TestCase):
     def setUp(self):
-        args = (('*', 5555), ('*', 5556))
+        args = (('localhost', 5555), ('localhost', 5556))
         self.broker = Process(target=run_broker, args=args)
         self.broker.start()
         sleep(sleep_time_process)

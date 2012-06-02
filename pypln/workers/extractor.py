@@ -68,3 +68,7 @@ def main(file_data):
     elif file_mime_type == 'application/pdf':
         text, metadata = extract_pdf(file_data['contents'])
     return {'text': text, 'metadata': metadata}
+
+#TODO: should extractor add file-metadata (creation date, size etc.)?
+#TODO: need to verify some exceptions when trying to convert 'evil' PDFs
+#TODO: should 'replace_with' be '' when extracting from HTML?
