@@ -21,6 +21,7 @@ class ManagerBroker(ManagerClient):
         self.jobs = []
         self.max_jobs = cpu_count()
         self.time_to_sleep = 0.1
+        self.logger.info('Broker started')
 
     def connect_to_database(self):
         conf = self.config['db']
@@ -33,6 +34,7 @@ class ManagerBroker(ManagerClient):
         self.gridfs = GridFS(self.db, conf['gridfs-collection'])
 
     def get_configuration(self):
+        self.logger.info('Getting configuration from manager...')
         self.manager_api.send_json({'command': 'get configuration'})
         self.config = self.manager_api.recv_json()
         self.logger.info('Got configuration from Manager')
@@ -40,6 +42,7 @@ class ManagerBroker(ManagerClient):
         self.logger.debug('Configuration received: {}'.format(self.config))
 
     def connect(self, api_host_port, broadcast_host_port):
+        self.logger.info('Trying to connect to manager...')
         super(ManagerBroker, self).connect(api_host_port, broadcast_host_port)
         self.get_configuration()
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
@@ -50,7 +53,8 @@ class ManagerBroker(ManagerClient):
             self.logger.info('Rejecting job: {}'.format(job))
             #TODO: send a 'rejecting job' request to Manager
             return
-        self.logger.debug('Starting worker "{}" for document "{}"'.format(job['worker'], job['document']))
+        self.logger.debug('Starting worker "{}" for document "{}"'\
+                          .format(job['worker'], job['document']))
         worker_input = workers.available[job['worker']]['input']
         if worker_input == 'document':
             required_fields = workers.available[job['worker']]['requires']
@@ -79,11 +83,14 @@ class ManagerBroker(ManagerClient):
             self.manager_api.send_json({'command': 'get job'})
             message = self.manager_api.recv_json()
             self.logger.info('Received from Manager API: {}'.format(message))
-            if message['worker'] is not None:
-                self.jobs.append(message)
-                self.start_job(message)
+            if 'worker' in message:
+                if message['worker'] is not None:
+                    self.jobs.append(message)
+                    self.start_job(message)
+                else:
+                    break
             else:
-                break
+                self.logger.info('Ignoring malformed job: {}'.format(message))
 
     def manager_has_job(self):
         try:
@@ -91,7 +98,8 @@ class ManagerBroker(ManagerClient):
         except zmq.ZMQError:
             return False
         else:
-            self.logger.info('Received from Manager Broadcast: {}'.format(message))
+            self.logger.info('Received from Manager Broadcast: {}'\
+                             .format(message))
             return True
 
     def finished_jobs(self):
@@ -101,6 +109,7 @@ class ManagerBroker(ManagerClient):
         return len(self.jobs) >= self.max_jobs
 
     def run(self):
+        self.logger.info('Entering main loop')
         try:
             self.get_a_job()
             while True:
@@ -135,6 +144,7 @@ class ManagerBroker(ManagerClient):
                     self.get_a_job()
                 sleep(self.time_to_sleep)
         except KeyboardInterrupt:
+            self.logger.info('Got SIGNINT (KeyboardInterrupt), exiting.')
             self.close_sockets()
 
 

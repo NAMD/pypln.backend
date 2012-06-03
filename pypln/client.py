@@ -32,8 +32,10 @@ class ManagerClient(object):
         self.close_sockets()
 
     def close_sockets(self):
-        self.manager_api.close()
-        self.manager_broadcast.close()
+        sockets = ['manager_api', 'manager_broadcast']
+        for socket in sockets:
+            if hasattr(self, socket):
+                getattr(self, socket).close()
 
 class Worker(object):
     def __init__(self, worker_name):

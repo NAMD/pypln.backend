@@ -43,6 +43,9 @@ def wrapper(queue):
     #      worker only an lazy iterator for the collection (pymongo's cursor)
     #TODO: create documentation about object type returned by worker (strings
     #      must be unicode)
+    #TODO: add the possibility to create workers that are executables (they
+    #      receive data as JSON in stdin and put the result as JSON in stdout),
+    #      so we can create workers in C, Perl, Ruby etc.
     worker, document = queue.get(), queue.get()
     result = available[worker]['main'](document)
     queue.put(result)
