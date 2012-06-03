@@ -1,6 +1,6 @@
 test:
 	@clear
-	@python `which nosetests` -dv
+	@nosetests -dvs
 
 doc:
 	./make-docs.sh -vg
