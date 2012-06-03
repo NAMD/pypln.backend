@@ -95,6 +95,7 @@ class ManagerBroker(ManagerClient):
     def manager_has_job(self):
         try:
             message = self.manager_broadcast.recv(zmq.NOBLOCK)
+            #TODO: what if broker subscribe to another thing?
         except zmq.ZMQError:
             return False
         else:

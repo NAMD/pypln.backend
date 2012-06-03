@@ -42,6 +42,7 @@ class Manager(object):
         self.broadcast.close()
 
     def run(self):
+        self.logger.info('Entering main loop')
         try:
             while True:
                 try:
