@@ -62,7 +62,7 @@ class ManagerBroker(ManagerClient):
             #TODO: add option to get from GridFS
             contents = self.collection.find({'_id': ObjectId(job['document'])},
                                             fields=fields)[0]
-        elif worker_input == 'file':
+        elif worker_input == 'gridfs-file':
             file_data = self.gridfs.get(ObjectId(job['document']))
             contents = {'length': file_data.length, 'md5': file_data.md5,
                         'name': file_data.name,
@@ -130,7 +130,8 @@ class ManagerBroker(ManagerClient):
                     if worker_input == worker_output == 'document':
                         self.collection.update({'_id': ObjectId(job['document'])},
                                                {'$set': result})
-                    elif worker_input == 'file' and worker_output == 'document':
+                    elif worker_input == 'gridfs-file' and \
+                         worker_output == 'document':
                         data = {'_id': ObjectId(job['document'])}
                         data.update(result)
                         self.collection.insert(data)

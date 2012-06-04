@@ -1,6 +1,6 @@
 # coding: utf-8
 
-__meta__ = {'input': 'file',
+__meta__ = {'input': 'gridfs-file',
             'output': 'document',
             'requires': [], # Don't needed when getting data from GridFS
             'provides': ['text', 'metadata']}
