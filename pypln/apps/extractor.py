@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 """
-New Document processor
+Scan a directory or GridFS looking for files to convert to text
 
 This app scans a directory and submits new/changed documents to the
 preprocessing pipeline
@@ -15,16 +15,16 @@ Which will perform, in order:
 __docformat__ = "reStructuredText en"
 
 import os
-import sys, argparse
-from collections import defaultdict
+import sys
+import time
 import mimetypes
+from collections import defaultdict
+from pymongo import Connection
 from pypln.servers.ventilator import Ventilator
 from pypln.servers.baseapp import TaskVentilator
 from pypln.stores.filestor import FS
 from pypln.sinks.mongo_insert_sink import MongoInsertSink
-from pymongo import Connection
 from pypln.workers.docconv_worker import DocConverterWorker
-import time
 
 from pypln.logger import make_log
 
@@ -36,7 +36,6 @@ def scan_dir(path, db, recurse=False):
     Scans a directory, adds files to the GridFS and returns
     dictionary of files by mimetype
     """
-    log.info("scanning file system...")
     fs = FS(database=db, create=True)
     docdict = defaultdict(lambda: [])
     for p, dirs, files in os.walk(path):
@@ -44,17 +43,16 @@ def scan_dir(path, db, recurse=False):
             dirs = []
         for f in files:
             mt = mimetypes.guess_type(f)[0]
-            # classify documents by mimetype
             try:
                 fullpath = os.path.join(os.getcwd(), os.path.join(p, f).decode('utf8'))
             except UnicodeDecodeError:
-                log.error("skipping: %s due to UnicodeDecode Error"%f)
                 continue
             fid = fs.add_file(fullpath)
             if fid != None:
                 doc = fs.fs.get(fid)
                 docdict[mt].append(doc.md5)
-            #TODO: maybe handle the case when the files are already on gridfs but have not been extracted yet
+            #TODO: maybe handle the case when the files are already on GridFS
+            #      but have not been extracted yet
     return docdict
 
 def scan_gridfs(db, host):
@@ -65,14 +63,14 @@ def scan_gridfs(db, host):
     :param host: Host where to find Mongodb
     :return: Dictionary of documents by mimetype
     """
-    #TODO: maybe it's better to identify files by ID in both these scan functions.
+    #TODO: maybe it's better to identify files by ID in both these scan functions
     log.info("Scannig GridFS on database %s"%db)
     docdict = defaultdict(lambda: [])
     files = Connection(host)[db].fs.files
     fs = FS(database=db)
     cursor = files.find()
     for f in cursor:
-        mt = mimetypes.guess_type(f['filename'])[0] # classify documents by mimetype
+        mt = mimetypes.guess_type(f['filename'])[0]
         doc = fs.fs.get(f['_id'])
         docdict[mt].append(doc.md5)
     return docdict
@@ -86,7 +84,7 @@ def extract(args, vent):
     else:
         docs = scan_gridfs(args.db, args.host)
     msgs = []
-    for k, v in docs.iteritems(): # ['application/pdf']:
+    for k, v in docs.iteritems():
         for d in v:
             msgs.append({'database': args.db, 'collection': args.col,
                          'md5': d, 'mimetype': k})
@@ -98,6 +96,4 @@ def main(args):
     tv = TaskVentilator(Ventilator, DocConverterWorker, MongoInsertSink, 20)
     vent, ws, sink = tv.spawn()
     extract(args, vent)
-
-
 

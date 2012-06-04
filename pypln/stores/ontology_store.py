@@ -17,7 +17,7 @@ rdfextras.registerplugins()
 
 class Ontology(object):
     """
-    Class to store and load ontologies from MOngodb
+    Class to store and load ontologies from Mongodb
     """
     def __init__(self,name,db,collection, host="127.0.0.1", port=27017):
         self.name = name
@@ -32,14 +32,18 @@ class Ontology(object):
         :return:
         """
         self.graph = rdflib.Graph()
-        self.graph.parse(uri,format="application/rdf+xml")
-    def store(self):
+        self.graph.parse(uri,Format="application/rdf+xml")
+    def store(self, Format='n3'):
         """
         Stores ontology in Mongodb. Currently in n3 format
+        :param Format: form in which the ontology should be saved
         :return:
         """
-        data = self._serialize_to_n3()
-        self.collection.insert({'name':self.name,'n3':data})
+        if Format == 'n3':
+            data = self._serialize_to_n3()
+        else:
+            raise TypeError("Format '{}' unsupported".format(Format))
+        self.collection.insert({'name':self.name,'data':data,'format':'n3'})
 
     def load(self,name):
         """
@@ -49,7 +53,7 @@ class Ontology(object):
         """
         data = self.collection.find_one({'name':name})
         self.graph = rdflib.Graph()
-        self.graph.parse(data,format = "n3")
+        self.graph.parse(data,format = data['format'])
 
     def _serialize_to_n3(self):
         """
