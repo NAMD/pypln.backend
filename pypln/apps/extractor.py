@@ -26,13 +26,17 @@ from pymongo import Connection
 from pypln.workers.docconv_worker import DocConverterWorker
 import time
 
+from pypln.logger import make_log
+
+log = make_log(__name__)
+
 
 def scan_dir(path, db, recurse=False):
     """
     Scans a directory, adds files to the GridFS and returns
     dictionary of files by mimetype
     """
-#    print "==> scanning file system..."
+    log.info("scanning file system...")
     fs = FS(database=db, create=True)
     docdict = defaultdict(lambda: [])
     for p, dirs, files in os.walk(path):
@@ -44,7 +48,7 @@ def scan_dir(path, db, recurse=False):
             try:
                 fullpath = os.path.join(os.getcwd(), os.path.join(p, f).decode('utf8'))
             except UnicodeDecodeError:
-                # print "skipping: ",f
+                log.error("skipping: %s due to UnicodeDecode Error"%f)
                 continue
             fid = fs.add_file(fullpath)
             if fid != None:
@@ -62,6 +66,7 @@ def scan_gridfs(db, host):
     :return: Dictionary of documents by mimetype
     """
     #TODO: maybe it's better to identify files by ID in both these scan functions.
+    log.info("Scannig GridFS on database %s"%db)
     docdict = defaultdict(lambda: [])
     files = Connection(host)[db].fs.files
     fs = FS(database=db)
@@ -80,7 +85,6 @@ def extract(args, vent):
         docs = scan_dir(args.path, args.db)
     else:
         docs = scan_gridfs(args.db, args.host)
-#    print "number of PDFs ", len(docs['application/pdf'])
     msgs = []
     for k, v in docs.iteritems(): # ['application/pdf']:
         for d in v:
@@ -91,7 +95,7 @@ def extract(args, vent):
 
 
 def main(args):
-    tv = TaskVentilator(Ventilator, DocConverterWorker, MongoInsertSink, 10)
+    tv = TaskVentilator(Ventilator, DocConverterWorker, MongoInsertSink, 20)
     vent, ws, sink = tv.spawn()
     extract(args, vent)
 

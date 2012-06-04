@@ -45,10 +45,11 @@ class FS:
         :return: filename
         """
         i = 0
+        pos = fn.find('.',-5) #finds the dot before the extension
         while self.fs.exists(filename=fn):
             fn = fn.strip(str(i))
             i += 1
-            fn += str(i)
+            fn = fn[:pos]+"_"+str(i)+fn[pos:]
         return fn
 
     def add_file(self,fname):
@@ -62,13 +63,13 @@ class FS:
             # Check md5 to see if the files are really the same
             ef = self.fs.get_version(filename=fn)
             with open(fname, 'r') as f:
-                filemd5 = md5(f.read())
+                filemd5 = md5(f.read()).hexdigest()
             if ef.md5 == filemd5:
                 log.warning("File %s has already been Stored, skipping."%fn)
                 return
             else:
                 fn_new  = self._rename(fn)
-                log.warning("Name collision. Renaming {0} to {1}".format(fn,fn_new))
+                log.warning("Name collision. Renaming '{0}' to '{1}'".format(fn,fn_new))
         else:
             fn_new = fn
 
