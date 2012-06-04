@@ -8,17 +8,18 @@ import shlex
 import zmq
 
 
-time_to_sleep = 0.15
+time_to_wait = 150
 
 class TestManagerBroker(unittest.TestCase):
     def setUp(self):
-        self.start_broker_process()
         self.context = zmq.Context()
         self.start_manager_sockets()
+        self.start_broker_process()
 
     def tearDown(self):
-        self.context.destroy()
         self.end_broker_process()
+        self.close_sockets()
+        self.context.term()
 
     def start_broker_process(self):
         #TODO: call process passing a configuration file
@@ -30,7 +31,7 @@ class TestManagerBroker(unittest.TestCase):
 
     def end_broker_process(self):
         self.broker.send_signal(SIGINT)
-        sleep(time_to_sleep)
+        sleep(time_to_wait / 1000.0)
         self.broker.send_signal(SIGKILL)
         self.broker.wait()
 
@@ -39,16 +40,18 @@ class TestManagerBroker(unittest.TestCase):
         self.broadcast = self.context.socket(zmq.PUB)
         self.api.bind('tcp://*:5555')
         self.broadcast.bind('tcp://*:5556')
-        sleep(time_to_sleep)
+
+    def close_sockets(self):
+        self.api.close()
+        self.broadcast.close()
 
     def test_should_ask_for_configuration_on_start(self):
-        try:
-            message = self.api.recv_json(zmq.NOBLOCK)
-        except zmq.ZMQError:
-            self.assertFalse('Exception raised, socket not connected')
-        else:
+        if self.api.poll(time_to_wait):
+            message = self.api.recv_json()
             self.api.send_json({'db': {'host': 'localhost', 'port': 27017,
                                        'database': 'pypln',
                                        'collection': 'documents',
                                        'gridfs-collection': 'files'}})
             self.assertEquals(message, {'command': 'get configuration'})
+        else:
+            self.assertFalse('Exception raised, socket not connected')

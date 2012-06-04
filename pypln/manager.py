@@ -3,7 +3,6 @@
 
 import uuid
 from Queue import Queue
-from time import sleep
 from logging import Logger, NullHandler
 import zmq
 
@@ -14,12 +13,10 @@ class Manager(object):
     #TODO: if processing job have timeout, remove from processing queue, add
     #      again in job_queue and announce pending job
     #TODO: get status from brokers
-    def __init__(self, config, logger=None, logger_name='Manager',
-                 time_to_sleep=0.1):
+    def __init__(self, config, logger=None, logger_name='Manager'):
         self.job_queue = Queue()
         self.pending_job_ids = []
         self.context = zmq.Context()
-        self.time_to_sleep = time_to_sleep
         self.config = config
         if logger is None:
             self.logger = Logger(logger_name)
@@ -45,48 +42,43 @@ class Manager(object):
         self.logger.info('Entering main loop')
         try:
             while True:
-                try:
-                    message = self.api.recv_json(zmq.NOBLOCK)
-                except zmq.ZMQError:
-                    sleep(self.time_to_sleep)
-                    pass
-                else:
-                    self.logger.info('Manager API received: {}'.format(message))
-                    if 'command' not in message:
-                        self.api.send_json({'answer': 'undefined command'})
-                        self.logger.info('Message discarded: {}'.format(message))
-                        continue
-                    command = message['command']
-                    if command == 'get configuration':
-                        self.api.send_json(self.config)
-                    elif command == 'add job':
-                        message['job id'] = uuid.uuid4().hex
-                        del message['command']
-                        self.job_queue.put(message)
-                        self.pending_job_ids.append(message['job id'])
-                        self.api.send_json({'answer': 'job accepted',
-                                            'job id': message['job id']})
-                        self.broadcast.send('new job')
-                    elif command == 'get job':
-                        if self.job_queue.empty():
-                            self.api.send_json({'worker': None})
-                        else:
-                            job = self.job_queue.get()
-                            self.api.send_json(job)
-                    elif command == 'finished job':
-                        if 'job id' not in message:
-                            self.api.send_json({'answer': 'syntax error'})
-                        else:
-                            job_id = message['job id']
-                            if job_id not in self.pending_job_ids:
-                                self.api.send_json({'answer': 'unknown job id'})
-                            else:
-                                self.pending_job_ids.remove(job_id)
-                                self.api.send_json({'answer': 'good job!'})
-                                new_message = 'job finished: {}'.format(job_id)
-                                self.broadcast.send(new_message)
+                message = self.api.recv_json()
+                self.logger.info('Manager API received: {}'.format(message))
+                if 'command' not in message:
+                    self.api.send_json({'answer': 'undefined command'})
+                    self.logger.info('Message discarded: {}'.format(message))
+                    continue
+                command = message['command']
+                if command == 'get configuration':
+                    self.api.send_json(self.config)
+                elif command == 'add job':
+                    message['job id'] = uuid.uuid4().hex
+                    del message['command']
+                    self.job_queue.put(message)
+                    self.pending_job_ids.append(message['job id'])
+                    self.api.send_json({'answer': 'job accepted',
+                                        'job id': message['job id']})
+                    self.broadcast.send('new job')
+                elif command == 'get job':
+                    if self.job_queue.empty():
+                        self.api.send_json({'worker': None})
                     else:
-                        self.api.send_json({'answer': 'unknown command'})
+                        job = self.job_queue.get()
+                        self.api.send_json(job)
+                elif command == 'finished job':
+                    if 'job id' not in message:
+                        self.api.send_json({'answer': 'syntax error'})
+                    else:
+                        job_id = message['job id']
+                        if job_id not in self.pending_job_ids:
+                            self.api.send_json({'answer': 'unknown job id'})
+                        else:
+                            self.pending_job_ids.remove(job_id)
+                            self.api.send_json({'answer': 'good job!'})
+                            new_message = 'job finished: {}'.format(job_id)
+                            self.broadcast.send(new_message)
+                else:
+                    self.api.send_json({'answer': 'unknown command'})
         except KeyboardInterrupt:
             self.close_sockets()
 

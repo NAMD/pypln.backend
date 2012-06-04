@@ -48,6 +48,8 @@ class ManagerBroker(ManagerClient):
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
 
     def start_job(self, job):
+        #TODO: should information about where to get and save data be in the
+        #      job or worker will decide about it?
         if 'worker' not in job or 'document' not in job or \
            job['worker'] not in workers.available:
             self.logger.info('Rejecting job: {}'.format(job))
@@ -82,6 +84,7 @@ class ManagerBroker(ManagerClient):
         for i in range(self.max_jobs - len(self.jobs)):
             self.manager_api.send_json({'command': 'get job'})
             message = self.manager_api.recv_json()
+            #TODO: if manager stops and doesn't answer, broker will stop here
             self.logger.info('Received from Manager API: {}'.format(message))
             if 'worker' in message:
                 if message['worker'] is not None:
