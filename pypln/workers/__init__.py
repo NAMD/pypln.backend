@@ -36,7 +36,7 @@ for filename in glob('{}/*.py'.format(current_dir)):
                                      'output': meta_obj['output'],
                                     }
 
-def wrapper(queue):
+def wrapper(child_connection):
     #TODO: should receive the document or database's configuration?
     #      Note that if a worker should process a big document or an entire
     #      corpus, it's better to received database's configuration and pass to
@@ -46,8 +46,6 @@ def wrapper(queue):
     #TODO: add the possibility to create workers that are executables (they
     #      receive data as JSON in stdin and put the result as JSON in stdout),
     #      so we can create workers in C, Perl, Ruby etc.
-    worker, document = queue.get(), queue.get()
+    worker, document = child_connection.recv()
     result = available[worker]['main'](document)
-    queue.put(result)
-    queue.put(True)
-    queue.put(True)
+    child_connection.send(result)

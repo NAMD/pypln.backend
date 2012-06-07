@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from multiprocessing import Process, Pipe, cpu_count
+from os import kill
 from time import sleep
-from multiprocessing import Process, Queue, cpu_count
+from signal import SIGKILL
 import zmq
 from pymongo import Connection
 from gridfs import GridFS
@@ -71,46 +73,53 @@ class ManagerBroker(ManagerClient):
                         'upload_date': file_data.upload_date,
                         'contents': file_data.read()}
         #TODO: what if input is a corpus?
-        queue = Queue()
-        queue.put(job['worker'])
-        queue.put(contents)
-        process = Process(target=workers.wrapper, args=(queue, ))
-        job['queue'] = queue
-        job['process'] = process
+        parent_connection, child_connection = Pipe()
+        process = Process(target=workers.wrapper, args=(child_connection, ))
+        #TODO: is there any way to *do not* connect stdout/stderr?
         process.start()
-        self.logger.info('Worker started')
+        parent_connection.send([job['worker'], contents])
+        job['process'] = process
+        job['parent_connection'] = parent_connection
+        job['child_connection'] = child_connection
+        self.logger.debug('Started worker "{}" for document "{}" (PID: {})'\
+                          .format(job['worker'], job['document'], process.pid))
 
     def get_a_job(self):
         for i in range(self.max_jobs - len(self.jobs)):
             self.manager_api.send_json({'command': 'get job'})
             message = self.manager_api.recv_json()
             #TODO: if manager stops and doesn't answer, broker will stop here
-            self.logger.info('Received from Manager API: {}'.format(message))
             if 'worker' in message:
-                if message['worker'] is not None:
+                if message['worker'] is None:
+                    break # Don't have a job
+                else:
                     self.jobs.append(message)
                     self.start_job(message)
-                else:
-                    break
             else:
                 self.logger.info('Ignoring malformed job: {}'.format(message))
 
     def manager_has_job(self):
-        try:
-            message = self.manager_broadcast.recv(zmq.NOBLOCK)
-            #TODO: what if broker subscribe to another thing?
-        except zmq.ZMQError:
-            return False
-        else:
-            self.logger.info('Received from Manager Broadcast: {}'\
+        if self.manager_broadcast.poll(self.time_to_sleep):
+            message = self.manager_broadcast.recv()
+            self.logger.info('[Broadcast] Received from manager: {}'\
                              .format(message))
+            #TODO: what if broker subscribe to another thing?
             return True
+        else:
+            return False
 
     def finished_jobs(self):
-        return [job for job in self.jobs if job['queue'].qsize() > 2]
+        return [job for job in self.jobs if job['parent_connection'].poll()]
 
     def full_of_jobs(self):
         return len(self.jobs) >= self.max_jobs
+
+    def kill_processes(self):
+        for job in self.jobs:
+            try:
+                kill(job['process'].pid, SIGKILL)
+            except OSError:
+                pass
 
     def run(self):
         self.logger.info('Entering main loop')
@@ -121,9 +130,11 @@ class ManagerBroker(ManagerClient):
                     self.logger.info('Trying to get a new job...')
                     self.get_a_job()
                 for job in self.finished_jobs():
+                    result = job['parent_connection'].recv()
+                    job['parent_connection'].close()
+                    job['child_connection'].close()
                     job['process'].join()
                     self.logger.info('Job finished: {}'.format(job))
-                    result = job['queue'].get()
                     update_keys = workers.available[job['worker']]['provides']
                     for key in result.keys():
                         if key not in update_keys:
@@ -147,10 +158,10 @@ class ManagerBroker(ManagerClient):
                     self.jobs.remove(job)
                     self.logger.info('Job removed')
                     self.get_a_job()
-                sleep(self.time_to_sleep)
         except KeyboardInterrupt:
             self.logger.info('Got SIGNINT (KeyboardInterrupt), exiting.')
             self.close_sockets()
+            self.kill_processes()
 
 
 if __name__ == '__main__':
