@@ -73,7 +73,7 @@ class Manager(object):
                         job = self.job_queue.get()
                         self.reply(job)
                 elif command == 'job finished':
-                    if 'job id' not in message:
+                    if 'job id' not in message or 'duration' not in message:
                         self.reply({'answer': 'syntax error'})
                     else:
                         job_id = message['job id']
@@ -82,7 +82,8 @@ class Manager(object):
                         else:
                             self.pending_job_ids.remove(job_id)
                             self.reply({'answer': 'good job!'})
-                            new_message = 'job finished: {}'.format(job_id)
+                            new_message = 'job finished: {} duration: {}'\
+                                          .format(job_id, message['duration'])
                             self.broadcast.send(new_message)
                             self.logger.info('[Broadcast] Sent "new job"')
                 else:

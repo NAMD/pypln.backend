@@ -46,25 +46,25 @@ class TestManager(unittest.TestCase):
     def test_connect_to_manager_api_zmq_socket_and_execute_undefined_command(self):
         self.api.send_json({'spam': 'eggs'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'undefined command' from manager")
         message = self.api.recv_json()
         self.assertEquals(message, {'answer': 'undefined command'})
 
     def test_should_connect_to_manager_api_zmq_socket(self):
         self.api.send_json({'command': 'hello'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'unknown command' from manager")
         message = self.api.recv_json()
         self.assertEquals(message, {'answer': 'unknown command'})
 
-    def test_should_connect_to_manager_broadcast_zmq_socket(self):
+    def test_should_receive_new_job_from_broadcast_when_a_job_is_submitted(self):
         self.api.send_json({'command': 'add job', 'worker': 'x',
                             'document': 'y'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse("Didn't receive 'add job' reply")
+            self.fail("Didn't receive 'add job' reply")
         self.api.recv_json()
         if not self.broadcast.poll(time_to_wait):
-            self.assertFalse("Didn't receive 'new job' from broadcast")
+            self.fail("Didn't receive 'new job' from broadcast")
         message = self.broadcast.recv()
         self.assertEquals(message, 'new job')
 
@@ -75,7 +75,7 @@ class TestManager(unittest.TestCase):
                                  'collection': 'documents',
                                  'gridfs-collection': 'files'}}
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive configuration from manager")
         message = self.api.recv_json()
         self.assertEquals(message, default_config)
 
@@ -83,7 +83,7 @@ class TestManager(unittest.TestCase):
         cmd = {'command': 'add job', 'worker': 'test', 'document': 'eggs'}
         self.api.send_json(cmd)
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'job accepted' from manager")
         message = self.api.recv_json()
         self.assertEquals(message['answer'], 'job accepted')
         self.assertIn('job id', message)
@@ -92,7 +92,7 @@ class TestManager(unittest.TestCase):
     def test_command_get_job_should_return_empty_if_no_job(self):
         self.api.send_json({'command': 'get job'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive job (None) from manager")
         message = self.api.recv_json()
         self.assertEquals(message['worker'], None)
 
@@ -100,11 +100,11 @@ class TestManager(unittest.TestCase):
         self.api.send_json({'command': 'add job', 'worker': 'spam',
                             'document': 'eggs'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse("Didn't receive 'add job' reply")
+            self.fail("Didn't receive 'add job' reply")
         job = self.api.recv_json()
         self.api.send_json({'command': 'get job'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive job from manager")
         message = self.api.recv_json()
         self.assertEquals(message['worker'], 'spam')
         self.assertEquals(message['document'], 'eggs')
@@ -114,14 +114,15 @@ class TestManager(unittest.TestCase):
     def test_finished_job_without_job_id_should_return_error(self):
         self.api.send_json({'command': 'job finished'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'syntax error' from manager")
         message = self.api.recv_json()
         self.assertEquals(message['answer'], 'syntax error')
 
     def test_finished_job_with_unknown_job_id_should_return_error(self):
-        self.api.send_json({'command': 'job finished', 'job id': 'python rlz'})
+        self.api.send_json({'command': 'job finished', 'job id': 'python rlz',
+                            'duration': 0.1})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'unknown job id' from manager")
         message = self.api.recv_json()
         self.assertEquals(message['answer'], 'unknown job id')
 
@@ -129,11 +130,39 @@ class TestManager(unittest.TestCase):
         self.api.send_json({'command': 'add job', 'worker': 'a',
                             'document': 'b'})
         if not self.api.poll(time_to_wait):
-            self.assertFalse("Didn't receive 'add job' reply")
+            self.fail("Didn't receive 'add job' reply")
         message = self.api.recv_json()
         self.api.send_json({'command': 'job finished',
-                            'job id': message['job id']})
+                            'job id': message['job id'],
+                            'duration': 0.1})
         if not self.api.poll(time_to_wait):
-            self.assertFalse('Exception raised, socket not connected')
+            self.fail("Didn't receive 'good job!' from manager. "
+                      "#foreveralone :-(")
         message = self.api.recv_json()
         self.assertEquals(message['answer'], 'good job!')
+
+    def test_should_receive_job_finished_message_with_job_id_and_duration_when_a_job_finishes(self):
+        self.api.send_json({'command': 'add job', 'worker': 'x',
+                            'document': 'y'})
+        if not self.api.poll(time_to_wait):
+            self.fail("Didn't receive 'add job' reply")
+        self.api.recv_json()
+        if not self.broadcast.poll(time_to_wait):
+            self.fail("Didn't receive 'new job' from broadcast")
+        message = self.broadcast.recv()
+        self.assertEquals(message, 'new job')
+        self.api.send_json({'command': 'get job'})
+        if not self.api.poll(time_to_wait):
+            self.fail("Didn't receive 'get job' reply")
+        job = self.api.recv_json()
+        self.broadcast.setsockopt(zmq.SUBSCRIBE,
+                                  'job finished: {}'.format(job['job id']))
+        del job['worker']
+        job['command'] = 'job finished'
+        job['duration'] = 0.1
+        self.api.send_json(job)
+        if not self.broadcast.poll(time_to_wait):
+            self.fail("Didn't receive 'new job' from broadcast")
+        message = self.broadcast.recv()
+        expected = 'job finished: {} duration: 0.1'.format(job['job id'])
+        self.assertEquals(message, expected)

@@ -48,10 +48,11 @@ class Worker(object):
 
 class Pipeline(object):
     def __init__(self, pipeline, api_host_port, broadcast_host_port,
-                 logger=None, logger_name='Pipeline'):
+                 logger=None, logger_name='Pipeline', time_to_wait=0.1):
         self.client = ManagerClient(logger, logger_name)
         self.client.connect(api_host_port, broadcast_host_port)
         self.pipeline = pipeline
+        self.time_to_wait = time_to_wait
 
     def send_job(self, worker):
         job = {'command': 'add job', 'worker': worker.name,
@@ -78,22 +79,19 @@ class Pipeline(object):
         self.distribute()
         try:
             while True:
-                try:
+                if self.client.manager_broadcast.poll(self.time_to_wait):
                     message = self.client.manager_broadcast.recv()
-                except zmq.ZMQError:
-                    sleep(0.1)
-                    pass
-                else:
-                    logger.info('Received from Manager Broadcast: {}'.format(message))
+                    logger.info('[Client] Received from broadcast: {}'\
+                                .format(message))
                     if message.startswith('job finished: '):
-                        job_id = message.split(': ')[1]
+                        job_id = message.split(': ')[1].split(' ')[0]
                         worker = self.waiting[job_id]
                         for next_worker in worker.after:
                             next_worker.document = worker.document
                             self.send_job(next_worker)
                         del self.waiting[job_id]
-                    if not self.waiting.keys():
-                        break
+                if not self.waiting.keys():
+                    break
         except KeyboardInterrupt:
             self.client.close_sockets()
 

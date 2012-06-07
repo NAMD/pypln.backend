@@ -3,7 +3,7 @@
 
 from multiprocessing import Process, Pipe, cpu_count
 from os import kill
-from time import sleep
+from time import sleep, time
 from signal import SIGKILL
 import zmq
 from pymongo import Connection
@@ -80,6 +80,7 @@ class ManagerBroker(ManagerClient):
         process = Process(target=workers.wrapper, args=(child_connection, ))
         #TODO: is there any way to *do not* connect stdout/stderr?
         process.start()
+        job['start time'] = time()
         parent_connection.send((job['worker'], data))
         job['process'] = process
         job['parent_connection'] = parent_connection
@@ -136,6 +137,7 @@ class ManagerBroker(ManagerClient):
                     job['parent_connection'].close()
                     job['child_connection'].close()
                     job['process'].join()
+                    end_time = time()
                     self.logger.info('Job finished: {}'.format(job))
                     update_keys = workers.available[job['worker']]['provides']
                     for key in result.keys():
@@ -154,7 +156,8 @@ class ManagerBroker(ManagerClient):
                     #TODO: safe=True
                     #TODO: what if we have other combinations of input/output?
                     self.request({'command': 'job finished',
-                                  'job id': job['job id'],})
+                                  'job id': job['job id'],
+                                  'duration': end_time - job['start time']})
                     result = self.get_reply()
                     self.jobs.remove(job)
                     self.get_a_job()

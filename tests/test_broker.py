@@ -5,7 +5,7 @@ import shlex
 from os import unlink
 from textwrap import dedent
 from signal import SIGINT, SIGKILL
-from time import sleep
+from time import sleep, time
 from subprocess import Popen, PIPE
 from multiprocessing import cpu_count
 from md5 import md5
@@ -51,12 +51,10 @@ class TestManagerBroker(unittest.TestCase):
         '''))
         cls.create_worker('./pypln/workers/snorlax.py', dedent('''
             from time import sleep
-            __meta__ = {'from': '',
-                        'requires': [],
-                        'to': '',
-                        'provides': []}
+            __meta__ = {'from': 'document', 'requires': ['sleep-for'],
+                        'to': '', 'provides': []}
             def main(document):
-                sleep(100)
+                sleep(document['sleep-for'])
                 return {}
         '''))
 
@@ -193,7 +191,10 @@ class TestManagerBroker(unittest.TestCase):
             if not self.api.poll(3 * time_to_wait):
                 self.fail("Didn't receive 'job finished' from broker")
             message = self.api.recv_json()
-        self.assertEquals(message, {'command': 'job finished', 'job id': '42'})
+        self.assertIn('command', message)
+        self.assertIn('job id', message)
+        self.assertEquals(message['command'], 'job finished')
+        self.assertEquals(message['job id'], '42')
         search_document = self.collection.find({'_id': document_id})
         self.assertEquals(search_document.count(), 1)
         document = search_document[0]
@@ -223,7 +224,10 @@ class TestManagerBroker(unittest.TestCase):
             if not self.api.poll(3 * time_to_wait):
                 self.fail("Didn't receive 'job finished' from broker")
             message = self.api.recv_json()
-        self.assertEquals(message, {'command': 'job finished', 'job id': '42'})
+        self.assertIn('command', message)
+        self.assertIn('job id', message)
+        self.assertEquals(message['command'], 'job finished')
+        self.assertEquals(message['job id'], '42')
         search_document = self.collection.find({'_id': document_id})
         self.assertEquals(search_document.count(), 1)
         document = search_document[0]
@@ -236,25 +240,47 @@ class TestManagerBroker(unittest.TestCase):
                           gridfs_document.upload_date)
 
     def test_broker_should_kill_active_workers_process_when_receive_SIGINT(self):
-        jobs = [{'worker': 'snorlax', 'document': 'anything',
-                 'job id': '143-1'},
-                {'worker': 'snorlax', 'document': 'anything',
-                 'job id': '143-2'},
-                {'worker': 'snorlax', 'document': 'anything',
-                 'job id': '143-3'},
-                {'worker': 'snorlax', 'document': 'anything',
-                 'job id': '143-4'},]
+        document_id = str(self.collection.insert({'sleep-for': 100}))
+        jobs = [{'worker': 'snorlax', 'document': document_id,
+                 'job id': '143'}] * cpu_count()
         self.receive_get_configuration_and_send_it_to_broker()
-        for job in jobs:
+        for index, job in enumerate(jobs):
+            job['job id'] = '143-{}'.format(index)
             self.receive_get_job_and_send_it_to_broker(job)
-        sleep(time_to_wait / 1000.0)
+        sleep(cpu_count() * time_to_wait / 1000.0)
         broker_pid = self.broker.pid
         children_pid = [process.pid for process in \
                         Process(broker_pid).get_children()]
-        self.assertEquals(len(children_pid), 4)
+        self.assertEquals(len(children_pid), cpu_count())
         self.end_broker_process()
         with self.assertRaises(NoSuchProcess):
             broker_process = Process(broker_pid)
         for child_pid in children_pid:
             with self.assertRaises(NoSuchProcess):
                 snorlax_process = Process(child_pid)
+
+    def test_broker_should_return_time_spent_by_worker(self):
+        sleep_time = 0.1
+        document_id = str(self.collection.insert({'sleep-for': sleep_time}))
+        job = {'worker': 'snorlax', 'document': document_id, 'job id': '143'}
+        self.receive_get_configuration_and_send_it_to_broker()
+        self.receive_get_job_and_send_it_to_broker(job)
+        start_time = time()
+        for i in range(cpu_count() - 1):
+            if not self.api.poll(3 * time_to_wait):
+                self.fail("Didn't receive 'get job' from broker")
+            msg = self.api.recv_json()
+            if msg['command'] == 'job finished':
+                end_time = time()
+                message = msg
+                self.api.send_json({'answer': 'good job!'})
+                break
+            else:
+                self.api.send_json({'worker': None})
+        if message is None:
+            if not self.api.poll(3 * time_to_wait):
+                self.fail("Didn't receive 'job finished' from broker")
+            message = self.api.recv_json()
+            end_time = time()
+        self.assertIn('duration', message)
+        self.assertTrue(0 < message['duration'] < (end_time - start_time))
