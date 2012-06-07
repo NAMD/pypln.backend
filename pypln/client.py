@@ -113,10 +113,11 @@ if __name__ == '__main__':
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     connection = Connection()
-    collection = connection.pypln.documents
     connection.pypln.documents.drop()
     connection.pypln.files.chunks.drop()
     connection.pypln.files.files.drop()
+    collection = connection.pypln.documents
+    #TODO: use et2 to create the tree/pipeline
     W, W.__call__ = Worker, Worker.then
     my_docs = []
     if len(argv) == 1:
@@ -142,3 +143,5 @@ if __name__ == '__main__':
     pipeline = Pipeline(workers, ('localhost', 5555), ('localhost', 5556),
                         logger)
     pipeline.run(my_docs)
+    #TODO: should receive a 'job error' from manager when some job could not be
+    #      processed (timeout, worker not found etc.)

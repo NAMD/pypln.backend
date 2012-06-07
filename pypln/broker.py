@@ -62,24 +62,25 @@ class ManagerBroker(ManagerClient):
             #TODO: send a 'rejecting job' request to Manager
             return
         worker_input = workers.available[job['worker']]['from']
-        document = {}
+        data = {}
         if worker_input == 'document':
             required_fields = workers.available[job['worker']]['requires']
             fields = set(['meta'] + required_fields)
-            document = self.collection.find({'_id': ObjectId(job['document'])},
-                                            fields=fields)[0]
+            data = self.collection.find({'_id': ObjectId(job['document'])},
+                                        fields=fields)[0]
         elif worker_input == 'gridfs-file':
             file_data = self.gridfs.get(ObjectId(job['document']))
-            document = {'length': file_data.length, 'md5': file_data.md5,
-                        'name': file_data.name,
-                        'upload_date': file_data.upload_date,
-                        'contents': file_data.read()}
+            data = {'length': file_data.length,
+                    'md5': file_data.md5,
+                    'name': file_data.name,
+                    'upload_date': file_data.upload_date,
+                    'contents': file_data.read()}
         #TODO: what if input is a corpus?
         parent_connection, child_connection = Pipe()
         process = Process(target=workers.wrapper, args=(child_connection, ))
         #TODO: is there any way to *do not* connect stdout/stderr?
         process.start()
-        parent_connection.send((job['worker'], document))
+        parent_connection.send((job['worker'], data))
         job['process'] = process
         job['parent_connection'] = parent_connection
         job['child_connection'] = child_connection
@@ -93,7 +94,7 @@ class ManagerBroker(ManagerClient):
             #TODO: if manager stops and doesn't answer, broker will stop here
             if 'worker' in message:
                 if message['worker'] is None:
-                    break # Don't have a job
+                    break # Don't have a job, stop asking
                 else:
                     self.jobs.append(message)
                     self.start_job(message)

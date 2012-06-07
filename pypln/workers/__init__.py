@@ -46,6 +46,8 @@ def wrapper(child_connection):
     #TODO: add the possibility to create workers that are executables (they
     #      receive data as JSON in stdin and put the result as JSON in stdout),
     #      so we can create workers in C, Perl, Ruby etc.
+    #TODO: should get any exception information and send it to broker signaling
+    #      'job failed' and sending the traceback
     worker, document = child_connection.recv()
     result = available[worker]['main'](document)
     child_connection.send(result)

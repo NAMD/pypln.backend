@@ -46,11 +46,17 @@ def get_pdf_metadata(data):
     return metadata
 
 def extract_pdf(data):
-    pdf2text = Popen(shlex.split('pdftotext -q - -'), stdin=PIPE, stdout=PIPE)
-    pdfinfo = Popen(shlex.split('pdfinfo -meta -'), stdin=PIPE, stdout=PIPE)
+    pdf2text = Popen(shlex.split('pdftotext -q - -'), stdin=PIPE, stdout=PIPE,
+                     stderr=PIPE)
+    pdfinfo = Popen(shlex.split('pdfinfo -meta -'), stdin=PIPE, stdout=PIPE,
+                    stderr=PIPE)
     text, text_err = pdf2text.communicate(input=data)
     meta_out, meta_err = pdfinfo.communicate(input=data)
-    metadata = get_pdf_metadata(meta_out)
+    try:
+        metadata = get_pdf_metadata(meta_out)
+    except:
+        pass
+        #TODO: what should I do here?
     if not (text and metadata):
         return None, None
     elif not text_err:
