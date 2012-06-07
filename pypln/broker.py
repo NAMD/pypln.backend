@@ -25,6 +25,15 @@ class ManagerBroker(ManagerClient):
         self.time_to_sleep = 0.1
         self.logger.info('Broker started')
 
+    def request(self, message):
+        self.manager_api.send_json(message)
+        self.logger.info('[API] Request to manager: {}'.format(message))
+
+    def get_reply(self):
+        message = self.manager_api.recv_json()
+        self.logger.info('[API] Reply from manager: {}'.format(message))
+        return message
+
     def connect_to_database(self):
         conf = self.config['db']
         self.mongo_connection = Connection(conf['host'], conf['port'])
@@ -36,12 +45,9 @@ class ManagerBroker(ManagerClient):
         self.gridfs = GridFS(self.db, conf['gridfs-collection'])
 
     def get_configuration(self):
-        self.logger.info('Getting configuration from manager...')
-        self.manager_api.send_json({'command': 'get configuration'})
-        self.config = self.manager_api.recv_json()
-        self.logger.info('Got configuration from Manager')
+        self.request({'command': 'get configuration'})
+        self.config = self.get_reply()
         self.connect_to_database()
-        self.logger.debug('Configuration received: {}'.format(self.config))
 
     def connect(self, api_host_port, broadcast_host_port):
         self.logger.info('Trying to connect to manager...')
@@ -86,8 +92,8 @@ class ManagerBroker(ManagerClient):
 
     def get_a_job(self):
         for i in range(self.max_jobs - len(self.jobs)):
-            self.manager_api.send_json({'command': 'get job'})
-            message = self.manager_api.recv_json()
+            self.request({'command': 'get job'})
+            message = self.get_reply()
             #TODO: if manager stops and doesn't answer, broker will stop here
             if 'worker' in message:
                 if message['worker'] is None:
@@ -127,7 +133,6 @@ class ManagerBroker(ManagerClient):
             self.get_a_job()
             while True:
                 if not self.full_of_jobs() and self.manager_has_job():
-                    self.logger.info('Trying to get a new job...')
                     self.get_a_job()
                 for job in self.finished_jobs():
                     result = job['parent_connection'].recv()
@@ -151,12 +156,10 @@ class ManagerBroker(ManagerClient):
                         self.collection.insert(data)
                     #TODO: safe=True
                     #TODO: what if we have other combinations of input/output?
-                    self.manager_api.send_json({'command': 'finished job',
-                                                'job id': job['job id'],})
-                    result = self.manager_api.recv_json()
-                    self.logger.info('Result: {}'.format(result))
+                    self.request({'command': 'job finished',
+                                  'job id': job['job id'],})
+                    result = self.get_reply()
                     self.jobs.remove(job)
-                    self.logger.info('Job removed')
                     self.get_a_job()
         except KeyboardInterrupt:
             self.logger.info('Got SIGNINT (KeyboardInterrupt), exiting.')

@@ -112,14 +112,14 @@ class TestManager(unittest.TestCase):
         self.assertEquals(len(message['job id']), 32)
 
     def test_finished_job_without_job_id_should_return_error(self):
-        self.api.send_json({'command': 'finished job'})
+        self.api.send_json({'command': 'job finished'})
         if not self.api.poll(time_to_wait):
             self.assertFalse('Exception raised, socket not connected')
         message = self.api.recv_json()
         self.assertEquals(message['answer'], 'syntax error')
 
     def test_finished_job_with_unknown_job_id_should_return_error(self):
-        self.api.send_json({'command': 'finished job', 'job id': 'python rlz'})
+        self.api.send_json({'command': 'job finished', 'job id': 'python rlz'})
         if not self.api.poll(time_to_wait):
             self.assertFalse('Exception raised, socket not connected')
         message = self.api.recv_json()
@@ -131,7 +131,7 @@ class TestManager(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.assertFalse("Didn't receive 'add job' reply")
         message = self.api.recv_json()
-        self.api.send_json({'command': 'finished job',
+        self.api.send_json({'command': 'job finished',
                             'job id': message['job id']})
         if not self.api.poll(time_to_wait):
             self.assertFalse('Exception raised, socket not connected')
