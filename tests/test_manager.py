@@ -73,7 +73,10 @@ class TestManager(unittest.TestCase):
         default_config = {'db': {'host': 'localhost', 'port': 27017,
                                  'database': 'pypln',
                                  'collection': 'documents',
-                                 'gridfs-collection': 'files'}}
+                                 'gridfs-collection': 'files',
+                                 'hosts-collection': 'hosts'}}
+        #TODO: should put configuration in another place (it should be the same
+        #      default configuration from manager.py)
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive configuration from manager")
         message = self.api.recv_json()

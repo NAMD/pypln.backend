@@ -61,11 +61,14 @@ class TestManagerBroker(unittest.TestCase):
         cls.config = {'db': {'host': 'localhost', 'port': 27017,
                              'database': 'pypln_test',
                              'collection': 'documents',
-                             'gridfs-collection': 'files'}}
+                             'gridfs-collection': 'files',
+                             'hosts-collection': 'statistics'}}
         cls.connection = Connection(cls.config['db']['host'],
                                     cls.config['db']['port'])
+        cls.connection.drop_database(cls.config['db']['database'])
         cls.db = cls.connection[cls.config['db']['database']]
         cls.collection = cls.db[cls.config['db']['collection']]
+        cls.hosts_collection = cls.db[cls.config['db']['hosts-collection']]
         cls.gridfs = GridFS(cls.db, cls.config['db']['gridfs-collection'])
 
     @classmethod
@@ -284,3 +287,18 @@ class TestManagerBroker(unittest.TestCase):
             end_time = time()
         self.assertIn('duration', message)
         self.assertTrue(0 < message['duration'] < (end_time - start_time))
+
+    def test_broker_should_insert_its_ip_and_pid_on_mongodb_after_get_configuration(self):
+        start_time = time()
+        self.receive_get_configuration_and_send_it_to_broker()
+        sleep(time_to_wait / 1000.0)
+        host_info = self.hosts_collection.find()
+        self.assertEquals(host_info.count(), 1)
+        info = host_info[0]
+        del info['_id']
+        for key in ['ip', 'local_port', 'pid', 'timestamp', 'type']:
+            self.assertIn(key, info)
+        self.assertEquals(info['type'], 'broker')
+        self.assertEquals(info['ip'], '127.0.0.1')
+        self.assertEquals(info['pid'], self.broker.pid)
+        self.assertTrue(start_time < info['timestamp'] < time())

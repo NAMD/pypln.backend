@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import socket
 from multiprocessing import Process, Pipe, cpu_count
-from os import kill
+from os import kill, getpid
 from time import sleep, time
 from signal import SIGKILL
 import zmq
@@ -17,9 +18,11 @@ class ManagerBroker(ManagerClient):
     #TODO: should use pypln.stores instead of pymongo directly
     #TODO: send stats to MongoDB
     #TODO: use log4mongo
-    def __init__(self, logger=None, logger_name='ManagerBroker',
-                 time_to_sleep=0.1):
+    def __init__(self, api_host_port, broadcast_host_port, logger=None,
+                 logger_name='ManagerBroker', time_to_sleep=0.1):
         ManagerClient.__init__(self, logger=logger, logger_name=logger_name)
+        self.api_host_port = api_host_port
+        self.broadcast_host_port = broadcast_host_port
         self.jobs = []
         self.max_jobs = cpu_count()
         self.time_to_sleep = 0.1
@@ -42,18 +45,40 @@ class ManagerBroker(ManagerClient):
            conf['password']:
                self.db.authenticate(conf['username'], conf['password'])
         self.collection = self.db[conf['collection']]
+        self.hosts_collection = self.db[conf['hosts-collection']]
         self.gridfs = GridFS(self.db, conf['gridfs-collection'])
+
+    def get_local_ip_and_port(self):
+        raw_socket = socket.socket(socket.AF_INET)
+        raw_socket.connect(self.api_host_port)
+        data = raw_socket.getsockname()
+        raw_socket.close()
+        return data
+
+    def insert_host_information(self):
+        ip, local_port = self.get_local_ip_and_port()
+        self.hosts_collection.insert({'type': 'broker',
+                                      'ip': ip,
+                                      'local_port': local_port,
+                                      'pid': getpid(),
+                                      'timestamp': time()})
 
     def get_configuration(self):
         self.request({'command': 'get configuration'})
         self.config = self.get_reply()
-        self.connect_to_database()
 
-    def connect(self, api_host_port, broadcast_host_port):
+    def connect_to_manager(self):
         self.logger.info('Trying to connect to manager...')
-        super(ManagerBroker, self).connect(api_host_port, broadcast_host_port)
+        super(ManagerBroker, self).connect(self.api_host_port,
+                                           self.broadcast_host_port)
+
+    def start(self):
+        self.connect_to_manager()
         self.get_configuration()
+        self.connect_to_database()
+        self.insert_host_information()
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
+        self.run()
 
     def start_job(self, job):
         if 'worker' not in job or 'document' not in job or \
@@ -178,6 +203,6 @@ if __name__ == '__main__':
     formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    broker = ManagerBroker(logger=logger)
-    broker.connect(('localhost', 5555), ('localhost', 5556))
-    broker.run()
+    broker = ManagerBroker(('localhost', 5555), ('localhost', 5556),
+                           logger=logger)
+    broker.start()
