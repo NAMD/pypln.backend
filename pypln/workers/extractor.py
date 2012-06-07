@@ -1,9 +1,9 @@
 # coding: utf-8
 
-__meta__ = {'input': 'gridfs-file',
-            'output': 'document',
-            'requires': [], # Don't needed when getting data from GridFS
-            'provides': ['text', 'metadata']}
+__meta__ = {'from': 'gridfs-file',
+            'requires': ['contents', 'meta'],
+            'to': 'document',
+            'provides': ['text', 'metadata'],}
 
 import shlex
 from subprocess import Popen, PIPE
@@ -69,6 +69,8 @@ def main(file_data):
         text, metadata = extract_pdf(file_data['contents'])
     return {'text': text, 'metadata': metadata}
 
+#TODO: detect language with cld
+#TODO: detect encoding to decode
 #TODO: should extractor add file-metadata (creation date, size etc.)?
 #TODO: need to verify some exceptions when trying to convert 'evil' PDFs
 #TODO: should 'replace_with' be '' when extracting from HTML?

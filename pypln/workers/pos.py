@@ -3,13 +3,13 @@
 from nltk import pos_tag
 
 
-__meta__ = {'input': 'document',
-            'output': 'document',
+__meta__ = {'from': 'document',
             'requires': ['text', 'tokens'],
+            'to': 'document',
             'provides': ['pos'],}
 #TODO: add 'lang' to 'requires'
 
-def put_offset(text, tagged_text):
+def _put_offset(text, tagged_text):
     result = []
     position = 0
     for token, classification in tagged_text:
@@ -22,4 +22,4 @@ def main(document):
     text = document['text']
     tokens = document['tokens']
     tagged_text = pos_tag(tokens)
-    return {'pos': put_offset(text, tagged_text)}
+    return {'pos': _put_offset(text, tagged_text)}

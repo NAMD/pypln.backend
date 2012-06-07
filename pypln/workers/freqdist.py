@@ -1,8 +1,8 @@
 # coding: utf-8
 
-__meta__ = {'input': 'document',
-            'output': 'document',
+__meta__ = {'from': 'document',
             'requires': ['tokens'],
+            'to': 'document',
             'provides': ['freqdist'],}
 
 def main(document):

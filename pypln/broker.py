@@ -56,25 +56,21 @@ class ManagerBroker(ManagerClient):
         self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
 
     def start_job(self, job):
-        #TODO: should information about where to get and save data be in the
-        #      job or worker will decide about it?
         if 'worker' not in job or 'document' not in job or \
            job['worker'] not in workers.available:
             self.logger.info('Rejecting job: {}'.format(job))
             #TODO: send a 'rejecting job' request to Manager
             return
-        self.logger.debug('Starting worker "{}" for document "{}"'\
-                          .format(job['worker'], job['document']))
-        worker_input = workers.available[job['worker']]['input']
+        worker_input = workers.available[job['worker']]['from']
+        document = {}
         if worker_input == 'document':
             required_fields = workers.available[job['worker']]['requires']
             fields = set(['meta'] + required_fields)
-            #TODO: add option to get from GridFS
-            contents = self.collection.find({'_id': ObjectId(job['document'])},
+            document = self.collection.find({'_id': ObjectId(job['document'])},
                                             fields=fields)[0]
         elif worker_input == 'gridfs-file':
             file_data = self.gridfs.get(ObjectId(job['document']))
-            contents = {'length': file_data.length, 'md5': file_data.md5,
+            document = {'length': file_data.length, 'md5': file_data.md5,
                         'name': file_data.name,
                         'upload_date': file_data.upload_date,
                         'contents': file_data.read()}
@@ -83,7 +79,7 @@ class ManagerBroker(ManagerClient):
         process = Process(target=workers.wrapper, args=(child_connection, ))
         #TODO: is there any way to *do not* connect stdout/stderr?
         process.start()
-        parent_connection.send([job['worker'], contents])
+        parent_connection.send((job['worker'], document))
         job['process'] = process
         job['parent_connection'] = parent_connection
         job['child_connection'] = child_connection
@@ -144,8 +140,8 @@ class ManagerBroker(ManagerClient):
                     for key in result.keys():
                         if key not in update_keys:
                             del result[key]
-                    worker_input = workers.available[job['worker']]['input']
-                    worker_output = workers.available[job['worker']]['output']
+                    worker_input = workers.available[job['worker']]['from']
+                    worker_output = workers.available[job['worker']]['to']
                     if worker_input == worker_output == 'document':
                         self.collection.update({'_id': ObjectId(job['document'])},
                                                {'$set': result})

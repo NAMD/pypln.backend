@@ -3,11 +3,12 @@
 from nltk import word_tokenize
 
 
-__meta__ = {'input': 'document',
-            'output': 'document',
+__meta__ = {'from': 'document',
             'requires': ['text'],
+            'to': 'document',
             'provides': ['tokens'],}
 
 def main(document):
     text = document['text']
-    return {'tokens': word_tokenize(text)}
+    result = word_tokenize(text)
+    return {'tokens': result}
