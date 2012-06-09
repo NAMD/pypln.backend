@@ -1,8 +1,13 @@
 test:
 	@clear
-	@nosetests -dvs
+	nosetests -dvs
+
+test-x:
+	@clear
+	nosetests -dvsx
 
 doc:
+	@clear
 	./make-docs.sh -vg
 
-.PHONY:	test doc
+.PHONY:	test test-x doc
