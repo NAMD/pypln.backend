@@ -239,9 +239,7 @@ class ManagerBroker(ManagerClient):
             self.close_sockets()
             self.kill_processes()
 
-
-if __name__ == '__main__':
-    #TODO: create a function main()
+def main():
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
 
@@ -255,3 +253,7 @@ if __name__ == '__main__':
     broker = ManagerBroker(('localhost', 5555), ('localhost', 5556),
                            logger=logger)
     broker.start()
+
+
+if __name__ == '__main__':
+    main()

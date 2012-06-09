@@ -91,9 +91,7 @@ class Manager(object):
         except KeyboardInterrupt:
             self.close_sockets()
 
-
-if __name__ == '__main__':
-    #TODO: create a function main()
+def main():
     from logging import Logger, StreamHandler, Formatter
     from sys import stdout
 
@@ -115,3 +113,7 @@ if __name__ == '__main__':
     manager = Manager(config, logger)
     manager.bind(api_host_port, broadcast_host_port)
     manager.run()
+
+
+if __name__ == '__main__':
+    main()

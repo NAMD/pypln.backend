@@ -53,19 +53,21 @@ class Pipeline(object):
         self.client.connect(api_host_port, broadcast_host_port)
         self.pipeline = pipeline
         self.time_to_wait = time_to_wait
+        self.logger = self.client.logger
 
     def send_job(self, worker):
         job = {'command': 'add job', 'worker': worker.name,
                'document': worker.document}
         self.client.manager_api.send_json(job)
-        logger.info('Sent job: {}'.format(job))
+        self.logger.info('Sent job: {}'.format(job))
         message = self.client.manager_api.recv_json()
-        logger.info('Received from Manager API: {}'.format(message))
+        self.logger.info('Received from Manager API: {}'.format(message))
         self.waiting[message['job id']] = worker
         subscribe_message = 'job finished: {}'.format(message['job id'])
         self.client.manager_broadcast.setsockopt(zmq.SUBSCRIBE,
                                                  subscribe_message)
-        logger.info('Subscribed on Manager Broadcast to: {}'.format(subscribe_message))
+        self.logger.info('Subscribed on Manager Broadcast to: {}'\
+                         .format(subscribe_message))
 
     def distribute(self):
         self.waiting = {}
@@ -81,8 +83,8 @@ class Pipeline(object):
             while True:
                 if self.client.manager_broadcast.poll(self.time_to_wait):
                     message = self.client.manager_broadcast.recv()
-                    logger.info('[Client] Received from broadcast: {}'\
-                                .format(message))
+                    self.logger.info('[Client] Received from broadcast: {}'\
+                                     .format(message))
                     if message.startswith('job finished: '):
                         #TODO: unsubscribe
                         job_id = message.split(': ')[1].split(' ')[0]
@@ -96,34 +98,44 @@ class Pipeline(object):
         except KeyboardInterrupt:
             self.client.close_sockets()
 
-
-if __name__ == '__main__':
-    #TODO: create main() function
-    from logging import Logger, StreamHandler, Formatter
+def main():
     import os
+    from logging import Logger, StreamHandler, Formatter
     from sys import stdout, argv
     from pymongo import Connection
     from gridfs import GridFS
 
 
-    logger = Logger('Pipeline')
-    handler = StreamHandler(stdout)
-    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    connection = Connection()
-    connection.pypln.documents.drop()
-    connection.pypln.files.chunks.drop()
-    connection.pypln.files.files.drop()
-    collection = connection.pypln.documents
-    #TODO: use et2 to create the tree/pipeline
-    W, W.__call__ = Worker, Worker.then
-    my_docs = []
     if len(argv) == 1:
         print 'ERROR: you need to pass files to import'
         exit(1)
 
-    gridfs = GridFS(connection.pypln, 'files')
+    api_host_port = ('localhost', 5555)
+    broadcast_host_port = ('localhost', 5556)
+    #TODO: should get config from manager
+    config = {'db': {'host': 'localhost', 'port': 27017,
+                     'database': 'pypln',
+                     'collection': 'documents',
+                     'gridfs collection': 'files',
+                     'monitoring collection': 'monitoring'},
+              'monitoring interval': 60,}
+    db_config = config['db']
+    mongo_connection = Connection(db_config['host'], db_config['port'])
+    db = mongo_connection[db_config['database']]
+    if 'username' in db_config and 'password' in db_config and \
+            db_config['username'] and db_config['password']:
+           db.authenticate(db_config['username'], db_config['password'])
+    gridfs = GridFS(db, db_config['gridfs collection'])
+    #TODO: connection/collection lines should be in pypln.stores.mongodb
+
+    logger = Logger('Pipeline')
+    handler = StreamHandler(stdout)
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - '
+                          '%(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    my_docs = []
     filenames = argv[1:]
     logger.info('Inserting files...')
     for filename in filenames:
@@ -132,10 +144,15 @@ if __name__ == '__main__':
             doc_id = gridfs.put(open(filename).read(), filename=filename)
             my_docs.append(str(doc_id))
 
+    #TODO: use et2 to create the tree/pipeline image
+    W, W.__call__ = Worker, Worker.then
     workers = W('extractor')(W('tokenizer')(W('pos'),
                                             W('freqdist')))
-    pipeline = Pipeline(workers, ('localhost', 5555), ('localhost', 5556),
-                        logger)
+    pipeline = Pipeline(workers, api_host_port, broadcast_host_port, logger)
     pipeline.run(my_docs)
     #TODO: should receive a 'job error' from manager when some job could not be
     #      processed (timeout, worker not found etc.)
+
+
+if __name__ == '__main__':
+    main()
