@@ -1,0 +1,9 @@
+pyzmq
+numpy
+nltk
+pymongo
+psutil
+rdflib
+rdfextras
+Pinax
+flask
