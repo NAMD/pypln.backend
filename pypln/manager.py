@@ -100,14 +100,18 @@ if __name__ == '__main__':
 
     logger = Logger('Manager')
     handler = StreamHandler(stdout)
-    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - '
+                          '%(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     api_host_port = ('*', 5555)
     broadcast_host_port = ('*', 5556)
-    config = {'db': {'host': 'localhost', 'port': 27017, 'database': 'pypln',
-                     'collection': 'documents', 'gridfs-collection': 'files',
-                     'hosts-collection': 'hosts'}}
+    config = {'db': {'host': 'localhost', 'port': 27017,
+                     'database': 'pypln',
+                     'collection': 'documents',
+                     'gridfs collection': 'files',
+                     'monitoring collection': 'monitoring'},
+              'monitoring interval': 60,}
     manager = Manager(config, logger)
     manager.bind(api_host_port, broadcast_host_port)
     manager.run()

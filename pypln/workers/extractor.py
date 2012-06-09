@@ -1,7 +1,7 @@
 # coding: utf-8
 
 __meta__ = {'from': 'gridfs-file',
-            'requires': ['contents', 'meta'],
+            'requires': ['contents'],
             'to': 'document',
             'provides': ['text', 'metadata'],}
 
@@ -18,7 +18,6 @@ def parse_html(html, remove_tags=None, remove_inside=None, replace_with=' '):
     content_between = data[::3]
     complete_tags = data[1::3]
     tag_names = data[2::3]
-    to_remove = []
     for index, tag_name in enumerate(tag_names):
         search_tag = tag_name
         if tag_name and tag_name[0] == '/':
@@ -29,7 +28,8 @@ def parse_html(html, remove_tags=None, remove_inside=None, replace_with=' '):
             remove_to = tag_names.index('/' + tag_name, index)
             total_to_remove = remove_to - index + 1
             complete_tags[index:remove_to + 1] = [''] * total_to_remove
-            content_between[index + 2:remove_to + 1] = [''] * (total_to_remove - 2)
+            content_between[index + 2:remove_to + 1] = \
+                    [''] * (total_to_remove - 2)
             content_between[index + 1] = '\n'
     complete_tags.append('')
     return ''.join(sum(zip(content_between, complete_tags), tuple()))

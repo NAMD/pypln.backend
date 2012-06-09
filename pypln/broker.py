@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-import socket
 from multiprocessing import Process, Pipe, cpu_count
 from os import kill, getpid
 from time import sleep, time
@@ -10,22 +9,23 @@ import zmq
 from pymongo import Connection
 from gridfs import GridFS
 from bson.objectid import ObjectId
-from client import ManagerClient
-import workers
+import pypln.workers as workers
+from pypln.client import ManagerClient
+from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
 
 class ManagerBroker(ManagerClient):
     #TODO: should use pypln.stores instead of pymongo directly
-    #TODO: send stats to MongoDB
     #TODO: use log4mongo
     def __init__(self, api_host_port, broadcast_host_port, logger=None,
-                 logger_name='ManagerBroker', time_to_sleep=0.1):
+                 logger_name='ManagerBroker', poll_time=50):
         ManagerClient.__init__(self, logger=logger, logger_name=logger_name)
         self.api_host_port = api_host_port
         self.broadcast_host_port = broadcast_host_port
         self.jobs = []
         self.max_jobs = cpu_count()
-        self.time_to_sleep = 0.1
+        self.poll_time = poll_time
+        self.last_time_saved_monitoring_information = 0
         self.logger.info('Broker started')
 
     def request(self, message):
@@ -45,23 +45,8 @@ class ManagerBroker(ManagerClient):
            conf['password']:
                self.db.authenticate(conf['username'], conf['password'])
         self.collection = self.db[conf['collection']]
-        self.hosts_collection = self.db[conf['hosts-collection']]
-        self.gridfs = GridFS(self.db, conf['gridfs-collection'])
-
-    def get_local_ip_and_port(self):
-        raw_socket = socket.socket(socket.AF_INET)
-        raw_socket.connect(self.api_host_port)
-        data = raw_socket.getsockname()
-        raw_socket.close()
-        return data
-
-    def insert_host_information(self):
-        ip, local_port = self.get_local_ip_and_port()
-        self.hosts_collection.insert({'type': 'broker',
-                                      'ip': ip,
-                                      'local_port': local_port,
-                                      'pid': getpid(),
-                                      'timestamp': time()})
+        self.monitoring_collection = self.db[conf['monitoring collection']]
+        self.gridfs = GridFS(self.db, conf['gridfs collection'])
 
     def get_configuration(self):
         self.request({'command': 'get configuration'})
@@ -72,12 +57,36 @@ class ManagerBroker(ManagerClient):
         super(ManagerBroker, self).connect(self.api_host_port,
                                            self.broadcast_host_port)
 
+    def save_monitoring_information(self):
+        #TODO: should we send average measures insted of instant measures of
+        #      some measured variables?
+        ip = get_outgoing_ip(self.api_host_port)
+        host_info = get_host_info()
+        host_info['network']['cluster ip'] = ip
+        broker_process = get_process_info(getpid())
+        broker_process['type'] = 'broker'
+        broker_process['active workers'] = len(self.jobs)
+        processes = [broker_process]
+        for job in self.jobs:
+            process = get_process_info(job['process'].pid)
+            if process is not None: # worker process not finished yet
+                process['worker'] = job['worker']
+                process['document id'] = ObjectId(job['document'])
+                process['type'] = 'worker'
+                processes.append(process)
+        data = {'host': host_info, 'processes': processes}
+        self.monitoring_collection.insert(data)
+        self.last_time_saved_monitoring_information = time()
+        self.logger.info('Saved monitoring information in MongoDB')
+        self.logger.debug('  Information: {}'.format(data))
+
     def start(self):
+        self.started_at = time()
         self.connect_to_manager()
+        self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
         self.get_configuration()
         self.connect_to_database()
-        self.insert_host_information()
-        self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
+        self.save_monitoring_information()
         self.run()
 
     def start_job(self, job):
@@ -90,26 +99,27 @@ class ManagerBroker(ManagerClient):
         data = {}
         if worker_input == 'document':
             required_fields = workers.available[job['worker']]['requires']
-            fields = set(['meta'] + required_fields)
+            fields = set(['_id', 'meta'] + required_fields)
             data = self.collection.find({'_id': ObjectId(job['document'])},
                                         fields=fields)[0]
         elif worker_input == 'gridfs-file':
             file_data = self.gridfs.get(ObjectId(job['document']))
-            data = {'length': file_data.length,
+            data = {'_id': ObjectId(job['document']),
+                    'length': file_data.length,
                     'md5': file_data.md5,
                     'name': file_data.name,
                     'upload_date': file_data.upload_date,
                     'contents': file_data.read()}
         #TODO: what if input is a corpus?
         parent_connection, child_connection = Pipe()
-        process = Process(target=workers.wrapper, args=(child_connection, ))
-        #TODO: is there any way to *do not* connect stdout/stderr?
-        process.start()
-        job['start time'] = time()
-        parent_connection.send((job['worker'], data))
-        job['process'] = process
         job['parent_connection'] = parent_connection
         job['child_connection'] = child_connection
+        #TODO: is there any way to *do not* connect stdout/stderr?
+        process = Process(target=workers.wrapper, args=(child_connection, ))
+        job['process'] = process
+        job['start time'] = time()
+        process.start()
+        parent_connection.send((job['worker'], data))
         self.logger.debug('Started worker "{}" for document "{}" (PID: {})'\
                           .format(job['worker'], job['document'], process.pid))
 
@@ -128,7 +138,7 @@ class ManagerBroker(ManagerClient):
                 self.logger.info('Ignoring malformed job: {}'.format(message))
 
     def manager_has_job(self):
-        if self.manager_broadcast.poll(self.time_to_sleep):
+        if self.manager_broadcast.poll(self.poll_time):
             message = self.manager_broadcast.recv()
             self.logger.info('[Broadcast] Received from manager: {}'\
                              .format(message))
@@ -150,11 +160,17 @@ class ManagerBroker(ManagerClient):
             except OSError:
                 pass
 
+    def should_save_monitoring_information_now(self):
+        time_difference = time() - self.last_time_saved_monitoring_information
+        return time_difference >= self.config['monitoring interval']
+
     def run(self):
         self.logger.info('Entering main loop')
         try:
             self.get_a_job()
             while True:
+                if self.should_save_monitoring_information_now():
+                    self.save_monitoring_information()
                 if not self.full_of_jobs() and self.manager_has_job():
                     self.get_a_job()
                 for job in self.finished_jobs():
@@ -171,8 +187,9 @@ class ManagerBroker(ManagerClient):
                     worker_input = workers.available[job['worker']]['from']
                     worker_output = workers.available[job['worker']]['to']
                     if worker_input == worker_output == 'document':
-                        self.collection.update({'_id': ObjectId(job['document'])},
-                                               {'$set': result})
+                        update_data = [{'_id': ObjectId(job['document'])},
+                                       {'$set': result}]
+                        self.collection.update(*update_data)
                     elif worker_input == 'gridfs-file' and \
                          worker_output == 'document':
                         data = {'_id': ObjectId(job['document'])}
@@ -200,7 +217,8 @@ if __name__ == '__main__':
 
     logger = Logger('ManagerBroker')
     handler = StreamHandler(stdout)
-    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - '
+                          '%(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     broker = ManagerBroker(('localhost', 5555), ('localhost', 5556),

@@ -73,8 +73,10 @@ class TestManager(unittest.TestCase):
         default_config = {'db': {'host': 'localhost', 'port': 27017,
                                  'database': 'pypln',
                                  'collection': 'documents',
-                                 'gridfs-collection': 'files',
-                                 'hosts-collection': 'hosts'}}
+                                 'gridfs collection': 'files',
+                                 'monitoring collection': 'monitoring',},
+                          'monitoring interval': 60,
+                         }
         #TODO: should put configuration in another place (it should be the same
         #      default configuration from manager.py)
         if not self.api.poll(time_to_wait):

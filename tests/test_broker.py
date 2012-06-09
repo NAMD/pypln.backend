@@ -15,7 +15,7 @@ from gridfs import GridFS
 from psutil import Process, NoSuchProcess
 
 
-time_to_wait = 150
+time_to_wait = 500
 
 class TestManagerBroker(unittest.TestCase):
     @classmethod
@@ -57,19 +57,15 @@ class TestManagerBroker(unittest.TestCase):
                 sleep(document['sleep-for'])
                 return {}
         '''))
-
+        cls.monitoring_interval = 0.3
         cls.config = {'db': {'host': 'localhost', 'port': 27017,
                              'database': 'pypln_test',
                              'collection': 'documents',
-                             'gridfs-collection': 'files',
-                             'hosts-collection': 'statistics'}}
+                             'gridfs collection': 'files',
+                             'monitoring collection': 'monitoring'},
+                      'monitoring interval': cls.monitoring_interval,}
         cls.connection = Connection(cls.config['db']['host'],
                                     cls.config['db']['port'])
-        cls.connection.drop_database(cls.config['db']['database'])
-        cls.db = cls.connection[cls.config['db']['database']]
-        cls.collection = cls.db[cls.config['db']['collection']]
-        cls.hosts_collection = cls.db[cls.config['db']['hosts-collection']]
-        cls.gridfs = GridFS(cls.db, cls.config['db']['gridfs-collection'])
 
     @classmethod
     def tearDownClass(cls):
@@ -83,8 +79,16 @@ class TestManagerBroker(unittest.TestCase):
         self.context = zmq.Context()
         self.start_manager_sockets()
         self.start_broker_process()
+        db_conf = self.config['db']
+        self.connection.drop_database(db_conf['database'])
+        self.db = self.connection[db_conf['database']]
+        self.collection = self.db[db_conf['collection']]
+        self.monitoring_collection = self.db[db_conf['monitoring collection']]
+        self.gridfs = GridFS(self.db, db_conf['gridfs collection'])
 
     def tearDown(self):
+        self.connection.drop_database(self.config['db']['database'])
+        self.connection.close()
         self.end_broker_process()
         self.close_sockets()
         self.context.term()
@@ -288,17 +292,92 @@ class TestManagerBroker(unittest.TestCase):
         self.assertIn('duration', message)
         self.assertTrue(0 < message['duration'] < (end_time - start_time))
 
-    def test_broker_should_insert_its_ip_and_pid_on_mongodb_after_get_configuration(self):
-        start_time = time()
+    def test_broker_should_insert_monitoring_information_in_mongodb(self):
         self.receive_get_configuration_and_send_it_to_broker()
-        sleep(time_to_wait / 1000.0)
-        host_info = self.hosts_collection.find()
-        self.assertEquals(host_info.count(), 1)
-        info = host_info[0]
-        del info['_id']
-        for key in ['ip', 'local_port', 'pid', 'timestamp', 'type']:
-            self.assertIn(key, info)
-        self.assertEquals(info['type'], 'broker')
-        self.assertEquals(info['ip'], '127.0.0.1')
-        self.assertEquals(info['pid'], self.broker.pid)
-        self.assertTrue(start_time < info['timestamp'] < time())
+        self.receive_get_job_and_send_it_to_broker({'worker': None})
+        monitoring_info = self.monitoring_collection.find()
+        self.assertEquals(monitoring_info.count(), 1)
+        info = monitoring_info[0]
+
+        self.assertIn('host', info)
+        self.assertIn('processes', info)
+
+        needed_host_keys = ['cpu', 'memory', 'network', 'storage', 'uptime']
+        for key in needed_host_keys:
+            self.assertIn(key, info['host'])
+
+        needed_cpu_keys = ['cpu percent', 'number of cpus']
+        for key in needed_cpu_keys:
+            self.assertIn(key, info['host']['cpu'])
+
+        needed_memory_keys = ['buffers', 'cached', 'free', 'free virtual',
+                              'percent', 'real free', 'real percent',
+                              'real used', 'total', 'total virtual', 'used',
+                              'used virtual']
+        for key in needed_memory_keys:
+            self.assertIn(key, info['host']['memory'])
+
+        self.assertIn('cluster ip', info['host']['network'])
+        self.assertIn('interfaces', info['host']['network'])
+        first_interface = info['host']['network']['interfaces'].keys()[0]
+        interface_info = info['host']['network']['interfaces'][first_interface]
+        needed_interface_keys = ['bytes received', 'bytes sent',
+                                 'packets received', 'packets sent']
+        for key in needed_interface_keys:
+            self.assertIn(key, interface_info)
+
+        first_partition = info['host']['storage'].keys()[0]
+        partition_info = info['host']['storage'][first_partition]
+        needed_storage_keys = ['file system', 'mount point', 'percent used',
+                               'total bytes', 'total free bytes',
+                               'total used bytes']
+        for key in needed_storage_keys:
+            self.assertIn(key, partition_info)
+
+        self.assertEquals(len(info['processes']), 1)
+        needed_process_keys = ['cpu percent', 'pid', 'resident memory',
+                               'virtual memory', 'type', 'started at']
+        process_info = info['processes'][0]
+        for key in needed_process_keys:
+            self.assertIn(key, process_info)
+
+    def test_broker_should_insert_monitoring_information_regularly(self):
+        self.receive_get_configuration_and_send_it_to_broker()
+        self.receive_get_job_and_send_it_to_broker({'worker': None})
+        sleep((self.monitoring_interval + 0.05) * 3)
+        # 0.05 = default broker poll time
+        monitoring_info = self.monitoring_collection.find()
+        self.assertEquals(monitoring_info.count(), 3)
+
+    def test_broker_should_insert_monitoring_information_about_workers(self):
+        cpus = cpu_count()
+        self.receive_get_configuration_and_send_it_to_broker()
+        start_time = time()
+        document_id = self.collection.insert({'sleep-for': 100})
+        for i in range(cpus):
+            job = {'worker': 'snorlax', 'document': str(document_id),
+                   'job id': i}
+            self.receive_get_job_and_send_it_to_broker(job)
+        sleep(0.1 * cpus) # 0.1 = time for each worker to start
+        end_time = time()
+        sleep(self.monitoring_interval * 2) # wait for broker to save info
+        monitoring_info = list(self.monitoring_collection.find())[-1]
+        self.assertEquals(len(monitoring_info['processes']), cpus + 1)
+
+        needed_process_keys = ['cpu percent', 'pid', 'resident memory', 'type',
+                               'virtual memory', 'started at']
+        for process in monitoring_info['processes']:
+            for key in needed_process_keys:
+                self.assertIn(key, process)
+
+        broker_process = monitoring_info['processes'][0]
+        self.assertEquals(broker_process['active workers'], 4)
+        self.assertEquals(broker_process['type'], 'broker')
+        self.assertTrue(start_time - 3 < broker_process['started at'] < \
+                end_time)
+        for process in monitoring_info['processes'][1:]:
+            self.assertEquals(process['document id'], document_id)
+            self.assertTrue(start_time - 1 < process['started at'] < \
+                    end_time - 1)
+            self.assertEquals(process['type'], 'worker')
+            self.assertEquals(process['worker'], 'snorlax')
