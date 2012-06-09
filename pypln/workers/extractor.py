@@ -55,7 +55,7 @@ def extract_pdf(data):
     try:
         metadata = get_pdf_metadata(meta_out)
     except:
-        pass
+        metadata = {}
         #TODO: what should I do here?
     if not (text and metadata):
         return None, None

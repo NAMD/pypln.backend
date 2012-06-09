@@ -6,7 +6,7 @@ __meta__ = {'from': 'document',
             'provides': ['freqdist'],}
 
 def main(document):
-    tokens = document['tokens']
+    tokens = [info[0].lower() for info in document['tokens']]
     frequency_distribution = {token: tokens.count(token) \
                               for token in set(tokens)}
     fd = frequency_distribution.items()

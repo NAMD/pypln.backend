@@ -14,7 +14,7 @@ def clear_text(text):
 
 original_text = "This is a test file.I'm testing PyPLN extractor worker!"
 
-class TestExtractor(unittest.TestCase):
+class TestExtractorWorker(unittest.TestCase):
     def test_extraction_from_text_file(self):
         filename = 'tests/data/test.txt'
         data = {'name': filename, 'contents': open(filename).read()}

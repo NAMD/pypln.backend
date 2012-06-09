@@ -77,8 +77,6 @@ class TestManager(unittest.TestCase):
                                  'monitoring collection': 'monitoring',},
                           'monitoring interval': 60,
                          }
-        #TODO: should put configuration in another place (it should be the same
-        #      default configuration from manager.py)
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive configuration from manager")
         message = self.api.recv_json()
