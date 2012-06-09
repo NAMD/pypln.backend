@@ -14,6 +14,47 @@ from pypln.client import ManagerClient
 from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
 
+class Job(object):
+    def __init__(self, message):
+        self.job_id = message['job id']
+        self.document_id = message['document']
+        self.worker = message['worker']
+        self.parent_connection = None
+        self.child_connection = None
+        self.start_time = None
+        self.process = None
+        self.pid = None
+
+    def __repr__(self):
+        return ('<Job(worker={}, document_id={}, job_id={}, pid={}, '
+                'start_time={})>'.format(self.worker, self.document_id,
+                                         self.job_id, self.pid,
+                                         self.start_time))
+
+    def start(self):
+        parent_connection, child_connection = Pipe()
+        self.parent_connection = parent_connection
+        self.child_connection = child_connection
+        #TODO: is there any way to *do not* connect stdout/stderr?
+        self.process = Process(target=workers.wrapper, args=(child_connection, ))
+        self.start_time = time()
+        self.process.start()
+        self.pid = self.process.pid
+
+    def send(self, message):
+        self.parent_connection.send(message)
+
+    def get_result(self):
+        return self.parent_connection.recv()
+
+    def finished(self):
+        return self.parent_connection.poll()
+
+    def end(self):
+        self.parent_connection.close()
+        self.child_connection.close()
+        self.process.join()
+
 class ManagerBroker(ManagerClient):
     #TODO: should use pypln.stores instead of pymongo directly
     #TODO: use log4mongo
@@ -68,10 +109,10 @@ class ManagerBroker(ManagerClient):
         broker_process['active workers'] = len(self.jobs)
         processes = [broker_process]
         for job in self.jobs:
-            process = get_process_info(job['process'].pid)
+            process = get_process_info(job.pid)
             if process is not None: # worker process not finished yet
-                process['worker'] = job['worker']
-                process['document id'] = ObjectId(job['document'])
+                process['worker'] = job.worker
+                process['document id'] = ObjectId(job.document_id)
                 process['type'] = 'worker'
                 processes.append(process)
         data = {'host': host_info, 'processes': processes}
@@ -90,52 +131,44 @@ class ManagerBroker(ManagerClient):
         self.run()
 
     def start_job(self, job):
-        if 'worker' not in job or 'document' not in job or \
-           job['worker'] not in workers.available:
-            self.logger.info('Rejecting job: {}'.format(job))
-            #TODO: send a 'rejecting job' request to Manager
-            return
-        worker_input = workers.available[job['worker']]['from']
+        worker_input = workers.available[job.worker]['from']
         data = {}
         if worker_input == 'document':
-            required_fields = workers.available[job['worker']]['requires']
+            required_fields = workers.available[job.worker]['requires']
             fields = set(['_id', 'meta'] + required_fields)
-            data = self.collection.find({'_id': ObjectId(job['document'])},
+            data = self.collection.find({'_id': ObjectId(job.document_id)},
                                         fields=fields)[0]
         elif worker_input == 'gridfs-file':
-            file_data = self.gridfs.get(ObjectId(job['document']))
-            data = {'_id': ObjectId(job['document']),
+            file_data = self.gridfs.get(ObjectId(job.document_id))
+            data = {'_id': ObjectId(job.document_id),
                     'length': file_data.length,
                     'md5': file_data.md5,
                     'name': file_data.name,
                     'upload_date': file_data.upload_date,
                     'contents': file_data.read()}
         #TODO: what if input is a corpus?
-        parent_connection, child_connection = Pipe()
-        job['parent_connection'] = parent_connection
-        job['child_connection'] = child_connection
-        #TODO: is there any way to *do not* connect stdout/stderr?
-        process = Process(target=workers.wrapper, args=(child_connection, ))
-        job['process'] = process
-        job['start time'] = time()
-        process.start()
-        parent_connection.send((job['worker'], data))
+
+        job.start()
+        job.send((job.worker, data))
         self.logger.debug('Started worker "{}" for document "{}" (PID: {})'\
-                          .format(job['worker'], job['document'], process.pid))
+                          .format(job.worker, job.document_id,
+                                  job.pid))
 
     def get_a_job(self):
         for i in range(self.max_jobs - len(self.jobs)):
             self.request({'command': 'get job'})
             message = self.get_reply()
             #TODO: if manager stops and doesn't answer, broker will stop here
-            if 'worker' in message:
-                if message['worker'] is None:
-                    break # Don't have a job, stop asking
-                else:
-                    self.jobs.append(message)
-                    self.start_job(message)
+            if 'worker' in message and message['worker'] is None:
+                break # Don't have a job, stop asking
+            elif 'worker' in message and 'document' in message and \
+                    message['worker'] in workers.available:
+                job = Job(message)
+                self.jobs.append(job)
+                self.start_job(job)
             else:
                 self.logger.info('Ignoring malformed job: {}'.format(message))
+                #TODO: send a 'rejecting job' request to Manager
 
     def manager_has_job(self):
         if self.manager_broadcast.poll(self.poll_time):
@@ -148,7 +181,7 @@ class ManagerBroker(ManagerClient):
             return False
 
     def finished_jobs(self):
-        return [job for job in self.jobs if job['parent_connection'].poll()]
+        return [job for job in self.jobs if job.finished()]
 
     def full_of_jobs(self):
         return len(self.jobs) >= self.max_jobs
@@ -156,7 +189,7 @@ class ManagerBroker(ManagerClient):
     def kill_processes(self):
         for job in self.jobs:
             try:
-                kill(job['process'].pid, SIGKILL)
+                kill(job.pid, SIGKILL)
             except OSError:
                 pass
 
@@ -174,32 +207,30 @@ class ManagerBroker(ManagerClient):
                 if not self.full_of_jobs() and self.manager_has_job():
                     self.get_a_job()
                 for job in self.finished_jobs():
-                    result = job['parent_connection'].recv()
-                    job['parent_connection'].close()
-                    job['child_connection'].close()
-                    job['process'].join()
+                    result = job.get_result()
+                    job.end()
                     end_time = time()
                     self.logger.info('Job finished: {}'.format(job))
-                    update_keys = workers.available[job['worker']]['provides']
+                    update_keys = workers.available[job.worker]['provides']
                     for key in result.keys():
                         if key not in update_keys:
                             del result[key]
-                    worker_input = workers.available[job['worker']]['from']
-                    worker_output = workers.available[job['worker']]['to']
+                    worker_input = workers.available[job.worker]['from']
+                    worker_output = workers.available[job.worker]['to']
                     if worker_input == worker_output == 'document':
-                        update_data = [{'_id': ObjectId(job['document'])},
+                        update_data = [{'_id': ObjectId(job.document_id)},
                                        {'$set': result}]
                         self.collection.update(*update_data)
                     elif worker_input == 'gridfs-file' and \
                          worker_output == 'document':
-                        data = {'_id': ObjectId(job['document'])}
+                        data = {'_id': ObjectId(job.document_id)}
                         data.update(result)
                         self.collection.insert(data)
                     #TODO: safe=True
                     #TODO: what if we have other combinations of input/output?
                     self.request({'command': 'job finished',
-                                  'job id': job['job id'],
-                                  'duration': end_time - job['start time']})
+                                  'job id': job.job_id,
+                                  'duration': end_time - job.start_time})
                     result = self.get_reply()
                     self.jobs.remove(job)
                     self.get_a_job()
