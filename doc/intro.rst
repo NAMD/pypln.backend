@@ -1,12 +1,15 @@
 Introduction to PyPLN
 =====================
 
+**WARNING:** since we rebuilt our backend, this documentation is depreacted.
+Come here in some days and we'll have an updated one.
+
 PyPLN is a distributed pipeline architecture to analyze text. Conceptually, it was idealized to provide a complete analysis of textual documents in any format. A diagram of the currently envisioned analytical tasks can be seen on Figure :ref:`fig-cmap`.
 
 .. _fig-cmap:
 .. figure:: _static/pypln.png
    :width: 20cm
-   
+
    Conceptual diagram of PyPLN
 
 PyPLN makes use of well know text processing tools such as NLTK for natural language processing, and various other opensource tools for  text manipulation. PyPLN developers may develop new or improve existing tools for text/language processing but that is not the main development focus of the project. The main focus of PyPLN is providing a framework for efficient analysis of large collections of text. By efficient analysis we mean the combination of computational, mathematical and visualization techniques.
@@ -14,11 +17,11 @@ PyPLN makes use of well know text processing tools such as NLTK for natural lang
 PyPLN relies heavily on distributed computing to be able to handle large collections of text. This distributed processing is built upon the ZeroMQ library and its API. Another key element to the scalability of our solution is the adoption of Mongodb for our storage backend. We use its replication and sharding capabilities to maintain IO performance.
 
 An very simplified example of the inner working of a text processing job in PyPLN is depicted on figure :ref:`fig-arch`.
-    
+
 .. _fig-arch:
 .. figure:: _static/Pipeline_architecture.png
    :width: 20cm
-   
+
    Example text processing job PyPLN.
 
 Cluster Architecture

@@ -1,6 +1,9 @@
 Storage Backend
 ===============
 
+**WARNING:** since we rebuilt our backend, this documentation is depreacted.
+Come here in some days and we'll have an updated one.
+
 PyPLN can make use of various storage formats for both documents and analytical
 results. Since PyPLN is built with distributed processing in mind, the
 configuration of storage backends should, whenever possible be distributed as

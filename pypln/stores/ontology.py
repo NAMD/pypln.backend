@@ -1,5 +1,7 @@
 #-*- coding:utf-8 -*-
 
+"""Store and load ontologies from MongoDB"""
+
 __docformat__ = 'restructuredtext en'
 
 import pymongo
@@ -10,7 +12,7 @@ import rdfextras
 rdfextras.registerplugins()
 
 class Ontology(object):
-    """ Store and load ontologies from Mongodb """
+    """Store and load ontologies from MongoDB"""
 
     def __init__(self, name, db, collection, host='127.0.0.1', port=27017):
         self.name = name

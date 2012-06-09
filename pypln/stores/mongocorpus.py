@@ -1,13 +1,10 @@
 #-*- coding:utf-8 -*-
-"""
-This module implements a MongoDB backed NLTK Corpus reader.
-Adapted from the book "Text processing with NLTK cookbook
+""" Implement a MongoDB-backed NLTK Corpus reader
 
-Usage:
-=====
-Instantiate MongoDBCorpusReader with parameter for host, port, db, collection and field
+Adapted from "Text processing with NLTK cookbook"
+To use, instantiate ``MongoDBCorpusReader`` with parameters for host, port,
+database, collection and field.
 """
-__author__ = 'flavio'
 
 import pymongo
 from nltk.data import LazyLoader
