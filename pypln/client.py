@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from logging import Logger, NullHandler
-from copy import copy
+from copy import deepcopy
 import zmq
 
 
@@ -70,7 +70,7 @@ class Pipeline(object):
     def distribute(self):
         self.waiting = {}
         for document in self.documents:
-            worker = copy(self.pipeline)
+            worker = deepcopy(self.pipeline)
             worker.document = document
             self.send_job(worker)
 
@@ -84,6 +84,7 @@ class Pipeline(object):
                     logger.info('[Client] Received from broadcast: {}'\
                                 .format(message))
                     if message.startswith('job finished: '):
+                        #TODO: unsubscribe
                         job_id = message.split(': ')[1].split(' ')[0]
                         worker = self.waiting[job_id]
                         for next_worker in worker.after:
@@ -119,25 +120,20 @@ if __name__ == '__main__':
     W, W.__call__ = Worker, Worker.then
     my_docs = []
     if len(argv) == 1:
-        for i in range(1, 11):
-            text = 'The sky is blue and this is the {}th document.'.format(i)
-            doc_id = collection.insert({'meta': {}, 'text': text, 'spam': 123,
-                                        'eggs': 456, 'ham': 789})
-            my_docs.append(str(doc_id))
-        workers = W('tokenizer')(W('pos'),
-                                 W('freqdist'))
-    else:
-        workers = W('extractor')(W('tokenizer')(W('pos'),
-                                                W('freqdist')))
-        gridfs = GridFS(connection.pypln, 'files')
-        filenames = argv[1:]
-        logger.info('Inserting files...')
-        for filename in filenames:
-            if os.path.exists(filename):
-                logger.debug('  {}'.format(filename))
-                doc_id = gridfs.put(open(filename).read(), filename=filename)
-                my_docs.append(str(doc_id))
+        print 'ERROR: you need to pass files to import'
+        exit(1)
 
+    gridfs = GridFS(connection.pypln, 'files')
+    filenames = argv[1:]
+    logger.info('Inserting files...')
+    for filename in filenames:
+        if os.path.exists(filename):
+            logger.debug('  {}'.format(filename))
+            doc_id = gridfs.put(open(filename).read(), filename=filename)
+            my_docs.append(str(doc_id))
+
+    workers = W('extractor')(W('tokenizer')(W('pos'),
+                                            W('freqdist')))
     pipeline = Pipeline(workers, ('localhost', 5555), ('localhost', 5556),
                         logger)
     pipeline.run(my_docs)
