@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.workers.extractor</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.workers-module.html">Package&nbsp;workers</a> ::
+        Module&nbsp;extractor
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.workers.extractor-module.html">Module pypln.workers.extractor</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable pypln.workers.extractor.__meta__=pypln.workers.extractor-module.html#__meta__,Variable pypln.workers.freqdist.__meta__=pypln.workers.freqdist-module.html#__meta__,Variable pypln.workers.pos.__meta__=pypln.workers.pos-module.html#__meta__,Variable pypln.workers.tokenizer.__meta__=pypln.workers.tokenizer-module.html#__meta__"><a title="pypln.workers.extractor.__meta__
+pypln.workers.freqdist.__meta__
+pypln.workers.pos.__meta__
+pypln.workers.tokenizer.__meta__" class="py-name" href="#" onclick="return doclink('link-0', '__meta__', 'link-0');">__meta__</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'from'</tt><tt class="py-op">:</tt> <tt class="py-string">'gridfs-file'</tt><tt class="py-op">,</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line">            <tt class="py-string">'requires'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line">            <tt class="py-string">'to'</tt><tt class="py-op">:</tt> <tt class="py-string">'document'</tt><tt class="py-op">,</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line">            <tt class="py-string">'provides'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt><tt class="py-string">'text'</tt><tt class="py-op">,</tt> <tt class="py-string">'metadata'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-op">}</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">shlex</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">subprocess</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Popen</tt><tt class="py-op">,</tt> <tt class="py-name">PIPE</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">mimetypes</tt> <tt class="py-keyword">import</tt> <tt class="py-name">guess_type</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">re</tt> <tt class="py-keyword">import</tt> <tt class="py-name">compile</tt> <tt class="py-keyword">as</tt> <tt class="py-name">re_compile</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable pypln.workers.extractor.regexp_tags=pypln.workers.extractor-module.html#regexp_tags"><a title="pypln.workers.extractor.regexp_tags" class="py-name" href="#" onclick="return doclink('link-1', 'regexp_tags', 'link-1');">regexp_tags</a></tt> <tt class="py-op">=</tt> <tt class="py-name">re_compile</tt><tt class="py-op">(</tt><tt class="py-string">r'(&lt;[ \t]*(/?[a-zA-Z]*)[^&gt;]*&gt;)'</tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="parse_html"></a><div id="parse_html-def"><a name="L16"></a><tt class="py-lineno">16</tt> <a class="py-toggle" href="#" id="parse_html-toggle" onclick="return toggle('parse_html');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.workers.extractor-module.html#parse_html">parse_html</a><tt class="py-op">(</tt><tt class="py-param">html</tt><tt class="py-op">,</tt> <tt class="py-param">remove_tags</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">remove_inside</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">replace_with</tt><tt class="py-op">=</tt><tt class="py-string">' '</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="parse_html-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="parse_html-expanded"><a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">    <tt class="py-name">data</tt> <tt class="py-op">=</tt> <tt id="link-2" class="py-name"><a title="pypln.workers.extractor.regexp_tags" class="py-name" href="#" onclick="return doclink('link-2', 'regexp_tags', 'link-1');">regexp_tags</a></tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-name">html</tt><tt class="py-op">)</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">    <tt class="py-name">content_between</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt class="py-name">complete_tags</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">    <tt class="py-name">tag_names</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">index</tt><tt class="py-op">,</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tag_names</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">        <tt class="py-name">search_tag</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_name</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">and</tt> <tt class="py-name">tag_name</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-string">'/'</tt><tt class="py-op">:</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">            <tt class="py-name">search_tag</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_name</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">remove_tags</tt> <tt class="py-keyword">and</tt> <tt class="py-name">search_tag</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">remove_inside</tt><tt class="py-op">:</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">            <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">replace_with</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">remove_inside</tt> <tt class="py-keyword">and</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">in</tt> <tt class="py-name">remove_inside</tt><tt class="py-op">:</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">            <tt class="py-name">remove_to</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_names</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'/'</tt> <tt class="py-op">+</tt> <tt class="py-name">tag_name</tt><tt class="py-op">,</tt> <tt class="py-name">index</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">            <tt class="py-name">total_to_remove</tt> <tt class="py-op">=</tt> <tt class="py-name">remove_to</tt> <tt class="py-op">-</tt> <tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">            <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">:</tt><tt class="py-name">remove_to</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">''</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-name">total_to_remove</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">            <tt class="py-name">content_between</tt><tt class="py-op">[</tt><tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">2</tt><tt class="py-op">:</tt><tt class="py-name">remove_to</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> \ </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">                    <tt class="py-op">[</tt><tt class="py-string">''</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-op">(</tt><tt class="py-name">total_to_remove</tt> <tt class="py-op">-</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">            <tt class="py-name">content_between</tt><tt class="py-op">[</tt><tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-string">'\n'</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">    <tt class="py-name">complete_tags</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">)</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-string">''</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-name">content_between</tt><tt class="py-op">,</tt> <tt class="py-name">complete_tags</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"> </tt>
+<a name="get_pdf_metadata"></a><div id="get_pdf_metadata-def"><a name="L37"></a><tt class="py-lineno">37</tt> <a class="py-toggle" href="#" id="get_pdf_metadata-toggle" onclick="return toggle('get_pdf_metadata');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.workers.extractor-module.html#get_pdf_metadata">get_pdf_metadata</a><tt class="py-op">(</tt><tt class="py-param">data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="get_pdf_metadata-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="get_pdf_metadata-expanded"><a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">    <tt class="py-name">lines</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">splitlines</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">    <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">lines</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">            <tt class="py-name">key</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt> <tt class="py-op">=</tt> <tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">':'</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">':'</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">ValueError</tt><tt class="py-op">:</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">            <tt class="py-keyword">continue</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt><tt class="py-op">[</tt><tt class="py-name">key</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">value</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">metadata</tt> </tt>
+</div><a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"> </tt>
+<a name="extract_pdf"></a><div id="extract_pdf-def"><a name="L48"></a><tt class="py-lineno">48</tt> <a class="py-toggle" href="#" id="extract_pdf-toggle" onclick="return toggle('extract_pdf');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.workers.extractor-module.html#extract_pdf">extract_pdf</a><tt class="py-op">(</tt><tt class="py-param">data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="extract_pdf-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="extract_pdf-expanded"><a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">    <tt class="py-name">pdf2text</tt> <tt class="py-op">=</tt> <tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-name">shlex</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">'pdftotext -q - -'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">stdin</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> <tt class="py-name">stdout</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">                     <tt class="py-name">stderr</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">)</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">    <tt class="py-name">pdfinfo</tt> <tt class="py-op">=</tt> <tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-name">shlex</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">'pdfinfo -meta -'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">stdin</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> <tt class="py-name">stdout</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">                    <tt class="py-name">stderr</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Method pypln.stores.mongocorpus.MongoDBCorpusReader.text()=pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#text"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-3', 'text', 'link-3');">text</a></tt><tt class="py-op">,</tt> <tt class="py-name">text_err</tt> <tt class="py-op">=</tt> <tt class="py-name">pdf2text</tt><tt class="py-op">.</tt><tt class="py-name">communicate</tt><tt class="py-op">(</tt><tt class="py-name">input</tt><tt class="py-op">=</tt><tt class="py-name">data</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">    <tt class="py-name">meta_out</tt><tt class="py-op">,</tt> <tt class="py-name">meta_err</tt> <tt class="py-op">=</tt> <tt class="py-name">pdfinfo</tt><tt class="py-op">.</tt><tt class="py-name">communicate</tt><tt class="py-op">(</tt><tt class="py-name">input</tt><tt class="py-op">=</tt><tt class="py-name">data</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">    <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt id="link-4" class="py-name" targets="Function pypln.workers.extractor.get_pdf_metadata()=pypln.workers.extractor-module.html#get_pdf_metadata"><a title="pypln.workers.extractor.get_pdf_metadata" class="py-name" href="#" onclick="return doclink('link-4', 'get_pdf_metadata', 'link-4');">get_pdf_metadata</a></tt><tt class="py-op">(</tt><tt class="py-name">meta_out</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">    <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">        <tt class="py-comment">#TODO: what should I do here?</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-op">(</tt><tt id="link-5" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-5', 'text', 'link-3');">text</a></tt> <tt class="py-keyword">and</tt> <tt class="py-name">metadata</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-name">None</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-keyword">not</tt> <tt class="py-name">text_err</tt><tt class="py-op">:</tt> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt id="link-6" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-6', 'text', 'link-3');">text</a></tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">None</tt> <tt class="py-keyword">if</tt> <tt class="py-name">meta_err</tt> <tt class="py-keyword">else</tt> <tt class="py-name">metadata</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-name">None</tt> </tt>
+</div><a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line"> </tt>
+<a name="main"></a><div id="main-def"><a name="L67"></a><tt class="py-lineno">67</tt> <a class="py-toggle" href="#" id="main-toggle" onclick="return toggle('main');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.workers.extractor-module.html#main">main</a><tt class="py-op">(</tt><tt class="py-param">file_data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="main-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="main-expanded"><a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">    <tt class="py-name">file_mime_type</tt> <tt class="py-op">=</tt> <tt class="py-name">guess_type</tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'name'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line">    <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'text/plain'</tt><tt class="py-op">:</tt> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">        <tt id="link-7" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-7', 'text', 'link-3');">text</a></tt> <tt class="py-op">=</tt> <tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'text/html'</tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">        <tt id="link-8" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-8', 'text', 'link-3');">text</a></tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name" targets="Function pypln.workers.extractor.parse_html()=pypln.workers.extractor-module.html#parse_html"><a title="pypln.workers.extractor.parse_html" class="py-name" href="#" onclick="return doclink('link-9', 'parse_html', 'link-9');">parse_html</a></tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-string">'script'</tt><tt class="py-op">,</tt> <tt class="py-string">'style'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'application/pdf'</tt><tt class="py-op">:</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">        <tt id="link-10" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-10', 'text', 'link-3');">text</a></tt><tt class="py-op">,</tt> <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt id="link-11" class="py-name" targets="Function pypln.workers.extractor.extract_pdf()=pypln.workers.extractor-module.html#extract_pdf"><a title="pypln.workers.extractor.extract_pdf" class="py-name" href="#" onclick="return doclink('link-11', 'extract_pdf', 'link-11');">extract_pdf</a></tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-op">{</tt><tt class="py-string">'text'</tt><tt class="py-op">:</tt> <tt id="link-12" class="py-name"><a title="pypln.stores.mongocorpus.MongoDBCorpusReader.text" class="py-name" href="#" onclick="return doclink('link-12', 'text', 'link-3');">text</a></tt><tt class="py-op">,</tt> <tt class="py-string">'metadata'</tt><tt class="py-op">:</tt> <tt class="py-name">metadata</tt><tt class="py-op">}</tt> </tt>
+</div><a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line"> </tt>
+<a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line"><tt class="py-comment">#TODO: detect language with cld</tt> </tt>
+<a name="L79"></a><tt class="py-lineno">79</tt>  <tt class="py-line"><tt class="py-comment">#TODO: detect encoding to decode</tt> </tt>
+<a name="L80"></a><tt class="py-lineno">80</tt>  <tt class="py-line"><tt class="py-comment">#TODO: should extractor add file-metadata (creation date, size etc.)?</tt> </tt>
+<a name="L81"></a><tt class="py-lineno">81</tt>  <tt class="py-line"><tt class="py-comment">#TODO: need to verify some exceptions when trying to convert 'evil' PDFs</tt> </tt>
+<a name="L82"></a><tt class="py-lineno">82</tt>  <tt class="py-line"><tt class="py-comment">#TODO: should 'replace_with' be '' when extracting from HTML?</tt> </tt>
+<a name="L83"></a><tt class="py-lineno">83</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jun  9 05:46:13 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

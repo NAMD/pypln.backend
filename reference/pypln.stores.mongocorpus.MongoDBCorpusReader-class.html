@@ -60,19 +60,18 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class MongoDBCorpusReader</h1><p class="nomargin-top"><span class="codelink"><a href="pypln.stores.mongocorpus-pysrc.html#MongoDBCorpusReader">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_pypln_st" name="uml_class_diagram_for_pypln_st">
-<area shape="rect" id="node11" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#__init__" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,39,773,57"/>
-<area shape="rect" id="node11" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#text" title="Returns lazy iterator over the texts in the corpus." alt="" coords="17,57,773,76"/>
-<area shape="rect" id="node11" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#words" title="pypln.stores.mongocorpus.MongoDBCorpusReader.words" alt="" coords="17,76,773,95"/>
-<area shape="rect" id="node11" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#sents" title="pypln.stores.mongocorpus.MongoDBCorpusReader.sents" alt="" coords="17,95,773,113"/>
-<area shape="rect" id="node1" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html" title="Corpus Reader to deal with text stored on a collection of a MongoDB database." alt="" coords="5,6,784,119"/>
+<center>  <map id="uml_class_diagram_for_pypln_st_2" name="uml_class_diagram_for_pypln_st_2">
+<area shape="rect" id="node8" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#__init__" title="x.__init__(...) initializes x; see help(type(x)) for signature" alt="" coords="17,39,425,57"/>
+<area shape="rect" id="node8" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#text" title="Return lazy iterator over the texts in the corpus." alt="" coords="17,57,425,76"/>
+<area shape="rect" id="node8" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#words" title="pypln.stores.mongocorpus.MongoDBCorpusReader.words" alt="" coords="17,76,425,95"/>
+<area shape="rect" id="node8" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#sents" title="pypln.stores.mongocorpus.MongoDBCorpusReader.sents" alt="" coords="17,95,425,113"/>
+<area shape="rect" id="node1" href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html" title="Corpus Reader to deal with text stored on a MongoDB collection" alt="" coords="5,6,437,119"/>
 </map>
-  <img src="uml_class_diagram_for_pypln_st.gif" alt='' usemap="#uml_class_diagram_for_pypln_st" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_pypln_st_2.gif" alt='' usemap="#uml_class_diagram_for_pypln_st_2" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
-<p>Corpus Reader to deal with text stored on a collection of a MongoDB 
-  database.</p>
+<p>Corpus Reader to deal with text stored on a MongoDB collection</p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -98,8 +97,8 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="pypln.stores.mongocorpus.MongoDBCorpusReader-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">word_tokenizer</span>=<span class="summary-sig-default">TreebankWordTokenizer()</span>,
-        <span class="summary-sig-arg">sent_tokenizer</span>=<span class="summary-sig-default">LazyLoader('tokenizers/punkt/english.pickle')</span>,
+        <span class="summary-sig-arg">word_tokenizer</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">sent_tokenizer</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">**kwargs</span>)</span><br />
       x.__init__(...) initializes x; see help(type(x)) for signature</td>
           <td align="right" valign="top">
@@ -118,7 +117,7 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a name="text"></a><span class="summary-sig-name">text</span>(<span class="summary-sig-arg">self</span>)</span><br />
-      Returns lazy iterator over the texts in the corpus.</td>
+      Return lazy iterator over the texts in the corpus.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="pypln.stores.mongocorpus-pysrc.html#MongoDBCorpusReader.text">source&nbsp;code</a></span>
             
@@ -230,8 +229,8 @@
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
-        <span class="sig-arg">word_tokenizer</span>=<span class="sig-default">TreebankWordTokenizer()</span>,
-        <span class="sig-arg">sent_tokenizer</span>=<span class="sig-default">LazyLoader('tokenizers/punkt/english.pickle')</span>,
+        <span class="sig-arg">word_tokenizer</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">sent_tokenizer</span>=<span class="sig-default">None</span>,
         <span class="sig-arg">**kwargs</span>)</span>
     <br /><em class="fname">(Constructor)</em>
   </h3>
@@ -281,7 +280,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu May 31 01:36:59 2012
+    Generated by Epydoc 3.0.1 on Sat Jun  9 05:46:13 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

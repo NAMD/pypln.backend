@@ -75,92 +75,28 @@
 </tr>
   <tr><td class="summary">
   <ul class="nomargin">
-    <li> <strong class="uidlink"><a href="pypln.Monitors-module.html">pypln.Monitors</a></strong>: <em class="summary">This package contains code implementing realtime monitoring tools 
-        for the Pipeline</em>
+    <li> <strong class="uidlink"><a href="pypln.broker-module.html">pypln.broker</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.client-module.html">pypln.client</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.manager-module.html">pypln.manager</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores-module.html">pypln.stores</a></strong>: <em class="summary">Abstraction layer to store data in MongoDB</em>
     <ul>
-    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor-module.html">pypln.Monitors.webmonitor</a></strong>: <em class="summary">Please describe this module.</em>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor.monitor-module.html">pypln.Monitors.webmonitor.monitor</a></strong>: <em class="summary">Web app to monitor PyPLN cluster</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.Monitors.webmonitor.settings-module.html">pypln.Monitors.webmonitor.settings</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores.filestore-module.html">pypln.stores.filestore</a></strong>: <em class="summary">Configure an interface for accessing files in MongoDB's GridFS</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores.mongocorpus-module.html">pypln.stores.mongocorpus</a></strong>: <em class="summary">Implement a MongoDB-backed NLTK Corpus reader</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.stores.ontology-module.html">pypln.stores.ontology</a></strong>: <em class="summary">Store and load ontologies from MongoDB</em>    </li>
     </ul>
     </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps-module.html">pypln.apps</a></strong>
+    <li> <strong class="uidlink"><a href="pypln.utils-module.html">pypln.utils</a></strong>
     <ul>
-    <li> <strong class="uidlink"><a href="pypln.apps.cleaner-module.html">pypln.apps.cleaner</a></strong>: <em class="summary">This script contains a number of cleanup functions which are 
-        intended to be run as a cron job with arguments indicating the type
-        of cleanup to do.</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.cluster-module.html">pypln.apps.cluster</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.apps.cluster.cmanager-module.html">pypln.apps.cluster.cmanager</a></strong>: <em class="summary">This executable is the manager of a pypln cluster. All tasks should be started through it and are
-monitorable/controllable through it.</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.cluster.slavedriver-module.html">pypln.apps.cluster.slavedriver</a></strong>: <em class="summary">Created on 27/04/12
-by fccoelho
-license: GPL V3 or Later</em>    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.clusterer-module.html">pypln.apps.clusterer</a></strong>: <em class="summary">Applies the clustering</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.extractor-module.html">pypln.apps.extractor</a></strong>: <em class="summary">New Document processor</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.frequency_counter-module.html">pypln.apps.frequency_counter</a></strong>: <em class="summary">This script Created on 28/09/11 by flavio</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.parser-module.html">pypln.apps.parser</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.postagger-module.html">pypln.apps.postagger</a></strong>: <em class="summary">Part of speech tagger based on NLTK
-Created on 27/09/11
-by flavio</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.apps.pyplncli-module.html">pypln.apps.pyplncli</a></strong>: <em class="summary">Main Pypln command line interface serves to host subcommands related to all apps
-Created on 24/05/12
-by fccoelho
-license: GPL V3 or Later</em>    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="pypln.logger-module.html">pypln.logger</a></strong>: <em class="summary">Define logger infrastructure for the cluster</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.servers-module.html">pypln.servers</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.servers.baseapp-module.html">pypln.servers.baseapp</a></strong>: <em class="summary">Basic application setup classes</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.servers.ventilator-module.html">pypln.servers.ventilator</a></strong>: <em class="summary">Task ventilator
-Binds PUSH socket to <a class="rst-rst-reference external rst-reference external" href="tcp://localhost:5557" target="_top">tcp://localhost:5557</a>
-Sends batch of tasks to workers via that socket
-Adapted from 0MQ tutorial (&quot;The Guide&quot;)</em>    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="pypln.sinks-module.html">pypln.sinks</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.sinks.base-module.html">pypln.sinks.base</a></strong>: <em class="summary">Base classes for sinks</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.sinks.dummy_sink-module.html">pypln.sinks.dummy_sink</a></strong>: <em class="summary">Task sink Binds PULL socket to tcp://localhost:5558 Collects 
-        results from workers via that socket</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.sinks.mongo_insert_sink-module.html">pypln.sinks.mongo_insert_sink</a></strong>: <em class="summary">Sink to save documents in a MongoDb Collection</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.sinks.mongo_update_sink-module.html">pypln.sinks.mongo_update_sink</a></strong>: <em class="summary">Created on 28/09/11
-by flavio</em>    </li>
-    </ul>
-    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores-module.html">pypln.stores</a></strong>: <em class="summary">This package contains code defining persistent stores which can be 
-        used by the sinks to  save  data to, and by the servers to fetch 
-        data for further processing.</em>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.stores.filestor-module.html">pypln.stores.filestor</a></strong>: <em class="summary">Configures an interface for accessing files in MongoDb's GridFS</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores.mongocorpus-module.html">pypln.stores.mongocorpus</a></strong>: <em class="summary">This module implements a MongoDB backed NLTK Corpus reader.</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores.ontology_store-module.html">pypln.stores.ontology_store</a></strong>: <em class="summary">Created on 28/05/12
-by fccoelho
-license: GPL V3 or Later</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.utils.monitoring-module.html">pypln.utils.monitoring</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.utils.tagset-module.html">pypln.utils.tagset</a></strong>    </li>
     </ul>
     </li>
     <li> <strong class="uidlink"><a href="pypln.workers-module.html">pypln.workers</a></strong>
     <ul>
-    <li> <strong class="uidlink"><a href="pypln.workers.base-module.html">pypln.workers.base</a></strong>: <em class="summary">Base classes for workers</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.docconv_worker-module.html">pypln.workers.docconv_worker</a></strong>: <em class="summary">PDF to text conversion worker</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.dummy_worker-module.html">pypln.workers.dummy_worker</a></strong>: <em class="summary">Task worker Connects PULL socket to tcp://localhost:5557 Collects 
-        workloads from ventilator via that socket Connects PUSH socket to 
-        tcp://localhost:5558 Sends results to sink via that socket</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.enc_detect_worker-module.html">pypln.workers.enc_detect_worker</a></strong>: <em class="summary">Character encoding detection worker</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.frequency_worker-module.html">pypln.workers.frequency_worker</a></strong>: <em class="summary">Created on 23/05/12
-by fccoelho
-license: GPL V3 or Later</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.highlighter_worker-module.html">pypln.workers.highlighter_worker</a></strong>: <em class="summary">This worker highlights words on a document using html and CSS.</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.mime_detect_worker-module.html">pypln.workers.mime_detect_worker</a></strong>: <em class="summary">Mimetype detection worker</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.palavras_worker-module.html">pypln.workers.palavras_worker</a></strong>: <em class="summary">class: palavras_worker connect worker to palavras (bick), and 
-        return annotation Author: Agnaldo L Martins (agnaldo@toptc.com.br)</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.parser_worker-module.html">pypln.workers.parser_worker</a></strong>: <em class="summary">Text parsing worker</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.tagger_worker-module.html">pypln.workers.tagger_worker</a></strong>: <em class="summary">This worker does Part of speech tagging.</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.extractor-module.html">pypln.workers.extractor</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.freqdist-module.html">pypln.workers.freqdist</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.pos-module.html">pypln.workers.pos</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.workers.tokenizer-module.html">pypln.workers.tokenizer</a></strong>    </li>
     </ul>
     </li>
   </ul></td></tr>
@@ -198,7 +134,7 @@ license: GPL V3 or Later</em>    </li>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu May 31 01:36:59 2012
+    Generated by Epydoc 3.0.1 on Sat Jun  9 05:46:13 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

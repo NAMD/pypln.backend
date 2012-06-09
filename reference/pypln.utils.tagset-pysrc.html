@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.utils.tagset</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.utils-module.html">Package&nbsp;utils</a> ::
+        Module&nbsp;tagset
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.utils.tagset-module.html">Module pypln.utils.tagset</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable pypln.utils.tagset.tagset_nltk=pypln.utils.tagset-module.html#tagset_nltk"><a title="pypln.utils.tagset.tagset_nltk" class="py-name" href="#" onclick="return doclink('link-0', 'tagset_nltk', 'link-0');">tagset_nltk</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-string">'"'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'closing-quotation-mark'</tt><tt class="py-op">,</tt> <tt class="py-string">'Closing quotation mark'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line">               <tt class="py-string">'$'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'dollar'</tt><tt class="py-op">,</tt> <tt class="py-string">'Dollar'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line">               <tt class="py-string">'('</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'opening-parenthesis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Opening parenthesis'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line">               <tt class="py-string">')'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'closing-parenthesis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Closing parenthesis'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line">               <tt class="py-string">'--'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'dash'</tt><tt class="py-op">,</tt> <tt class="py-string">'Dash'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">               <tt class="py-string">'.'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'sentence-terminator'</tt><tt class="py-op">,</tt> <tt class="py-string">'Sentence terminator'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">               <tt class="py-string">'0'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'comma'</tt><tt class="py-op">,</tt> <tt class="py-string">'Comma'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">               <tt class="py-string">':'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'colon-or-ellipsis'</tt><tt class="py-op">,</tt> <tt class="py-string">'Colon or ellipsis'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">               <tt class="py-string">'CC'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'conjunction-coordinating'</tt><tt class="py-op">,</tt> <tt class="py-string">'Conjunction, coordinating'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">               <tt class="py-string">'CD'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'numeral-cardinal'</tt><tt class="py-op">,</tt> <tt class="py-string">'Numeral, cardinal'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">               <tt class="py-string">'DT'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'determiner'</tt><tt class="py-op">,</tt> <tt class="py-string">'Determiner'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">               <tt class="py-string">'EX'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'existential-there'</tt><tt class="py-op">,</tt> <tt class="py-string">'Existential there'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">               <tt class="py-string">'FW'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'foreign-word'</tt><tt class="py-op">,</tt> <tt class="py-string">'Foreign word'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">               <tt class="py-string">'IN'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'preposition-or-conjunction-subordinating'</tt><tt class="py-op">,</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">                      <tt class="py-string">'Preposition or conjunction, subordinating'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">               <tt class="py-string">'JJ'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adjective-or-numeral-ordinal'</tt><tt class="py-op">,</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">                      <tt class="py-string">'Adjective or numeral, ordinal'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">               <tt class="py-string">'JJR'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adjective-comparative'</tt><tt class="py-op">,</tt> <tt class="py-string">'Adjective, comparative'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">               <tt class="py-string">'JJS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adjective-superlative'</tt><tt class="py-op">,</tt> <tt class="py-string">'Adjective, superlative'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">               <tt class="py-string">'LS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'list-item-marker'</tt><tt class="py-op">,</tt> <tt class="py-string">'List item marker'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">               <tt class="py-string">'MD'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'modal-auxiliary'</tt><tt class="py-op">,</tt> <tt class="py-string">'Modal auxiliary'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">               <tt class="py-string">'NN'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-common-singular-or-mass'</tt><tt class="py-op">,</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">                      <tt class="py-string">'Noun, common, singular or mass'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">               <tt class="py-string">'NNP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-proper-singular'</tt><tt class="py-op">,</tt> <tt class="py-string">'Noun, proper, singular'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">               <tt class="py-string">'NNPS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-proper-plural'</tt><tt class="py-op">,</tt> <tt class="py-string">'Noun, proper, plural'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">               <tt class="py-string">'NNS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-common-plural'</tt><tt class="py-op">,</tt> <tt class="py-string">'Noun, common, plural'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">               <tt class="py-string">'NP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-proper-singular'</tt><tt class="py-op">,</tt> <tt class="py-string">'Noun, proper, singular'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">               <tt class="py-string">'NPS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'noun-proper-plural'</tt><tt class="py-op">,</tt> <tt class="py-string">'Noun, proper, plural'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">               <tt class="py-string">'PDT'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'pre-determiner'</tt><tt class="py-op">,</tt> <tt class="py-string">'Pre-determiner'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">               <tt class="py-string">'POS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'genitive-marker'</tt><tt class="py-op">,</tt> <tt class="py-string">'Genitive marker'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">               <tt class="py-string">'PP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'pronoun-personal'</tt><tt class="py-op">,</tt> <tt class="py-string">'Pronoun, personal'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">               <tt class="py-string">'PP$'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'pronoun-possessive'</tt><tt class="py-op">,</tt> <tt class="py-string">'Pronoun, possessive'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">               <tt class="py-string">'PRP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'pronoun-personal'</tt><tt class="py-op">,</tt> <tt class="py-string">'Pronoun, personal'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">               <tt class="py-string">'PRP$'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'pronoun-possessive'</tt><tt class="py-op">,</tt> <tt class="py-string">'Pronoun, possessive'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">               <tt class="py-string">'RB'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adverb'</tt><tt class="py-op">,</tt> <tt class="py-string">'Adverb'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">               <tt class="py-string">'RBR'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adverb-comparative'</tt><tt class="py-op">,</tt> <tt class="py-string">'Adverb, comparative'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">               <tt class="py-string">'RBS'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'adverb-superlative'</tt><tt class="py-op">,</tt> <tt class="py-string">'Adverb, superlative'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">               <tt class="py-string">'RP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'particle'</tt><tt class="py-op">,</tt> <tt class="py-string">'Particle'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">               <tt class="py-string">'SYM'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'symbol'</tt><tt class="py-op">,</tt> <tt class="py-string">'Symbol'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">               <tt class="py-string">'TO'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'to-as-preposition-or-infinitive-marker'</tt><tt class="py-op">,</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">                      <tt class="py-string">'"to" as preposition or infinitive marker'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line">               <tt class="py-string">'UH'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'interjection'</tt><tt class="py-op">,</tt> <tt class="py-string">'Interjection'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">               <tt class="py-string">'VB'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-base-form'</tt><tt class="py-op">,</tt> <tt class="py-string">'Verb, base form'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">               <tt class="py-string">'VBD'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-past-tense'</tt><tt class="py-op">,</tt> <tt class="py-string">'Verb, past tense'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">               <tt class="py-string">'VBG'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-present-participle-or-gerund'</tt><tt class="py-op">,</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line">                       <tt class="py-string">'Verb, present participle or gerund'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line">               <tt class="py-string">'VBN'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-past-participle'</tt><tt class="py-op">,</tt> <tt class="py-string">'Verb, past participle'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">               <tt class="py-string">'VBP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-present-tense-not-3rd-person-singular'</tt><tt class="py-op">,</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">                       <tt class="py-string">'Verb, present tense, not 3rd person singular'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">               <tt class="py-string">'VBZ'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'verb-present-tense-3rd-person-singular'</tt><tt class="py-op">,</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">                       <tt class="py-string">'Verb, present tense, 3rd person singular'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">               <tt class="py-string">'WDT'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'wh-determiner'</tt><tt class="py-op">,</tt> <tt class="py-string">'Wh-determiner'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">               <tt class="py-string">'WP'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'wh-pronoun'</tt><tt class="py-op">,</tt> <tt class="py-string">'Wh-pronoun'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">               <tt class="py-string">'WP$'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'wh-pronoun-possessive'</tt><tt class="py-op">,</tt> <tt class="py-string">'Wh-pronoun, possessive'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">               <tt class="py-string">'WRB'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'wh-adverb'</tt><tt class="py-op">,</tt> <tt class="py-string">'Wh-adverb'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">               <tt class="py-string">'``'</tt><tt class="py-op">:</tt> <tt class="py-op">(</tt><tt class="py-string">'opening-quotation-mark'</tt><tt class="py-op">,</tt> <tt class="py-string">'Opening quotation mark'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line"><tt class="py-op">}</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Jun  9 05:46:13 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
