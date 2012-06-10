@@ -72,8 +72,12 @@ class TestManagerBroker(unittest.TestCase):
         cls.connection.drop_database(cls.config['db']['database'])
         cls.connection.close()
         for worker in cls.workers:
-            unlink(worker)
-            unlink(worker + 'c') # .pyc
+            try:
+                unlink(worker)
+                unlink(worker + 'c') # .pyc
+            except OSError:
+                # file was not created, probably test failed
+                pass
 
     def setUp(self):
         self.context = zmq.Context()
@@ -159,7 +163,7 @@ class TestManagerBroker(unittest.TestCase):
     def test_broker_should_send_finished_job_when_asked_to_run_dummy_worker(self):
         self.receive_get_configuration_and_send_it_to_broker()
 
-        jobs = [{'worker': 'dummy', 'document': 'xpto'}] * 4
+        jobs = [{'worker': 'dummy', 'document': 'xpto'}] * cpu_count()
         finished_jobs = 0
         for i in range(3 * cpu_count()):
             if not self.api.poll(3 * time_to_wait):
@@ -371,13 +375,13 @@ class TestManagerBroker(unittest.TestCase):
                 self.assertIn(key, process)
 
         broker_process = monitoring_info['processes'][0]
-        self.assertEquals(broker_process['active workers'], cpus)
+        self.assertEquals(broker_process['active workers'], cpu_count())
         self.assertEquals(broker_process['type'], 'broker')
         self.assertTrue(start_time - 3 < broker_process['started at'] < \
-                end_time)
+                end_time + 3)
         for process in monitoring_info['processes'][1:]:
             self.assertEquals(process['document id'], document_id)
-            self.assertTrue(start_time - 1 < process['started at'] < \
-                    end_time - 1)
+            self.assertTrue(start_time - 3 < process['started at'] < \
+                    end_time + 3)
             self.assertEquals(process['type'], 'worker')
             self.assertEquals(process['worker'], 'snorlax')
