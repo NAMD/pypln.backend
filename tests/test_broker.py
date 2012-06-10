@@ -371,7 +371,7 @@ class TestManagerBroker(unittest.TestCase):
                 self.assertIn(key, process)
 
         broker_process = monitoring_info['processes'][0]
-        self.assertEquals(broker_process['active workers'], 4)
+        self.assertEquals(broker_process['active workers'], cpus)
         self.assertEquals(broker_process['type'], 'broker')
         self.assertTrue(start_time - 3 < broker_process['started at'] < \
                 end_time)
