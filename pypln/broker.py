@@ -9,7 +9,7 @@ import zmq
 from pymongo import Connection
 from gridfs import GridFS
 from bson.objectid import ObjectId
-import pypln.workers as workers
+from pypln import workers
 from pypln.client import ManagerClient
 from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
