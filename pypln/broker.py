@@ -221,12 +221,13 @@ class ManagerBroker(ManagerClient):
                         update_data = [{'_id': ObjectId(job.document_id)},
                                        {'$set': result}]
                         self.collection.update(*update_data)
+                        #TODO: what if document > 16MB?
                     elif worker_input == 'gridfs-file' and \
                          worker_output == 'document':
                         data = {'_id': ObjectId(job.document_id)}
                         data.update(result)
                         self.collection.insert(data)
-                    #TODO: safe=True
+                    #TODO: use safe=True (probably on pypln.stores)
                     #TODO: what if we have other combinations of input/output?
                     self.request({'command': 'job finished',
                                   'job id': job.job_id,
