@@ -28,8 +28,9 @@ def make_log(name,fs=False):
     # Add the log message handler to the logger
     rfhandler = logging.handlers.RotatingFileHandler('/tmp/pypln.log', maxBytes=200000, backupCount=1)
     rfhandler.setFormatter(formatter)
-#    log.addHandler(rfhandler)
-    log.addHandler(MongoHandler(host='localhost',database_name='pypln', formatter=formatter))
+    if fs:
+        log.addHandler(rfhandler)
+    log.addHandler(MongoHandler(host='localhost',database_name='pypln'))
     #TODO: Maybe use zmq.loghandler
     return log
 
