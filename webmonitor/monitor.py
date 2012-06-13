@@ -28,17 +28,7 @@ def dashboard():
     Fetch data about cluster resource usage.
     :return:
     """
-    now  = time.time()
-#    pipeline = [{'$match':{'host.timestamp':{'$gt':now-600}}},
-#                {'$sort':{'host.timestamp':-1}},
-#                {'$project':{'host':1,}}
-#    ]
-#    q = Db.command('aggregate','monitoring',pipeline=pipeline)
-    q = Db.monitoring.find({'host.timestamp':{'$gt':now-600}},sort=[('host.timestamp',-1)])
-
-    results = list(q)
-
-
+    results = fetch_x_minutes(10)
     # Summing up resources
     resources, nnames = format_resources(results)
 
@@ -49,6 +39,17 @@ def dashboard():
         resources = resources,
     )
 
+def fetch_x_minutes(x=10):
+    """
+    Fetch x minutes worth of data from the pypln.monitoring collection
+    :param x: number of minutes of data to fetch
+    :return:list of dictionaries
+    """
+    now  = time.time()
+#    q = Db.monitoring.find({'host.timestamp':{'$gt':now-(60*x)}},sort=[('host.timestamp',-1)])
+    q = Db.monitoring.find(spec={},sort=[('host.timestamp',-1)]).limit(10*x)
+    return list(q)
+
 def format_resources(status):
     """
     From the list of objects returned from Mongodb,
@@ -56,7 +57,7 @@ def format_resources(status):
     :param status:
     :return: dictionary of resources
     """
-    nnames = set([h['network']['cluster ip'][0] for h in status])
+    nnames = set([h['host']['network']['cluster ip'].strip() for h in status])
     resources = {'nodes':len(nnames),'cpus':0,'memory':0}
     for h in status:
         resources['cpus'] += h['host']['cpu']["number of cpus"]
@@ -69,13 +70,14 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    stats = Db.Stats.find(fields=['cluster', 'active_jobs', 'time_stamp']).sort("time_stamp", -1).limit(100)
-    e = []
+    results = fetch_x_minutes(10)
     timeseries = defaultdict(lambda: {}) #using a dictionary here to eliminate messages from the same second
     ts = defaultdict(lambda: [])
-    for d in stats:
-        for k,v in d['cluster'].iteritems():
-            timeseries[k][int(d['time_stamp'])*1000]=[v['last_report']['status']['cpu']*100,v['last_report']['status']['memory']*100]
+    e = []
+    for h in results:
+        ip = h['host']['network']['cluster ip'].replace('.','_')
+        timeseries[ip][int(h['timestamp'])*1000]=[h['host']['cpu']['cpu percent'],
+                                                      h['host']['memory']['real percent']]
     for k,v in timeseries.iteritems():
         ts[k].append({'data':zip([(i,v[i][0]) for i in sorted(v.keys())]),
                       'label':"Percent CPU",
@@ -85,9 +87,6 @@ def get_cluster_stats():
                       'label':"Percent Memory",
 #                      'color':"red"
         })
-
-        d.pop('_id')
-#        d.pop('time_stamp')
         e.append(d)
     return json.dumps(ts)#jsonify(entries= e)
 
@@ -97,8 +96,12 @@ def get_jobs():
     Returns a list of active jobs
     :return:JSON
     """
-    status = Db.monitoring.find_one(fields=['active jobs', 'time_stamp'], sort=[("time_stamp", -1)])
-    return jsonify(jobs=status['active jobs'])
+    results = fetch_x_minutes(5)
+    ajobs = []
+    for d in results:
+        for p in d['processes']:
+            ajobs.append(p['type']+" "+str(p['pid']))
+    return jsonify(jobs=ajobs)
 
 @app.route("/_get_logs")
 def get_logs():
