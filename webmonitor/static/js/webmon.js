@@ -10,21 +10,21 @@ var webmon = {};
 
 webmon.monitor = function(){};
 
-webmon.monitor.prototype.get_ts_data = function (nnodes, nnames){
+webmon.monitor.prototype.get_ts_data = function (nnodes, nnames) {
                 var options = {
                     series: { shadowSize:1 }, // drawing is faster without shadows
                     lines: { show: true },
                     points: { show: true },
                     yaxis: { min: 0, max: 100 },
                     xaxis: { show: true, mode: "time", timeformat: "%y/%m/%d-%H:%M:%S"}
-                };
+        };
                 $.getJSON($SCRIPT_ROOT+'/_get_stats', {}, function (data) {
                     for (var i = 0; i < nnodes ; i++) {
-                        $.plot($("#placeholder" + i), data[nnames[i]], options)
+                        $.plot($("#placeholder" + i), data[nnames[i]], options);
                     }
                 });
-                return "passed"
-            }
+                return "passed";
+            };
 
 webmon.monitor.prototype.update_logs = function () {
                 var Logs;
@@ -57,9 +57,9 @@ webmon.monitor.prototype.update_logs = function () {
                 });
 
     return Logs;
-            }
+            };
 
-webmon.monitor.prototype.update_jobs = function (){
+webmon.monitor.prototype.update_jobs = function () {
                 var Jobs;
                 $.getJSON($SCRIPT_ROOT+'/_get_active_jobs', {}, function (jobs) {
                     Jobs = jobs;
@@ -68,7 +68,7 @@ webmon.monitor.prototype.update_jobs = function (){
                     }
                 });
                 return Jobs;
-            }
+        };
 
 
 webmon.monitor.prototype.update = function (numbnodes,nodenames, updateInterval) {
@@ -76,6 +76,6 @@ webmon.monitor.prototype.update = function (numbnodes,nodenames, updateInterval)
                 this.get_ts_data(numbnodes,nodenames);
                 this.update_jobs();
                 setTimeout(webmon.monitor.update, updateInterval);
-            }
+            };
 
 
