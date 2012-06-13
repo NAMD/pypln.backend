@@ -58,10 +58,11 @@ def format_resources(status):
     :return: dictionary of resources
     """
     nnames = set([h['host']['network']['cluster ip'].strip() for h in status])
+    hosts = {h['host']['network']['cluster ip']: h['host'] for h in status}
+
     resources = {'nodes':len(nnames),'cpus':0,'memory':0}
-    for h in status:
-        resources['cpus'] += h['host']['cpu']["number of cpus"]
-        resources['memory'] += h['host']['memory']['total']
+    resources['cpus'] += sum(h['cpu']["number of cpus"] for h in hosts.itervalues())
+    resources['memory'] += sum(h['memory']['total'] for h in hosts.itervalues())
     return resources, nnames
 
 @app.route("/_get_stats")
