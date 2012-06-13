@@ -6,18 +6,17 @@
  *
  */
 
-webmon = {};
+var webmon = {};
 
 webmon.monitor = function(){};
 
-webmon.monitor.prototype.get_ts_data = function (nnodes,nnames)
-            {
+webmon.monitor.prototype.get_ts_data = function (nnodes, nnames){
                 var options = {
-                    series:{ shadowSize:1 }, // drawing is faster without shadows
-                    lines:{ show:true },
-                    points:{ show:true },
-                    yaxis:{ min:0, max:100 },
-                    xaxis:{ show:true, mode:"time", timeformat:"%y/%m/%d-%H:%M:%S"}
+                    series: { shadowSize:1 }, // drawing is faster without shadows
+                    lines: { show: true },
+                    points: { show: true },
+                    yaxis: { min: 0, max: 100 },
+                    xaxis: { show: true, mode: "time", timeformat: "%y/%m/%d-%H:%M:%S"}
                 };
                 $.getJSON($SCRIPT_ROOT+'/_get_stats', {}, function (data) {
                     for (var i = 0; i < nnodes ; i++) {

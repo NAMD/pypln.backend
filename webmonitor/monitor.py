@@ -15,31 +15,53 @@ from pymongo import Connection
 import datetime
 import time
 from collections import defaultdict
+import argparse
+from pypln.client import ManagerClient
 
+global Db
 
 app = Flask(__name__)
-app.config.from_pyfile('settings.py')
-Db = Connection()[app.config['DATABASE']]
 
 @app.route("/")
 def dashboard():
-    info = Db.Stats.find_one(fields=['cluster'], sort=[("time_stamp", -1)])
-    number_nodes = len(info['cluster'])
-    # Summing up resources
-    resources = {'nodes':number_nodes,'cpus':0,'memory':0}
-    for k,v in info['cluster'].iteritems():
-        resources['cpus'] += v['system']['cpus']
-        resources['memory'] += v['system']['memory']['total']
+    """
+    Fetch data about cluster resource usage.
+    :return:
+    """
+    now  = time.time()
+#    pipeline = [{'$match':{'host.timestamp':{'$gt':now-600}}},
+#                {'$sort':{'host.timestamp':-1}},
+#                {'$project':{'host':1,}}
+#    ]
+#    q = Db.command('aggregate','monitoring',pipeline=pipeline)
+    q = Db.monitoring.find({'host.timestamp':{'$gt':now-600}},sort=[('host.timestamp',-1)])
 
-#    with open("/tmp/pypln.log") as f:
-#        logs = f.readlines()
-#    logs.reverse() # Latest entries first
+    results = list(q)
+
+
+    # Summing up resources
+    resources, nnames = format_resources(results)
+
     return render_template('index.html',logs=[],
-        n_nodes = number_nodes,
-        nrows=number_nodes/2,
-        nnames=info['cluster'].keys(),
+        n_nodes = len(nnames),
+        nrows = len(nnames)/2,
+        nnames = list(nnames),
         resources = resources,
     )
+
+def format_resources(status):
+    """
+    From the list of objects returned from Mongodb,
+    returns a formatted dictionary of cluster resources
+    :param status:
+    :return: dictionary of resources
+    """
+    nnames = set([h['network']['cluster ip'][0] for h in status])
+    resources = {'nodes':len(nnames),'cpus':0,'memory':0}
+    for h in status:
+        resources['cpus'] += h['host']['cpu']["number of cpus"]
+        resources['memory'] += h['host']['memory']['total']
+    return resources, nnames
 
 @app.route("/_get_stats")
 def get_cluster_stats():
@@ -75,7 +97,7 @@ def get_jobs():
     Returns a list of active jobs
     :return:JSON
     """
-    status = Db.Stats.find_one(fields=['active jobs', 'time_stamp'], sort=[("time_stamp", -1)])
+    status = Db.monitoring.find_one(fields=['active jobs', 'time_stamp'], sort=[("time_stamp", -1)])
     return jsonify(jobs=status['active jobs'])
 
 @app.route("/_get_logs")
@@ -94,8 +116,27 @@ def get_logs():
         l.append(i)
     return json.dumps(l)
 
+def get_conf(args):
+    """
+    Fetches the Mongodb Configuration from manager
+    :return:
+    """
+    host = '127.0.0.1'
+    port = 27017
+    client = ManagerClient(None, "Monitor")
+    try:
+        client.connect((args.manager,args.api))
+        client.manager_api.send_json({'command': 'get configuration'})
+        config = client.manager_api.recv_json()
+    except: #TODO: handle manager not being alive here
+        pass
+    return host,port
 
 def main():
+    global Db
+    app.config.from_pyfile('settings.py')
+    conf = get_conf(app.config['MANAGER_URI'])
+    Db = Connection(*conf)[app.config['DATABASE']]
     app.run()
 
 if __name__ == "__main__":

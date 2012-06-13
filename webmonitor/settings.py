@@ -19,5 +19,6 @@ AUTHOR_EMAIL = 'fccoelho@gmail.com'
 KEYWORDS = 'python, PyPLN, cluster, NLP, Text processing'
 DESCRIPTION = ''
 
-# Mongodb configuration
-DATABASE = 'PYPLN'
+# PyPLN configuration
+DATABASE = 'pypln'
+MANAGER_URI = "127.0.0.1:5551"
