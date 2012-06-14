@@ -63,9 +63,11 @@
                   <div class="span6" ><p>{{i}}
                     </p><div id="placeholder{{ loop.index0*2 }}" style="width:400px;height:200px;"></div>
                   </div>
+                  {% if loop.index0*2+1 > n_nodes %}
                   <div class="span6"><p>{{i}}
                     </p><div id="placeholder{{ loop.index0*2+1 }}" style="width:400px;height:200px;"></div>
                   </div>
+                  {% endif %}
               </div>
               </div>
           </div>
