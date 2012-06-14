@@ -115,7 +115,7 @@ class ManagerBroker(ManagerClient):
                 process['document id'] = ObjectId(job.document_id)
                 process['type'] = 'worker'
                 processes.append(process)
-        data = {'host': host_info, 'processes': processes}
+        data = {'host': host_info, 'timestamp':time(), 'processes': processes}
         self.monitoring_collection.insert(data)
         self.last_time_saved_monitoring_information = time()
         self.logger.info('Saved monitoring information in MongoDB')
