@@ -15,7 +15,6 @@ from pymongo import Connection
 import datetime
 import time
 from collections import defaultdict
-import argparse
 from pypln.client import ManagerClient
 
 global Db
@@ -47,8 +46,9 @@ def fetch_x_records(x=100):
     """
     now  = time.time()
 #    q = Db.monitoring.find({'host.timestamp':{'$gt':now-(60*x)}},sort=[('host.timestamp',-1)])
-    q = Db.monitoring.find(spec={},sort=[('host.timestamp',-1)]).limit(x)
-    return list(q)
+    q = Db.monitoring.find(spec={},sort=[('timestamp',-1)]).limit(x)
+    res = list(q)
+    return res
 
 def format_resources(status):
     """
