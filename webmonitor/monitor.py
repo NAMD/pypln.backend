@@ -57,7 +57,7 @@ def format_resources(status):
     :param status:
     :return: dictionary of resources
     """
-    nnames = set([h['host']['network']['cluster ip'].strip() for h in status])
+    nnames = set([h['host']['network']['cluster ip'].strip().replace('.',' ') for h in status])
     hosts = {h['host']['network']['cluster ip']: h['host'] for h in status}
 
     resources = {'nodes':len(nnames),'cpus':0,'memory':0}
@@ -74,9 +74,9 @@ def get_cluster_stats():
     results = fetch_x_minutes(10)
     timeseries = defaultdict(lambda: {}) #using a dictionary here to eliminate messages from the same second
     ts = defaultdict(lambda: [])
-    e = []
+
     for h in results:
-        ip = h['host']['network']['cluster ip'].replace('.','_')
+        ip = h['host']['network']['cluster ip'].replace('.',' ')
         timeseries[ip][int(h['timestamp'])*1000]=[h['host']['cpu']['cpu percent'],
                                                       h['host']['memory']['real percent']]
     for k,v in timeseries.iteritems():
@@ -88,8 +88,7 @@ def get_cluster_stats():
                       'label':"Percent Memory",
 #                      'color':"red"
         })
-        e.append(d)
-    return json.dumps(ts)#jsonify(entries= e)
+    return json.dumps(ts)
 
 @app.route("/_get_active_jobs")
 def get_jobs():
