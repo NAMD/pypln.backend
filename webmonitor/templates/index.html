@@ -179,9 +179,10 @@
         function run(){
             var mon = new webmon.monitor();
             mon.update({{ n_nodes }},[{% for n in nnames %}"{{ n|safe }}",{% endfor %}],1000)
+            setTimeout(run, 1000);
         }
+
         run()
-        setTimeout(run, 1000);
 </script>
 
   </body>
