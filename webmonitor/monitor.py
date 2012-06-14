@@ -28,7 +28,7 @@ def dashboard():
     Fetch data about cluster resource usage.
     :return:
     """
-    results = fetch_x_minutes(10)
+    results = fetch_x_records(100)
     # Summing up resources
     resources, nnames = format_resources(results)
 
@@ -39,15 +39,15 @@ def dashboard():
         resources = resources,
     )
 
-def fetch_x_minutes(x=10):
+def fetch_x_records(x=100):
     """
-    Fetch x minutes worth of data from the pypln.monitoring collection
-    :param x: number of minutes of data to fetch
+    Fetch x reports from the pypln.monitoring collection
+    :param x: number of status reports to fetch
     :return:list of dictionaries
     """
     now  = time.time()
 #    q = Db.monitoring.find({'host.timestamp':{'$gt':now-(60*x)}},sort=[('host.timestamp',-1)])
-    q = Db.monitoring.find(spec={},sort=[('host.timestamp',-1)]).limit(10*x)
+    q = Db.monitoring.find(spec={},sort=[('host.timestamp',-1)]).limit(x)
     return list(q)
 
 def format_resources(status):
@@ -71,7 +71,7 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    results = fetch_x_minutes(10)
+    results = fetch_x_records(100)
     timeseries = defaultdict(lambda: {}) #using a dictionary here to eliminate messages from the same second
     ts = defaultdict(lambda: [])
 
@@ -96,7 +96,7 @@ def get_jobs():
     Returns a list of active jobs
     :return:JSON
     """
-    results = fetch_x_minutes(5)
+    results = fetch_x_records(5)
     ajobs = set([])
     for d in results:
         for p in d['processes']:
