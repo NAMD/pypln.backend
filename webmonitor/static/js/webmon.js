@@ -16,7 +16,7 @@ webmon.monitor.prototype.get_ts_data = function (nnodes, nnames) {
                     lines: { show: true },
                     points: { show: true },
                     yaxis: { min: 0, max: 100 },
-                    xaxis: { show: true, mode: "time", timeformat: "%y/%m/%d-%H:%M:%S"}
+                    xaxis: { show: true, mode: "time", timeformat: "%h:%M"}
         };
                 $.getJSON($SCRIPT_ROOT+'/_get_stats', {}, function (data) {
                     for (var i = 0; i < nnodes ; i++) {
@@ -75,7 +75,7 @@ webmon.monitor.prototype.update = function (numbnodes,nodenames, updateInterval)
                 this.update_logs();
                 this.get_ts_data(numbnodes,nodenames);
                 this.update_jobs();
-                setTimeout(webmon.monitor.update, updateInterval);
+                //setTimeout(this.update, 1000);
             };
 
 
