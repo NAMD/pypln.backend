@@ -62,9 +62,9 @@ webmon.monitor.prototype.update_logs = function () {
 webmon.monitor.prototype.update_jobs = function () {
                 var Jobs;
                 $.getJSON($SCRIPT_ROOT+'/_get_active_jobs', {}, function (jobs) {
-                    Jobs = jobs;
-                    for (var i = 0; i < jobs.length; i++) {
-                        $('#joblist').append('<li>' + jobs[i].toString() + '</li>');
+                    Jobs = jobs.jobs;
+                    for (var i = 0; i < Jobs.length; i++) {
+                        $('#joblist').append('<div class="label label-success">' + Jobs[i].toString() + '</div>');
                     }
                 });
                 return Jobs;
