@@ -97,11 +97,11 @@ def get_jobs():
     :return:JSON
     """
     results = fetch_x_minutes(5)
-    ajobs = []
+    ajobs = set([])
     for d in results:
         for p in d['processes']:
-            ajobs.append(p['type']+" "+str(p['pid']))
-    return jsonify(jobs=ajobs)
+            ajobs.add(p['type']+" "+str(p['pid']))
+    return jsonify(jobs=list(ajobs))
 
 @app.route("/_get_logs")
 def get_logs():
