@@ -80,11 +80,11 @@ def get_cluster_stats():
         timeseries[ip][int(h['timestamp'])*1000]=[h['host']['cpu']['cpu percent'],
                                                       h['host']['memory']['real percent']]
     for k,v in timeseries.iteritems():
-        ts[k].append({'data':zip([(i,v[i][0]) for i in sorted(v.keys())]),
+        ts[k].append({'data':[(i,v[i][0]) for i in sorted(v.keys())],
                       'label':"Percent CPU",
 #                      'color':"blue"
                       })
-        ts[k].append({'data':zip([(i,v[i][1]) for i in sorted(v.keys())]),
+        ts[k].append({'data':[(i,v[i][1]) for i in sorted(v.keys())],
                       'label':"Percent Memory",
 #                      'color':"red"
         })
