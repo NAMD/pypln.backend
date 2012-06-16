@@ -158,6 +158,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="../static/js/bootstrap.min.js"></script>
     <script src="../static/js/jquery.js"></script>
+    <script src="../static/js/webmon.js"></script>
     <script language="javascript" type="text/javascript" src="../static/js/flot/jquery.flot.min.js"></script>
     <!--<script src="../static/js/bootstrap-transition.js"></script>-->
     <!--<script src="../static/js/bootstrap-alert.js"></script>-->
@@ -172,85 +173,8 @@
     <!--<script src="../static/js/bootstrap-carousel.js"></script>-->
     <!--<script src="../static/js/bootstrap-typeahead.js"></script>-->
     <script type="text/javascript">
-        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}
-        $(function () {
-            // we use an inline data source in the example, usually data would
-            // be fetched from a server
-            function get_ts_data(){
-                var options = {
-                series: { shadowSize: 1 }, // drawing is faster without shadows
-                lines: { show: true },
-                points: { show: true },
-                yaxis: { min: 0, max: 100 },
-                xaxis: { show: true ,mode: "time",timeformat: "%y/%m/%d-%H:%M:%S"}
-                };
-                $.getJSON($SCRIPT_ROOT + '/_get_stats',{},function(data){
-                    for (var i = 0 ; i<{{ n_nodes }} ; i++){
-                        var nnames = [{% for n in nnames %}"{{ n|safe }}",{% endfor %}]
-                        $.plot($("#placeholder"+i), data[nnames[i]], options)
-                    }
-                });
-            }
-            function update_logs(){
-
-                $.getJSON($SCRIPT_ROOT + '/_get_logs',{},function(logs){
-//                    $('#loglist').append(logs.length)
-                    $('#loglist').html(' ')
-                    for (var i=0 ; i < logs.length ; i++) {
-                        var l = logs[i];
-                        var logbot = '</div>';
-//                        $('#loglist').append(logtop+'<h4 class="alert-info">'+ l.loggerName+'-'+ l.level+'</h4>'+ l.message+logbot);
-                        if (l.level.indexOf("INFO") >= 0){
-                            var logtop = '<div class="alert alert-info"><a class="close" data-dismiss="alert" href="#">×</a>';
-                            $('#loglist').append(logtop+'<h4 class="alert-info">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
-
-                        else if (l.level.indexOf('WARNING') >= 0){
-                            var logtop = '<div class="alert alert-warning"><a class="close" data-dismiss="alert" href="#">×</a>';
-                            $('#loglist').append(logtop+'<h4 class="alert-warning">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
-                        else if (l.level.indexOf('ERROR') >= 0){
-                            var logtop = '<div class="alert alert-error"><a class="close" data-dismiss="alert" href="#">×</a>';
-                            $('#loglist').append(logtop+'<h4 class="alert-error">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
-
-                        else if (l.level.indexOf('DEBUG') >= 0){
-                            var logtop = '<div class="alert alert-success"><a class="close" data-dismiss="alert" href="#">×</a>';
-                            $('#loglist').append(logtop+'<h4 class="alert-success">'+ l.loggerName+'-'+ l.level+'-'+ l.timest+'</h4>'+ l.message+logbot)}
-
-                    }
-                });
-
-            }
-            function update_jobs(){
-                $.getJSON($SCRIPT_ROOT + '/_get_active_jobs',{},function(jobs){
-                    for (var i=0;i<jobs.length;i++){
-                        $('#joblist').append('<li>'+jobs[i].toString()+'</li>')
-                    }
-                })
-            }
-
-
-            // setup control widget
-            var updateInterval = 1000;
-            $("#updateInterval").val(updateInterval).change(function () {
-                var v = $(this).val();
-                if (v && !isNaN(+v)) {
-                    updateInterval = +v;
-                    if (updateInterval < 1)
-                        updateInterval = 1;
-                    if (updateInterval > 2000)
-                        updateInterval = 2000;
-                    $(this).val("" + updateInterval);
-                }
-            });
-
-            function update() {
-                update_logs();
-                get_ts_data();
-                update_jobs();
-                setTimeout(update, updateInterval);
-            }
-//        $('#loglist').append('hello')
-            update();
-        });
+        var mon = new webmon.monitor();
+        mon.update({{ n_nodes }},[{% for n in nnames %}"{{ n|safe }}",{% endfor %}],1000)
 </script>
 
   </body>

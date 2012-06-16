@@ -9,7 +9,7 @@ import zmq
 from pymongo import Connection
 from gridfs import GridFS
 from bson.objectid import ObjectId
-import pypln.workers as workers
+from pypln import workers
 from pypln.client import ManagerClient
 from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
@@ -115,7 +115,7 @@ class ManagerBroker(ManagerClient):
                 process['document id'] = ObjectId(job.document_id)
                 process['type'] = 'worker'
                 processes.append(process)
-        data = {'host': host_info, 'processes': processes}
+        data = {'host': host_info,'timestamp':time(), 'processes': processes}
         self.monitoring_collection.insert(data)
         self.last_time_saved_monitoring_information = time()
         self.logger.info('Saved monitoring information in MongoDB')
@@ -221,12 +221,13 @@ class ManagerBroker(ManagerClient):
                         update_data = [{'_id': ObjectId(job.document_id)},
                                        {'$set': result}]
                         self.collection.update(*update_data)
+                        #TODO: what if document > 16MB?
                     elif worker_input == 'gridfs-file' and \
                          worker_output == 'document':
                         data = {'_id': ObjectId(job.document_id)}
                         data.update(result)
                         self.collection.insert(data)
-                    #TODO: safe=True
+                    #TODO: use safe=True (probably on pypln.stores)
                     #TODO: what if we have other combinations of input/output?
                     self.request({'command': 'job finished',
                                   'job id': job.job_id,
