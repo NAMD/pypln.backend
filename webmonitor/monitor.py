@@ -27,7 +27,7 @@ def dashboard():
     Fetch data about cluster resource usage.
     :return:
     """
-    results = fetch_x_records(100)
+    results = fetch_x_minutes(100)
     # Summing up resources
     resources, nnames = format_resources(results)
 
@@ -38,17 +38,22 @@ def dashboard():
         resources = resources,
     )
 
-def fetch_x_records(x=100):
+def fetch_x_minutes(x=100):
     """
-    Fetch x reports from the pypln.monitoring collection
-    :param x: number of status reports to fetch
+    Fetch x minutes of data from the pypln.monitoring collection
+    :param x: number of minutes to fetch
     :return:list of dictionaries
     """
     now  = time.time()
-#    q = Db.monitoring.find({'host.timestamp':{'$gt':now-(60*x)}},sort=[('host.timestamp',-1)])
+    last_time_to_check = now - x*60 #100 * time_between_measures
+    match = {'timestamp': {'$gt': last_time_to_check}}
+    selected_fields = {'host.network.cluster ip': 1, 'timestamp': 1}
+    broker_ips = list(Db.monitoring.find(match, {'host.network.cluster ip': 1})\
+    .distinct('host.network.cluster ip'))
+
     q = Db.monitoring.find(spec={},sort=[('timestamp',-1)]).limit(x)
     res = list(q)
-    return res
+    return res, broker_ips
 
 def format_resources(status):
     """
@@ -57,8 +62,8 @@ def format_resources(status):
     :param status:
     :return: dictionary of resources
     """
-    nnames = set([h['host']['network']['cluster ip'].strip().replace('.',' ') for h in status])
-    hosts = {h['host']['network']['cluster ip']: h['host'] for h in status}
+    nnames = status[1]
+    hosts = {h['host']['network']['cluster ip']: h['host'] for h in status[0]}
 
     resources = {'nodes':len(nnames),'cpus':0,'memory':0}
     resources['cpus'] += sum(h['cpu']["number of cpus"] for h in hosts.itervalues())
@@ -71,7 +76,7 @@ def get_cluster_stats():
     Return status data about the cluster, such as list of nodes, network status, overall load, etc.
     :return: JSON object with the data fetched from Mongodb
     """
-    results = fetch_x_records(100)
+    results,ips = fetch_x_minutes(100)
     timeseries = defaultdict(lambda: {}) #using a dictionary here to eliminate messages from the same second
     ts = defaultdict(lambda: [])
 
@@ -96,7 +101,7 @@ def get_jobs():
     Returns a list of active jobs
     :return:JSON
     """
-    results = fetch_x_records(5)
+    results,ips = fetch_x_minutes(5)
     ajobs = set([])
     for d in results:
         for p in d['processes']:
