@@ -16,10 +16,16 @@ import datetime
 import time
 from collections import defaultdict
 from pypln.client import ManagerClient
+from flask_debugtoolbar import DebugToolbarExtension
 
 global Db
 
 app = Flask(__name__)
+app.debug = True
+# set a 'SECRET_KEY' to enable the Flask session cookies
+app.config['SECRET_KEY'] = 'ldfaoiwjeclgnasyghiwuasdggoer'
+toolbar = DebugToolbarExtension(app)
+
 
 @app.route("/")
 def dashboard():
