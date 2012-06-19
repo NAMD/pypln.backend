@@ -46,11 +46,11 @@ webmon.monitor.prototype.get_ts_data = function (nnodes, nnames) {
                     lines: { show: true },
                     points: { show: true },
                     yaxis: { min: 0, max: 100 },
-                    xaxis: { show: true, mode: "time", timeformat: "%h:%M"}
+                    xaxis: { show: true, mode: "time", timeformat: "%h:%M"},
         };
                 $.getJSON($SCRIPT_ROOT+'/_get_stats', {}, function (data) {
                     for (var i = 0; i < nnodes ; i++) {
-                        $.plot($("#placeholder" + i), data[nnames[i]], options);
+                        $.plot($("#placeholder" + i.toString()), data[nnames[i]], options);//[nnames[i]]
                     }
                 });
                 return "passed";
@@ -96,9 +96,9 @@ webmon.monitor.prototype.update_jobs = function () {
                     $('#joblist').html(' ');
                     for (ip in Jobs) {
                         tbl = create_table(Jobs[ip]);
-                        $('#joblist').append('<div class="label label-success">' + ip.toString() + '</div><div>'+tbl+'</div>');
-
+                        $('#joblist').append('<div class="label label-success">' + ip.toString() + '</div><div id="jobs" class="collapse in">'+tbl+'</div>');
                     }
+//                    $('#jobs').collapse()
                 });
                 return Jobs;
         };
