@@ -162,6 +162,10 @@ def get_conf(args):
         pass
     return host,port
 
+@app.route("/_test")
+def test():
+    return render_template('webmon-test.html')
+
 def main():
     global Db
     app.config.from_pyfile('settings.py')
