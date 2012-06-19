@@ -9,7 +9,7 @@
 function create_table(data) {
     //data should be an array of JSON objetcs: [{...},{...},...]
     var table = '';
-    table += '<table id="myTable" cellspacing=0 cellpadding=2 border=1>';
+    table += '<table id="procTable" class="table-condensed table-striped">';
     table +=  "<thead>";
     table +=   "<tr>";
     for (var v in data[0]){
