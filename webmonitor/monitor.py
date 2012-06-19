@@ -101,18 +101,34 @@ def get_cluster_stats():
         })
     return json.dumps(ts)
 
+def fetch_last_jobs():
+    now  = time.time()
+    last_time_to_check = now - 600 #last ten minutes
+    match = {}#{'timestamp': {'$gt': last_time_to_check}}
+    broker_ips = list(Db.monitoring.find(match, {'host.network.cluster ip': 1}).limit(1000)\
+    .distinct('host.network.cluster ip'))
+    jobs = {}
+    for broker_ip in broker_ips:
+        match = {'processes':{'$ne':[]},
+             'host.network.cluster ip': broker_ip}
+        fields = {'processes':1}
+        result = list(Db.monitoring.find(match,fields=fields).limit(1))
+        jobs[broker_ip] = result[0]['processes']
+    return jobs
+
 @app.route("/_get_active_jobs")
 def get_jobs():
     """
     Returns a list of active jobs
     :return:JSON
     """
-    results,ips = fetch_x_minutes(5)
-    ajobs = set([])
-    for d in results:
-        for p in d['processes']:
-            ajobs.add(p['type']+" "+str(p['pid']))
-    return jsonify(jobs=list(ajobs))
+    jobs = fetch_last_jobs()
+#    results,ips = fetch_x_minutes(5)
+#    ajobs = set([])
+#    for d in results:
+#        for p in d['processes']:
+#            ajobs.add(p['type']+" "+str(p['pid']))
+    return json.dumps(jobs)
 
 @app.route("/_get_logs")
 def get_logs():
