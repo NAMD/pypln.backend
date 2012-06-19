@@ -6,6 +6,36 @@
  *
  */
 
+function create_table(data) {
+    //data should be an array of JSON objetcs: [{...},{...},...]
+    var table = '';
+    table += '<table id="myTable" cellspacing=0 cellpadding=2 border=1>';
+    table +=  "<thead>";
+    table +=   "<tr>";
+    for (var v in data[0]){
+        table += "<th>" + v.toString() + "</th>";
+    }
+    table +=   "</tr>" ;
+    table +=  "</thead>" ;
+    table +=  "<tbody>" ;
+    // Adding rows
+    for (var i = 0; i < data.length; i++) {
+        table +=   "<tr>";
+        for (var d in data[i]) {
+            var cnt = data[i][d];
+            if (d == "started at") {
+                cnt = new Date(data[i][d]*1000);
+                cnt = cnt.toDateString();
+            }
+            table += "<td>" + cnt + "</td>";
+        }
+        table +=   "</tr>";
+    }
+    table +=  "</tbody>" ;
+    table +=  "</table>" ;
+    return table;
+}
+
 var webmon = {};
 
 webmon.monitor = function(){};
@@ -62,10 +92,12 @@ webmon.monitor.prototype.update_logs = function () {
 webmon.monitor.prototype.update_jobs = function () {
                 var Jobs;
                 $.getJSON($SCRIPT_ROOT+'/_get_active_jobs', {}, function (jobs) {
-                    Jobs = jobs.jobs;
-                    $('#joblist').html(' ')
-                    for (var i = 0; i < Jobs.length; i++) {
-                        $('#joblist').append('<div class="label label-success">' + Jobs[i].toString() + '</div>');
+                    Jobs = jobs;
+                    $('#joblist').html(' ');
+                    for (ip in Jobs) {
+                        tbl = create_table(Jobs[ip]);
+                        $('#joblist').append('<div class="label label-success">' + ip.toString() + '</div><div>'+tbl+'</div>');
+
                     }
                 });
                 return Jobs;
