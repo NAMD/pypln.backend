@@ -40,7 +40,7 @@ def dashboard():
     return render_template('index.html',logs=[],
         n_nodes = len(nnames),
         nrows = len(nnames)/2,
-        nnames = list(nnames),
+        nnames = [n.replace('.',' ') for n in nnames],
         resources = resources,
     )
 
@@ -93,10 +93,12 @@ def get_cluster_stats():
     for k,v in timeseries.iteritems():
         ts[k].append({'data':[(i,v[i][0]) for i in sorted(v.keys())],
                       'label':"Percent CPU",
+                      'hoverable': True,
 #                      'color':"blue"
                       })
         ts[k].append({'data':[(i,v[i][1]) for i in sorted(v.keys())],
                       'label':"Percent Memory",
+                      'hoverable': True,
 #                      'color':"red"
         })
     return json.dumps(ts)
