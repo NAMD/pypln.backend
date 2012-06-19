@@ -38,7 +38,7 @@
             module("Module Auxiliary functions");
 
             test("testing create_table", function() {
-                tbl = create_table([{"a":1,"b":2,"c":3}])
+                var tbl = create_table([{"a":1,"b":2,"c":3}])
                 ok( tbl.search('<table id="procTable" class="table-condensed table-striped">') >=0);
             });
 
