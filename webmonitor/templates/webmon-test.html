@@ -5,35 +5,41 @@
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
     <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
-    <script type="text/javascript" src="webmon.js"></script>
+    <script type="text/javascript" src="../static/js/webmon.js"></script>
+    <script language="javascript" type="text/javascript" src="../static/js/flot/jquery.flot.min.js"></script>
 
     <script>
         var $SCRIPT_ROOT = 'http://localhost:5000';
         $(document).ready(function(){
-            module("Module Ajax");
+            module("Module Ajax functions");
             var mon = new webmon.monitor()
             test('Fetching time series data', function() {
+                //stop(1000);
                 var value = mon.get_ts_data(1,['node1']);
                 equal( value, "passed", "Function returned withou an error" );
+//                start();
             });
 
 
             test("Fetching logs", function() {
+//                stop(1000);
                 var logs = mon.update_logs()
                 ok( logs[0].level in ['DEBUG','INFO','WARNING','ERROR'], "Data fetched is a log message" );
+//                start();
             });
 
             test("Fetching jobs", function() {
+//                stop(1000);
                 var jobs = mon.update_jobs()
                 ok( jobs instanceof Array, "Got Jobs" );
+//                start();
             });
 
-            module("Module B");
+            module("Module Auxiliary functions");
 
-            test("some other test", function() {
-                expect(2);
-                equal( true, false, "failing test" );
-                equal( true, true, "passing test" );
+            test("testing create_table", function() {
+                tbl = create_table([{"a":1,"b":2,"c":3}])
+                ok( tbl.search('<table id="procTable" class="table-condensed table-striped">') >=0);
             });
 
         });
