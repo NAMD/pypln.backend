@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
 
       <div class="hero-unit">
         <h2>Cluster Load</h2>
@@ -60,12 +60,14 @@
           <div class="row">
               <div class="span12">
               <div class="row">
-                  <div class="span6" ><p>{{i}}
-                    </p><div id="placeholder{{ loop.index0*2 }}" style="width:400px;height:200px;"></div>
+                  <div class="span6" ><div class="label label-info">{{i}}</div>
+                      <div id="placeholder{{ loop.index0*2 }}" style="width:100%;height:200px;"></div>
                   </div>
+                  {% if loop.index0*2+1 > n_nodes %}
                   <div class="span6"><p>{{i}}
                     </p><div id="placeholder{{ loop.index0*2+1 }}" style="width:400px;height:200px;"></div>
                   </div>
+                  {% endif %}
               </div>
               </div>
           </div>
@@ -75,20 +77,20 @@
       </div>
 
       <!-- Example row of columns -->
-      <div class="row">
+      <div class="row-fluid">
         <div class="span4">
           <h2>Recent Jobs</h2>
-           <ol class="pager">
+           <ul class="pager">
                <li>
                     <a href="#">Previous</a>
-                </li>
-                <li>
+               </li>
+               <li>
                     <a href="#">Next</a>
-                </li>
-           </ol>
-               <div id="joblist">
+               </li>
+           </ul>
+                <div id="joblist">
 
-               </div>
+                </div>
 
 
           <p><a class="btn" href="#">View details &raquo;</a></p>
@@ -173,8 +175,14 @@
     <!--<script src="../static/js/bootstrap-carousel.js"></script>-->
     <!--<script src="../static/js/bootstrap-typeahead.js"></script>-->
     <script type="text/javascript">
-        var mon = new webmon.monitor();
-        mon.update({{ n_nodes }},[{% for n in nnames %}"{{ n|safe }}",{% endfor %}],1000)
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+        function run(){
+            var mon = new webmon.monitor();
+            mon.update({{ n_nodes }},[{% for n in nnames %}"{{ n|safe }}",{% endfor %}],1000)
+            setTimeout(run, 1000);
+        }
+
+        run()
 </script>
 
   </body>
