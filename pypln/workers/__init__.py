@@ -48,6 +48,15 @@ def wrapper(child_connection):
     #      so we can create workers in C, Perl, Ruby etc.
     #TODO: should get any exception information and send it to broker signaling
     #      'job failed' and sending the traceback
-    worker, document = child_connection.recv()
-    result = available[worker]['main'](document)
-    child_connection.send(result)
+    try:
+        while True:
+            message = child_connection.recv()
+            if message['command'] == 'exit':
+                break
+            elif message['command'] == 'execute job':
+                worker_function = message['worker']
+                data = message['data']
+                result = available[worker_function]['main'](data)
+                child_connection.send(result)
+    except KeyboardInterrupt:
+        pass
