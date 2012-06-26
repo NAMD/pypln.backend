@@ -1,0 +1,6 @@
+-r production.txt
+
+nose
+epydoc
+sphinx
+flask-debugtoolbar

@@ -1,6 +1,9 @@
 Data Gathering and Importing
 ============================
 
+**WARNING:** since we rebuilt our backend, this documentation is depreacted.
+Come here in some days and we'll have an updated one.
+
 The main goal of PyPLN is to analyze textual data coming from all kinds of documents. Therefore, an essencial pre-requisite to its use is
 gathering some collection of documents which can then be imported to PyPLN Mongodb document store in order to be analyzed.
 

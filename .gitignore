@@ -10,4 +10,4 @@ pypln.egg-info/*
 reg_settings.py
 MANIFEST
 .directory
-pyplnweb/dev.db
+*/dev.db
