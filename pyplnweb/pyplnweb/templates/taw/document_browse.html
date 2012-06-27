@@ -125,7 +125,7 @@
             {{ corpusform.as_p }}
             <input type="hidden" value="{{ database|safe }}" name="database"/>
             <input type="hidden" value="{{ collection|safe }}" name="collection"/>
-            <input type="hidden" name="documents"/>
+            <input type="hidden" name="documents" value=fnGetSelected(oTable)/>
             <input type="submit" value="{% trans 'Create and Add Selected docs' %}" />
             <input type="button" value="{% trans 'Cancel' %}" onclick="$('#corpusform').hide(); $('#corpora').show();"/>
         </form>

@@ -6,8 +6,14 @@
 {% block nav %}
     {% if user.is_authenticated %}
         <ul>{% spaceless %}
+            <li id="tab_workbench"><a href="{% url taw_home %}">{% trans "Workbench" %}</a></li>
+            <li id="tab_corpora"><a href="{% url corpora %}">{% trans "Corpora" %}</a></li>
+            <li id="tab_documents"><a href="{% url documents %}">{% trans "Documents" %}</a></li>
+            <li id="tab_collection"><a href="{% url collections %}">{% trans "Collections" %}</a></li>
             <li id="tab_profile"><a href="{% url profile_detail user.username %}">{% trans "Profile" %}</a></li>
-        {% endspaceless %}</ul>
+
+            {% endspaceless %}
+        </ul>
     {% endif %}
 {% endblock %}
 

@@ -37,6 +37,7 @@ def manage(request):
     """
     This view assembles the  management page
     """
+    pass
 
 def collection_browse(request):
     """

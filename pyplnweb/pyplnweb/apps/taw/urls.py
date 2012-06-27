@@ -13,10 +13,10 @@ from taw.models import Document, Corpus, Glossario
 
 
 urlpatterns = patterns('taw.views', #this is the prefix to the views below:(eg. taw.views.main)
-    url(r'^$', "main"),
-    url(r'^corpora/$',  ListView.as_view(model=Corpus,)),
-    url(r'^documents/$', ListView.as_view(model=Document,)),
-    url(r'^collections/$', 'collection_browse'),
+    url(r'^$', "main", name="taw_home"),
+    url(r'^corpora/$',  ListView.as_view(model=Corpus,), name="corpora"),
+    url(r'^documents/$', ListView.as_view(model=Document,), name="documents"),
+    url(r'^collections/$', 'collection_browse', name="collections"),
     url(r'^collections/(?P<dbname>\w+)/(?P<collname>\w+)/$', 'document_browse'),
     url(r'^createcorpus/$', 'create_corpus'),
 )
