@@ -7,3 +7,4 @@ rdflib
 rdfextras
 Pinax
 flask
+jinja2
