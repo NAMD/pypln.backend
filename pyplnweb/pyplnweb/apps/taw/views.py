@@ -102,3 +102,11 @@ def create_corpus(request):
         }
 
     return redirect('/taw/collections/')
+
+def search(request, query):
+    """
+    Perform a fulltext search on all collections.
+    :param request:
+    :param query: Query string
+    :return:
+    """
