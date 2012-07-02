@@ -19,5 +19,11 @@
 
 {% block body %}
     <div class="breadcrumb">{% trans "You are here: "%}</div>
-
+    <div class="page-header">
+        <h1>{% trans "Document Search" %}</h1>
+    </div>
+    <form action="/taw/search" method="post" class="well form-search">{% csrf_token %}
+        <input type="text" class="input-large search-query">
+        <button type="submit" class="btn">{% trans "Search" %}</button>
+    </form>
 {% endblock %}
