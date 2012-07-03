@@ -189,6 +189,9 @@ FIXTURE_DIRS = [
 MONGODB = "127.0.0.1"#"10.250.46.208"#
 MONGODB_PORT = 27017
 
+SPHINXSEARCH_HOST = "127.0.0.1"
+SPHINXSEARCH_PORT = 9312
+
 MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
 
 EMAIL_BACKEND = "mailer.backend.DbBackend"
