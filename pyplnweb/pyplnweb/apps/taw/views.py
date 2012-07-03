@@ -122,7 +122,6 @@ def search(request):
     cl.SetMatchMode(sphinxapi.SPH_MATCH_EXTENDED)
     #cl.SetGroupBy('collection',sphinxapi.SPH_GROUPBY_ATTR)
     res = cl.Query(query)
-    print res
     results = []
     fields = {'text': 1, 'filename': 1, 'size': 1, 'text': 1}
     for match in res["matches"]:
