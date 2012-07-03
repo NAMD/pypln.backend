@@ -22,18 +22,39 @@
     <div class="page-header">
         <h1>{% trans "Document Search" %}</h1>
     </div>
-    <form action="/taw/search" method="post" class="well form-search">{% csrf_token %}
-        <input type="text" class="input-large search-query">
-        <button type="submit" class="btn">{% trans "Search" %}</button>
+    <form id="search_form" class="well form-search" method="get" action="/taw/search">{% csrf_token %}
+        <input type="text" class="input-large search-query" name="query" placeholder="Type something…" onkeyup="$("#search_form").submit();">
+        <button id="search_submit" type="submit" class="btn">{% trans "Search" %} </button>
     </form>
-    <div id="search_info"  class="alert">
+    <div id="search_info" class="alert alert-success">
     </div>
     <div id="search_results">
 
 
     </div>
     <script type="text/javascript">
+        $("#search_form").submit(
+        function (){
+            //implement on the fly search based on words being typed
+            //var values = {};
+            //$.each($('#search_form').serializeArray(), function(i, field) {
+            //    values[field.name] = field.value;
+            //});
+            //alert("searching...")
+            $.get("/taw/search/", $('#search_form').serialize(), function(resp) {
+                output = "";
+                var data = resp.results
+                var stats = resp.stats
+                $("#search_info").html("<strong>"+stats.total_found.toString()+"</strong>"+ " documents found in " + stats.time.toString()+ " seconds")
+                for (var i = 0; i < data.length; i++) {
+                    var document = data[i];
+                    output += '<p><b><a href="/taw/document/' + document['_id'] + '/">' + document['filename'] + '</a></b><br />' + document['excerpt'] + '</p>';
 
+                }
+                $("#search_results").html(output);
+            });
+            return false;
+        })
     </script>
 
 {% endblock %}
