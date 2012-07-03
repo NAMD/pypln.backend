@@ -10,6 +10,9 @@ from taw.models import *
 from taw.forms import CorpusForm
 from django.conf import settings
 import pymongo as PM
+from bson import ObjectId
+import sphinxapi
+import json
 
 
 # Initialize mongo connection
@@ -103,10 +106,43 @@ def create_corpus(request):
 
     return redirect('/taw/collections/')
 
-def search(request, query):
+def search(request):
     """
     Perform a fulltext search on all collections.
     :param request:
     :param query: Query string
     :return:
     """
+    query = request.GET.get('query', None)
+    if query is None:
+        return HttpResponse('', mimetype="application/json")
+
+    cl = sphinxapi.SphinxClient()
+    cl.SetServer(settings.SPHINXSEARCH_HOST, settings.SPHINXSEARCH_PORT)
+    cl.SetMatchMode(sphinxapi.SPH_MATCH_EXTENDED)
+    #cl.SetGroupBy('collection',sphinxapi.SPH_GROUPBY_ATTR)
+    res = cl.Query(query)
+    print res
+    results = []
+    fields = {'text': 1, 'filename': 1, 'size': 1, 'text': 1}
+    for match in res["matches"]:
+        _id = match["attrs"]["_id"]
+        result = connection[match['attrs']['db']][match['attrs']['collection']].find({'_id': ObjectId(_id)}, fields)
+        if result.count():
+            document = result[0]
+            results.append({'_id': _id, 'filename': document['filename'], 'text': document['text'],
+                            'db': match['attrs']['db'], 'collection': match['attrs']['collection']})
+    excerpts = cl.BuildExcerpts([document['text'] for document in results], 'artigos', query)
+    keywords = cl.BuildKeywords(query.encode('utf8'),'artigos',1)
+    for index, document in enumerate(results):
+        document['excerpt'] = excerpts[index]
+        del document['text']
+
+    stats = {"total_found"  : res['total_found'],
+             "time"         : res['time'],
+             "words"        : res['words']
+             }
+    return HttpResponse(json.dumps({'results':results,'stats':stats}), mimetype="application/json")
+
+def document(request, document_id):
+    pass
