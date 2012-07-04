@@ -18,7 +18,10 @@
 {% endblock %}
 
 {% block body %}
-    <div class="breadcrumb">{% trans "You are here: "%}</div>
+    <div class="breadcrumb">
+        {% trans "You are here: " %}
+        <a href="{% url taw_home %}">{% trans "Workbench" %}</a> &gt;
+    </div>
     <div class="page-header">
         <h1>{% trans "Document Search" %}</h1>
     </div>
@@ -48,7 +51,7 @@
                 $("#search_info").html("<strong>"+stats.total_found.toString()+"</strong>"+ " documents found in " + stats.time.toString()+ " seconds")
                 for (var i = 0; i < data.length; i++) {
                     var document = data[i];
-                    output += '<p><b><a href="/taw/document/' + document['_id'] + '/">' + document['filename'] + '</a></b><br />' + document['excerpt'] + '</p>';
+                    output += '<p><b><a href="/taw/document/' + document['_id']+'|'+document['db']+'|'+document['collection'] + '/">' + document['filename'] + '</a></b><br />' + document['excerpt'] + '</p>';
 
                 }
                 $("#search_results").html(output);
