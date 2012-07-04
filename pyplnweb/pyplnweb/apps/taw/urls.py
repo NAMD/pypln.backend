@@ -20,5 +20,5 @@ urlpatterns = patterns('taw.views', #this is the prefix to the views below:(eg. 
     url(r'^collections/(?P<dbname>\w+)/(?P<collname>\w+)/$', 'document_browse'),
     url(r'^createcorpus/$', 'create_corpus'),
     url(r'^search/?', 'search', name='search'),
-    url(r'^document/(?P<document_id>\w*)', 'document', name='document'),
+    url(r'^document/(?P<document_id>.*)', 'document', name='document'),
 )
