@@ -144,4 +144,22 @@ def search(request):
     return HttpResponse(json.dumps({'results':results,'stats':stats}), mimetype="application/json")
 
 def document(request, document_id):
-    pass
+    print document_id
+    id, db, collection = document_id.strip('/').split('|')
+    print id, db, collection
+    fields = {'text': 1, 'filename': 1, 'size': 1, 'text': 1}
+    result = connection[db][collection].find({"_id":ObjectId(id)},fields)
+    print result.count()
+    if result.count():
+            text = result[0]['text']
+            fname = result[0]['filename']
+
+    else:
+        text = "Document not Found"
+        fname = ""
+    data_dict = {
+        "doc_id": document_id,
+        "filename": fname,
+        "text": text
+    }
+    return render_to_response("taw/document.html", data_dict, context_instance=RequestContext(request))
