@@ -102,7 +102,7 @@ def corpus(request,corpus_name):
     :param corpus_name: name of the corpus in the corpora collection
     :return:
     """
-    pass
+    #TODO: check that database has these standard collections or use Document Store
 
 def search(request):
     """
