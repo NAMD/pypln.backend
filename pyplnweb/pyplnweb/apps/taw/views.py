@@ -106,6 +106,16 @@ def create_corpus(request):
 
     return redirect('/taw/collections/')
 
+@login_required
+def corpus(request,corpus_name):
+    """
+    Render a single corpus view
+    :param request:
+    :param corpus_name: name of the corpus in the corpora collection
+    :return:
+    """
+    pass
+
 def search(request):
     """
     Perform a fulltext search on all collections.
