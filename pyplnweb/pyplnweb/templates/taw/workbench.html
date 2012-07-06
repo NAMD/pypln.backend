@@ -29,6 +29,16 @@
         <input type="text" class="input-large search-query" name="query" placeholder="Type something…" onkeyup="$("#search_form").submit();">
         <button id="search_submit" type="submit" class="btn">{% trans "Search" %} </button>
     </form>
+    <div class="btn-group">
+        <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="#">{% trans "Action" %}</a></li>
+            <li><a href="#">{% trans "Add to existing corpus" %}</a></li>
+            <li><a href="#">{% trans "Add to new corpus" %}</a></li>
+            <li class="divider"></li>
+            <li><a href="#">{% trans "Analyze" %}</a></li>
+        </ul>
+    </div><!-- /btn-group -->
     <div id="search_info" class="alert alert-success">
     </div>
     <div id="search_results">
