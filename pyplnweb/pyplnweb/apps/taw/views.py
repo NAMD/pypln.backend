@@ -22,19 +22,7 @@ connection = PM.Connection(settings.MONGODB, settings.MONGODB_PORT)
 def main(request):
     return render_to_response("taw/workbench.html", context_instance=RequestContext(request))
 
-def document(request):
-    """
-    This view assembles the document analysis page
-    """
-    pass
-    #TODO: implement
 
-def corpus(request):
-    """
-    This view assembles the corpus analysis page
-    """
-    pass
-    #TODO: implement
 
 def manage(request):
     """
@@ -154,6 +142,12 @@ def search(request):
     return HttpResponse(json.dumps({'results':results,'stats':stats}), mimetype="application/json")
 
 def document(request, document_id):
+    """
+    This view assembles the document analysis page
+    :param request:
+    :param document_id:
+    :return:
+    """
     print document_id
     id, db, collection = document_id.strip('/').split('|')
     print id, db, collection
