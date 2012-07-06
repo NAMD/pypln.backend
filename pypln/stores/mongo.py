@@ -1,5 +1,6 @@
 # coding: utf-8
 
+import datetime
 from pymongo import Connection
 from gridfs import GridFS
 
@@ -13,9 +14,10 @@ class MongoDBStore(object):
         self._corpora = self._db[config['corpora_collection']]
         self._gridfs = GridFS(self._db, config['gridfs_collection'])
 
-    def add_corpus(self, name, slug):
+    def add_corpus(self, name, slug, owner):
         return self._corpora.insert({'name': name, 'slug': slug,
-                                     'documents': []})
+                                     'documents': [], 'owner': owner,
+                                     'date created': datetime.datetime.now()})
 
     def list_corpora(self):
         return list(self._corpora.find())

@@ -1,9 +1,11 @@
 # coding: utf-8
 
 import unittest
+import datetime
 import pymongo
 from gridfs import GridFS
 from pypln.stores.mongo import MongoDBStore
+from bson import ObjectId
 
 
 class TestMongoStore(unittest.TestCase):
@@ -30,20 +32,26 @@ class TestMongoStore(unittest.TestCase):
         self.db[db_conf['gridfs_collection'] + '.chuncks'].drop()
 
     def test_add_corpus_method_should_receive_name_and_slug(self):
-        self.store.add_corpus(name='Test Corpus', slug='test-corpus')
+        returned_corpus = self.store.add_corpus(name='Test Corpus',
+                                                slug='test-corpus',
+                                                owner=u'Álvaro Justen')
         cursor = self.corpora.find()
         self.assertEquals(cursor.count(), 1)
         corpus = cursor[0]
+        self.assertEquals(type(returned_corpus), ObjectId)
         del corpus['_id']
-        expected_corpus = {'name': 'Test Corpus', 'slug': 'test-corpus',
-                           'documents': []}
-        self.assertEquals(corpus, expected_corpus)
+        self.assertEquals(corpus['name'], 'Test Corpus')
+        self.assertEquals(corpus['slug'], 'test-corpus')
+        self.assertEquals(corpus['documents'], [])
+        self.assertEquals(corpus['owner'], u'Álvaro Justen')
+        self.assertIn('date created', corpus)
+        self.assertEquals(type(corpus['date created']), datetime.datetime)
 
     def test_list_corpora_should_return__id_name_and_slug(self):
         number_of_corpora = 10
         for i in range(number_of_corpora):
             self.store.add_corpus(name='Test Corpus ' + str(i),
-                                  slug='test-corpus-' + str(i))
+                                  slug='test-corpus-' + str(i), owner='me')
         corpora = self.store.list_corpora()
         self.assertEquals(len(corpora), number_of_corpora)
         for i in range(number_of_corpora):
@@ -54,7 +62,8 @@ class TestMongoStore(unittest.TestCase):
 
     def test_find_corpus_by_slug_should_return_a_dict_with_corpus_info_or_None(self):
         self.assertEquals(self.store.find_corpus_by_slug('test-corpus'), None)
-        self.store.add_corpus(name='Test Corpus', slug='test-corpus')
+        self.store.add_corpus(name='Test Corpus', slug='test-corpus',
+                              owner='me')
         corpus = self.store.find_corpus_by_slug('test-corpus')
         self.assertEquals(type(corpus), dict)
         self.assertIn('_id', corpus)
