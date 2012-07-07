@@ -31,9 +31,13 @@ class TestMongoStore(unittest.TestCase):
         self.db[db_conf['gridfs_collection'] + '.files'].drop()
         self.db[db_conf['gridfs_collection'] + '.chuncks'].drop()
 
+    def tearDown(self):
+        self.connection.drop_database(self.db)
+
     def test_add_corpus_method_should_receive_name_and_slug(self):
         returned_corpus = self.store.add_corpus(name='Test Corpus',
                                                 slug='test-corpus',
+                                                description='spam eggs ham',
                                                 owner=u'Álvaro Justen')
         cursor = self.corpora.find()
         self.assertEquals(cursor.count(), 1)
@@ -43,30 +47,51 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(corpus['name'], 'Test Corpus')
         self.assertEquals(corpus['slug'], 'test-corpus')
         self.assertEquals(corpus['documents'], [])
+        self.assertEquals(corpus['description'], u'spam eggs ham')
         self.assertEquals(corpus['owner'], u'Álvaro Justen')
         self.assertIn('date created', corpus)
         self.assertEquals(type(corpus['date created']), datetime.datetime)
+        self.assertEquals(type(corpus['date last modified']), datetime.datetime)
+        self.assertEquals(corpus['date last modified'], corpus['date created'])
 
     def test_list_corpora_should_return__id_name_and_slug(self):
         number_of_corpora = 10
         for i in range(number_of_corpora):
             self.store.add_corpus(name='Test Corpus ' + str(i),
-                                  slug='test-corpus-' + str(i), owner='me')
+                                  slug='test-corpus-' + str(i),
+                                  description='spam eggs ham',
+                                  owner='me')
         corpora = self.store.list_corpora()
         self.assertEquals(len(corpora), number_of_corpora)
         for i in range(number_of_corpora):
             self.assertIn('_id', corpora[i])
             self.assertEquals(corpora[i]['name'], 'Test Corpus ' + str(i))
+            self.assertEquals(corpora[i]['description'], 'spam eggs ham')
             self.assertEquals(corpora[i]['slug'], 'test-corpus-' + str(i))
             self.assertEquals(corpora[i]['documents'], [])
 
     def test_find_corpus_by_slug_should_return_a_dict_with_corpus_info_or_None(self):
         self.assertEquals(self.store.find_corpus_by_slug('test-corpus'), None)
         self.store.add_corpus(name='Test Corpus', slug='test-corpus',
+                              description='spam eggs ham',
                               owner='me')
         corpus = self.store.find_corpus_by_slug('test-corpus')
         self.assertEquals(type(corpus), dict)
         self.assertIn('_id', corpus)
         self.assertEquals(corpus['name'], 'Test Corpus')
         self.assertEquals(corpus['slug'], 'test-corpus')
+        self.assertEquals(corpus['description'], 'spam eggs ham')
+        self.assertEquals(corpus['documents'], [])
+
+    def test_find_corpus_by_docid_should_return_a_dict_with_corpus_info_or_None(self):
+        self.assertEquals(self.store.find_corpus_by_docid('dummy'), None)
+        corpus_id = self.store.add_corpus(name='Test Corpus', slug='test-corpus',
+                                          description='ham eggs spam',
+                                          owner='me')
+        corpus = self.store.find_corpus_by_docid(corpus_id)
+        self.assertEquals(type(corpus), dict)
+        self.assertEquals(corpus['_id'], corpus_id)
+        self.assertEquals(corpus['name'], 'Test Corpus')
+        self.assertEquals(corpus['slug'], 'test-corpus')
+        self.assertEquals(corpus['description'], 'ham eggs spam')
         self.assertEquals(corpus['documents'], [])
