@@ -20,8 +20,7 @@
 <h2>Corpora</h2>
     <h3>Add Corpus</h3>
     <form method="post" action="/taw/corpora/">{% csrf_token %}
-        {% trans "Name" %}: <input class="input-xlarge" type="text" name="name" value="" />
-        {% trans "Description" %}: <textarea class="input-xlarge" name="description" value="" rows="3"></textarea>
+        {{ form.as_p }}
         <input type="submit" value="Add" />
     </form>
     <h4>{% trans "These" %} {{ corpora|length }} {% trans "corpora are accessible to you, " %}{{ user.username }}"</h4>
