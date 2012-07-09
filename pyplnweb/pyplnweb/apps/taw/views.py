@@ -38,12 +38,16 @@ def corpora_page(request):
     :param request:
     :return:
     """
+    form = CorpusForm()
     if request.method == 'POST':
-        create_corpus(request.POST,request.user)
+        form = CorpusForm(request.POST)
+        if form.is_valid():
+            create_corpus(request.POST,request.user)
+            return HttpResponseRedirect('/taw/corpora/') # Redirect after POST
     corpora = connection.pypln.corpora.find()
     data_dict = {
         'corpora': list(corpora),
-        'form': None
+        'form': form
     }
 
     return render_to_response('taw/corpora.html',data_dict, context_instance=RequestContext(request))
@@ -61,7 +65,7 @@ def create_corpus(data, owner):
                                      'created_on'   : datetime.datetime.now(),
                                      'last_updated' : datetime.datetime.now(),
                                      'docs'         : [],
-                                     'access'       : 'public',
+                                     'private'       : data['private'],
                                     })
 
 def collection_browse(request):
@@ -104,27 +108,27 @@ def document_browse(request, dbname,collname):
     data_dict.update(csrf(request))
     return render_to_response("taw/document_browse.html", data_dict, context_instance=RequestContext(request))
 
-@login_required
-def create_corpus(request):
-    """
-    Handle the creation of a corpus
-    """
-    corpora = []
-    if request.method == 'POST': # If the form has been submitted...
-        form = CorpusForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            c = Corpus(title=title,description=description,owner=request.user)
-            c.save()
-            return HttpResponseRedirect('/taw/#corpustab/') # Redirect after POST
-    else:
-        corpora = Corpus.objects.all(owner=request.user)
-#        form = CorpusForm() # An unbound form
-    data_dict = {
-#        'form': form,
-        'corpora':corpora,
-        }
+#@login_required
+#def create_corpus(request):
+#    """
+#    Handle the creation of a corpus
+#    """
+#    corpora = []
+#    if request.method == 'POST': # If the form has been submitted...
+#        form = CorpusForm(request.POST) # A form bound to the POST data
+#        if form.is_valid(): # All validation rules pass
+#            title = form.cleaned_data['title']
+#            description = form.cleaned_data['description']
+#            c = Corpus(title=title,description=description,owner=request.user)
+#            c.save()
+#            return HttpResponseRedirect('/taw/#corpustab/') # Redirect after POST
+#    else:
+#        corpora = Corpus.objects.all(owner=request.user)
+##        form = CorpusForm() # An unbound form
+#    data_dict = {
+##        'form': form,
+#        'corpora':corpora,
+#        }
 
     return redirect('/taw/collections/')
 
@@ -185,7 +189,7 @@ def document(request, document_id):
     print document_id
     id, db, collection = document_id.strip('/').split('|')
     print id, db, collection
-    fields = {'text': 1, 'filename': 1, 'size': 1, 'text': 1}
+    fields = {'text': 1, 'filename': 1, 'size': 1}
     result = connection[db][collection].find({"_id":ObjectId(id)},fields)
     print result.count()
     if result.count():
