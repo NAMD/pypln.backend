@@ -195,13 +195,16 @@ def document(request, document_id):
     if result.count():
             text = result[0]['text']
             fname = result[0]['filename']
+            size  = result[0].get('size','N/A')
 
     else:
         text = "Document not Found"
         fname = ""
+        size = 0
     data_dict = {
-        "doc_id": document_id,
-        "filename": fname,
-        "text": text
+        "doc_id"    : document_id,
+        "filename"  : fname,
+        "text"      : text,
+        "size"      : size,
     }
     return render_to_response("taw/document.html", data_dict, context_instance=RequestContext(request))
