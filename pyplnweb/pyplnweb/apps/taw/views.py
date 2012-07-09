@@ -13,7 +13,9 @@ import pymongo as PM
 from bson import ObjectId
 import sphinxapi
 import json
-
+import datetime
+#from pypln.stores import DocumentStore
+#DS = DocumentStore()
 
 # Initialize mongo connection
 connection = PM.Connection(settings.MONGODB, settings.MONGODB_PORT)
@@ -29,6 +31,38 @@ def manage(request):
     This view assembles the  management page
     """
     pass
+
+def corpora_page(request):
+    """
+    View of list of corpora available
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        create_corpus(request.POST,request.user)
+    corpora = connection.pypln.corpora.find()
+    data_dict = {
+        'corpora': list(corpora),
+        'form': None
+    }
+
+    return render_to_response('taw/corpora.html',data_dict, context_instance=RequestContext(request))
+
+
+def create_corpus(data, owner):
+    """
+    Create corpus in the database.
+    :param data: dictionary with corpus info from post request
+    :return: None
+    """
+    connection.pypln.corpora.insert({"name"         :data['name'],
+                                     'description'  :data['description'],
+                                     'owner'        : owner,
+                                     'created_on'   : datetime.datetime.now(),
+                                     'last_updated' : datetime.datetime.now(),
+                                     'docs'         : [],
+                                     'access'       : 'public',
+                                    })
 
 def collection_browse(request):
     """
