@@ -1,0 +1,51 @@
+{% extends "site_base.html" %}
+
+{% load i18n %}
+{% load ifsetting_tag %}
+
+
+{% block head_title %}{% trans "Corpora List" %}{% endblock %}
+{% block extra_head%}
+    <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+    <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet"></link>
+{% endblock %}
+
+
+{% block body %}
+<div class="breadcrumb">
+    {% trans "You are here: " %}
+    <a href="{% url taw_home %}">{% trans "Workbench" %}</a> &gt;
+    <a href="{% url corpora %}">{% trans "Corpora" %} </a>
+</div>
+<h2>Corpora</h2>
+    <h3>Add Corpus</h3>
+    <form method="post" action="/taw/corpora/">{% csrf_token %}
+        {% trans "Name" %}: <input class="input-xlarge" type="text" name="name" value="" />
+        {% trans "Description" %}: <textarea class="input-xlarge" name="description" value="" rows="3"></textarea>
+        <input type="submit" value="Add" />
+    </form>
+    <h4>{% trans "These" %} {{ corpora|length }} {% trans "corpora are accessible to you, " %}{{ user.username }}"</h4>
+
+    <table id="table_id">
+        <thead>
+        <tr>
+            <th>{% trans "Name"%}</th>
+            <th>{% trans "Owner" %}</th>
+            <th>{% trans "Created on" %}</th>
+            <th>{% trans "Size" %}</th>
+            <th>{% trans "Access" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for corpus in corpora %}
+        <tr>
+            <td>{{corpus.name}}</td>
+            <td>{{corpus.owner}}</td>
+            <td>{{corpus.created_on}}</td>
+            <td>{{ corpus.docs|length}} {% trans "documents" %}</td>
+            <td>{{corpus.access}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
