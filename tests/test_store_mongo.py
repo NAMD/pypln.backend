@@ -48,6 +48,7 @@ class TestMongoStore(unittest.TestCase):
                          'database': 'pypln',
                          'corpora_collection': 'corpora',
                          'document_collection': 'documents',
+                         'analysis_collection': 'analysis',
                          'gridfs_collection': 'files',
                          'monitoring_collection': 'monitoring'},
                   'monitoring interval': 60,}
@@ -57,6 +58,7 @@ class TestMongoStore(unittest.TestCase):
                                              port=db_conf['port'])
         self.db = self.connection[db_conf['database']]
         self.documents = self.db[db_conf['document_collection']]
+        self.analysis = self.db[db_conf['analysis_collection']]
         self.gridfs = GridFS(self.db, db_conf['gridfs_collection'])
         self.corpora = self.db[self.db_conf['corpora_collection']]
         self.store = MongoDBStore(**db_conf)
@@ -186,3 +188,18 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(gridfs_file.length, len(data))
         self.assertEquals(gridfs_file.read(), data)
         self.assertEquals(document.get_blob(), data)
+
+    def test_analysis(self):
+        document = self.store.Document(filename='test.txt')
+        document.save()
+        analysis = self.store.Analysis(name='tokens',
+                                       value=['this', 'is', 'a', 'test'],
+                                       document=document._id)
+        analysis.save()
+        results = self.analysis.find()
+        self.assertEquals(results.count(), 1)
+        self.assertEquals(results[0]['name'], 'tokens')
+        self.assertEquals(results[0]['value'], ['this' ,'is' ,'a', 'test'])
+        self.assertEquals(results[0]['_id'], analysis._id)
+        result = self.store.Analysis.find_by_document(document._id)
+        self.assertEquals(analysis._id, result._id)

@@ -127,6 +127,15 @@ class Document(Object):
         fp = self._store._gridfs.get_last_version(filename=self._id)
         return fp.read()
 
+class Analysis(Object):
+    fields = {'name': '',
+              'value': '',
+              'document': lambda: [],
+              'date_created': lambda: now(),}
+    indexes = ['name', 'value', 'document']
+    required_fields = ['name', 'value']
+    auto_value_fields = {}
+
 class MongoDBStore(object):
     """
     `<https://github.com/NAMD/pypln/wiki/Document-Store-Design>`_
@@ -138,6 +147,8 @@ class MongoDBStore(object):
         self._db = self._connection[config['database']]
         self._documents = self._db[config['document_collection']]
         self._corpora = self._db[config['corpora_collection']]
+        self._analysis = self._db[config['analysis_collection']]
         self._gridfs = GridFS(self._db, config['gridfs_collection'])
         self.Corpus = ObjectStore(self, self._corpora, Corpus)
         self.Document = ObjectStore(self, self._documents, Document)
+        self.Analysis = ObjectStore(self, self._analysis, Analysis)
