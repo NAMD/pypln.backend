@@ -4,9 +4,43 @@ import unittest
 import datetime
 import pymongo
 from gridfs import GridFS
-from pypln.stores.mongo import MongoDBStore
+from pypln.stores.mongo import MongoDBStore, slug
 from bson import ObjectId
 
+
+class TestSlug(unittest.TestCase):
+    def test_should_always_return_lowercase_words(self):
+        self.assertEquals(slug('ALVAROJUSTEN'), 'alvarojusten')
+
+    def test_should_replace_space_with_dash(self):
+        self.assertEquals(slug('Alvaro Justen'), 'alvaro-justen')
+
+    def test_should_ignore_unecessary_spaces(self):
+        self.assertEquals(slug('  alvaro   justen  '), 'alvaro-justen')
+
+    def test_should_replace_nonascii_chars_with_corresponding_ascii_chars(self):
+        self.assertEquals(slug('áÁàÀãÃâÂäÄ'.decode('utf8')), 'aaaaaaaaaa')
+        self.assertEquals(slug('éÉèÈẽẼêÊëË'.decode('utf8')), 'eeeeeeeeee')
+        self.assertEquals(slug('íÍìÌĩĨîÎïÏ'.decode('utf8')), 'iiiiiiiiii')
+        self.assertEquals(slug('óÓòÒõÕôÔöÖ'.decode('utf8')), 'oooooooooo')
+        self.assertEquals(slug('úÚùÙũŨûÛüÜ'.decode('utf8')), 'uuuuuuuuuu')
+        self.assertEquals(slug('ćĆĉĈçÇ'.decode('utf8')), 'cccccc')
+
+    def test_should_accept_unicode_text(self):
+        self.assertEquals(slug(u'Álvaro Justen'), 'alvaro-justen')
+
+    def test_should_accept_other_input_encodings(self):
+        slugged_text = slug(u'Álvaro Justen'.encode('utf16'), 'utf16')
+        self.assertEquals(slugged_text, 'alvaro-justen')
+
+    def test_should_accept_only_ascii_letters_and_numbers(self):
+        slugged_text = slug('''qwerty123456"'@#$%*()_+\|<>,.;:/?]~[`{}^ ''')
+        self.assertEquals(slugged_text, 'qwerty123456')
+
+    def test_should_accept_only_chars_in_permitted_chars_parameter(self):
+        slugged_text = slug('''0987654321gfdsazxcvb''',
+                            permitted_chars='abc123')
+        self.assertEquals(slugged_text, '321acb')
 
 class TestMongoStore(unittest.TestCase):
     def setUp(self):
@@ -34,64 +68,94 @@ class TestMongoStore(unittest.TestCase):
     def tearDown(self):
         self.connection.drop_database(self.db)
 
-    def test_add_corpus_method_should_receive_name_and_slug(self):
-        returned_corpus = self.store.add_corpus(name='Test Corpus',
-                                                slug='test-corpus',
-                                                description='spam eggs ham',
-                                                owner=u'Álvaro Justen')
+    def test_add_corpus(self):
+        new_corpus = self.store.Corpus()
+        new_corpus.name = 'Just Testing'
+        new_corpus.owner = u'Álvaro Justen'
+        new_corpus.description = u'This is just a test'
+        new_corpus.save()
+        corpus_id = new_corpus._id
         cursor = self.corpora.find()
         self.assertEquals(cursor.count(), 1)
         corpus = cursor[0]
-        self.assertEquals(type(returned_corpus), ObjectId)
-        del corpus['_id']
-        self.assertEquals(corpus['name'], 'Test Corpus')
-        self.assertEquals(corpus['slug'], 'test-corpus')
-        self.assertEquals(corpus['documents'], [])
-        self.assertEquals(corpus['description'], u'spam eggs ham')
-        self.assertEquals(corpus['owner'], u'Álvaro Justen')
-        self.assertIn('date created', corpus)
-        self.assertEquals(type(corpus['date created']), datetime.datetime)
-        self.assertEquals(type(corpus['date last modified']), datetime.datetime)
-        self.assertEquals(corpus['date last modified'], corpus['date created'])
-
-    def test_list_corpora_should_return__id_name_and_slug(self):
-        number_of_corpora = 10
-        for i in range(number_of_corpora):
-            self.store.add_corpus(name='Test Corpus ' + str(i),
-                                  slug='test-corpus-' + str(i),
-                                  description='spam eggs ham',
-                                  owner='me')
-        corpora = self.store.list_corpora()
-        self.assertEquals(len(corpora), number_of_corpora)
-        for i in range(number_of_corpora):
-            self.assertIn('_id', corpora[i])
-            self.assertEquals(corpora[i]['name'], 'Test Corpus ' + str(i))
-            self.assertEquals(corpora[i]['description'], 'spam eggs ham')
-            self.assertEquals(corpora[i]['slug'], 'test-corpus-' + str(i))
-            self.assertEquals(corpora[i]['documents'], [])
-
-    def test_find_corpus_by_slug_should_return_a_dict_with_corpus_info_or_None(self):
-        self.assertEquals(self.store.find_corpus_by_slug('test-corpus'), None)
-        self.store.add_corpus(name='Test Corpus', slug='test-corpus',
-                              description='spam eggs ham',
-                              owner='me')
-        corpus = self.store.find_corpus_by_slug('test-corpus')
-        self.assertEquals(type(corpus), dict)
-        self.assertIn('_id', corpus)
-        self.assertEquals(corpus['name'], 'Test Corpus')
-        self.assertEquals(corpus['slug'], 'test-corpus')
-        self.assertEquals(corpus['description'], 'spam eggs ham')
-        self.assertEquals(corpus['documents'], [])
-
-    def test_find_corpus_by_docid_should_return_a_dict_with_corpus_info_or_None(self):
-        self.assertEquals(self.store.find_corpus_by_docid('dummy'), None)
-        corpus_id = self.store.add_corpus(name='Test Corpus', slug='test-corpus',
-                                          description='ham eggs spam',
-                                          owner='me')
-        corpus = self.store.find_corpus_by_docid(corpus_id)
-        self.assertEquals(type(corpus), dict)
         self.assertEquals(corpus['_id'], corpus_id)
-        self.assertEquals(corpus['name'], 'Test Corpus')
-        self.assertEquals(corpus['slug'], 'test-corpus')
-        self.assertEquals(corpus['description'], 'ham eggs spam')
+        self.assertEquals(corpus['name'], 'Just Testing')
+        self.assertEquals(corpus['slug'], 'just-testing')
         self.assertEquals(corpus['documents'], [])
+        self.assertEquals(corpus['description'], u'This is just a test')
+        self.assertEquals(corpus['owner'], u'Álvaro Justen')
+        self.assertEquals(type(corpus['date_created']), datetime.datetime)
+        self.assertEquals(type(corpus['last_modified']), datetime.datetime)
+        self.assertEquals(corpus['last_modified'], corpus['date_created'])
+        self.assertEquals(corpus['_id'], new_corpus._id)
+        self.assertEquals(corpus['name'], new_corpus.name)
+        self.assertEquals(corpus['slug'], new_corpus.slug)
+        self.assertEquals(corpus['documents'], new_corpus.documents)
+        self.assertEquals(corpus['description'], new_corpus.description)
+        self.assertEquals(corpus['owner'], new_corpus.owner)
+        self.assertEquals(corpus['date_created'], new_corpus.date_created)
+        self.assertEquals(corpus['last_modified'], new_corpus.last_modified)
+
+    def test_add_corpus_using_keywords(self):
+        new_corpus = self.store.Corpus(name='Just Testing',
+                                       owner=u'Álvaro Justen',
+                                       description=u'This is just a test')
+        new_corpus.save()
+        corpus_id = new_corpus._id
+        cursor = self.corpora.find()
+        self.assertEquals(cursor.count(), 1)
+        corpus = cursor[0]
+        self.assertEquals(corpus['_id'], corpus_id)
+        self.assertEquals(corpus['name'], 'Just Testing')
+        self.assertEquals(corpus['slug'], 'just-testing')
+        self.assertEquals(corpus['documents'], [])
+        self.assertEquals(corpus['description'], u'This is just a test')
+        self.assertEquals(corpus['owner'], u'Álvaro Justen')
+        self.assertEquals(type(corpus['date_created']), datetime.datetime)
+        self.assertEquals(type(corpus['last_modified']), datetime.datetime)
+        self.assertEquals(corpus['last_modified'], corpus['date_created'])
+        self.assertEquals(corpus['_id'], new_corpus._id)
+        self.assertEquals(corpus['name'], new_corpus.name)
+        self.assertEquals(corpus['slug'], new_corpus.slug)
+        self.assertEquals(corpus['documents'], new_corpus.documents)
+        self.assertEquals(corpus['description'], new_corpus.description)
+        self.assertEquals(corpus['owner'], new_corpus.owner)
+        self.assertEquals(corpus['date_created'], new_corpus.date_created)
+        self.assertEquals(corpus['last_modified'], new_corpus.last_modified)
+
+    def test_get_existing_corpus(self):
+        new_corpus = self.store.Corpus(name='Just Testing',
+                                       owner=u'Álvaro Justen',
+                                       description=u'This is just a test')
+        new_corpus.save()
+        same_corpus_1 = self.store.Corpus.find_by_id(new_corpus._id)
+        same_corpus_2 = self.store.Corpus.find_by_name(new_corpus.name)
+        same_corpus_3 = self.store.Corpus.find_by_slug(new_corpus.slug)
+        self.assertEquals(new_corpus._id, same_corpus_1._id)
+        self.assertEquals(new_corpus._id, same_corpus_2._id)
+        self.assertEquals(new_corpus._id, same_corpus_3._id)
+
+    def test_should_have_at_least_name(self):
+        new_corpus = self.store.Corpus()
+        with self.assertRaises(RuntimeError):
+            new_corpus.save()
+        self.assertEquals(self.corpora.find().count(), 0)
+
+    def test_save_twice(self):
+        new_corpus = self.store.Corpus(name='testing')
+        new_corpus.save()
+        new_corpus.documents = [1, 2, 3]
+        new_corpus.save()
+        corpus = self.corpora.find_one()
+        self.assertEquals(corpus['documents'], [1, 2, 3])
+
+    def test_get_all_elements(self):
+        for i in range(10):
+            self.store.Corpus(name='testing-' + str(i)).save()
+        counter = 0
+        for corpus in self.store.Corpus.all:
+            self.assertIn('_id', dir(corpus))
+            self.assertIn('name', dir(corpus))
+            self.assertTrue(corpus.name.startswith('testing-'))
+            counter += 1
+        self.assertEquals(counter, 10)
