@@ -1,3 +1,1 @@
-"""
-Abstraction layer to store data in MongoDB
-"""
+""" Abstraction layer to store data """
