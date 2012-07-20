@@ -81,7 +81,6 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(corpus['_id'], corpus_id)
         self.assertEquals(corpus['name'], 'Just Testing')
         self.assertEquals(corpus['slug'], 'just-testing')
-        self.assertEquals(corpus['documents'], [])
         self.assertEquals(corpus['description'], u'This is just a test')
         self.assertEquals(corpus['owner'], u'Álvaro Justen')
         self.assertEquals(type(corpus['date_created']), datetime.datetime)
@@ -90,7 +89,6 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(corpus['_id'], new_corpus._id)
         self.assertEquals(corpus['name'], new_corpus.name)
         self.assertEquals(corpus['slug'], new_corpus.slug)
-        self.assertEquals(corpus['documents'], new_corpus.documents)
         self.assertEquals(corpus['description'], new_corpus.description)
         self.assertEquals(corpus['owner'], new_corpus.owner)
         self.assertEquals(corpus['date_created'], new_corpus.date_created)
@@ -108,7 +106,6 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(corpus['_id'], corpus_id)
         self.assertEquals(corpus['name'], 'Just Testing')
         self.assertEquals(corpus['slug'], 'just-testing')
-        self.assertEquals(corpus['documents'], [])
         self.assertEquals(corpus['description'], u'This is just a test')
         self.assertEquals(corpus['owner'], u'Álvaro Justen')
         self.assertEquals(type(corpus['date_created']), datetime.datetime)
@@ -117,13 +114,12 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(corpus['_id'], new_corpus._id)
         self.assertEquals(corpus['name'], new_corpus.name)
         self.assertEquals(corpus['slug'], new_corpus.slug)
-        self.assertEquals(corpus['documents'], new_corpus.documents)
         self.assertEquals(corpus['description'], new_corpus.description)
         self.assertEquals(corpus['owner'], new_corpus.owner)
         self.assertEquals(corpus['date_created'], new_corpus.date_created)
         self.assertEquals(corpus['last_modified'], new_corpus.last_modified)
 
-    def test_get_existing_corpus(self):
+    def test_get_existing_corpora(self):
         new_corpus = self.store.Corpus(name='Just Testing',
                                        owner=u'Álvaro Justen',
                                        description=u'This is just a test')
@@ -135,21 +131,21 @@ class TestMongoStore(unittest.TestCase):
         self.assertEquals(new_corpus._id, same_corpus_2._id)
         self.assertEquals(new_corpus._id, same_corpus_3._id)
 
-    def test_should_have_at_least_name(self):
+    def test_corpus_should_have_at_least_name(self):
         new_corpus = self.store.Corpus()
         with self.assertRaises(RuntimeError):
             new_corpus.save()
         self.assertEquals(self.corpora.find().count(), 0)
 
-    def test_save_twice(self):
+    def test_save_corpus_twice(self):
         new_corpus = self.store.Corpus(name='testing')
         new_corpus.save()
-        new_corpus.documents = [1, 2, 3]
+        new_corpus.owner = 'me'
         new_corpus.save()
         corpus = self.corpora.find_one()
-        self.assertEquals(corpus['documents'], [1, 2, 3])
+        self.assertEquals(corpus['owner'], 'me')
 
-    def test_get_all_elements(self):
+    def test_get_all_corpora(self):
         for i in range(10):
             self.store.Corpus(name='testing-' + str(i)).save()
         counter = 0
@@ -159,3 +155,34 @@ class TestMongoStore(unittest.TestCase):
             self.assertTrue(corpus.name.startswith('testing-'))
             counter += 1
         self.assertEquals(counter, 10)
+
+    def test_add_document(self):
+        document = self.store.Document(filename='test.txt',
+                                       owner=u'Álvaro Justen', corpora=[])
+        document.save()
+        documents = self.documents.find()
+        self.assertEquals(documents.count(), 1)
+        self.assertEquals(documents[0]['owner'], u'Álvaro Justen')
+        self.assertEquals(documents[0]['corpora'], [])
+        self.assertEquals(documents[0]['date_created'],
+                          document.date_created)
+
+    def test_document_should_have_at_least_filename(self):
+        new_document = self.store.Document()
+        with self.assertRaises(RuntimeError):
+            new_document.save()
+        self.assertEquals(self.documents.find().count(), 0)
+
+    def test_document_set_and_get_blob(self):
+        data = 'now is better than never'
+        document = self.store.Document(filename='test.txt',
+                                       owner=u'Álvaro Justen', corpora=[])
+        document.save()
+        document.set_blob(data)
+        results = self.gridfs.list()
+        self.assertEquals(len(results), 1)
+        self.assertEquals(results[0], document._id)
+        gridfs_file = self.gridfs.get_last_version(filename=document._id)
+        self.assertEquals(gridfs_file.length, len(data))
+        self.assertEquals(gridfs_file.read(), data)
+        self.assertEquals(document.get_blob(), data)

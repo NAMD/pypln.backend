@@ -57,14 +57,21 @@ class Object(object):
             self._collection.update({'_id': self._id}, data)
 
 class ObjectStore(object):
-    def __init__(self, collection, class_):
+    def __init__(self, store, collection, class_):
+        self._store = store
         self._collection = collection
         self._class = class_
+        for index in class_.indexes:
+            self._collection.ensure_index(index)
 
-    def __call__(self, **kwargs):
+    def _make_object(self, **kwargs):
         obj = self._class(**kwargs)
         obj._collection = self._collection
+        obj._store = self._store
         return obj
+
+    def __call__(self, **kwargs):
+        return self._make_object(**kwargs)
 
     def __getattr__(self, attribute):
         if attribute.startswith('find_by_'):
@@ -76,26 +83,49 @@ class ObjectStore(object):
                 if data is None:
                     return None
                 else:
-                    return self._class(**data)
+                    return self._make_object(**data)
             return find
         else:
             raise AttributeError
 
     @property
     def all(self):
-        return (self._class(**obj) for obj in self._collection.find())
+        return (self._make_object(**obj) for obj in self._collection.find())
 
 class Corpus(Object):
     fields = {'name': '',
               'slug': '',
-              'documents': lambda: list(),
               'description': '',
               'owner': '',
               'date_created': lambda: now(),
               'last_modified': None,}
+    indexes = ['slug', 'owner', 'date_created', 'last_modified']
     required_fields = ['name']
     auto_value_fields = {'last_modified': lambda obj: now(),
                          'slug': lambda obj: slug(obj.name),}
+
+class Document(Object):
+    fields = {'filename': '',
+              'slug': '',
+              'owner': '',
+              'corpora': lambda: [],
+              'date_created': lambda: now(),}
+    indexes = ['slug', 'filename', 'owner', 'date_created', 'corpora']
+    required_fields = ['filename']
+    auto_value_fields = {'slug': lambda obj: slug(obj.filename),}
+
+    def set_blob(self, blob):
+        if self._id is None:
+            raise RuntimeError('You need to save document before setting its'
+                               ' blob')
+        self._store._gridfs.put(blob, filename=self._id)
+
+    def get_blob(self):
+        if self._id is None:
+            raise RuntimeError('You need to save document before setting its'
+                               ' blob')
+        fp = self._store._gridfs.get_last_version(filename=self._id)
+        return fp.read()
 
 class MongoDBStore(object):
     """
@@ -109,4 +139,5 @@ class MongoDBStore(object):
         self._documents = self._db[config['document_collection']]
         self._corpora = self._db[config['corpora_collection']]
         self._gridfs = GridFS(self._db, config['gridfs_collection'])
-        self.Corpus = ObjectStore(self._corpora, Corpus)
+        self.Corpus = ObjectStore(self, self._corpora, Corpus)
+        self.Document = ObjectStore(self, self._documents, Document)
