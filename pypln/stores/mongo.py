@@ -1,21 +1,10 @@
 # coding: utf-8
 
 from datetime import datetime
-from unicodedata import normalize
 from pymongo import Connection
 from gridfs import GridFS
+from pypln.utils import slug
 
-
-def slug(text, encoding='utf-8',
-         permitted_chars='abcdefghijklmnopqrstuvwxyz0123456789-'):
-    if isinstance(text, str):
-        text = text.decode(encoding or 'ascii')
-    clean_text = text.strip().replace(' ', '-').lower()
-    while '--' in clean_text:
-        clean_text = clean_text.replace('--', '-')
-    ascii_text = normalize('NFKD', clean_text).encode('ascii', 'ignore')
-    strict_text = map(lambda x: x if x in permitted_chars else '', ascii_text)
-    return ''.join(strict_text)
 
 def now():
     '''Return a normalized datetime.datetime.now()
@@ -27,10 +16,11 @@ def now():
 
 class Object(object):
     def __init__(self, **kwargs):
+        '''Instantiate a new object, based on default attributes'''
         if '_id' in kwargs:
-            setattr(self, '_id', kwargs['_id'])
+            self._id = kwargs['_id']
         else:
-            setattr(self, '_id', None)
+            self._id = None
         for field_name, default_value in self.fields.iteritems():
             if hasattr(default_value, '__call__'):
                 default_value = default_value()
@@ -40,6 +30,7 @@ class Object(object):
                 setattr(self, key, value)
 
     def save(self):
+        '''Save the modified object data into the database'''
         for field in self.required_fields:
             if not getattr(self, field) and \
                field not in self.auto_value_fields.keys():
@@ -58,6 +49,7 @@ class Object(object):
 
 class ObjectStore(object):
     def __init__(self, store, collection, class_):
+        '''Instantiate a new object store'''
         self._store = store
         self._collection = collection
         self._class = class_
@@ -65,15 +57,18 @@ class ObjectStore(object):
             self._collection.ensure_index(index)
 
     def _make_object(self, **kwargs):
+        '''Create the object with the default Class-model'''
         obj = self._class(**kwargs)
         obj._collection = self._collection
         obj._store = self._store
         return obj
 
     def __call__(self, **kwargs):
+        '''Return a new object'''
         return self._make_object(**kwargs)
 
     def __getattr__(self, attribute):
+        '''Method-missing that implements find_by_*'''
         if attribute.startswith('find_by_'):
             key = attribute[8:]
             if key == 'id':
@@ -90,9 +85,11 @@ class ObjectStore(object):
 
     @property
     def all(self):
+        '''Return an iterator with all objects inserted in this store'''
         return (self._make_object(**obj) for obj in self._collection.find())
 
 class Corpus(Object):
+    '''Class that represents PyPLN's corpus model'''
     fields = {'name': '',
               'slug': '',
               'description': '',
@@ -101,10 +98,13 @@ class Corpus(Object):
               'last_modified': None,}
     indexes = ['slug', 'owner', 'date_created', 'last_modified']
     required_fields = ['name']
+    #TODO: should auto-update last_modified when some document is added/deleted
+    #      to/from corpus
     auto_value_fields = {'last_modified': lambda obj: now(),
                          'slug': lambda obj: slug(obj.name),}
 
 class Document(Object):
+    '''Class that represents PyPLN's document model'''
     fields = {'filename': '',
               'slug': '',
               'owner': '',
@@ -115,12 +115,14 @@ class Document(Object):
     auto_value_fields = {'slug': lambda obj: slug(obj.filename),}
 
     def set_blob(self, blob):
+        '''Use GridFS to store document's blob'''
         if self._id is None:
             raise RuntimeError('You need to save document before setting its'
                                ' blob')
         self._store._gridfs.put(blob, filename=self._id)
 
     def get_blob(self):
+        '''Retrieve the document's blob from GridFS'''
         if self._id is None:
             raise RuntimeError('You need to save document before setting its'
                                ' blob')
@@ -128,6 +130,7 @@ class Document(Object):
         return fp.read()
 
 class Analysis(Object):
+    '''Class that represents PyPLN's document analysis'''
     fields = {'name': '',
               'value': '',
               'document': lambda: [],
@@ -137,10 +140,23 @@ class Analysis(Object):
     auto_value_fields = {}
 
 class MongoDBStore(object):
-    """
-    `<https://github.com/NAMD/pypln/wiki/Document-Store-Design>`_
+    """Implements a Corpus/Document/Analysis backed by MongoDB
+
+    Learn more about the specification:
+    `<https://github.com/NAMD/pypln/wiki/MongoDB-store>`_
     """
     def __init__(self, **config):
+        '''Connect to MongoDB and set its ObjectStores
+
+        Required parameters:
+        - `host`
+        - `port`
+        - `database`
+        - `document_collection`
+        - `corpora_collection`
+        - `analysis_collection`
+        - `gridfs_collection`
+        '''
         self._connection = Connection(host=config['host'], port=config['port'],
                                       safe=True)
         #TODO: implement username and password
