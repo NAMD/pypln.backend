@@ -1,0 +1,38 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load ifsetting_tag %}
+{% block head_title %}{% trans "Corpus" %}{{ slug }}{% endblock %}
+
+{% block body %}
+<div class="breadcrumb">
+You are here:
+    <a href="{% url taw_home %}">{% trans "Home" %}</a> &gt;
+    <a href="{% url corpus slug %}">Corpus</a>
+  </div>
+
+<h2>Corpus {{ name }}</h2>
+    <h3>Add Documents</h3>
+    <form method="POST" action="/taw/corpus/{{ slug }}/" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Add" />
+    </form>
+
+    <h3>{% trans "List of Documents" %}</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>{% trans "Filename" %}</th>
+            <th>{% trans "Size" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for doc in document_list %}
+        <tr>
+            <td>{{ doc.filename }}</td>
+            <td>{{ doc.size }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
