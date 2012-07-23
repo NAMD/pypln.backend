@@ -7,12 +7,13 @@ from django.utils import simplejson
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, DetailView
 from taw.models import *
-from taw.forms import CorpusForm
+from taw.forms import CorpusForm, DocumentForm
 from django.conf import settings
 import pymongo as PM
 from bson import ObjectId
 import sphinxapi
 import json
+import os
 import datetime
 #from pypln.stores import DocumentStore
 #DS = DocumentStore()
@@ -25,12 +26,6 @@ def main(request):
     return render_to_response("taw/workbench.html", context_instance=RequestContext(request))
 
 
-
-def manage(request):
-    """
-    This view assembles the  management page
-    """
-    pass
 
 def corpora_page(request):
     """
@@ -108,39 +103,43 @@ def document_browse(request, dbname,collname):
     data_dict.update(csrf(request))
     return render_to_response("taw/document_browse.html", data_dict, context_instance=RequestContext(request))
 
-#@login_required
-#def create_corpus(request):
-#    """
-#    Handle the creation of a corpus
-#    """
-#    corpora = []
-#    if request.method == 'POST': # If the form has been submitted...
-#        form = CorpusForm(request.POST) # A form bound to the POST data
-#        if form.is_valid(): # All validation rules pass
-#            title = form.cleaned_data['title']
-#            description = form.cleaned_data['description']
-#            c = Corpus(title=title,description=description,owner=request.user)
-#            c.save()
-#            return HttpResponseRedirect('/taw/#corpustab/') # Redirect after POST
-#    else:
-#        corpora = Corpus.objects.all(owner=request.user)
-##        form = CorpusForm() # An unbound form
-#    data_dict = {
-##        'form': form,
-#        'corpora':corpora,
-#        }
 
-    return redirect('/taw/collections/')
 
 @login_required
-def corpus(request,corpus_name):
+def corpus(request,corpus_slug=""):
     """
     Render a single corpus view
     :param request:
-    :param corpus_name: name of the corpus in the corpora collection
+    :param corpus_slug: name (slug) of the corpus in the corpora collection
     :return:
     """
-    #TODO: check that database has these standard collections or use Document Store
+    form = DocumentForm()
+    docs = [] #this should be fetched from corpus if it exists
+    if request.method == 'POST':
+        form = DocumentForm(request.POST,request.FILES)
+        docs = save_uploaded_documents(request.FILES['file'])
+        return HttpResponseRedirect("/taw/corpus/"+corpus_slug+"/")
+    #TODO: integrate with DocumentStore
+    data_dict = {
+        "slug"          : corpus_slug,
+        "name"          : corpus_slug,
+        "document_list" : docs,
+        "form"          : form,
+    }
+    return render_to_response("taw/corpus.html", data_dict, context_instance=RequestContext(request))
+
+def save_uploaded_documents(fobj):
+    """
+    Save uploaded documents in the document store
+    :param fobj: fileobject uploaded
+    :return: list of documents
+    """
+    fname  = fobj.name
+    gfs = open(os.path.join('/tmp/',fname),'w')
+    for chunk in fobj.chunks():
+        gfs.write(chunk)
+    #TODO: check if file is an archive and extract the individual files from it before adding them to gridfs
+    return []
 
 def search(request):
     """
@@ -179,19 +178,16 @@ def search(request):
              }
     return HttpResponse(json.dumps({'results':results,'stats':stats}), mimetype="application/json")
 
-def document(request, document_id):
+def document_view(request, document_id):
     """
     This view assembles the document analysis page
     :param request:
     :param document_id:
     :return:
     """
-    print document_id
     id, db, collection = document_id.strip('/').split('|')
-    print id, db, collection
     fields = {'text': 1, 'filename': 1, 'size': 1}
     result = connection[db][collection].find({"_id":ObjectId(id)},fields)
-    print result.count()
     if result.count():
             text = result[0]['text']
             fname = result[0]['filename']
