@@ -22,4 +22,8 @@ class CorpusForm(forms.Form):
         #TODO: stubify and look it up in the Documento Store
         if data in []:
             raise forms.ValidationError("This name is taken. please try a new one")
+        return data
+
+class DocumentForm(forms.Form):
+    file = forms.FileField(required=True)
 
