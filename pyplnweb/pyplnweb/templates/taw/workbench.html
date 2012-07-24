@@ -26,7 +26,7 @@
         <h1>{% trans "Document Search" %}</h1>
     </div>
     <form id="search_form" class="well form-search" method="get" action="/taw/search">{% csrf_token %}
-        <input type="text" class="input-large search-query" name="query" placeholder="Type something…" onkeyup="$("#search_form").submit();">
+        <input type="text" class="input-large search-query" name="query" placeholder="Type something…" onkeyup="$('#search_form').submit();">
         <button id="search_submit" type="submit" class="btn">{% trans "Search" %} </button>
     </form>
     <div class="btn-group">
