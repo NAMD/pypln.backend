@@ -162,6 +162,8 @@ def search(request):
     query = request.GET.get('query', None)
     if query is None:
         return HttpResponse('', mimetype="application/json")
+    elif query == '':
+        return HttpResponse('', mimetype="application/json")
 
     cl = sphinxapi.SphinxClient()
     cl.SetServer(settings.SPHINXSEARCH_HOST, settings.SPHINXSEARCH_PORT)
