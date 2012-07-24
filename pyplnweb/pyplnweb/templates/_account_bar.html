@@ -1,8 +1,8 @@
-<ul class="secondary-nav">
+<ul class="nav pull-right">
     {% if user.is_authenticated %}
         <li>
-            <a href="#" class="menu">{{ user }}</a>
-            <ul class="menu-dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ user }}</a>
+            <ul class="dropdown-menu">
                 <li><a href="{% url acct_email %}">Account</a></li>
                 {% if user.is_staff %}
                     <li><a href="/admin/">Admin</a></li>
