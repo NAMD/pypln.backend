@@ -1,6 +1,7 @@
 {% extends "site_base.html" %}
 {% load i18n %}
 {% load ifsetting_tag %}
+{% load custom %}
 {% block head_title %}{% trans "Corpus" %}{{ slug }}{% endblock %}
 {% block extra_head%}
     <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
@@ -21,12 +22,22 @@ You are here:
   </div>
 
 <h2>Corpus {{ name }}</h2>
-    <h3>Add Documents</h3>
-    <form class="well-large" method="POST" action="/taw/corpus/{{ slug }}/" enctype="multipart/form-data">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add" />
-    </form>
+    <div class="row">
+        <div class="span4">
+            <h3>Add Documents</h3>
+            <form class="well form-inline" method="POST" action="/taw/corpus/{{ slug }}/" enctype="multipart/form-data">{% csrf_token %}
+                {{ form }}
+                <input type="submit" value="Add" />
+            </form>
+        </div>
+        <div class="span8">
+            <h3>{% trans "Metadata" %}</h3>
+            <span class="label label-info">{% trans "Owner:" %}</span> {{ owner|username_from_id }}<br>
+            <span class="label label-info">{% trans "Number of documents:" %}</span><br>
+            <span class="label label-info">{% trans "Date of creation:" %}</span> {{ date_created }}
 
+        </div>
+    </div>
     <h3>{% trans "List of Documents" %}</h3>
 
     <table id="table_docs">

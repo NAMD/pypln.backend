@@ -67,15 +67,16 @@ def corpora_page(request):
     return render_to_response('taw/corpora.html',data_dict, context_instance=RequestContext(request))
 
 
-def create_corpus(data, owner):
+def create_corpus(data, usr):
     """
     Create corpus in the database.
     :param data: dictionary with corpus info from post request
+    :param usr: User creating the corpus
     :return: None
     """
     c = Corpus(**{"name"      :data['name'],
                 'description' :data['description'],
-                'owner'       : owner.id,
+                'owner'       : usr.id,
                 'private'     : data['private'],
                 })
     c.save()
@@ -140,8 +141,10 @@ def corpus(request,corpus_slug=""):
 
     c = Corpus.find_by_slug(corpus_slug)
     data_dict = {
+        "owner"        : c.owner,
         "slug"          : c.slug,
         "name"          : c.name,
+        "date_created"  : c.date_created,
         "document_list" : docs,
         "form"          : form,
     }
