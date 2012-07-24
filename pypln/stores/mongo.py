@@ -97,6 +97,7 @@ class Corpus(Object):
               'slug': '',
               'description': '',
               'owner': '',
+              'private': False,
               'date_created': lambda: now(),
               'last_modified': None,}
     indexes = ['slug', 'owner', 'date_created', 'last_modified']
