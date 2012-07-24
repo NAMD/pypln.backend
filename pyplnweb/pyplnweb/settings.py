@@ -231,3 +231,5 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+#TODO: add fetching of db configuration from manager
