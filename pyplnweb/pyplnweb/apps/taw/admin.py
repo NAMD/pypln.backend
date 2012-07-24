@@ -6,16 +6,9 @@ by fccoelho
 __author__ = 'fccoelho'
 
 from django.contrib import admin
-from taw.models import Document,Corpus, Glossario
+from taw.models import Glossario
 
-class DocumentAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(Document, DocumentAdmin)
 
-class CorpusAdmin(admin.ModelAdmin):
-    date_hierarchy = 'date_created'
-    pass
-admin.site.register(Corpus, CorpusAdmin)
 
 class GlossarioAdmin(admin.ModelAdmin):
     pass
