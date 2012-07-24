@@ -15,10 +15,23 @@ import sphinxapi
 import json
 import os
 import datetime
-#from pypln.stores import DocumentStore
-#DS = DocumentStore()
+from pypln.stores.mongo import MongoDBStore
+
+
+
 
 # Initialize mongo connection
+MS = MongoDBStore(**{'host':'127.0.0.1','port':27017,
+                   'database': 'pypln',
+                    'corpora_collection': 'corpora',
+                    'document_collection': 'documents',
+                    'analysis_collection': 'analysis',
+                    'gridfs_collection': 'files',
+                    'monitoring_collection': 'monitoring'})
+Corpus = MS.Corpus
+Document = MS.Document
+
+#TODO: the configuration from the Mongodb Store should be pulled from some global config file.
 connection = PM.Connection(settings.MONGODB, settings.MONGODB_PORT)
 
 
@@ -26,7 +39,7 @@ def main(request):
     return render_to_response("taw/workbench.html", context_instance=RequestContext(request))
 
 
-
+@login_required
 def corpora_page(request):
     """
     View of list of corpora available
@@ -39,7 +52,7 @@ def corpora_page(request):
         if form.is_valid():
             create_corpus(request.POST,request.user)
             return HttpResponseRedirect('/taw/corpora/') # Redirect after POST
-    corpora = connection.pypln.corpora.find()
+    corpora = MS.Corpus.all
     data_dict = {
         'corpora': list(corpora),
         'form': form
@@ -54,14 +67,12 @@ def create_corpus(data, owner):
     :param data: dictionary with corpus info from post request
     :return: None
     """
-    connection.pypln.corpora.insert({"name"         :data['name'],
-                                     'description'  :data['description'],
-                                     'owner'        : owner,
-                                     'created_on'   : datetime.datetime.now(),
-                                     'last_updated' : datetime.datetime.now(),
-                                     'docs'         : [],
-                                     'private'       : data['private'],
-                                    })
+    c = Corpus(**{"name"      :data['name'],
+                'description' :data['description'],
+                'owner'       : owner.id,
+                'private'     : data['private'],
+                })
+    c.save()
 
 def collection_browse(request):
     """
