@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load ifsetting_tag %}
+{% load custom %}
 
 
 {% block head_title %}{% trans "Corpora List" %}{% endblock %}
@@ -12,20 +13,38 @@
 
 
 {% block body %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#table_corpora').dataTable();
+    } );
+</script>
 <div class="breadcrumb">
     {% trans "You are here: " %}
     <a href="{% url taw_home %}">{% trans "Workbench" %}</a> &gt;
     <a href="{% url corpora %}">{% trans "Corpora" %} </a>
 </div>
 <h2>Corpora</h2>
-    <h3>Add Corpus</h3>
-    <form method="post" action="/taw/corpora/">{% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add" />
-    </form>
-    <h4>{% trans "These" %} {{ corpora|length }} {% trans "corpora are accessible to you, " %}{{ user.username }}"</h4>
 
-    <table id="table_id">
+    <div class="modal hide fade in" id="add_form_div" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>{% trans "Create a new corpus" %}</h3>
+        </div>
+        <form class="well-large" method="post" action="/taw/corpora/" id="add_form">{% csrf_token %}
+            {{ form.as_p }}
+        </form>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">{% trans "Close" %}</a>
+            <a href="#" class="btn btn-primary" onclick="$('#add_form').submit()">{% trans "Create" %}</a>
+        </div>
+    </div>
+    <button class="btn btn-primary" data-toggle="modal" href="#add_form_div">
+        Add Corpus
+        <b class="caret"></b>
+    </button>
+    <h4>{% trans "These" %} {{ corpora|length }} {% trans "corpora are accessible to you, " %}{{ user.username }}</h4>
+
+    <table id="table_corpora">
         <thead>
         <tr>
             <th>{% trans "Name"%}</th>
@@ -38,11 +57,11 @@
         <tbody>
         {% for corpus in corpora %}
         <tr>
-            <td>{{corpus.name}}</td>
-            <td>{{corpus.owner}}</td>
-            <td>{{corpus.created_on}}</td>
-            <td>{{ corpus.docs|length}} {% trans "documents" %}</td>
-            <td>{{corpus.access}}</td>
+            <td><a href="/taw/corpus/{{ corpus.slug }}">{{corpus.name}}</a></td>
+            <td>{{ corpus.owner|username_from_id }}</td>
+            <td>{{corpus.date_created }}</td>
+            <td>{{ corpus.docs|length }} {% trans "documents" %}</td>
+            <td>{{corpus.private}}</td>
         </tr>
         {% endfor %}
         </tbody>

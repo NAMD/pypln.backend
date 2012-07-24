@@ -14,15 +14,15 @@
         <script src="{{ STATIC_URL }}js/jquery-1.7.min.js"></script>
         <script src="{{ STATIC_URL }}js/jquery.form.js"></script>
         <script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-alerts.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-twipsy.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-tabs.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>
-        <script src="{{ STATIC_URL }}js/bootstrap-buttons.js"></script>
+{#        <script src="{{ STATIC_URL }}js/bootstrap-alerts.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-twipsy.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-popover.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-dropdown.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-tabs.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-scrollspy.js"></script>#}
+{#        <script src="{{ STATIC_URL }}js/bootstrap-buttons.js"></script>#}
         <script src="{{ STATIC_URL }}js/theme.js"></script>
-        <script src="{{ STATIC_URL }}js/pinax.modal.js"></script>
+{#        <script src="{{ STATIC_URL }}js/pinax.modal.js"></script>#}
 
         {% block extra_head_base %}
             {% block extra_head %}{% endblock %}
@@ -30,11 +30,11 @@
     </head>
     <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
         {% block topbar_base %}
-            <div class="topbar">
-                <div class="fill">
+            <div class="navbar navbar-fixed-top">
+                <div class="navbar-inner">
                     <div class="container">
                         {% block topbar %}
-                            <h3><a href="{% url home %}">{{ SITE_NAME }}</a></h3>
+                            <h3><a class="brand" href="{% url home %}">{{ SITE_NAME }}</a></h3>
                             {% block nav %}{% endblock %}
                             {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
                         {% endblock %}

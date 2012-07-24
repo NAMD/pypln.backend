@@ -3,10 +3,12 @@ from django.core.context_processors import csrf
 from django.http import Http404,HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils import simplejson
+import zipfile
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView, ListView, DetailView
-from taw.models import *
+#from taw.models import *
 from taw.forms import CorpusForm, DocumentForm
 from django.conf import settings
 import pymongo as PM
@@ -15,7 +17,9 @@ import sphinxapi
 import json
 import os
 import datetime
+import mimetypes
 from pypln.stores.mongo import MongoDBStore
+
 
 
 
@@ -35,6 +39,8 @@ Document = MS.Document
 connection = PM.Connection(settings.MONGODB, settings.MONGODB_PORT)
 
 
+
+
 def main(request):
     return render_to_response("taw/workbench.html", context_instance=RequestContext(request))
 
@@ -52,10 +58,10 @@ def corpora_page(request):
         if form.is_valid():
             create_corpus(request.POST,request.user)
             return HttpResponseRedirect('/taw/corpora/') # Redirect after POST
-    corpora = MS.Corpus.all
+    corpora = list(MS.Corpus.all)
     data_dict = {
-        'corpora': list(corpora),
-        'form': form
+        'corpora': corpora,
+        'form': form,
     }
 
     return render_to_response('taw/corpora.html',data_dict, context_instance=RequestContext(request))
@@ -128,29 +134,55 @@ def corpus(request,corpus_slug=""):
     docs = [] #this should be fetched from corpus if it exists
     if request.method == 'POST':
         form = DocumentForm(request.POST,request.FILES)
-        docs = save_uploaded_documents(request.FILES['file'])
+        save_uploaded_documents(request.FILES['file'], corpus_slug, request.user.id)
         return HttpResponseRedirect("/taw/corpus/"+corpus_slug+"/")
     #TODO: integrate with DocumentStore
+
+    c = Corpus.find_by_slug(corpus_slug)
     data_dict = {
-        "slug"          : corpus_slug,
-        "name"          : corpus_slug,
+        "slug"          : c.slug,
+        "name"          : c.name,
         "document_list" : docs,
         "form"          : form,
     }
     return render_to_response("taw/corpus.html", data_dict, context_instance=RequestContext(request))
 
-def save_uploaded_documents(fobj):
+def save_uploaded_documents(fobj, corpus_slug, uid):
     """
     Save uploaded documents in the document store
     :param fobj: fileobject uploaded
     :return: list of documents
     """
     fname  = fobj.name
-    gfs = open(os.path.join('/tmp/',fname),'w')
-    for chunk in fobj.chunks():
-        gfs.write(chunk)
+    if mimetypes.guess_type(fname)[0] == 'application/zip':
+        process_zip_file(fobj,corpus_slug, uid)
+    else:
+        doc = Document(filename=fname)
+        doc.corpora.append(corpus_slug)
+        doc.owner = uid
+        doc.save()
+        doc.set_blob(fobj.read())
+
+
     #TODO: check if file is an archive and extract the individual files from it before adding them to gridfs
     return []
+
+def process_zip_file(f, corpus_slug, uid):
+    """
+    Extracts files of a zip archive and return them as a list of file objects
+    :param f: File object of a zip archive
+    :return: list of file objects contained in the zip file
+    """
+    zip = zipfile.ZipFile(f)
+    bad_file = zip.testzip()
+    if bad_file:
+        raise Exception('"%s" in the .zip archive is corrupt.' %f.name)
+    for filename in sorted(zip.namelist()):
+        data = zip.read(filename)
+        doc = Document(filename=filename, owner=uid)
+        doc.save()
+        doc.set_blob(data)
+    zip.close()
 
 def search(request):
     """

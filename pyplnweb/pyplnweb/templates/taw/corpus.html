@@ -2,24 +2,34 @@
 {% load i18n %}
 {% load ifsetting_tag %}
 {% block head_title %}{% trans "Corpus" %}{{ slug }}{% endblock %}
+{% block extra_head%}
+    <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+    <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet"></link>
+{% endblock %}
 
 {% block body %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#table_docs').dataTable();
+        } );
+    </script>
 <div class="breadcrumb">
 You are here:
     <a href="{% url taw_home %}">{% trans "Home" %}</a> &gt;
-    <a href="{% url corpus slug %}">Corpus</a>
+    <a href="{% url corpora%}">Corpora</a> &gt;
+    <a href="{% url corpus slug %}">Corpus {{ slug }}</a>
   </div>
 
 <h2>Corpus {{ name }}</h2>
     <h3>Add Documents</h3>
-    <form method="POST" action="/taw/corpus/{{ slug }}/" enctype="multipart/form-data">{% csrf_token %}
+    <form class="well-large" method="POST" action="/taw/corpus/{{ slug }}/" enctype="multipart/form-data">{% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Add" />
     </form>
 
     <h3>{% trans "List of Documents" %}</h3>
 
-    <table>
+    <table id="table_docs">
         <thead>
         <tr>
             <th>{% trans "Filename" %}</th>

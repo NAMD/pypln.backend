@@ -5,9 +5,10 @@
 
 {% block nav %}
     {% if user.is_authenticated %}
-        <ul>{% spaceless %}
+        <ul class="nav">{% spaceless %}
             <li id="tab_workbench"><a href="{% url taw_home %}">{% trans "Workbench" %}</a></li>
             <li id="tab_corpora"><a href="{% url corpora %}">{% trans "Corpora" %}</a></li>
+            <li class="divider-vertical"></li>
             <li id="tab_profile"><a href="{% url profile_detail user.username %}">{% trans "Profile" %}</a></li>
 
             {% endspaceless %}
