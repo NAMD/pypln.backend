@@ -17,8 +17,6 @@ urlpatterns = patterns('taw.views', #this is the prefix to the views below:(eg. 
     url(r'^corpora/$', 'corpora_page', name="corpora"),
     url(r'^corpus/(?P<corpus_slug>.+)/$','corpus', name="corpus"), # restful corpus access/creation
 #    url(r'^corpus/$','corpus', name="corpus"), #for POSTs
-    url(r'^collections/$', 'collection_browse', name="collections"),
-    url(r'^collections/(?P<dbname>\w+)/(?P<collname>\w+)/$', 'document_browse'),
     url(r'^createcorpus/$', 'create_corpus'),
     url(r'^search/?', 'search', name='search'),
     url(r'^document/(?P<document_id>.*)', 'document_view', name='document'),
