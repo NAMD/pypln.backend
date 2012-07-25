@@ -180,6 +180,7 @@ INSTALLED_APPS = [
     "profiles",
     "taw",
     "search",
+    "tastypie",
 ]
 
 FIXTURE_DIRS = [

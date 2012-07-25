@@ -78,6 +78,7 @@ class ObjectStore(object):
             key = attribute[8:]
             if key == 'id':
                 key = '_id'
+                #TODO: check if the id has been passed as a ObjectID. If not convert it
             def find(value):
                 data = self._collection.find_one({key: value})
                 if data is None:

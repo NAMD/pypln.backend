@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404,redirect
 from django.core.context_processors import csrf
 from django.http import Http404,HttpResponse, HttpResponseRedirect
+from django.core import serializers
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -66,6 +67,35 @@ def corpora_page(request):
 
     return render_to_response('taw/corpora.html',data_dict, context_instance=RequestContext(request))
 
+@login_required
+def corpora_as_JSON(request):
+    """
+    Returns list of corpora in JSON format
+    :param request:
+    :return:
+    """
+    data = json.dumps([{'name':c.name,'slug':c.slug} for c in Corpus.all])
+    return HttpResponse(data,mimetype='application/json')
+
+@login_required
+def add_docs_to_corpus(request):
+    """
+    From a post request, add a list of documents identified by their IDs to
+    a corpus. This view is for documents which are already stored in the system.
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        print request.POST.items()
+        doc_ids = [v for k,v in request.POST.items() if k.startswith('option')]
+        corpus = request.POST['corpus']
+        for did in doc_ids:
+            d = Document.find_by_id(did)
+            d.corpora.append(corpus)
+            d.save()
+    return HttpResponseRedirect('/taw/') # Redirect after POST
+
+
 
 def create_corpus(data, usr):
     """
@@ -81,52 +111,12 @@ def create_corpus(data, usr):
                 })
     c.save()
 
-def collection_browse(request):
-    """
-    This view assembles the collection browsw page
-    """
-    dbs = connection.database_names()
-    collections = {}
-    for db in dbs:
-        d = connection[db]
-        for col in d.collection_names():
-            collections[col] = {'db':db, 'count':d[col].count()}
-
-    data_dict = {'collections':collections,
-
-    }
-    data_dict.update(csrf(request))
-    return render_to_response("taw/collections.html", data_dict, context_instance=RequestContext(request))
-
-def document_browse(request, dbname,collname):
-    """
-    List of documents for a given collection.
-    Also
-    """
-    docs = connection[dbname][collname].find(limit=100)
-    keys = docs[0].keys()
-    if request.user.is_authenticated():
-        corpora = Corpus.objects.filter(owner=request.user)
-    else:
-        corpora = []
-    cform = CorpusForm()
-    data_dict = {'docs':docs,
-                 'keys':keys,
-                 'jkeys':simplejson.dumps(keys),
-                 'db':simplejson.dumps(dbname),
-                 'collection':simplejson.dumps(collname),
-                 'corpora':corpora,
-                 'corpusform':cform,
-    }
-    data_dict.update(csrf(request))
-    return render_to_response("taw/document_browse.html", data_dict, context_instance=RequestContext(request))
-
-
 
 @login_required
 def corpus(request,corpus_slug=""):
     """
-    Render a single corpus view
+    Render a single corpus view, when receiving a GET or Add uploaded documents to corpus when
+    receiving a POST
     :param request:
     :param corpus_slug: name (slug) of the corpus in the corpora collection
     :return:
@@ -140,6 +130,8 @@ def corpus(request,corpus_slug=""):
     #TODO: integrate with DocumentStore
 
     c = Corpus.find_by_slug(corpus_slug)
+    docs.append(Document.find_by_corpora(corpus_slug))
+    #TODO: fetch metadata for docs: _id(to be able to show and manipulate),size, owner, date uploaded, etc.
     data_dict = {
         "owner"        : c.owner,
         "slug"          : c.slug,
@@ -165,7 +157,6 @@ def save_uploaded_documents(fobj, corpus_slug, uid):
         doc.owner = uid
         doc.save()
         doc.set_blob(fobj.read())
-
 
     #TODO: check if file is an archive and extract the individual files from it before adding them to gridfs
     return []

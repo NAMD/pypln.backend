@@ -32,8 +32,8 @@
     <div class="btn-group">
         <button class="btn btn-danger dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
         <ul class="dropdown-menu">
-            <li><a href="#">{% trans "Action" %}</a></li>
-            <li><a href="#">{% trans "Add to existing corpus" %}</a></li>
+            <li><a href="#">{% trans "With selected" %}</a></li>
+            <li><a data-toggle="modal" href="#selectcorpus">{% trans "Add to existing corpus" %}</a></li>
             <li><a href="#">{% trans "Add to new corpus" %}</a></li>
             <li class="divider"></li>
             <li><a href="#">{% trans "Analyze" %}</a></li>
@@ -41,19 +41,42 @@
     </div><!-- /btn-group -->
     <div id="search_info" class="alert alert-success">
     </div>
-    <div id="search_results">
+    <form class="well" id="select_docs">
+        <div id="search_results">
+        </div>
+    </form>
 
+    <div class="modal hide fade in" id="selectcorpus" >
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">×</button>
+            <h3>Select Corpus</h3>
+        </div>
+        <div class="modal-body">
+            <form class="well" id="corpusform">
 
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Close</a>
+            <a href="#" class="btn btn-primary" onclick="$('#select_docs').submit();">Add</a>
+        </div>
     </div>
+
     <script type="text/javascript">
+        $.get("/taw/corporaJSON/",callback=function(resp){
+            var corpora = resp;
+            content = "<select id='corpora'><option disabled='disabled'>{% trans 'Select one...' %}</option>"
+            for (var i=0;i<corpora.length; i++){
+                corpus = corpora[i];
+                content += '<option name="corpus '+i+'" value="'+corpus.slug+'">'+corpus.name+'</option>'
+            }
+            content += '</select>'
+            $("#corpusform").html(content);
+        })
         $("#search_form").submit(
         function (){
             //implement on the fly search based on words being typed
-            //var values = {};
-            //$.each($('#search_form').serializeArray(), function(i, field) {
-            //    values[field.name] = field.value;
-            //});
-            //alert("searching...")
+
             $.get("/taw/search/", $('#search_form').serialize(), function(resp) {
                 output = "";
                 var data = resp.results
@@ -61,13 +84,22 @@
                 $("#search_info").html("<strong>"+stats.total_found.toString()+"</strong>"+ " documents found in " + stats.time.toString()+ " seconds")
                 for (var i = 0; i < data.length; i++) {
                     var document = data[i];
-                    output += '<p><b><a href="/taw/document/' + document['_id']+'|'+document['db']+'|'+document['collection'] + '/">' + document['filename'] + '</a></b><br />' + document['excerpt'] + '</p>';
+                    output += '<p><span class="badge badge-info">'+(i+1)+' </span><input type="checkbox" name="option '+i+'" value="'+document['_id']+'"> <b><a href="/taw/document/' + document['_id']+'|'+document['db']+'|'+document['collection'] + '/">' + document['filename'] + '</a></b><br />' + document['excerpt'] + '</p>';
 
                 }
                 $("#search_results").html(output);
             });
             return false;
         })
+        $("#select_docs").submit(
+                function(){
+                    var form_data = $("#select_docs").serialize();
+                    var corpus = $("#corpusform").value;
+                    form_data +="&corpus="+$("select#corpora").val()
+                    $.post("/taw/adddocs/",form_data,function(){
+                    });
+                }
+        )
     </script>
 
 {% endblock %}
