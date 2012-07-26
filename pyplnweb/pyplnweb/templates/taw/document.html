@@ -15,8 +15,16 @@
 <div class="container">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="row">
-        <div class="span10">
-            <h2>{% trans "Plain Text View" %}</h2>
+        <div class="span8">
+
+            <form class="well form-inline">
+                <label>{% trans "Select view" %}</label>
+                <select>
+                    <option selected="selected"><i class="icon-align-center"></i> {% trans "Plain text" %}</option>
+                    <option>{% trans "Formatted" %}</option>
+                    <option>{% trans "Tagged" %}</option>
+                </select>
+            </form><br>
             <span class="label label-info">{{ filename }}</span><br>
             {{ text }}
         </div>

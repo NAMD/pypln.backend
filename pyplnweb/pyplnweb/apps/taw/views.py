@@ -224,6 +224,7 @@ def document_view(request, document_id):
     :param document_id:
     :return:
     """
+    doc = Document.find_by_id(document_id)
     id, db, collection = document_id.strip('/').split('|')
     fields = {'text': 1, 'filename': 1, 'size': 1}
     result = connection[db][collection].find({"_id":ObjectId(id)},fields)

@@ -101,6 +101,7 @@ class Corpus(Object):
               'private': False,
               'date_created': lambda: now(),
               'last_modified': None,}
+    #TODO: we need a way to get document size(plain text, maybe total storage related to the doc) and blob size for display
     indexes = ['slug', 'owner', 'date_created', 'last_modified']
     required_fields = ['name']
     auto_value_fields = {'last_modified': lambda obj: now(),
