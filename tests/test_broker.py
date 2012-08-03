@@ -58,7 +58,7 @@ class TestManagerBroker(unittest.TestCase):
                 sleep(document['sleep-for'])
                 return {}
         '''))
-        cls.monitoring_interval = 0.5
+        cls.monitoring_interval = 60
         cls.config = {'db': {'host': 'localhost', 'port': 27017,
                              'database': 'pypln_test',
                              'collection': 'documents',
@@ -77,8 +77,7 @@ class TestManagerBroker(unittest.TestCase):
                 unlink(worker)
                 unlink(worker + 'c') # .pyc
             except OSError:
-                # file was not created, probably test failed
-                pass
+                pass # some test failed
 
     def setUp(self):
         self.context = zmq.Context()
@@ -110,10 +109,14 @@ class TestManagerBroker(unittest.TestCase):
         try:
             self.broker.send_signal(SIGINT)
             sleep(time_to_wait / 1000.0)
-            self.broker.send_signal(SIGKILL)
-            self.broker.wait()
         except OSError:
             pass
+        finally:
+            try:
+                self.broker.send_signal(SIGKILL)
+            except OSError:
+                pass
+            self.broker.wait()
 
     def start_manager_sockets(self):
         self.api = self.context.socket(zmq.REP)
@@ -129,6 +132,7 @@ class TestManagerBroker(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'get configuration' from broker")
         message = self.api.recv_json()
+        self.config['monitoring interval'] = self.monitoring_interval
         self.api.send_json(self.config)
         self.assertEquals(message, {'command': 'get configuration'})
 
@@ -137,7 +141,7 @@ class TestManagerBroker(unittest.TestCase):
             self.fail("Didn't receive 'get job' from broker")
         message = self.api.recv_json()
         if job is None:
-            job = {'worker': 'dummy', 'document': '1', 'job id': '2'}
+            job = {'worker': 'dummy', 'data': '1', 'job id': '2'}
         self.api.send_json(job)
         self.assertEquals(message, {'command': 'get job'})
 
@@ -176,7 +180,7 @@ class TestManagerBroker(unittest.TestCase):
 
     def test_should_ask_for_a_job_after_configuration(self):
         self.receive_get_configuration_and_send_it_to_broker()
-        job = {'worker': 'dummy', 'document': '1', 'job id': '2'}
+        job = {'worker': 'dummy', 'data': '1', 'job id': '2'}
         self.send_and_receive_jobs([job])
 
     def test_should_send_get_job_just_after_manager_broadcast_new_job(self):
@@ -189,7 +193,7 @@ class TestManagerBroker(unittest.TestCase):
     def test_should_send_finished_job_when_asked_to_run_dummy_worker(self):
         jobs = []
         for i in range(self.cpus):
-            jobs.append({'worker': 'dummy', 'document': 'xpto', 'job id': i})
+            jobs.append({'worker': 'dummy', 'data': 'xpto', 'job id': i})
         self.receive_get_configuration_and_send_it_to_broker()
         messages = self.send_and_receive_jobs(jobs, wait_finished_job=True)
         finished_jobs = 0
@@ -205,7 +209,7 @@ class TestManagerBroker(unittest.TestCase):
         document_id = self.collection.insert({'key-a': 'spam', 'key-b': 'eggs'})
         jobs = []
         for i in range(self.cpus):
-            job = {'worker': 'echo', 'document': str(document_id), 'job id': i}
+            job = {'worker': 'echo', 'data': str(document_id), 'job id': i}
             jobs.append(job)
         last_job_id = jobs[-1]['job id']
         self.receive_get_configuration_and_send_it_to_broker()
@@ -225,7 +229,7 @@ class TestManagerBroker(unittest.TestCase):
         file_contents = 'Now is better than never.'
         filename = 'this.txt'
         document_id = self.gridfs.put(file_contents, filename=filename)
-        job = {'worker': 'gridfs_clone', 'document': str(document_id),
+        job = {'worker': 'gridfs_clone', 'data': str(document_id),
                'job id': '42'}
         jobs = [job] * self.cpus
         self.receive_get_configuration_and_send_it_to_broker()
@@ -246,7 +250,10 @@ class TestManagerBroker(unittest.TestCase):
         self.assertEquals(document['upload_date'],
                           gridfs_document.upload_date)
 
-    def test_should_start_worker_processes_on_initialization(self):
+    def test_should_kill_active_workers_process_when_receive_SIGINT(self):
+        document_id = str(self.collection.insert({'sleep-for': 100}))
+        jobs = [{'worker': 'snorlax', 'data': document_id,
+                 'job id': '143'}] * cpu_count()
         self.receive_get_configuration_and_send_it_to_broker()
         broker_pid = self.broker.pid
         children_pid = [process.pid for process in \
@@ -274,7 +281,7 @@ class TestManagerBroker(unittest.TestCase):
                                Process(broker_pid).get_children()]
         sleep_time = 0.1
         document_id = str(self.collection.insert({'sleep-for': sleep_time}))
-        job = {'worker': 'snorlax', 'document': document_id, 'job id': '143'}
+        job = {'worker': 'snorlax', 'data': document_id, 'job id': '143'}
         jobs = [job] * self.cpus
         self.send_and_receive_jobs(jobs, wait_finished_job=True)
         children_pid_after = [process.pid for process in \
@@ -289,7 +296,7 @@ class TestManagerBroker(unittest.TestCase):
     def test_should_return_time_spent_by_each_job(self):
         sleep_time = 0.1
         document_id = str(self.collection.insert({'sleep-for': sleep_time}))
-        job = {'worker': 'snorlax', 'document': document_id, 'job id': '143'}
+        job = {'worker': 'snorlax', 'data': document_id, 'job id': '143'}
         jobs = [job] * self.cpus
         self.receive_get_configuration_and_send_it_to_broker()
         start_time = time()
@@ -305,6 +312,7 @@ class TestManagerBroker(unittest.TestCase):
         self.assertEquals(len(jobs), counter)
 
     def test_should_insert_monitoring_information_in_mongodb(self):
+        self.monitoring_interval = 0.3
         self.receive_get_configuration_and_send_it_to_broker()
         self.send_and_receive_jobs([{'worker': None}])
         monitoring_info = self.monitoring_collection.find()
@@ -354,6 +362,7 @@ class TestManagerBroker(unittest.TestCase):
             self.assertIn(key, process_info)
 
     def test_should_insert_monitoring_information_regularly(self):
+        self.monitoring_interval = 0.5
         self.receive_get_configuration_and_send_it_to_broker()
         self.send_and_receive_jobs([{'worker': None}])
         sleep((self.monitoring_interval + 0.05 + 0.2) * 3)
@@ -362,12 +371,13 @@ class TestManagerBroker(unittest.TestCase):
         self.assertEquals(monitoring_info.count(), 3)
 
     def test_should_insert_monitoring_information_about_workers(self):
+        self.monitoring_interval = 0.5
         self.receive_get_configuration_and_send_it_to_broker()
         document_id = self.collection.insert({'sleep-for': 100})
         jobs = []
         start_time = time()
         for i in range(self.cpus):
-            jobs.append({'worker': 'snorlax', 'document': str(document_id),
+            jobs.append({'worker': 'snorlax', 'data': str(document_id),
                          'job id': i})
         self.send_and_receive_jobs(jobs)
         end_time = time()

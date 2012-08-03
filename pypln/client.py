@@ -78,7 +78,7 @@ class Pipeline(object):
 
     def send_job(self, worker):
         job = {'command': 'add job', 'worker': worker.name,
-               'document': worker.document}
+               'data': worker.document}
         self.client.manager_api.send_json(job)
         self.logger.info('Sent job: {}'.format(job))
         message = self.client.manager_api.recv_json()

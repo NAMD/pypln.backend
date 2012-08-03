@@ -132,7 +132,7 @@ class ManagerBroker(ManagerClient):
         if 'username' in conf and 'password' in conf and conf['username'] and \
            conf['password']:
                self.db.authenticate(conf['username'], conf['password'])
-        self.collection = self.db[conf['collection']]
+        self.documents = self.db[conf['collection']]
         self.monitoring_collection = self.db[conf['monitoring collection']]
         self.gridfs = GridFS(self.db, conf['gridfs collection'])
 
@@ -163,7 +163,7 @@ class ManagerBroker(ManagerClient):
             if worker.working:
                 process_info['worker'] = worker.job_info['worker']
                 process_info['document id'] = \
-                        ObjectId(worker.job_info['document'])
+                        ObjectId(worker.job_info['data'])
             processes.append(process_info)
             #TODO: should we send worker's process information if worker is not
             #      processing a job (not worker.working)?
@@ -195,11 +195,11 @@ class ManagerBroker(ManagerClient):
         if worker_input == 'document':
             required_fields = worker_info['requires']
             fields = set(['_id', 'meta'] + required_fields)
-            data = self.collection.find({'_id': ObjectId(job_description['document'])},
-                                        fields=fields)[0]
+            object_id = ObjectId(job_description['data'])
+            data = self.documents.find({'_id': object_id}, fields=fields)[0]
         elif worker_input == 'gridfs-file':
-            file_data = self.gridfs.get(ObjectId(job_description['document']))
-            data = {'_id': ObjectId(job_description['document']),
+            file_data = self.gridfs.get(ObjectId(job_description['data']))
+            data = {'_id': ObjectId(job_description['data']),
                     'length': file_data.length,
                     'md5': file_data.md5,
                     'name': file_data.name,
@@ -209,7 +209,7 @@ class ManagerBroker(ManagerClient):
 
         self.worker_pool.start_job(job_description, data)
         self.logger.debug('Started job "{}" for document "{}"'\
-                .format(job_description['worker'], job_description['document']))
+                .format(job_description['worker'], job_description['data']))
 
     def get_a_job(self):
         self.logger.debug('Available workers: {}'.format(self.worker_pool.available()))
@@ -219,7 +219,7 @@ class ManagerBroker(ManagerClient):
             #TODO: if manager stops and doesn't answer, broker will stop here
             if 'worker' in message and message['worker'] is None:
                 break # Don't have a job, stop asking
-            elif 'worker' in message and 'document' in message and \
+            elif 'worker' in message and 'data' in message and \
                     message['worker'] in workers.available:
                 self.start_job(message)
             else:
@@ -248,7 +248,7 @@ class ManagerBroker(ManagerClient):
             if not worker.finished_job():
                 continue
             job_id = worker.job_info['job id']
-            document_id = worker.job_info['document']
+            document_id = worker.job_info['data']
             worker_function = worker.job_info['worker']
             start_time = worker.job_info['start time']
             result = worker.get_result()
@@ -267,13 +267,13 @@ class ManagerBroker(ManagerClient):
             if worker_input == worker_output == 'document':
                 update_data = [{'_id': ObjectId(document_id)},
                                {'$set': result}]
-                self.collection.update(*update_data)
+                self.documents.update(*update_data)
                 #TODO: what if document > 16MB?
             elif worker_input == 'gridfs-file' and \
                  worker_output == 'document':
                 data = {'_id': ObjectId(document_id)}
                 data.update(result)
-                self.collection.insert(data)
+                self.documents.insert(data)
             #TODO: use safe=True (probably on pypln.stores)
             #TODO: what if we have other combinations of input/output?
 
