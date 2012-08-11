@@ -10,14 +10,14 @@
 {% block body %}
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#table_docs').dataTable();
+            $('#table_documents').dataTable();
         } );
     </script>
 <div class="breadcrumb">
 You are here:
     <a href="{% url home %}">{% trans "Home" %}</a> &gt;
     <a href="{% url corpora_list %}">Corpora</a> &gt;
-    <a href="{% url corpus_page corpus.slug %}">Corpus {{ corpus.slug }}</a>
+    <a href="{% url corpus_page corpus.slug %}">Corpus {{ corpus.name }}</a>
   </div>
 
   <h2 class="brand">Corpus {{ corpus.name }}</h2>
@@ -39,7 +39,7 @@ You are here:
               {% trans "Owner:" %}
             </span>
             <span class="label">
-              {{ corpus.owner }}
+              <a href="{% url profile_detail username=corpus.owner.username %}">{{ corpus.owner }}</a>
             </span>
           </div>
           <div>
@@ -70,7 +70,7 @@ You are here:
     </div>
     <h3>{% trans "List of Documents" %}</h3>
 
-    <table id="table_docs">
+    <table id="table_documents">
         <thead>
         <tr>
             <th>{% trans "Filename" %}</th>

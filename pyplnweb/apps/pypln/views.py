@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import datetime
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
@@ -81,6 +82,17 @@ def document_page(request, document_slug):
         return render_to_response('pypln/404.html', {},
                 context_instance=RequestContext(request))
 
-    data = {'document': document}
+    data = {'document': document,
+            'corpora': Corpus.objects.filter(owner=request.user.id)}
     return render_to_response('pypln/document.html', data,
+        context_instance=RequestContext(request))
+
+@login_required
+def document_list(request):
+    data = {'documents': Document.objects.filter(owner=request.user.id)}
+    return render_to_response('pypln/documents.html', data,
             context_instance=RequestContext(request))
+
+@login_required
+def document_download(request, document_slug):
+    return HttpResponse('#TODO')

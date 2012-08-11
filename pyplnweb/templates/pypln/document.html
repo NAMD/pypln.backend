@@ -1,0 +1,64 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load ifsetting_tag %}
+{% block head_title %}{% trans "Document" %} {{ document.slug }}{% endblock %}
+
+{% block body %}
+  <div class="breadcrumb">
+    You are here:
+    <a href="{% url home %}">{% trans "Home" %}</a> &gt;
+    <a href="{% url document_page document.slug %}">Document {{ document.file_name }}</a>
+  </div>
+
+  <h2 class="brand">Document {{ document.file_name }}</h2>
+  <div class="row">
+
+    <div class="span8">
+      <h2>{% trans "Visualizations" %}</h2>
+      #TODO: put visualizations here
+    </div>
+
+    <div class="span8">
+      <h2>{% trans "Metadata" %}</h2>
+      <div>
+        <span class="label label-info">
+          {% trans "Size:" %}
+        </span>
+        <span class="label">
+          {{ document.file_size }}
+        </span>
+      </div>
+      <div>
+        <span class="label label-info">
+          {% trans "Owner:" %}
+        </span>
+        <span class="label">
+          <a href="{% url profile_detail username=document.owner.username %}">{{ document.owner }}</a>
+        </span>
+      </div>
+      <div>
+        <span class="label label-info">
+          {% trans "Upload date:" %}
+        </span>
+        <span class="label">
+          {{ document.date_uploaded }}
+        </span>
+      </div>
+      <div>
+        <a href="{% url document_download document.slug %}">Download the original file</a>
+      </div>
+
+      <h2>{% trans "Corpora" %}</h2>
+      <div>
+        <ul>
+          {% for corpus in document.corpus_set.all %}
+          <li><a href="{% url corpus_page corpus_slug=corpus.slug %}">{{ corpus.slug }}</a></li>
+          {% endfor %}
+          {# #TODO: option to change corpora of this document #}
+        </ul>
+      </div>
+
+
+    </div>
+  </div>
+{% endblock %}
