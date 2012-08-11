@@ -7,4 +7,3 @@
 # See http://pip-installer.org/requirement-format.html for more information.
 
 pymongo
-django-tastypie

@@ -11,3 +11,4 @@ reg_settings.py
 MANIFEST
 .directory
 */dev.db
+.env
