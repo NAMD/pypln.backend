@@ -10,5 +10,5 @@ class TestTokenizerWorker(unittest.TestCase):
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
                   'yellow', '.']
         result = tokenizer.main({'text': text})
-        self.assertEquals(result, {'tokens': tokens})
+        self.assertEqual(result, {'tokens': tokens})
 

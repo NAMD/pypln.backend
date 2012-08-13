@@ -4,6 +4,7 @@ import unittest
 from signal import SIGINT, SIGKILL
 from time import sleep
 from subprocess import Popen, PIPE
+from .utils import default_config
 import shlex
 import zmq
 
@@ -48,14 +49,14 @@ class TestManager(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'undefined command' from manager")
         message = self.api.recv_json()
-        self.assertEquals(message, {'answer': 'undefined command'})
+        self.assertEqual(message, {'answer': 'undefined command'})
 
     def test_should_connect_to_manager_api_zmq_socket(self):
         self.api.send_json({'command': 'hello'})
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'unknown command' from manager")
         message = self.api.recv_json()
-        self.assertEquals(message, {'answer': 'unknown command'})
+        self.assertEqual(message, {'answer': 'unknown command'})
 
     def test_should_receive_new_job_from_broadcast_when_a_job_is_submitted(self):
         self.api.send_json({'command': 'add job', 'worker': 'x',
@@ -66,21 +67,14 @@ class TestManager(unittest.TestCase):
         if not self.broadcast.poll(time_to_wait):
             self.fail("Didn't receive 'new job' from broadcast")
         message = self.broadcast.recv()
-        self.assertEquals(message, 'new job')
+        self.assertEqual(message, 'new job')
 
     def test_command_get_configuration_should_return_dict_passed_on_setUp(self):
         self.api.send_json({'command': 'get configuration'})
-        default_config = {'db': {'host': 'localhost', 'port': 27017,
-                                 'database': 'pypln',
-                                 'collection': 'documents',
-                                 'gridfs collection': 'files',
-                                 'monitoring collection': 'monitoring',},
-                          'monitoring interval': 60,
-                         }
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive configuration from manager")
         message = self.api.recv_json()
-        self.assertEquals(message, default_config)
+        self.assertEqual(message, default_config)
 
     def test_command_add_job_should_return_a_job_id(self):
         cmd = {'command': 'add job', 'worker': 'test', 'document': 'eggs'}
@@ -88,16 +82,16 @@ class TestManager(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'job accepted' from manager")
         message = self.api.recv_json()
-        self.assertEquals(message['answer'], 'job accepted')
+        self.assertEqual(message['answer'], 'job accepted')
         self.assertIn('job id', message)
-        self.assertEquals(len(message['job id']), 32)
+        self.assertEqual(len(message['job id']), 32)
 
     def test_command_get_job_should_return_empty_if_no_job(self):
         self.api.send_json({'command': 'get job'})
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive job (None) from manager")
         message = self.api.recv_json()
-        self.assertEquals(message['worker'], None)
+        self.assertEqual(message['worker'], None)
 
     def test_command_get_job_should_return_a_job_after_adding_one(self):
         self.api.send_json({'command': 'add job', 'worker': 'spam',
@@ -109,17 +103,17 @@ class TestManager(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive job from manager")
         message = self.api.recv_json()
-        self.assertEquals(message['worker'], 'spam')
-        self.assertEquals(message['document'], 'eggs')
+        self.assertEqual(message['worker'], 'spam')
+        self.assertEqual(message['document'], 'eggs')
         self.assertIn('job id', message)
-        self.assertEquals(len(message['job id']), 32)
+        self.assertEqual(len(message['job id']), 32)
 
     def test_finished_job_without_job_id_should_return_error(self):
         self.api.send_json({'command': 'job finished'})
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'syntax error' from manager")
         message = self.api.recv_json()
-        self.assertEquals(message['answer'], 'syntax error')
+        self.assertEqual(message['answer'], 'syntax error')
 
     def test_finished_job_with_unknown_job_id_should_return_error(self):
         self.api.send_json({'command': 'job finished', 'job id': 'python rlz',
@@ -127,7 +121,7 @@ class TestManager(unittest.TestCase):
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'unknown job id' from manager")
         message = self.api.recv_json()
-        self.assertEquals(message['answer'], 'unknown job id')
+        self.assertEqual(message['answer'], 'unknown job id')
 
     def test_finished_job_with_correct_job_id_should_return_good_job(self):
         self.api.send_json({'command': 'add job', 'worker': 'a',
@@ -142,7 +136,7 @@ class TestManager(unittest.TestCase):
             self.fail("Didn't receive 'good job!' from manager. "
                       "#foreveralone :-(")
         message = self.api.recv_json()
-        self.assertEquals(message['answer'], 'good job!')
+        self.assertEqual(message['answer'], 'good job!')
 
     def test_should_receive_job_finished_message_with_job_id_and_duration_when_a_job_finishes(self):
         self.api.send_json({'command': 'add job', 'worker': 'x',
@@ -153,7 +147,7 @@ class TestManager(unittest.TestCase):
         if not self.broadcast.poll(time_to_wait):
             self.fail("Didn't receive 'new job' from broadcast")
         message = self.broadcast.recv()
-        self.assertEquals(message, 'new job')
+        self.assertEqual(message, 'new job')
         self.api.send_json({'command': 'get job'})
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive 'get job' reply")
@@ -168,4 +162,4 @@ class TestManager(unittest.TestCase):
             self.fail("Didn't receive 'new job' from broadcast")
         message = self.broadcast.recv()
         expected = 'job finished: {} duration: 0.1'.format(job['job id'])
-        self.assertEquals(message, expected)
+        self.assertEqual(message, expected)

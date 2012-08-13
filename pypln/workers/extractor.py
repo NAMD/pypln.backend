@@ -65,7 +65,7 @@ def extract_pdf(data):
         return None, None
 
 def main(file_data):
-    file_mime_type = guess_type(file_data['name'])[0]
+    file_mime_type = guess_type(file_data['filename'])[0]
     metadata = None
     if file_mime_type == 'text/plain':
         text = file_data['contents']

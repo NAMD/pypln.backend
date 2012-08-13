@@ -8,3 +8,4 @@ rdfextras
 Pinax
 flask
 jinja2
+mongodict
