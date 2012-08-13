@@ -4,6 +4,7 @@ import unittest
 from signal import SIGINT, SIGKILL
 from time import sleep
 from subprocess import Popen, PIPE
+from .utils import default_config
 import shlex
 import zmq
 
@@ -70,13 +71,6 @@ class TestManager(unittest.TestCase):
 
     def test_command_get_configuration_should_return_dict_passed_on_setUp(self):
         self.api.send_json({'command': 'get configuration'})
-        default_config = {'db': {'host': 'localhost', 'port': 27017,
-                                 'database': 'pypln',
-                                 'collection': 'documents',
-                                 'gridfs collection': 'files',
-                                 'monitoring collection': 'monitoring',},
-                          'monitoring interval': 60,
-                         }
         if not self.api.poll(time_to_wait):
             self.fail("Didn't receive configuration from manager")
         message = self.api.recv_json()

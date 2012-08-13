@@ -1,7 +1,9 @@
 # coding: utf-8
 
+from __future__ import print_function
 import unittest
 import shlex
+import select
 from os import unlink
 from textwrap import dedent
 from signal import SIGINT, SIGKILL
@@ -12,10 +14,36 @@ from md5 import md5
 import zmq
 from pymongo import Connection
 from gridfs import GridFS
+from mongodict import MongoDict
 from psutil import Process, NoSuchProcess
+from .utils import default_config
 
 
 time_to_wait = 1500
+
+
+def _print_debug(name, message):
+    print()
+    print('----- {} BEGIN -----'.format(name))
+    print(message)
+    print('----- {} END -----'.format(name))
+
+def _kill(pid, timeout=1.5):
+    try:
+        process = Process(pid)
+    except NoSuchProcess:
+        return
+    try:
+        process.send_signal(SIGINT)
+        sleep(timeout)
+    except OSError:
+        pass
+    finally:
+        try:
+            process.send_signal(SIGKILL)
+        except OSError:
+            pass
+        process.wait()
 
 class TestManagerBroker(unittest.TestCase):
     @classmethod
@@ -42,11 +70,11 @@ class TestManagerBroker(unittest.TestCase):
         '''))
         cls.create_worker('./pypln/workers/gridfs_clone.py', dedent('''
             __meta__ = {'from': 'gridfs-file',
-                        'requires': ['length', 'md5', 'name', 'upload_date',
-                                     'contents'],
+                        'requires': ['length', 'md5', 'filename',
+                                     'upload_date', 'contents'],
                         'to': 'document',
-                        'provides': ['length', 'md5', 'name', 'upload_date',
-                                     'contents']}
+                        'provides': ['length', 'md5', 'filename',
+                                     'upload_date', 'contents']}
             def main(document):
                 return document
         '''))
@@ -59,12 +87,7 @@ class TestManagerBroker(unittest.TestCase):
                 return {}
         '''))
         cls.monitoring_interval = 60
-        cls.config = {'db': {'host': 'localhost', 'port': 27017,
-                             'database': 'pypln_test',
-                             'collection': 'documents',
-                             'gridfs collection': 'files',
-                             'monitoring collection': 'monitoring'},
-                      'monitoring interval': cls.monitoring_interval,}
+        cls.config = default_config
         cls.connection = Connection(cls.config['db']['host'],
                                     cls.config['db']['port'])
 
@@ -86,9 +109,14 @@ class TestManagerBroker(unittest.TestCase):
         db_conf = self.config['db']
         self.connection.drop_database(db_conf['database'])
         self.db = self.connection[db_conf['database']]
-        self.collection = self.db[db_conf['collection']]
-        self.monitoring_collection = self.db[db_conf['monitoring collection']]
-        self.gridfs = GridFS(self.db, db_conf['gridfs collection'])
+        self.collection = self.db[db_conf['analysis_collection']]
+        self.monitoring_collection = self.db[db_conf['monitoring_collection']]
+        self.gridfs = GridFS(self.db, db_conf['gridfs_collection'])
+        self.mongodict = MongoDict(host=db_conf['host'], port=db_conf['port'],
+                database=db_conf['database'],
+                collection=db_conf['analysis_collection'])
+        self.DEBUG_STDOUT = False
+        self.DEBUG_STDERR = True
 
     def tearDown(self):
         self.connection.drop_database(self.config['db']['database'])
@@ -107,16 +135,29 @@ class TestManagerBroker(unittest.TestCase):
 
     def end_broker_process(self):
         try:
-            self.broker.send_signal(SIGINT)
-            sleep(time_to_wait / 1000.0)
-        except OSError:
-            pass
-        finally:
-            try:
-                self.broker.send_signal(SIGKILL)
-            except OSError:
-                pass
-            self.broker.wait()
+            broker_process = Process(self.broker.pid)
+        except NoSuchProcess:
+            return # was killed
+        # get stdout and stderr
+        select_config = [self.broker.stdout, self.broker.stderr], [], [], 0.1
+        stdout, stderr = [], []
+        result = select.select(*select_config)
+        while any(result):
+            if result[0]:
+                stdout.append(result[0][0].readline())
+            if result[1]:
+                stderr.append(result[1][0].readline())
+            result = select.select(*select_config)
+        if stdout and self.DEBUG_STDOUT:
+            _print_debug('STDOUT', ''.join(stdout))
+        if stderr and self.DEBUG_STDERR:
+            _print_debug('STDERR', ''.join(stderr))
+
+        # kill main process and its children
+        children = [process.pid for process in broker_process.get_children()]
+        _kill(self.broker.pid, timeout=time_to_wait / 1000.0)
+        for child_pid in children:
+            _kill(child_pid, timeout=time_to_wait / 1000.0)
 
     def start_manager_sockets(self):
         self.api = self.context.socket(zmq.REP)
@@ -206,10 +247,11 @@ class TestManagerBroker(unittest.TestCase):
         self.broker_should_be_quiet()
 
     def test_should_load_file_from_gridfs_and_save_what_worker_returns_to_collection(self):
-        document_id = self.collection.insert({'key-a': 'spam', 'key-b': 'eggs'})
+        self.mongodict['id:456:key-a'] = 'spam'
+        self.mongodict['id:456:key-b'] = 'eggs'
         jobs = []
         for i in range(self.cpus):
-            job = {'worker': 'echo', 'data': str(document_id), 'job id': i}
+            job = {'worker': 'echo', 'data': '456', 'job id': i}
             jobs.append(job)
         last_job_id = jobs[-1]['job id']
         self.receive_get_configuration_and_send_it_to_broker()
@@ -219,38 +261,38 @@ class TestManagerBroker(unittest.TestCase):
         self.assertIn('job id', message)
         self.assertEquals(message['command'], 'job finished')
         self.assertEquals(message['job id'], last_job_id)
-        search_document = self.collection.find({'_id': document_id})
-        self.assertEquals(search_document.count(), 1)
-        document = search_document[0]
-        self.assertEquals(document['key-c'], document['key-a'])
-        self.assertEquals(document['key-d'], document['key-b'])
+        self.assertIn('id:456:key-c', self.mongodict)
+        self.assertIn(self.mongodict['id:456:key-c'], 'spam')
+        self.assertIn('id:456:key-d', self.mongodict)
+        self.assertIn(self.mongodict['id:456:key-d'], 'eggs')
 
     def test_should_load_and_save_document_from_and_to_collection(self):
         file_contents = 'Now is better than never.'
         filename = 'this.txt'
         document_id = self.gridfs.put(file_contents, filename=filename)
-        job = {'worker': 'gridfs_clone', 'data': str(document_id),
-               'job id': '42'}
-        jobs = [job] * self.cpus
+        jobs = []
+        for i in range(self.cpus):
+            jobs.append({'worker': 'gridfs_clone', 'data': str(document_id),
+                         'job id': str(i)})
         self.receive_get_configuration_and_send_it_to_broker()
         messages = self.send_and_receive_jobs(jobs, wait_finished_job=True)
         message = messages[-1]
         self.assertIn('command', message)
         self.assertIn('job id', message)
-        self.assertEquals(message['command'], 'job finished')
-        self.assertEquals(message['job id'], '42')
-        search_document = self.collection.find({'_id': document_id})
-        self.assertEquals(search_document.count(), 1)
-        document = search_document[0]
-        gridfs_document = self.gridfs.get(document_id)
-        self.assertEquals(document['name'], filename)
-        self.assertEquals(document['length'], len(file_contents))
-        self.assertEquals(document['md5'], md5(file_contents).hexdigest())
-        self.assertEquals(document['contents'], file_contents)
-        self.assertEquals(document['upload_date'],
-                          gridfs_document.upload_date)
+        self.assertEqual(message['command'], 'job finished')
+        self.assertEqual(message['job id'], str(self.cpus - 1))
 
-    def test_should_kill_active_workers_process_when_receive_SIGINT(self):
+        gridfs_document = self.gridfs.get(document_id)
+        prefix = 'id:{}:'.format(document_id)
+        self.assertEqual(self.mongodict[prefix + 'filename'], filename)
+        self.assertEqual(self.mongodict[prefix + 'length'], len(file_contents))
+        self.assertEqual(self.mongodict[prefix + 'md5'],
+                         md5(file_contents).hexdigest())
+        self.assertEqual(self.mongodict[prefix + 'upload_date'],
+                         gridfs_document.upload_date)
+        self.assertEqual(self.mongodict[prefix + 'contents'], file_contents)
+
+    def test_should_start_worker_process_even_if_no_job(self):
         document_id = str(self.collection.insert({'sleep-for': 100}))
         jobs = [{'worker': 'snorlax', 'data': document_id,
                  'job id': '143'}] * cpu_count()
@@ -280,8 +322,8 @@ class TestManagerBroker(unittest.TestCase):
         children_pid_before = [process.pid for process in \
                                Process(broker_pid).get_children()]
         sleep_time = 0.1
-        document_id = str(self.collection.insert({'sleep-for': sleep_time}))
-        job = {'worker': 'snorlax', 'data': document_id, 'job id': '143'}
+        self.mongodict['id:123:sleep-for'] = sleep_time
+        job = {'worker': 'snorlax', 'data': '123', 'job id': '143'}
         jobs = [job] * self.cpus
         self.send_and_receive_jobs(jobs, wait_finished_job=True)
         children_pid_after = [process.pid for process in \
@@ -295,8 +337,8 @@ class TestManagerBroker(unittest.TestCase):
 
     def test_should_return_time_spent_by_each_job(self):
         sleep_time = 0.1
-        document_id = str(self.collection.insert({'sleep-for': sleep_time}))
-        job = {'worker': 'snorlax', 'data': document_id, 'job id': '143'}
+        self.mongodict['id:123:sleep-for'] = sleep_time
+        job = {'worker': 'snorlax', 'data': '123', 'job id': '143'}
         jobs = [job] * self.cpus
         self.receive_get_configuration_and_send_it_to_broker()
         start_time = time()
@@ -310,6 +352,15 @@ class TestManagerBroker(unittest.TestCase):
                 self.assertIn('duration', message)
                 self.assertTrue(0 < message['duration'] < total_time)
         self.assertEquals(len(jobs), counter)
+
+    def test_should_insert_monitoring_information_regularly(self):
+        self.monitoring_interval = 0.5
+        self.receive_get_configuration_and_send_it_to_broker()
+        self.send_and_receive_jobs([{'worker': None}])
+        sleep((self.monitoring_interval + 0.05 + 0.2) * 3)
+        # 0.05 = default broker poll time, 0.2 = some overhead
+        monitoring_info = self.monitoring_collection.find()
+        self.assertEquals(monitoring_info.count(), 3)
 
     def test_should_insert_monitoring_information_in_mongodb(self):
         self.monitoring_interval = 0.3
@@ -361,23 +412,14 @@ class TestManagerBroker(unittest.TestCase):
         for key in needed_process_keys:
             self.assertIn(key, process_info)
 
-    def test_should_insert_monitoring_information_regularly(self):
-        self.monitoring_interval = 0.5
-        self.receive_get_configuration_and_send_it_to_broker()
-        self.send_and_receive_jobs([{'worker': None}])
-        sleep((self.monitoring_interval + 0.05 + 0.2) * 3)
-        # 0.05 = default broker poll time, 0.2 = some overhead
-        monitoring_info = self.monitoring_collection.find()
-        self.assertEquals(monitoring_info.count(), 3)
-
     def test_should_insert_monitoring_information_about_workers(self):
         self.monitoring_interval = 0.5
         self.receive_get_configuration_and_send_it_to_broker()
-        document_id = self.collection.insert({'sleep-for': 100})
+        self.mongodict['id:123:sleep-for'] = 100
         jobs = []
         start_time = time()
         for i in range(self.cpus):
-            jobs.append({'worker': 'snorlax', 'data': str(document_id),
+            jobs.append({'worker': 'snorlax', 'data': '123',
                          'job id': i})
         self.send_and_receive_jobs(jobs)
         end_time = time()
@@ -398,8 +440,10 @@ class TestManagerBroker(unittest.TestCase):
         self.assertTrue(start_time - 3 < broker_process['started at'] < \
                 end_time + 3)
         for process in monitoring_info['processes'][1:]:
-            self.assertEquals(process['document id'], document_id)
+            self.assertEquals(process['data'], '123')
             self.assertTrue(start_time - 3 < process['started at'] < \
                     end_time + 3)
             self.assertEquals(process['type'], 'worker')
             self.assertEquals(process['worker'], 'snorlax')
+
+    #TODO: change data = 123 to data = {'id': 123, '_id': 'af32...'}

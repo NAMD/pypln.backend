@@ -104,13 +104,14 @@ def main():
     logger.addHandler(handler)
     api_host_port = ('*', 5555)
     broadcast_host_port = ('*', 5556)
-    config = {'db': {'host': 'localhost', 'port': 27017,
-                     'database': 'pypln',
-                     'collection': 'documents',
-                     'gridfs collection': 'files',
-                     'monitoring collection': 'monitoring'},
-              'monitoring interval': 60,}
-    manager = Manager(config, logger)
+    default_config = {'db': {'host': 'localhost', 'port': 27017,
+                             'database': 'pypln',
+                             'analysis_collection': 'analysis',
+                             'gridfs_collection': 'files',
+                             'monitoring_collection': 'monitoring',},
+                      'monitoring interval': 60,
+    }
+    manager = Manager(default_config, logger)
     manager.bind(api_host_port, broadcast_host_port)
     manager.run()
 

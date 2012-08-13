@@ -8,9 +8,9 @@ from signal import SIGKILL
 import zmq
 from pymongo import Connection
 from gridfs import GridFS
-from bson.objectid import ObjectId
 from pypln import workers
 from pypln.client import ManagerClient
+from pypln.stores.mongo import MongoDBStore
 from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
 
@@ -25,10 +25,10 @@ class WorkerPool(object):
         return len(self.workers)
 
     def available(self):
-        return len([True for worker in self.workers if not worker.working])
+        return [worker.working for worker in self.workers].count(False)
 
     def working(self):
-        return len([True for worker in self.workers if worker.working])
+        return [worker.working for worker in self.workers].count(True)
 
     def start_job(self, job_description, data):
         for worker in self.workers:
@@ -124,21 +124,9 @@ class ManagerBroker(ManagerClient):
         self.logger.info('[API] Reply from manager: {}'.format(message))
         return message
 
-    def connect_to_database(self):
-        #TODO: it should be in store
-        conf = self.config['db']
-        self.mongo_connection = Connection(conf['host'], conf['port'])
-        self.db = self.mongo_connection[conf['database']]
-        if 'username' in conf and 'password' in conf and conf['username'] and \
-           conf['password']:
-               self.db.authenticate(conf['username'], conf['password'])
-        self.documents = self.db[conf['collection']]
-        self.monitoring_collection = self.db[conf['monitoring collection']]
-        self.gridfs = GridFS(self.db, conf['gridfs collection'])
-
     def get_configuration(self):
         self.request({'command': 'get configuration'})
-        self.config = self.get_reply()
+        self._config = self.get_reply()
 
     def connect_to_manager(self):
         self.logger.info('Trying to connect to manager...')
@@ -162,13 +150,12 @@ class ManagerBroker(ManagerClient):
             process_info['type'] = 'worker'
             if worker.working:
                 process_info['worker'] = worker.job_info['worker']
-                process_info['document id'] = \
-                        ObjectId(worker.job_info['data'])
+                process_info['data'] = worker.job_info['data']
             processes.append(process_info)
             #TODO: should we send worker's process information if worker is not
             #      processing a job (not worker.working)?
         data = {'host': host_info, 'timestamp': time(), 'processes': processes}
-        self.monitoring_collection.insert(data)
+        self._store.save_monitoring(data)
         self.last_time_saved_monitoring_information = time()
         self.logger.info('Saved monitoring information in MongoDB')
         self.logger.debug('  Information: {}'.format(data))
@@ -179,7 +166,7 @@ class ManagerBroker(ManagerClient):
             self.connect_to_manager()
             self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
             self.get_configuration()
-            self.connect_to_database()
+            self._store = MongoDBStore(**self._config['db'])
             self.save_monitoring_information()
             self.run()
         except KeyboardInterrupt:
@@ -189,23 +176,16 @@ class ManagerBroker(ManagerClient):
             self.close_sockets()
 
     def start_job(self, job_description):
-        data = {}
         worker_info = workers.available[job_description['worker']]
-        worker_input = worker_info['from']
-        if worker_input == 'document':
-            required_fields = worker_info['requires']
-            fields = set(['_id', 'meta'] + required_fields)
-            object_id = ObjectId(job_description['data'])
-            data = self.documents.find({'_id': object_id}, fields=fields)[0]
-        elif worker_input == 'gridfs-file':
-            file_data = self.gridfs.get(ObjectId(job_description['data']))
-            data = {'_id': ObjectId(job_description['data']),
-                    'length': file_data.length,
-                    'md5': file_data.md5,
-                    'name': file_data.name,
-                    'upload_date': file_data.upload_date,
-                    'contents': file_data.read()}
-        #TODO: what if input is a corpus?
+        job_data = {
+                'worker_input': worker_info['from'],
+                'worker_requires': worker_info['requires'],
+                'worker_output': worker_info['to'],
+                'worker_provides': worker_info['provides'],
+                'worker': job_description['worker'],
+                'data': job_description['data'],
+        }
+        data = self._store.retrieve(job_data)
 
         self.worker_pool.start_job(job_description, data)
         self.logger.debug('Started job "{}" for document "{}"'\
@@ -241,7 +221,7 @@ class ManagerBroker(ManagerClient):
 
     def should_save_monitoring_information_now(self):
         time_difference = time() - self.last_time_saved_monitoring_information
-        return time_difference >= self.config['monitoring interval']
+        return time_difference >= self._config['monitoring interval']
 
     def check_if_some_job_finished_and_do_what_you_need_to(self):
         for worker in self.worker_pool.workers:
@@ -262,20 +242,16 @@ class ManagerBroker(ManagerClient):
             for key in result.keys():
                 if key not in update_keys:
                     del result[key]
-            worker_input = worker_info['from']
-            worker_output = worker_info['to']
-            if worker_input == worker_output == 'document':
-                update_data = [{'_id': ObjectId(document_id)},
-                               {'$set': result}]
-                self.documents.update(*update_data)
-                #TODO: what if document > 16MB?
-            elif worker_input == 'gridfs-file' and \
-                 worker_output == 'document':
-                data = {'_id': ObjectId(document_id)}
-                data.update(result)
-                self.documents.insert(data)
-            #TODO: use safe=True (probably on pypln.stores)
-            #TODO: what if we have other combinations of input/output?
+            job_data = {
+                    'worker_input': worker_info['from'],
+                    'worker_requires': worker_info['requires'],
+                    'worker_output': worker_info['to'],
+                    'worker_provides': worker_info['provides'],
+                    'worker': worker_function,
+                    'data': document_id,
+                    'result': result,
+            }
+            self._store.save(job_data)
 
             self.request({'command': 'job finished',
                           'job id': job_id,
