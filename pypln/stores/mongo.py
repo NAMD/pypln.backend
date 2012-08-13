@@ -21,20 +21,27 @@ class MongoDBStore(object):
         self._gridfs = GridFS(self._db, gridfs_collection)
 
     def save(self, data):
+        worker_input = data['worker_input']
         worker_output = data['worker_output']
         worker_provides = data['worker_provides']
         job_data = data['data']
         result = data['result']
         if worker_output == 'document':
+            if 'id' not in job_data:
+                raise ValueError('Invalid job data')
+            if worker_input == 'gridfs-file':
+                if '_id' not in job_data:
+                    raise ValueError('Invalid job data')
             total = []
             for key in worker_provides:
                 if key in result:
-                    new_key = 'id:{}:{}'.format(job_data, key)
+                    new_key = 'id:{}:{}'.format(job_data['id'], key)
                     self._dict[new_key] = result[key]
                     total.append(key)
-            analysis_key = 'id:{}:analysis'.format(job_data)
+            analysis_key = 'id:{}:analysis'.format(job_data['id'])
             try:
                 self._dict[analysis_key] += total
+                #TODO: change to 'push'
             except KeyError:
                 self._dict[analysis_key] = total
 
@@ -48,11 +55,15 @@ class MongoDBStore(object):
 
         result = {}
         if worker_input == 'document':
+            if 'id' not in job_data:
+                raise ValueError('Invalid job data')
             for key in worker_requires:
-                new_key = 'id:{}:{}'.format(job_data, key)
+                new_key = 'id:{}:{}'.format(job_data['id'], key)
                 result[key] = self._dict[new_key]
         elif worker_input == 'gridfs-file':
-            file_data = self._gridfs.get(ObjectId(job_data))
+            if '_id' not in job_data:
+                raise ValueError('Invalid job data')
+            file_data = self._gridfs.get(ObjectId(job_data['_id']))
             result = {'length': file_data.length,
                       'md5': file_data.md5,
                       'filename': file_data.filename,

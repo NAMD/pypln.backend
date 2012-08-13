@@ -41,7 +41,7 @@ def _kill(pid, timeout=1.5):
     finally:
         try:
             process.send_signal(SIGKILL)
-        except OSError:
+        except (OSError, NoSuchProcess):
             pass
         process.wait()
 
@@ -182,7 +182,7 @@ class TestManagerBroker(unittest.TestCase):
             self.fail("Didn't receive 'get job' from broker")
         message = self.api.recv_json()
         if job is None:
-            job = {'worker': 'dummy', 'data': '1', 'job id': '2'}
+            job = {'worker': 'dummy', 'data': {'id': '1'}, 'job id': '2'}
         self.api.send_json(job)
         self.assertEquals(message, {'command': 'get job'})
 
@@ -221,7 +221,7 @@ class TestManagerBroker(unittest.TestCase):
 
     def test_should_ask_for_a_job_after_configuration(self):
         self.receive_get_configuration_and_send_it_to_broker()
-        job = {'worker': 'dummy', 'data': '1', 'job id': '2'}
+        job = {'worker': 'dummy', 'data': {'id': '1'}, 'job id': '2'}
         self.send_and_receive_jobs([job])
 
     def test_should_send_get_job_just_after_manager_broadcast_new_job(self):
@@ -234,7 +234,8 @@ class TestManagerBroker(unittest.TestCase):
     def test_should_send_finished_job_when_asked_to_run_dummy_worker(self):
         jobs = []
         for i in range(self.cpus):
-            jobs.append({'worker': 'dummy', 'data': 'xpto', 'job id': i})
+            jobs.append({'worker': 'dummy', 'data': {'id': 'xpto'},
+                         'job id': i})
         self.receive_get_configuration_and_send_it_to_broker()
         messages = self.send_and_receive_jobs(jobs, wait_finished_job=True)
         finished_jobs = 0
@@ -251,7 +252,7 @@ class TestManagerBroker(unittest.TestCase):
         self.mongodict['id:456:key-b'] = 'eggs'
         jobs = []
         for i in range(self.cpus):
-            job = {'worker': 'echo', 'data': '456', 'job id': i}
+            job = {'worker': 'echo', 'data': {'id': '456'}, 'job id': i}
             jobs.append(job)
         last_job_id = jobs[-1]['job id']
         self.receive_get_configuration_and_send_it_to_broker()
@@ -272,7 +273,8 @@ class TestManagerBroker(unittest.TestCase):
         document_id = self.gridfs.put(file_contents, filename=filename)
         jobs = []
         for i in range(self.cpus):
-            jobs.append({'worker': 'gridfs_clone', 'data': str(document_id),
+            jobs.append({'worker': 'gridfs_clone',
+                         'data': {'_id': str(document_id), 'id': '123'},
                          'job id': str(i)})
         self.receive_get_configuration_and_send_it_to_broker()
         messages = self.send_and_receive_jobs(jobs, wait_finished_job=True)
@@ -283,7 +285,7 @@ class TestManagerBroker(unittest.TestCase):
         self.assertEqual(message['job id'], str(self.cpus - 1))
 
         gridfs_document = self.gridfs.get(document_id)
-        prefix = 'id:{}:'.format(document_id)
+        prefix = 'id:123:' # 123, not document_id!
         self.assertEqual(self.mongodict[prefix + 'filename'], filename)
         self.assertEqual(self.mongodict[prefix + 'length'], len(file_contents))
         self.assertEqual(self.mongodict[prefix + 'md5'],
@@ -294,7 +296,7 @@ class TestManagerBroker(unittest.TestCase):
 
     def test_should_start_worker_process_even_if_no_job(self):
         document_id = str(self.collection.insert({'sleep-for': 100}))
-        jobs = [{'worker': 'snorlax', 'data': document_id,
+        jobs = [{'worker': 'snorlax', 'data': {'id': document_id},
                  'job id': '143'}] * cpu_count()
         self.receive_get_configuration_and_send_it_to_broker()
         broker_pid = self.broker.pid
@@ -323,7 +325,7 @@ class TestManagerBroker(unittest.TestCase):
                                Process(broker_pid).get_children()]
         sleep_time = 0.1
         self.mongodict['id:123:sleep-for'] = sleep_time
-        job = {'worker': 'snorlax', 'data': '123', 'job id': '143'}
+        job = {'worker': 'snorlax', 'data': {'id': '123'}, 'job id': '143'}
         jobs = [job] * self.cpus
         self.send_and_receive_jobs(jobs, wait_finished_job=True)
         children_pid_after = [process.pid for process in \
@@ -338,7 +340,7 @@ class TestManagerBroker(unittest.TestCase):
     def test_should_return_time_spent_by_each_job(self):
         sleep_time = 0.1
         self.mongodict['id:123:sleep-for'] = sleep_time
-        job = {'worker': 'snorlax', 'data': '123', 'job id': '143'}
+        job = {'worker': 'snorlax', 'data': {'id': '123'}, 'job id': '143'}
         jobs = [job] * self.cpus
         self.receive_get_configuration_and_send_it_to_broker()
         start_time = time()
@@ -419,7 +421,7 @@ class TestManagerBroker(unittest.TestCase):
         jobs = []
         start_time = time()
         for i in range(self.cpus):
-            jobs.append({'worker': 'snorlax', 'data': '123',
+            jobs.append({'worker': 'snorlax', 'data': {'id': '123'},
                          'job id': i})
         self.send_and_receive_jobs(jobs)
         end_time = time()
@@ -440,10 +442,8 @@ class TestManagerBroker(unittest.TestCase):
         self.assertTrue(start_time - 3 < broker_process['started at'] < \
                 end_time + 3)
         for process in monitoring_info['processes'][1:]:
-            self.assertEquals(process['data'], '123')
+            self.assertEquals(process['data'], {'id': '123'})
             self.assertTrue(start_time - 3 < process['started at'] < \
                     end_time + 3)
             self.assertEquals(process['type'], 'worker')
             self.assertEquals(process['worker'], 'snorlax')
-
-    #TODO: change data = 123 to data = {'id': 123, '_id': 'af32...'}

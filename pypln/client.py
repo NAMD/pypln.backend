@@ -78,7 +78,7 @@ class Pipeline(object):
 
     def send_job(self, worker):
         job = {'command': 'add job', 'worker': worker.name,
-               'data': worker.document}
+               'data': worker.data}
         self.client.manager_api.send_json(job)
         self.logger.info('Sent job: {}'.format(job))
         message = self.client.manager_api.recv_json()
@@ -92,13 +92,13 @@ class Pipeline(object):
 
     def distribute(self):
         self.waiting = {}
-        for document in self.documents:
+        for document_data in self.data:
             worker = deepcopy(self.pipeline)
-            worker.document = document
+            worker.data = document_data
             self.send_job(worker)
 
-    def run(self, documents):
-        self.documents = documents
+    def run(self, data):
+        self.data = data
         self.distribute()
         try:
             while True:
@@ -111,7 +111,7 @@ class Pipeline(object):
                         job_id = message.split(': ')[1].split(' ')[0]
                         worker = self.waiting[job_id]
                         for next_worker in worker.after:
-                            next_worker.document = worker.document
+                            next_worker.data = worker.data
                             self.send_job(next_worker)
                         del self.waiting[job_id]
                 if not self.waiting.keys():
@@ -159,11 +159,11 @@ def main():
     my_docs = []
     filenames = argv[1:]
     logger.info('Inserting files...')
-    for filename in filenames:
+    for index, filename in enumerate(filenames):
         if os.path.exists(filename):
             logger.debug('  {}'.format(filename))
             doc_id = gridfs.put(open(filename).read(), filename=filename)
-            my_docs.append(str(doc_id))
+            my_docs.append({'_id': str(doc_id), 'id': str(index + 1)})
 
     #TODO: use et2 to create the tree/pipeline image
     W, W.__call__ = Worker, Worker.then

@@ -34,7 +34,7 @@ class TestMongoStore(unittest.TestCase):
                 'worker_output': 'document',
                 'worker_requires': [''],
                 'worker': 'test',
-                'data': 123,
+                'data': {'id': '123'},
         }
         with self.assertRaises(KeyError):
             result = self.store.retrieve(job_data)
@@ -46,7 +46,7 @@ class TestMongoStore(unittest.TestCase):
                 'worker_output': 'document',
                 'worker_requires': ['spam', 'eggs'],
                 'worker': 'test',
-                'data': 123,
+                'data': {'id': '123'},
                 'result': {'bla': 123, 'spam': 42, 'eggs': 'ham'}
         }
         self.store.save(job_data)

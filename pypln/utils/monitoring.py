@@ -93,7 +93,7 @@ if __name__ == '__main__':
         worker_info = get_process_info(getpid())
         if worker_info is not None:
             worker_info['worker'] = 'the worker is a lie'
-            worker_info['document id'] = '...'
+            worker_info['data'] = '...'
             worker_info['type'] = 'worker'
             processes.append(worker_info)
     data = {'host': host_info, 'processes': processes, 'timestamp': time()}

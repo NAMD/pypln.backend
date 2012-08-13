@@ -118,3 +118,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#TODO: handle 'job failed' messages

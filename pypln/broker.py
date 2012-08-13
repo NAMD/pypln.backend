@@ -73,7 +73,6 @@ class Worker(object):
                    'data': data,}
         self.parent_connection.send(message)
         self.job_info = job_description
-        #TODO: should worker know about document id?
         self.job_info['start time'] = time()
         self.working = True
         return True
@@ -234,7 +233,7 @@ class ManagerBroker(ManagerClient):
             result = worker.get_result()
             end_time = time()
             self.logger.info('Job finished: job id={}, worker={}, '
-                             'document id={}, start time={}'.format(job_id,
+                             'data={}, start time={}'.format(job_id,
                     worker_function, document_id, start_time))
 
             worker_info = workers.available[worker_function]
@@ -251,11 +250,17 @@ class ManagerBroker(ManagerClient):
                     'data': document_id,
                     'result': result,
             }
-            self._store.save(job_data)
-
-            self.request({'command': 'job finished',
-                          'job id': job_id,
-                          'duration': end_time - start_time})
+            try:
+                self._store.save(job_data)
+            except ValueError:
+                self.request({'command': 'job failed',
+                              'job id': job_id,
+                              'duration': end_time - start_time,
+                              'message': "Can't save information on store"})
+            else:
+                self.request({'command': 'job finished',
+                              'job id': job_id,
+                              'duration': end_time - start_time})
             result = self.get_reply()
             self.get_a_job()
 
@@ -287,3 +292,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+#TODO: reject jobs if can't get information from store or something like
+#      that
