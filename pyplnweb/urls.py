@@ -5,13 +5,13 @@ from django.conf.urls.defaults import *
 from django.views.generic.simple import direct_to_template
 from django.contrib import admin
 from pinax.apps.account.openid_consumer import PinaxConsumer
-import apps.pypln.urls
+import apps.core.urls
 
 
 admin.autodiscover()
 handler500 = "pinax.views.server_error"
 urlpatterns = patterns("",
-    url(r"^$", 'pypln.views.index', name='home'),
+    url(r"^$", 'core.views.index', name='home'),
     url(r"^admin/invite_user/$",
          "pinax.apps.signup_codes.views.admin_invite_user",
          name="admin_invite_user"),
@@ -23,7 +23,7 @@ urlpatterns = patterns("",
     url(r"^notices/", include("notification.urls")),
     url(r"^announcements/", include("announcements.urls")),
 )
-urlpatterns += apps.pypln.urls.urlpatterns
+urlpatterns += apps.core.urls.urlpatterns
 
 if settings.SERVE_MEDIA:
     urlpatterns += patterns("",

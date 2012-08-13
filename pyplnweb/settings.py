@@ -175,7 +175,7 @@ INSTALLED_APPS = [
     "profiles",
 
     # PyPLN
-    'pypln',
+    'core',
 ]
 
 FIXTURE_DIRS = [

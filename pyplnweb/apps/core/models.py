@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from settings import MONGODB_CONFIG
-from pypln.storage import GridFSStorage
+from .storage import GridFSStorage
 
 
 gridfs_storage = GridFSStorage(location='/',
