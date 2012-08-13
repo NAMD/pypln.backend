@@ -12,8 +12,10 @@ class Manager(object):
     #TODO: add a timeout for processing jobs (default or get it from client)
     #TODO: if processing job have timeout, remove from processing queue, add
     #      again in job_queue and announce pending job
+    #TODO: validate all received data (types, keys etc.)
     def __init__(self, config, logger=None, logger_name='Manager'):
         self.job_queue = Queue()
+        #TODO: should persist jobs and recover in case of failure
         self.pending_job_ids = []
         self.context = zmq.Context()
         self.config = config

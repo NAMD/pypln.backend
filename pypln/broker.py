@@ -15,6 +15,8 @@ from pypln.utils import get_host_info, get_outgoing_ip, get_process_info
 
 
 class WorkerPool(object):
+    #TODO: test it!
+
     def __init__(self, number_of_workers):
         self.workers = []
         self.number_of_workers = number_of_workers
@@ -52,6 +54,8 @@ class WorkerPool(object):
             worker.process.join()
 
 class Worker(object):
+    #TODO: test it!
+
     def __init__(self):
         parent_connection, child_connection = Pipe()
         self.parent_connection = parent_connection
@@ -101,6 +105,7 @@ class ManagerBroker(ManagerClient):
     #      Manager
     #TODO: should use pypln.stores instead of pymongo directly
     #TODO: use log4mongo
+    #TODO: validate all received data (types, keys etc.)
     def __init__(self, api_host_port, broadcast_host_port, logger=None,
                  logger_name='ManagerBroker', poll_time=50):
         ManagerClient.__init__(self, logger=logger, logger_name=logger_name)
@@ -165,6 +170,8 @@ class ManagerBroker(ManagerClient):
             self.connect_to_manager()
             self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
             self.get_configuration()
+            #TODO: should be able to use other stores
+            #TODO: create a "dummy" store
             self._store = MongoDBStore(**self._config['db'])
             self.save_monitoring_information()
             self.run()
@@ -227,14 +234,14 @@ class ManagerBroker(ManagerClient):
             if not worker.finished_job():
                 continue
             job_id = worker.job_info['job id']
-            document_id = worker.job_info['data']
+            job_data = worker.job_info['data']
             worker_function = worker.job_info['worker']
             start_time = worker.job_info['start time']
             result = worker.get_result()
             end_time = time()
             self.logger.info('Job finished: job id={}, worker={}, '
                              'data={}, start time={}'.format(job_id,
-                    worker_function, document_id, start_time))
+                    worker_function, job_data, start_time))
 
             worker_info = workers.available[worker_function]
             update_keys = worker_info['provides']
@@ -247,10 +254,12 @@ class ManagerBroker(ManagerClient):
                     'worker_output': worker_info['to'],
                     'worker_provides': worker_info['provides'],
                     'worker': worker_function,
-                    'data': document_id,
+                    'data': job_data,
                     'result': result,
             }
             try:
+                #TODO: what if I want to the caller to receive job information
+                #      as a "return" from a function call? Should use a store?
                 self._store.save(job_data)
             except ValueError:
                 self.request({'command': 'job failed',

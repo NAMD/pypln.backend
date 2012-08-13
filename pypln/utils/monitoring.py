@@ -8,6 +8,7 @@ import psutil
 
 def get_outgoing_ip((host, port)):
     """Connect to remote host/port, return local IP used by OS"""
+    #TODO: handle exception if can't connect and add a timeout
     raw_socket = socket.socket(socket.AF_INET)
     raw_socket.connect((host, port))
     data = raw_socket.getsockname()

@@ -7,6 +7,8 @@ import zmq
 
 
 class ManagerClient(object):
+    #TODO: validate all received data (types, keys etc.)
+
     def __init__(self, logger=None, logger_name='ManagerClient'):
         self.context = zmq.Context()
         if logger is None:
