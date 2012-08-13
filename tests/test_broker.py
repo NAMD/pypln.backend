@@ -175,7 +175,7 @@ class TestManagerBroker(unittest.TestCase):
         message = self.api.recv_json()
         self.config['monitoring interval'] = self.monitoring_interval
         self.api.send_json(self.config)
-        self.assertEquals(message, {'command': 'get configuration'})
+        self.assertEqual(message, {'command': 'get configuration'})
 
     def receive_get_job_and_send_it_to_broker(self, job=None):
         if not self.api.poll(time_to_wait):
@@ -184,7 +184,7 @@ class TestManagerBroker(unittest.TestCase):
         if job is None:
             job = {'worker': 'dummy', 'data': {'id': '1'}, 'job id': '2'}
         self.api.send_json(job)
-        self.assertEquals(message, {'command': 'get job'})
+        self.assertEqual(message, {'command': 'get job'})
 
     def broker_should_be_quiet(self):
         sleep(time_to_wait / 1000.0)
@@ -242,8 +242,8 @@ class TestManagerBroker(unittest.TestCase):
         for message in messages:
             if message['command'] == 'job finished':
                 finished_jobs += 1
-        self.assertEquals(finished_jobs, self.cpus)
-        self.assertEquals(self.api.recv_json(), {'command': 'get job'})
+        self.assertEqual(finished_jobs, self.cpus)
+        self.assertEqual(self.api.recv_json(), {'command': 'get job'})
         self.api.send_json({'worker': None})
         self.broker_should_be_quiet()
 
@@ -260,8 +260,8 @@ class TestManagerBroker(unittest.TestCase):
         message = messages[-1]
         self.assertIn('command', message)
         self.assertIn('job id', message)
-        self.assertEquals(message['command'], 'job finished')
-        self.assertEquals(message['job id'], last_job_id)
+        self.assertEqual(message['command'], 'job finished')
+        self.assertEqual(message['job id'], last_job_id)
         self.assertIn('id:456:key-c', self.mongodict)
         self.assertIn(self.mongodict['id:456:key-c'], 'spam')
         self.assertIn('id:456:key-d', self.mongodict)
@@ -302,7 +302,7 @@ class TestManagerBroker(unittest.TestCase):
         broker_pid = self.broker.pid
         children_pid = [process.pid for process in \
                         Process(broker_pid).get_children()]
-        self.assertEquals(len(children_pid), self.cpus)
+        self.assertEqual(len(children_pid), self.cpus)
 
     def test_should_kill_workers_processes_when_receive_SIGINT(self):
         self.receive_get_configuration_and_send_it_to_broker()
@@ -334,8 +334,8 @@ class TestManagerBroker(unittest.TestCase):
         self.send_and_receive_jobs(jobs, wait_finished_job=True)
         children_pid_after_2 = [process.pid for process in \
                                 Process(broker_pid).get_children()]
-        self.assertEquals(children_pid_before, children_pid_after)
-        self.assertEquals(children_pid_before, children_pid_after_2)
+        self.assertEqual(children_pid_before, children_pid_after)
+        self.assertEqual(children_pid_before, children_pid_after_2)
 
     def test_should_return_time_spent_by_each_job(self):
         sleep_time = 0.1
@@ -353,7 +353,7 @@ class TestManagerBroker(unittest.TestCase):
                 counter += 1
                 self.assertIn('duration', message)
                 self.assertTrue(0 < message['duration'] < total_time)
-        self.assertEquals(len(jobs), counter)
+        self.assertEqual(len(jobs), counter)
 
     def test_should_insert_monitoring_information_regularly(self):
         self.monitoring_interval = 0.5
@@ -362,14 +362,14 @@ class TestManagerBroker(unittest.TestCase):
         sleep((self.monitoring_interval + 0.05 + 0.2) * 3)
         # 0.05 = default broker poll time, 0.2 = some overhead
         monitoring_info = self.monitoring_collection.find()
-        self.assertEquals(monitoring_info.count(), 3)
+        self.assertEqual(monitoring_info.count(), 3)
 
     def test_should_insert_monitoring_information_in_mongodb(self):
         self.monitoring_interval = 0.3
         self.receive_get_configuration_and_send_it_to_broker()
         self.send_and_receive_jobs([{'worker': None}])
         monitoring_info = self.monitoring_collection.find()
-        self.assertEquals(monitoring_info.count(), 1)
+        self.assertEqual(monitoring_info.count(), 1)
         info = monitoring_info[0]
 
         self.assertIn('host', info)
@@ -407,7 +407,7 @@ class TestManagerBroker(unittest.TestCase):
         for key in needed_storage_keys:
             self.assertIn(key, partition_info)
 
-        self.assertEquals(len(info['processes']), self.cpus + 1)
+        self.assertEqual(len(info['processes']), self.cpus + 1)
         needed_process_keys = ['cpu percent', 'pid', 'resident memory',
                                'virtual memory', 'type', 'started at']
         process_info = info['processes'][0]
@@ -427,7 +427,7 @@ class TestManagerBroker(unittest.TestCase):
         end_time = time()
         sleep(self.monitoring_interval * 3) # wait for broker to save info
         monitoring_info = list(self.monitoring_collection.find())[-1]
-        self.assertEquals(len(monitoring_info['processes']), self.cpus + 1)
+        self.assertEqual(len(monitoring_info['processes']), self.cpus + 1)
 
         needed_process_keys = ['cpu percent', 'pid', 'resident memory', 'type',
                                'virtual memory', 'started at']
@@ -436,14 +436,14 @@ class TestManagerBroker(unittest.TestCase):
                 self.assertIn(key, process)
 
         broker_process = monitoring_info['processes'][0]
-        self.assertEquals(broker_process['number of workers'], self.cpus)
-        self.assertEquals(broker_process['active workers'], self.cpus)
-        self.assertEquals(broker_process['type'], 'broker')
+        self.assertEqual(broker_process['number of workers'], self.cpus)
+        self.assertEqual(broker_process['active workers'], self.cpus)
+        self.assertEqual(broker_process['type'], 'broker')
         self.assertTrue(start_time - 3 < broker_process['started at'] < \
                 end_time + 3)
         for process in monitoring_info['processes'][1:]:
-            self.assertEquals(process['data'], {'id': '123'})
+            self.assertEqual(process['data'], {'id': '123'})
             self.assertTrue(start_time - 3 < process['started at'] < \
                     end_time + 3)
-            self.assertEquals(process['type'], 'worker')
-            self.assertEquals(process['worker'], 'snorlax')
+            self.assertEqual(process['type'], 'worker')
+            self.assertEqual(process['worker'], 'snorlax')

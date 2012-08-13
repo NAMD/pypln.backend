@@ -21,8 +21,8 @@ class TestExtractorWorker(unittest.TestCase):
         result = extractor.main(data)
         text = clear_text(result['text'])
         metadata = result['metadata']
-        self.assertEquals(original_text, text)
-        self.assertEquals(metadata, None)
+        self.assertEqual(original_text, text)
+        self.assertEqual(metadata, None)
 
     def test_extraction_from_html_file(self):
         filename = 'tests/data/test.html'
@@ -30,8 +30,8 @@ class TestExtractorWorker(unittest.TestCase):
         result = extractor.main(data)
         text = clear_text(result['text'])
         metadata = result['metadata']
-        self.assertEquals(original_text, text)
-        self.assertEquals(metadata, None)
+        self.assertEqual(original_text, text)
+        self.assertEqual(metadata, None)
 
     def test_extraction_from_pdf_file(self):
         filename = 'tests/data/test.pdf'
@@ -51,5 +51,5 @@ class TestExtractorWorker(unittest.TestCase):
                 'Optimized':      'no',
                 'PDF version':    '1.4',
         }
-        self.assertEquals(original_text, text)
-        self.assertEquals(metadata, metadata_expected)
+        self.assertEqual(original_text, text)
+        self.assertEqual(metadata, metadata_expected)

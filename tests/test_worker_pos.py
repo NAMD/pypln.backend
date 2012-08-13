@@ -14,5 +14,5 @@ class TestPosWorker(unittest.TestCase):
                    ('sun', 'NN', 21), ('is', 'VBZ', 25), ('yellow', 'JJ', 28),
                    ('.', '.', 34)]
         result = pos.main({'text': text, 'tokens': tokens})
-        self.assertEquals(result, {'pos': expected})
+        self.assertEqual(result, {'pos': expected})
 
