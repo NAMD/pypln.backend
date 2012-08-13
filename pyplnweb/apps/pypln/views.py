@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import datetime
+from mimetypes import guess_type
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -85,7 +86,8 @@ def corpus_page(request, corpus_slug):
 @login_required
 def document_page(request, document_slug):
     try:
-        document = Document.objects.get(slug=document_slug, owner=request.user.id)
+        document = Document.objects.get(slug=document_slug,
+                owner=request.user.id)
     except ObjectDoesNotExist:
         return render_to_response('pypln/404.html', {},
                 context_instance=RequestContext(request))
@@ -103,4 +105,14 @@ def document_list(request):
 
 @login_required
 def document_download(request, document_slug):
-    return HttpResponse('#TODO')
+    try:
+        document = Document.objects.get(slug=document_slug,
+                owner=request.user.id)
+    except ObjectDoesNotExist:
+        return render_to_response('pypln/404.html', {},
+                context_instance=RequestContext(request))
+    filename = document.blob.name.split('/')[-1]
+    file_mime_type = guess_type(filename)[0]
+    response = HttpResponse(document.blob, content_type=file_mime_type)
+    response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
+    return response
