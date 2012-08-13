@@ -1,13 +1,14 @@
 # coding: utf-8
 
 import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from pypln.models import Corpus, Document, CorpusForm, DocumentForm
 
 
@@ -31,6 +32,7 @@ def corpora_list(request):
             new_corpus.save()
             request.user.message_set.create(message=_('Corpus created '
                                                       'successfully!'))
+            return HttpResponseRedirect(reverse('corpora_list'))
     else:
         form = CorpusForm()
 
@@ -67,6 +69,8 @@ def corpus_page(request, corpus_slug):
             new_document.save()
             request.user.message_set.create(message=_('Document uploaded '
                                                       'successfully!'))
+            return HttpResponseRedirect(reverse('corpus_page',
+                    kwargs={'corpus_slug': corpus_slug}))
     else:
         form = DocumentForm()
     form.fields['blob'].label = ''
