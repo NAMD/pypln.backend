@@ -12,18 +12,31 @@
           {% url what_next as what_next_url %}
           {% url acct_login as login_url %}
           {% url acct_signup as signup_url %}
+          {% url corpora_list as corpora_list_url %}
+          {% url document_list as document_list_url %}
           <h1>{% trans "Welcome to PyPLN" %}</h1>
           <p>
-              {% blocktrans %}
-              <b>PyPLN</b> is a complete pipeline to create analysis based on corpora.
-              By integrating many text mining and natural language processing tools,
-              it offers an easy-to-use Web interface where you can manage documents,
-              corpora and interact with its analysis/visualizations.
-              PyPLN is free software (as in free speech) and can scale very well
-              depending on your demand.
-              {% endblocktrans %}
+            {% blocktrans %}
+            <b>PyPLN</b> is a complete pipeline to create analysis based on corpora.
+            By integrating many text mining and natural language processing tools,
+            it offers an easy-to-use Web interface where you can manage documents,
+            corpora and interact with its analysis/visualizations.
+            PyPLN is free software (as in free speech) and can scale very well
+            depending on your demand.
+            {% endblocktrans %}
           </p>
 
+          {% if user.is_authenticated %}
+          <h2>Start using it!</h2>
+          <p>
+            {% blocktrans %}
+            Go to <a href="{{ corpora_list_url }}">corpora list</a> page to see
+            your corpora or add new, see your
+            <a href="{{ document_list_url }}">documents</a> and start analyzing
+            it!
+            {% endblocktrans %}
+          </p>
+          {% else %}
           <h2>How to use it</h2>
           <p>
             {% blocktrans %}
@@ -34,10 +47,8 @@
             its processed analysis/visualizations.
             {% endblocktrans %}
           </p>
-
-          {% if user.is_authenticated %}
-              <p class="what_next">{% blocktrans %}Wondering <a href="{{ what_next_url }}" class="btn primary large">What Next</a>?{% endblocktrans %}</p>
           {% endif %}
+
         {% endblock %}
         </div>
 
