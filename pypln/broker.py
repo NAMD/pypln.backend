@@ -108,23 +108,25 @@ class ManagerBroker(ManagerClient):
     #TODO: validate all received data (types, keys etc.)
     def __init__(self, api_host_port, broadcast_host_port, logger=None,
                  logger_name='ManagerBroker', poll_time=50):
-        ManagerClient.__init__(self, logger=logger, logger_name=logger_name)
+        super(ManagerBroker, self).__init__()
         self.api_host_port = api_host_port
         self.broadcast_host_port = broadcast_host_port
-        self.number_of_workers = cpu_count()
+        self.logger = logger
         self.poll_time = poll_time
         self.last_time_saved_monitoring_information = 0
+
+        self.number_of_workers = cpu_count()
         self.pid = getpid()
         self.logger.info('Starting worker processes')
         self.worker_pool = WorkerPool(self.number_of_workers)
         self.logger.info('Broker started')
 
     def request(self, message):
-        self.manager_api.send_json(message)
+        self.send_api_request(message)
         self.logger.info('[API] Request to manager: {}'.format(message))
 
     def get_reply(self):
-        message = self.manager_api.recv_json()
+        message = self.get_api_reply()
         self.logger.info('[API] Reply from manager: {}'.format(message))
         return message
 
@@ -134,8 +136,7 @@ class ManagerBroker(ManagerClient):
 
     def connect_to_manager(self):
         self.logger.info('Trying to connect to manager...')
-        super(ManagerBroker, self).connect(self.api_host_port,
-                                           self.broadcast_host_port)
+        self.connect(self.api_host_port, self.broadcast_host_port)
         self.ip = get_outgoing_ip(self.api_host_port)
 
     def save_monitoring_information(self):
@@ -156,8 +157,6 @@ class ManagerBroker(ManagerClient):
                 process_info['worker'] = worker.job_info['worker']
                 process_info['data'] = worker.job_info['data']
             processes.append(process_info)
-            #TODO: should we send worker's process information if worker is not
-            #      processing a job (not worker.working)?
         data = {'host': host_info, 'timestamp': time(), 'processes': processes}
         self._store.save_monitoring(data)
         self.last_time_saved_monitoring_information = time()
@@ -168,7 +167,7 @@ class ManagerBroker(ManagerClient):
         try:
             self.started_at = time()
             self.connect_to_manager()
-            self.manager_broadcast.setsockopt(zmq.SUBSCRIBE, 'new job')
+            self.broadcast_subscribe('new job')
             self.get_configuration()
             #TODO: should be able to use other stores
             #TODO: create a "dummy" store
@@ -213,8 +212,8 @@ class ManagerBroker(ManagerClient):
                 #TODO: send a 'rejecting job' request to Manager
 
     def manager_has_job(self):
-        if self.manager_broadcast.poll(self.poll_time):
-            message = self.manager_broadcast.recv()
+        if self.broadcast_poll(self.poll_time):
+            message = self.broadcast_receive()
             self.logger.info('[Broadcast] Received from manager: {}'\
                              .format(message))
             #TODO: what if broker subscribe to another thing?
