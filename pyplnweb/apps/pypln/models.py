@@ -15,7 +15,7 @@ gridfs_storage = GridFSStorage(location='/',
                                collection=MONGODB_CONFIG['gridfs_collection'])
 
 class Document(models.Model):
-    blob = models.FileField(upload_to='/documents', storage=gridfs_storage)
+    blob = models.FileField(upload_to='/', storage=gridfs_storage)
     slug = models.SlugField()
     date_uploaded = models.DateTimeField()
     owner = models.ForeignKey(User)

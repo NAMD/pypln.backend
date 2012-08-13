@@ -63,10 +63,10 @@ class Pipeliner(ManagerClient):
         self.send_api_request({'command': 'get pipeline'})
         message = self.get_api_reply()
         #TODO: if manager stops and doesn't answer, pipeliner will stop here
-        self._new_pipelines -= 1
         if 'data' in message:
             if message['data'] is not None:
                 self.logger.info('Got this pipeline: {}'.format(message))
+                self._new_pipelines -= 1
                 return message
         elif 'pipeline' in message and message['pipeline'] is None:
             self.logger.info('Bad bad manager, no pipeline for me.')
