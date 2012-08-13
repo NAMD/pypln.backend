@@ -133,6 +133,7 @@ class Pipeliner(ManagerClient):
 
     def run(self):
         self.logger.info('Entering main loop')
+        self.get_a_pipeline()
         while True:
             if self.manager_has_new_pipeline():
                 self.get_a_pipeline()

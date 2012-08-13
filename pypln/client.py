@@ -19,12 +19,14 @@ class ManagerClient(object):
             self.api_connection_string = 'tcp://{}:{}'.format(*api_host_port)
             self._manager_api = self.context.socket(zmq.REQ)
             self._manager_api.connect(self.api_connection_string)
+            self._manager_api.linger = 0
         if broadcast_host_port is not None:
             self.broadcast_host_port = broadcast_host_port
             self.broadcast_connection_string = \
                     'tcp://{}:{}'.format(*broadcast_host_port)
             self._manager_broadcast = self.context.socket(zmq.SUB)
             self._manager_broadcast.connect(self.broadcast_connection_string)
+            self._manager_broadcast.linger = 0
 
     def send_api_request(self, json):
         self._manager_api.send_json(json)
@@ -41,6 +43,9 @@ class ManagerClient(object):
 
     def broadcast_poll(self, timeout=0):
         return self._manager_broadcast.poll(timeout)
+
+    def api_poll(self, timeout=0):
+        return self._manager_api.poll(timeout)
 
     def broadcast_receive(self):
         return self._manager_broadcast.recv()

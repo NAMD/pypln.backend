@@ -12,7 +12,7 @@ gridfs_storage = GridFSStorage(location='/',
                                host=MONGODB_CONFIG['host'],
                                port=MONGODB_CONFIG['port'],
                                database=MONGODB_CONFIG['database'],
-                               collection=MONGODB_CONFIG['gridfs collection'])
+                               collection=MONGODB_CONFIG['gridfs_collection'])
 
 class Document(models.Model):
     blob = models.FileField(upload_to='/documents', storage=gridfs_storage)

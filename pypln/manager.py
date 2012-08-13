@@ -34,6 +34,8 @@ class Manager(object):
     def bind(self):
         self.api = self.context.socket(zmq.REP)
         self.broadcast = self.context.socket(zmq.PUB)
+        self.api.linger = 0
+        self.broadcast.linger = 0
         self.api.bind('tcp://{}:{}'.format(*self.api_host_port))
         self.broadcast.bind('tcp://{}:{}'.format(*self.broadcast_host_port))
 
