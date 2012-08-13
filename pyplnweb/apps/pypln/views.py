@@ -20,6 +20,7 @@ def index(request):
 def corpora_list(request):
     if request.method == 'POST':
         form = CorpusForm(request.POST)
+        #TODO: do not permit to insert duplicated corpus
         if not form.is_valid():
             request.user.message_set.create(message=_('ERROR: all fields are '
                                                       'required!'))
@@ -49,8 +50,11 @@ def corpus_page(request, corpus_slug):
         return render_to_response('pypln/404.html', {},
                 context_instance=RequestContext(request))
     if request.method == 'POST':
+        #TODO: accept (and uncompress) .tar.gz and .zip files
+        #TODO: enforce document type
         form = DocumentForm(request.POST, request.FILES)
         if not form.is_valid():
+            #TODO: put messages to work
             request.user.message_set.create(message=_('ERROR: you need to '
                                                       'select a file!'))
         else:
