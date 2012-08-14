@@ -222,6 +222,8 @@ MONGODB_CONFIG = {'host': 'localhost',
                   'port': 27017,
                   'database': 'pypln',
                   'gridfs_collection': 'files',
+                  'analysis_collection': 'analysis',
+                  'monitoring_collection': 'monitoring',
 }
 MANAGER_API_HOST_PORT = ('localhost', 5555)
 MANAGER_TIMEOUT = 5

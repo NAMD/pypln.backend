@@ -2,7 +2,9 @@
 {% load i18n %}
 {% load ifsetting_tag %}
 {% block head_title %}{% trans "Document" %} {{ document.slug }}{% endblock %}
-
+{% block extra_head %}
+<script type="text/javascript" src="{{ STATIC_URL }}js/visualizations.js"></script>
+{% endblock %}
 {% block body %}
   <div class="breadcrumb">
     You are here:
@@ -15,7 +17,24 @@
 
     <div class="span8">
       <h2>{% trans "Visualizations" %}</h2>
-      #TODO: put visualizations here
+      <p>
+      {% if visualizations %}
+      {% trans "Visualizations available:" %}
+        <ul>
+          {% for visualization in visualizations %}
+          <li> <a data-visualization="{{ visualization }}"
+                  class="link-visualization"
+                  href="{% url document_visualization document.slug visualization %}">{{ visualization }}</a> </li>
+          {% endfor %}
+        </ul>
+        <div id="visualization"></div>
+      {% else %}
+        {% block trans%}
+        There no visualizations available for this document; probably it's on
+        our pipeline, processing. Please come back later.
+        {% endblock %}
+      {% endif %}
+      </p>
     </div>
 
     <div class="span8">

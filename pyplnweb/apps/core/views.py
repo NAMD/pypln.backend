@@ -1,6 +1,7 @@
 # coding: utf-8
 
 import datetime
+import json
 from mimetypes import guess_type
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
@@ -11,9 +12,16 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from .models import Corpus, Document, CorpusForm, DocumentForm
-from pyplnweb.settings import MANAGER_API_HOST_PORT, MANAGER_TIMEOUT
+from pyplnweb.settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT,
+                               MONGODB_CONFIG)
 from pypln.client import ManagerClient
+from mongodict import MongoDict
 
+
+VISUALIZATIONS = {'text': set(['text']),
+                  'pos-highlighter': set(['pos', 'tokens']),
+                  'wordcloud': set(['freqdist']),
+}
 
 def _create_pipeline(api_host_port, data, timeout=1):
     client = ManagerClient()
@@ -109,8 +117,46 @@ def document_page(request, document_slug):
 
     data = {'document': document,
             'corpora': Corpus.objects.filter(owner=request.user.id)}
+    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
+                      database=MONGODB_CONFIG['database'],
+                      collection=MONGODB_CONFIG['analysis_collection'])
+    try:
+        analysis = set(store['id:{}:analysis'.format(document.id)])
+    except KeyError:
+        analysis = set([])
+    visualizations = []
+    for key, value in VISUALIZATIONS.items():
+        if value.issubset(analysis):
+            visualizations.append(key)
+    data['visualizations'] = visualizations
     return render_to_response('core/document.html', data,
         context_instance=RequestContext(request))
+
+@login_required
+def document_visualization(request, document_slug, visualization):
+    try:
+        document = Document.objects.get(slug=document_slug,
+                owner=request.user.id)
+    except ObjectDoesNotExist:
+        return HttpResponse('Document not found', status_code=404)
+
+    data = {}
+    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
+                      database=MONGODB_CONFIG['database'],
+                      collection=MONGODB_CONFIG['analysis_collection'])
+
+    try:
+        analysis = set(store['id:{}:analysis'.format(document.id)])
+    except KeyError:
+        return HttpResponse('Visualization not found', status_code=404)
+    if visualization not in VISUALIZATIONS or \
+            not VISUALIZATIONS[visualization].issubset(analysis):
+        return HttpResponse('Visualization not found', status_code=404)
+
+    data = {}
+    for key in VISUALIZATIONS[visualization]:
+        data[key] = store['id:{}:{}'.format(document.id, key)]
+    return HttpResponse(json.dumps(data), mimetype='application/json')
 
 @login_required
 def document_list(request):
