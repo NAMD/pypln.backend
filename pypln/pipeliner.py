@@ -98,7 +98,7 @@ class Pipeliner(ManagerClient):
     def start_pipeline(self, data):
         pipeline_id = data['pipeline id']
         workers = Worker('extractor').then(Worker('tokenizer').then(Worker('pos'),
-                                                                    Worker('freqdist')))
+                                                                    Worker('freqdist').then(Worker('statistics'))))
         workers.pipeline = pipeline_id
         workers.data = data['data']
         self._pipelines[pipeline_id] = [workers]
