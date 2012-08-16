@@ -12,16 +12,37 @@ from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from .models import Corpus, Document, CorpusForm, DocumentForm
+from core.util import LANGUAGES
 from pyplnweb.settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT,
                                MONGODB_CONFIG)
 from pypln.client import ManagerClient
 from mongodict import MongoDict
 
 
-VISUALIZATIONS = {'text': set(['text']),
-                  'pos-highlighter': set(['pos', 'tokens']),
-                  'wordcloud': set(['freqdist']),
+VISUALIZATIONS = {
+        'text': {
+            'label': _('Plain text'),
+            'requires': set(['text'])
+        },
+        'pos_highlighter': {
+            'label': _('Part-of-speech'),
+            'requires': set(['pos', 'tokens'])
+        },
+        'token_histogram': {
+             'label': _('Token histogram'),
+             'requires': set(['freqdist'])
+        },
+        'statistics': {
+            'label': _('Statistics'),
+            'requires': set(['momentum-1', 'momentum-2', 'momentum-3',
+                             'momentum-4', 'repertoire',
+                             'average-sentence-length',
+                             'average-sentence-repertoire'])
+        },
 }
+
+def _slug(filename):
+    return '.'.join([slugify(x) for x in filename.split('.')])
 
 def _create_pipeline(api_host_port, data, timeout=1):
     client = ManagerClient()
@@ -72,6 +93,7 @@ def corpus_page(request, corpus_slug):
     if request.method == 'POST':
         #TODO: accept (and uncompress) .tar.gz and .zip files
         #TODO: enforce document type
+        #TODO: dot not permit to have documents with the same slug!
         form = DocumentForm(request.POST, request.FILES)
         if not form.is_valid():
             #TODO: put messages to work
@@ -83,9 +105,7 @@ def corpus_page(request, corpus_slug):
             new_document.owner = request.user
             new_document.date_uploaded = datetime.datetime.now()
             new_document.save()
-            filename = new_document.file_name()
-            filename = ' '.join(filename.split('.')[:-1])
-            new_document.slug = slugify(filename)
+            new_document.slug = _slug(new_document.file_name())
             new_document.corpus_set.add(corpus)
             for corpus in new_document.corpus_set.all():
                 corpus.last_modified = datetime.datetime.now()
@@ -120,14 +140,16 @@ def document_page(request, document_slug):
     store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
                       database=MONGODB_CONFIG['database'],
                       collection=MONGODB_CONFIG['analysis_collection'])
-    try:
-        analysis = set(store['id:{}:analysis'.format(document.id)])
-    except KeyError:
-        analysis = set([])
+    analysis = set(store.get('id:{}:analysis'.format(document.id), []))
+    metadata = store.get('id:{}:file-metadata'.format(document.id), {})
+    language = store.get('id:{}:language'.format(document.id), None)
+    if language is not None:
+        metadata['language'] = LANGUAGES[language]
+    data['metadata'] = metadata
     visualizations = []
     for key, value in VISUALIZATIONS.items():
-        if value.issubset(analysis):
-            visualizations.append(key)
+        if value['requires'].issubset(analysis):
+            visualizations.append({'slug': key, 'label': value['label']})
     data['visualizations'] = visualizations
     return render_to_response('core/document.html', data,
         context_instance=RequestContext(request))
@@ -150,11 +172,11 @@ def document_visualization(request, document_slug, visualization):
     except KeyError:
         return HttpResponse('Visualization not found', status_code=404)
     if visualization not in VISUALIZATIONS or \
-            not VISUALIZATIONS[visualization].issubset(analysis):
+            not VISUALIZATIONS[visualization]['requires'].issubset(analysis):
         return HttpResponse('Visualization not found', status_code=404)
 
     data = {}
-    for key in VISUALIZATIONS[visualization]:
+    for key in VISUALIZATIONS[visualization]['requires']:
         data[key] = store['id:{}:{}'.format(document.id, key)]
     return HttpResponse(json.dumps(data), mimetype='application/json')
 

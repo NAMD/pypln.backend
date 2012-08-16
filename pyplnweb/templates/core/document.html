@@ -15,16 +15,15 @@
   <h2 class="brand">Document {{ document.file_name }}</h2>
   <div class="row">
 
-    <div class="span8">
-      <h2>{% trans "Visualizations" %}</h2>
+    <div class="span10">
+      <h3>{% trans "Visualizations" %}</h3>
       <p>
       {% if visualizations %}
-      {% trans "Visualizations available:" %}
-        <ul>
+        <ul class="tabs" id="visualization-tabs">
           {% for visualization in visualizations %}
-          <li> <a data-visualization="{{ visualization }}"
+          <li> <a data-visualization="{{ visualization.slug }}"
                   class="link-visualization"
-                  href="{% url document_visualization document.slug visualization %}">{{ visualization }}</a> </li>
+                  href="{% url document_visualization document.slug visualization.slug %}">{{ visualization.label }}</a> </li>
           {% endfor %}
         </ul>
         <div id="visualization"></div>
@@ -37,41 +36,37 @@
       </p>
     </div>
 
-    <div class="span8">
-      <h2>{% trans "Metadata" %}</h2>
+    <div class="span6">
+      <h3>{% trans "Metadata" %}</h3>
       <div>
-        <span class="label label-info">
-          {% trans "Size:" %}
-        </span>
-        <span class="label">
-          {{ document.file_size }}
-        </span>
+        <span class="label label-info"> {% trans "Size:" %} </span>
+        <span class="label"> {{ document.file_size }} </span>
       </div>
       <div>
-        <span class="label label-info">
-          {% trans "Owner:" %}
-        </span>
+        <span class="label label-info"> {% trans "Owner:" %} </span>
         <span class="label">
           <a href="{% url profile_detail username=document.owner.username %}">{{ document.owner }}</a>
         </span>
       </div>
       <div>
-        <span class="label label-info">
-          {% trans "Upload date:" %}
-        </span>
-        <span class="label">
-          {{ document.date_uploaded }}
-        </span>
+        <span class="label label-info"> {% trans "Upload date:" %} </span>
+        <span class="label"> {{ document.date_uploaded }} </span>
       </div>
+      {% for key, value in metadata.items %}
+      <div>
+        <span class="label label-info"> {{ key }} </span>
+        <span class="label"> {{ value }} </span>
+      </div>
+      {% endfor %}
       <div>
         <a href="{% url document_download document.slug %}">Download the original file</a>
       </div>
 
-      <h2>{% trans "Corpora" %}</h2>
+      <h4>{% trans "Corpora" %}</h4>
       <div>
         <ul>
           {% for corpus in document.corpus_set.all %}
-          <li><a href="{% url corpus_page corpus_slug=corpus.slug %}">{{ corpus.slug }}</a></li>
+          <li><a href="{% url corpus_page corpus_slug=corpus.slug %}">{{ corpus.name }}</a></li>
           {% endfor %}
           {# #TODO: option to change corpora of this document #}
         </ul>
