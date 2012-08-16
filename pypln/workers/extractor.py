@@ -3,7 +3,7 @@
 __meta__ = {'from': 'gridfs-file',
             'requires': ['contents'],
             'to': 'document',
-            'provides': ['text', 'metadata'],}
+            'provides': ['text', 'file-metadata', 'language'],}
 
 import shlex
 from tempfile import NamedTemporaryFile
@@ -12,6 +12,7 @@ from os import unlink
 from subprocess import Popen, PIPE
 from mimetypes import guess_type
 from re import compile as regexp_compile, DOTALL, escape
+import cld
 
 
 regexp_tags = regexp_compile(r'(<[ \t]*([a-zA-Z0-9!"./_-]*)[^>]*>)', flags=DOTALL)
@@ -85,10 +86,7 @@ def extract_pdf(data):
     temp.close()
     pdf2html = Popen(shlex.split('pdftohtml -q -i - {}'.format(temp.name)),
                      stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    pdfinfo = Popen(shlex.split('pdfinfo -meta -'), stdin=PIPE, stdout=PIPE,
-                    stderr=PIPE)
     html, html_err = pdf2html.communicate(input=data)
-    meta_out, meta_err = pdfinfo.communicate(input=data)
     fp = open(filename + 's.html', 'r')
     html = fp.read()
     fp.close()
@@ -96,28 +94,32 @@ def extract_pdf(data):
     unlink(filename + '_ind.html')
     unlink(filename + 's.html')
     text = parse_html(html.replace('&#160;', ' '), True, ['script', 'style'])
+    pdfinfo = Popen(shlex.split('pdfinfo -'), stdin=PIPE, stdout=PIPE,
+                    stderr=PIPE)
+    meta_out, meta_err = pdfinfo.communicate(input=data)
     try:
         metadata = get_pdf_metadata(meta_out)
     except:
         metadata = {}
         #TODO: what should I do here?
     if not (text and metadata):
-        return None, None
+        return '', {}
     elif not html_err:
-        return text, None if meta_err else metadata
+        return text, {} if meta_err else metadata
     else:
-        return None, None
+        return '', {}
 
 def main(file_data):
     file_mime_type = guess_type(file_data['filename'])[0]
-    metadata = None
+    metadata = {}
     if file_mime_type == 'text/plain':
         text = clean(file_data['contents'])
     elif file_mime_type == 'text/html':
         text = parse_html(file_data['contents'], True, ['script', 'style'])
     elif file_mime_type == 'application/pdf':
         text, metadata = extract_pdf(file_data['contents'])
-    return {'text': text, 'metadata': metadata}
+    language = cld.detect(text)[1]
+    return {'text': text, 'file-metadata': metadata, 'language': language}
 
 #TODO: detect language with cld
 #TODO: detect encoding to decode

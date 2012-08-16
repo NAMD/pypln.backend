@@ -1,11 +1,15 @@
+# Common
 pyzmq
+pymongo
+mongodict
+
+# Backend
+psutil
+chromium_compact_language_detector
 numpy
 nltk
-pymongo
-psutil
-rdflib
-rdfextras
+
+# Web
 Pinax
 flask
 jinja2
-mongodict

@@ -11,25 +11,25 @@ class TestExtractorWorker(unittest.TestCase):
         filename = 'tests/data/test.txt'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['metadata']
+        metadata = result['file-metadata']
         self.assertEqual(expected, result['text'])
-        self.assertEqual(metadata, None)
+        self.assertEqual(metadata, {})
 
     def test_extraction_from_html_file(self):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.html'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['metadata']
+        metadata = result['file-metadata']
         self.assertEqual(expected, result['text'])
-        self.assertEqual(metadata, None)
+        self.assertEqual(metadata, {})
 
     def test_extraction_from_pdf_file(self):
-        expected = "This is a test file. I'm testing PyPLN extractor worker!"
+        expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.pdf'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['metadata']
+        metadata = result['file-metadata']
         metadata_expected = {
                 'Author':         'Álvaro Justen',
                 'Creator':        'Writer',
@@ -89,3 +89,17 @@ class TestExtractorWorker(unittest.TestCase):
 
             bla2''').strip()
         self.assertEqual(result['text'], expected)
+
+    def test_language_detection(self):
+        text_pt = 'Esse texto foi escrito por Álvaro em Português.'
+        text_es = 'Este texto ha sido escrito en Español por Álvaro.'
+        text_en = 'This text was written by Álvaro in English.'
+        data_pt = {'filename': 'text-pt.txt', 'contents': text_pt}
+        data_es = {'filename': 'text-es.txt', 'contents': text_es}
+        data_en = {'filename': 'text-en.txt', 'contents': text_en}
+        result_pt = extractor.main(data_pt)
+        result_es = extractor.main(data_es)
+        result_en = extractor.main(data_en)
+        self.assertEqual('pt', result_pt['language'])
+        self.assertEqual('es', result_es['language'])
+        self.assertEqual('en', result_en['language'])
