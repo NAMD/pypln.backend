@@ -64,10 +64,20 @@ $(document).ready(function() {
             link.addClass('active');
             visualizationElement.fadeIn();
         }});
+        document.location.hash = visualization.replace(/_/g, '-');
         return false;
     });
 
     if ($('#visualization-tabs > li > a').length > 0) {
-        $($('#visualization-tabs > li > a')[0]).click();
+        var hash = document.location.hash;
+        var visualization_tabs = $('#visualization-tabs > li > a');
+        for (var index = 0; index < visualization_tabs.length; index++) {
+            var element = $(visualization_tabs[index]);
+            var element_hash = '#' + element.attr('data-visualization').replace(/_/g, '-');
+            if (element_hash == hash) {
+                element.click();
+                break;
+            }
+        }
     }
 });
