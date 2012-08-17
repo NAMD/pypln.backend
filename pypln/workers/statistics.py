@@ -6,9 +6,9 @@ from collections import Counter
 __meta__ = {'from': 'document',
             'requires': ['freqdist', 'sentences'],
             'to': 'document',
-            'provides': ['momentum-1', 'momentum-2', 'momentum-3',
-                         'momentum-4', 'repertoire', 'average-sentence-length',
-                         'average-sentence-repertoire'],
+            'provides': ['momentum_1', 'momentum_2', 'momentum_3',
+                         'momentum_4', 'repertoire', 'average_sentence_length',
+                         'average_sentence_repertoire'],
 }
 
 def _get_momenta(distribution):
@@ -46,10 +46,10 @@ def main(document):
     number_of_sentences = len(sentences)
     average_sentence_length = total_tokens / number_of_sentences
     sentence_repertoire = sentence_repertoire_sum / number_of_sentences
-    return {'momentum-1': momenta[0],
-            'momentum-2': momenta[1],
-            'momentum-3': momenta[2],
-            'momentum-4': momenta[3],
+    return {'momentum_1': momenta[0],
+            'momentum_2': momenta[1],
+            'momentum_3': momenta[2],
+            'momentum_4': momenta[3],
             'repertoire': repertoire,
-            'average-sentence-length': average_sentence_length,
-            'average-sentence-repertoire': sentence_repertoire,}
+            'average_sentence_length': average_sentence_length,
+            'average_sentence_repertoire': sentence_repertoire,}

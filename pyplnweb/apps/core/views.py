@@ -19,10 +19,22 @@ from pypln.client import ManagerClient
 from mongodict import MongoDict
 
 
+def _token_frequency_histogram(data):
+    from collections import Counter
+
+    freqdist = data['freqdist']
+    values = Counter()
+    for key, value in freqdist:
+        values[value] += 1
+    data['values'] = [list(x) for x in values.most_common()]
+    del data['freqdist']
+    return data
+
+
 VISUALIZATIONS = {
         'text': {
             'label': _('Plain text'),
-            'requires': set(['text'])
+            'requires': set(['text']),
         },
         'pos-highlighter': {
             'label': _('Part-of-speech'),
@@ -30,14 +42,15 @@ VISUALIZATIONS = {
         },
         'token-frequency-histogram': {
              'label': _('Token frequency histogram'),
-             'requires': set(['freqdist', 'momentum-1', 'momentum-2',
-                              'momentum-3', 'momentum-4'])
+             'requires': set(['freqdist', 'momentum_1', 'momentum_2',
+                              'momentum_3', 'momentum_4']),
+             'process': _token_frequency_histogram,
         },
         'statistics': {
             'label': _('Statistics'),
             'requires': set(['tokens', 'sentences', 'repertoire',
-                             'average-sentence-repertoire',
-                             'average-sentence-length'])
+                             'average_sentence_repertoire',
+                             'average_sentence_length'])
         },
 }
 
@@ -178,7 +191,11 @@ def document_visualization(request, document_slug, visualization):
     data = {}
     for key in VISUALIZATIONS[visualization]['requires']:
         data[key] = store['id:{}:{}'.format(document.id, key)]
-    return HttpResponse(json.dumps(data), mimetype='application/json')
+    view_name = 'core/visualizations/{}.html'.format(visualization)
+    if 'process' in VISUALIZATIONS[visualization]:
+        data = VISUALIZATIONS[visualization]['process'](data)
+    return render_to_response(view_name, data,
+            context_instance=RequestContext(request))
 
 @login_required
 def document_list(request):

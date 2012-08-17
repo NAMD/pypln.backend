@@ -3,7 +3,7 @@
 __meta__ = {'from': 'gridfs-file',
             'requires': ['contents'],
             'to': 'document',
-            'provides': ['text', 'file-metadata', 'language'],}
+            'provides': ['text', 'file_metadata', 'language'],}
 
 import shlex
 from tempfile import NamedTemporaryFile
@@ -119,7 +119,7 @@ def main(file_data):
     elif file_mime_type == 'application/pdf':
         text, metadata = extract_pdf(file_data['contents'])
     language = cld.detect(text)[1]
-    return {'text': text, 'file-metadata': metadata, 'language': language}
+    return {'text': text, 'file_metadata': metadata, 'language': language}
 
 #TODO: detect language with cld
 #TODO: detect encoding to decode
