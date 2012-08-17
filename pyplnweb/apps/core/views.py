@@ -24,20 +24,20 @@ VISUALIZATIONS = {
             'label': _('Plain text'),
             'requires': set(['text'])
         },
-        'pos_highlighter': {
+        'pos-highlighter': {
             'label': _('Part-of-speech'),
             'requires': set(['pos', 'tokens'])
         },
-        'token_histogram': {
-             'label': _('Token histogram'),
-             'requires': set(['freqdist'])
+        'token-frequency-histogram': {
+             'label': _('Token frequency histogram'),
+             'requires': set(['freqdist', 'momentum-1', 'momentum-2',
+                              'momentum-3', 'momentum-4'])
         },
         'statistics': {
             'label': _('Statistics'),
-            'requires': set(['momentum-1', 'momentum-2', 'momentum-3',
-                             'momentum-4', 'repertoire',
-                             'average-sentence-length',
-                             'average-sentence-repertoire'])
+            'requires': set(['tokens', 'sentences', 'repertoire',
+                             'average-sentence-repertoire',
+                             'average-sentence-length'])
         },
 }
 
