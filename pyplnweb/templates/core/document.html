@@ -15,7 +15,7 @@
   <h2 class="brand">Document {{ document.file_name }}</h2>
   <div class="row">
 
-    <div class="span10">
+    <div class="span11">
       <h3>{% trans "Visualizations" %}</h3>
       <p>
       {% if visualizations %}
@@ -36,25 +36,29 @@
       </p>
     </div>
 
-    <div class="span6">
+    <div class="span5">
       <h3>{% trans "Metadata" %}</h3>
       <div>
         <span class="label label-info"> {% trans "Size:" %} </span>
+        &nbsp;
         <span class="label"> {{ document.file_size }} </span>
       </div>
       <div>
         <span class="label label-info"> {% trans "Owner:" %} </span>
+        &nbsp;
         <span class="label">
           <a href="{% url profile_detail username=document.owner.username %}">{{ document.owner }}</a>
         </span>
       </div>
       <div>
         <span class="label label-info"> {% trans "Upload date:" %} </span>
+        &nbsp;
         <span class="label"> {{ document.date_uploaded }} </span>
       </div>
       {% for key, value in metadata.items %}
       <div>
         <span class="label label-info"> {{ key }} </span>
+        &nbsp;
         <span class="label"> {{ value }} </span>
       </div>
       {% endfor %}

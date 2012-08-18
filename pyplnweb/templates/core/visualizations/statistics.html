@@ -1,22 +1,31 @@
+{% load i18n %}
 <table>
   <tr>
-    <th>Number of tokens:</th>
-    <td class="right">{{ tokens|length }}</td>
+    <th>{% trans "Number of tokens" %}:</th>
+    <td class="right">{{ number_of_tokens }}</td>
   </tr>
   <tr>
-    <th>Number of sentences:</th>
-    <td class="right">{{ sentences|length }}</td>
+    <th>{% trans "Number of unique tokens" %}:</th>
+    <td class="right">{{ number_of_unique_tokens }} ({{ percentual_tokens }}%)</td>
   </tr>
   <tr>
-    <th>Average sentence length (in tokens):</th>
+    <th>{% trans "Number of sentences" %}:</th>
+    <td class="right">{{ number_of_sentences }}</td>
+  </tr>
+  <tr>
+    <th>{% trans "Number of unique sentences" %}:</th>
+    <td class="right">{{ number_of_unique_sentences }} ({{ percentual_sentences }}%)</td>
+  </tr>
+  <tr>
+    <th>{% trans "Average sentence length (in tokens)" %}:</th>
     <td class="right">{{ average_sentence_length }}</td>
   </tr>
   <tr>
-    <th>Repertoire:</th>
-    <td class="right">{{ repertoire }}*100%</td>
+    <th>{% trans "Repertoire" %}:</th>
+    <td class="right">{{ repertoire }}%</td>
   </tr>
   <tr>
-    <th>Average sentence repertoire:</th>
-    <td class="right">{{ average_sentence_repertoire }} *100%</td>
+    <th>{% trans "Average sentence repertoire" %}:</th>
+    <td class="right">{{ average_sentence_repertoire }}%</td>
   </tr>
 </table>
