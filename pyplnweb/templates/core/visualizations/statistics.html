@@ -1,20 +1,14 @@
 {% load i18n %}
 <table>
   <tr>
-    <th>{% trans "Number of tokens" %}:</th>
-    <td class="right">{{ number_of_tokens }}</td>
+    <th>{% trans "Number of unique/total tokens" %}:</th>
+    <td class="right">
+      {{ number_of_unique_tokens }}/{{ number_of_tokens }} ({{ percentual_tokens }}%)
   </tr>
   <tr>
-    <th>{% trans "Number of unique tokens" %}:</th>
-    <td class="right">{{ number_of_unique_tokens }} ({{ percentual_tokens }}%)</td>
-  </tr>
-  <tr>
-    <th>{% trans "Number of sentences" %}:</th>
-    <td class="right">{{ number_of_sentences }}</td>
-  </tr>
-  <tr>
-    <th>{% trans "Number of unique sentences" %}:</th>
-    <td class="right">{{ number_of_unique_sentences }} ({{ percentual_sentences }}%)</td>
+    <th>{% trans "Number of unique/total sentences" %}:</th>
+    <td class="right">
+      {{ number_of_unique_sentences }}/{{ number_of_sentences }} ({{ percentual_sentences }}%)
   </tr>
   <tr>
     <th>{% trans "Average sentence length (in tokens)" %}:</th>
