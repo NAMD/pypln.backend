@@ -58,3 +58,14 @@ class ManagerClient(object):
         for socket in sockets:
             if hasattr(self, socket):
                 getattr(self, socket).close()
+
+def create_pipeline(api_host_port, data, timeout=1):
+    client = ManagerClient()
+    client.connect(api_host_port=api_host_port)
+    client.send_api_request({'command': 'add pipeline', 'data': data})
+    if client.api_poll(timeout):
+        result = client.get_api_reply()
+    else:
+        resul = False
+    client.close_sockets()
+    return result

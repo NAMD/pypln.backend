@@ -15,22 +15,13 @@ from .models import Corpus, Document, CorpusForm, DocumentForm
 from core.util import LANGUAGES
 from pyplnweb.settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT,
                                MONGODB_CONFIG)
-from pypln.client import ManagerClient
+from pypln.client import create_pipeline
 from pyplnweb.apps.core.visualizations import VISUALIZATIONS
 from mongodict import MongoDict
 
 
 def _slug(filename):
     return '.'.join([slugify(x) for x in filename.split('.')])
-
-def _create_pipeline(api_host_port, data, timeout=1):
-    client = ManagerClient()
-    client.connect(api_host_port=api_host_port)
-    client.send_api_request({'command': 'add pipeline', 'data': data})
-    if client.api_poll(timeout):
-        return client.get_api_reply()
-    else:
-        return False
 
 def index(request):
     return render_to_response('core/homepage.html', {},
@@ -92,8 +83,8 @@ def corpus_page(request, corpus_slug):
             new_document.save()
             data = {'_id': str(new_document.blob.file._id),
                     'id': new_document.id}
-            _create_pipeline(MANAGER_API_HOST_PORT, data,
-                             timeout=MANAGER_TIMEOUT)
+            create_pipeline(MANAGER_API_HOST_PORT, data,
+                            timeout=MANAGER_TIMEOUT)
             request.user.message_set.create(message=_('Document uploaded '
                                                       'successfully!'))
             return HttpResponseRedirect(reverse('corpus_page',
