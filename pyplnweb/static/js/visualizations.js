@@ -11,19 +11,24 @@ $(document).ready(function() {
             link.addClass('active');
             visualizationElement.fadeIn();
         }});
-        document.location.hash = visualization.replace(/_/g, '-');
+        document.location.hash = visualization;
         return false;
     });
 
-    if ($('#visualization-tabs > li > a').length > 0) {
+    var visualization_links = $('#visualization-tabs > li > a');
+    if (visualization_links.length > 0) {
         var hash = document.location.hash;
-        var visualization_tabs = $('#visualization-tabs > li > a');
-        for (var index = 0; index < visualization_tabs.length; index++) {
-            var element = $(visualization_tabs[index]);
-            var element_hash = '#' + element.attr('data-visualization').replace(/_/g, '-');
-            if (element_hash == hash) {
-                element.click();
-                break;
+        if (!hash) {
+            $(visualization_links[0]).click();
+        }
+        else {
+            for (var index = 0; index < visualization_links.length; index++) {
+                var element = $(visualization_links[index]);
+                var element_hash = '#' + element.attr('data-visualization');
+                if (element_hash == hash) {
+                    element.click();
+                    break;
+                }
             }
         }
     }
