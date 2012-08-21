@@ -69,3 +69,14 @@ def create_pipeline(api_host_port, data, timeout=1):
         result = False
     client.close_sockets()
     return result
+
+def get_config_from_manager(api_host_port, timeout=5):
+    client = ManagerClient()
+    client.connect(api_host_port=api_host_port)
+    client.send_api_request({'command': 'get configuration'})
+    if client.api_poll(timeout):
+        result = client.get_api_reply()
+    else:
+        result = None
+    client.close_sockets()
+    return result

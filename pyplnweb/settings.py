@@ -3,6 +3,8 @@
 
 import os.path
 import posixpath
+from pypln.client import get_config_from_manager
+
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
@@ -110,7 +112,7 @@ MIDDLEWARE_CLASSES = [
     "pinax.apps.account.middleware.LocaleMiddleware",
     "pagination.middleware.PaginationMiddleware",
     "pinax.middleware.security.HideSensistiveFieldsMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    #"debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "pyplnweb.urls"
@@ -156,7 +158,7 @@ INSTALLED_APPS = [
     "notification", # must be first
     "staticfiles",
     "compressor",
-    "debug_toolbar",
+    #"debug_toolbar",
     "mailer",
     "django_openid",
     "timezones",
@@ -217,14 +219,20 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 CONTACT_EMAIL = 'namdemapfgv@gmail.com'
-#TODO: get from manager
-MONGODB_CONFIG = {'host': 'localhost',
-                  'port': 27017,
-                  'database': 'pypln',
-                  'gridfs_collection': 'files',
-                  'analysis_collection': 'analysis',
-                  'monitoring_collection': 'monitoring',
-}
+MANAGER_API_HOST_PORT = ('localhost', 5555)
+
+CONFIGURATION = get_config_from_manager(MANAGER_API_HOST_PORT)
+if CONFIGURATION is None:
+    MONGODB_CONFIG = {'host': 'localhost',
+                      'port': 27017,
+                      'database': 'pypln',
+                      'gridfs_collection': 'files',
+                      'analysis_collection': 'analysis',
+                      'monitoring_collection': 'monitoring',
+    }
+else:
+    MONGODB_CONFIG = CONFIGURATION['db']
+
 MANAGER_API_HOST_PORT = ('localhost', 5555)
 MANAGER_TIMEOUT = 5
 
