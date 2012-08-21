@@ -66,6 +66,6 @@ def create_pipeline(api_host_port, data, timeout=1):
     if client.api_poll(timeout):
         result = client.get_api_reply()
     else:
-        resul = False
+        result = False
     client.close_sockets()
     return result

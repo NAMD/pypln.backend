@@ -1,1 +1,80 @@
-#TODO
+{% load i18n %}
+<h3>{% trans "Controls" %}</h3>
+<div id="controls"></div>
+
+<h3>{% trans "Highlighted text" %}</h3>
+<div id="text"></div>
+
+<style type="text/css">
+  #controls {
+    height: 180px;
+    width: 640px;
+    overflow: auto;
+  }
+  #text {
+    width: 640px;
+    height: 400px;
+    overflow: auto;
+  }
+  #text > div, #controls > label {
+    display: inline-block;
+    padding: 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+  }
+  #controls > label {
+    text-align: left;
+    margin: 1px;
+    padding: 2px;
+  }
+  {% for tag, info in tagset.items %} .{{ info.slug }} { background-color: {{ info.color }}; }
+{% endfor %}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  var tagSlug = {
+  {% for tag, info in tagset.items %} "{{ tag|safe }}": '{{ info.slug|safe }}', {% endfor %}
+  };
+  var tagLabel = {
+  {% for tag, info in tagset.items %} "{{ tag|safe }}": '{{ info.label|safe }}', {% endfor %}
+  };
+  var mostCommon = {
+  {% for tag in most_common %} "{{ tag|safe }}": true, {% endfor %}
+  };
+  var html = [];
+  for (var i in tagSlug) {
+    if (mostCommon[i] == true) {
+      html.push('<label class="' + tagSlug[i] + '"><input type="checkbox" data-color="' + tagSlug[i] + '" />' + tagLabel[i] + '</label>');
+    }
+  }
+  $('#controls').html(html.join("\n"));
+
+  function reloadHighlight(e) {
+    var element = $(e.srcElement);
+    var color = element.attr('data-color');
+    var showElement = element.attr('checked') == 'checked';
+    var tokens = $('#text div.' + color);
+    if (showElement) {
+      tokens.css('background-color', '');
+    }
+    else {
+      tokens.css('background-color', 'white');
+    }
+  }
+  var inputs = $('#controls > label > input');
+  for (var i = 0; i < inputs.length; i++) {
+    var element = $(inputs[i]);
+    element.attr('checked', 'checked');
+    element.click(reloadHighlight);
+  }
+
+  var content = [
+  {% for info in pos %}
+  "<div class=\"{{ info.slug }}\">{{ info.token }}</div>",
+  {% endfor %}
+  ];
+  $('#text').html(content.join('\n'));
+});
+</script>
