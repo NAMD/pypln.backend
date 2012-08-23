@@ -1,0 +1,15 @@
+<script type="text/javascript" src="{{ STATIC_URL }}js/jqcloud-1.0.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/jqcloud.css" />
+
+<div id="wordcloud" style="width: 480px; height: 350px"></div>
+
+<script type="text/javascript">
+var word_list = [
+  {% for word, weight in freqdist %}
+  {text: "{{ word }}", weight: {{ weight }} },
+  {% endfor %}
+];
+$(document).ready(function() {
+   $("#wordcloud").jQCloud(word_list);
+});
+</script>

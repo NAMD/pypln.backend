@@ -8,6 +8,7 @@ import psutil
 
 def get_outgoing_ip((host, port)):
     """Connect to remote host/port, return local IP used by OS"""
+    #TODO: handle exception if can't connect and add a timeout
     raw_socket = socket.socket(socket.AF_INET)
     raw_socket.connect((host, port))
     data = raw_socket.getsockname()
@@ -93,7 +94,7 @@ if __name__ == '__main__':
         worker_info = get_process_info(getpid())
         if worker_info is not None:
             worker_info['worker'] = 'the worker is a lie'
-            worker_info['document id'] = '...'
+            worker_info['data'] = '...'
             worker_info['type'] = 'worker'
             processes.append(worker_info)
     data = {'host': host_info, 'processes': processes, 'timestamp': time()}

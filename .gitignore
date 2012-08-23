@@ -10,4 +10,5 @@ pypln.egg-info/*
 reg_settings.py
 MANIFEST
 .directory
-*/dev.db
+*.db
+.env

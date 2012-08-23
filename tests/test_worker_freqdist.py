@@ -14,4 +14,4 @@ class TestFreqDistWorker(unittest.TestCase):
         expected = {'freqdist': [('is', 2), ('the', 2), ('blue', 1),
                                  ('sun', 1), ('sky', 1), (',', 1),
                                  ('yellow', 1), ('.', 1)]}
-        self.assertEquals(result, expected)
+        self.assertEqual(result, expected)

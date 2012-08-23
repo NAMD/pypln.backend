@@ -1,0 +1,58 @@
+{% extends "site_base.html" %}
+{% load i18n %}
+{% load ifsetting_tag %}
+{% block head_title %}{% trans "Corpora List" %}{% endblock %}
+{% block extra_head%}
+    <script src="{{ STATIC_URL }}js/jquery.dataTables.min.js"></script>
+    <link href="{{ STATIC_URL }}css/jquery.dataTables.css" rel="stylesheet"></link>
+{% endblock %}
+
+
+{% block body %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#table_corpora').dataTable();
+    } );
+</script>
+<div class="breadcrumb">
+    {% trans "You are here: " %}
+    <a href="{% url home %}">{% trans "Main page" %}</a> &gt;
+    <a href="{% url corpora_list %}">{% trans "Corpora" %} </a>
+</div>
+<h2>Corpora</h2>
+
+    <div id="add_form_div">
+        <h3>{% trans "Create a new corpus" %}</h3>
+        <form class="well large" method="post" action="{% url corpora_list %}" id="add_form">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <p>
+            <label></label>
+            <input type="submit" class="btn" value="{% trans 'Add Corpus' %}" />
+          </p>
+        </form>
+    </div>
+
+    <table id="table_corpora">
+        <thead>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Created on" %}</th>
+            <th>{% trans "Last Modified" %}</th>
+            <th>{% trans "Number of Documents" %}</th>
+            <th>{% trans "Owner" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for corpus in corpora %}
+        <tr>
+          <td><a href="{% url corpus_page corpus_slug=corpus.slug %}">{{ corpus.name }}</a></td>
+          <td>{{ corpus.date_created }}</td>
+          <td>{{ corpus.last_modified }}</td>
+          <td>{{ corpus.documents.count }}</td>
+          <td><a href="{% url profile_detail username=corpus.owner.username %}">{{ corpus.owner }}</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
