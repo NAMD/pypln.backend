@@ -28,7 +28,7 @@ def index(request):
             context_instance=RequestContext(request))
 
 @login_required
-def corpora_list(request):
+def corpora_list(request, as_json=False):
     if request.method == 'POST':
         form = CorpusForm(request.POST)
         #TODO: do not permit to insert duplicated corpus
@@ -173,3 +173,6 @@ def document_download(request, document_slug):
     response = HttpResponse(document.blob, content_type=file_mime_type)
     response['Content-Disposition'] = 'attachment; filename={}'.format(filename)
     return response
+
+def search(request, query):
+    pass
