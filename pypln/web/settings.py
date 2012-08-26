@@ -3,7 +3,7 @@
 
 import os.path
 import posixpath
-from pypln.client import get_config_from_manager
+from pypln.backend.client import get_config_from_manager
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -115,7 +115,7 @@ MIDDLEWARE_CLASSES = [
     #"debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
-ROOT_URLCONF = "pyplnweb.urls"
+ROOT_URLCONF = "pypln.web.urls"
 
 TEMPLATE_DIRS = [
     os.path.join(PROJECT_ROOT, "templates"),

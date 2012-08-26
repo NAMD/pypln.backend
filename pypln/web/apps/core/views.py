@@ -13,10 +13,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from .models import Corpus, Document, CorpusForm, DocumentForm
 from pypln.util import LANGUAGES
-from pyplnweb.settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT,
-                               MONGODB_CONFIG)
-from pypln.client import create_pipeline
-from pyplnweb.apps.core.visualizations import VISUALIZATIONS
+from settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT, MONGODB_CONFIG)
+from pypln.backend.client import create_pipeline
+from apps.core.visualizations import VISUALIZATIONS
 from mongodict import MongoDict
 
 
