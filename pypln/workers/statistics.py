@@ -4,7 +4,7 @@ from collections import Counter
 
 
 __meta__ = {'from': 'document',
-            'requires': ['freqdist_without_stopwords', 'sentences'],
+            'requires': ['freqdist', 'sentences'],
             'to': 'document',
             'provides': ['momentum_1', 'momentum_2', 'momentum_3',
                          'momentum_4', 'repertoire', 'average_sentence_length',
@@ -35,7 +35,7 @@ def _histogram(freqdist):
 
 
 def main(document):
-    freqdist = document['freqdist_without_stopwords'] # eg: [('word', 100), ('other', 97)]
+    freqdist = document['freqdist'] # eg: [('word', 100), ('other', 97)]
     sentences = document['sentences'] # eg: [['1st', 'sentence.'], ['2nd!']]
     momenta = _get_momenta(_histogram(freqdist))
     total_tokens = float(sum(dict(freqdist).values()))

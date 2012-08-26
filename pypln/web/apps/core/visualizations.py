@@ -1,18 +1,21 @@
 # coding: utf-8
 
+from string import punctuation
 from django.utils.translation import ugettext as _
+from nltk.corpus import stopwords
 from pypln.util import TAGSET, COMMON_TAGS
+from pypln.util import LANGUAGES
 
 
 def _token_frequency_histogram(data):
     from collections import Counter
 
-    freqdist = data['freqdist_without_stopwords']
+    freqdist = data['freqdist']
     values = Counter()
     for key, value in freqdist:
         values[value] += 1
     data['values'] = [list(x) for x in values.most_common()]
-    del data['freqdist_without_stopwords']
+    del data['freqdist']
     data['momentum_1'] = '{:.2f}'.format(data['momentum_1'])
     data['momentum_2'] = '{:.2f}'.format(data['momentum_2'])
     data['momentum_3'] = '{:.2f}'.format(data['momentum_3'])
@@ -42,7 +45,12 @@ def _statistics(data):
     return data
 
 def _wordcloud(data):
-    data['freqdist_without_stopwords'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist_without_stopwords']]
+    stopwords_list = list(punctuation)
+    document_language = LANGUAGES[data['language']].lower()
+    if document_language in stopwords.fileids():
+        stopwords_list += stopwords.words(document_language)
+    data['freqdist'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist'] \
+                                                 if x[0] not in stopwords_list]
     return data
 
 VISUALIZATIONS = {
@@ -57,7 +65,7 @@ VISUALIZATIONS = {
         },
         'token-frequency-histogram': {
              'label': _('Token frequency histogram'),
-             'requires': set(['freqdist_without_stopwords', 'momentum_1', 'momentum_2',
+             'requires': set(['freqdist', 'momentum_1', 'momentum_2',
                               'momentum_3', 'momentum_4']),
              'process': _token_frequency_histogram,
         },
@@ -70,7 +78,7 @@ VISUALIZATIONS = {
         },
         'word-cloud': {
             'label': _('Word cloud'),
-            'requires': set(['freqdist_without_stopwords']),
+            'requires': set(['freqdist', 'language']),
             'process': _wordcloud,
         },
 }

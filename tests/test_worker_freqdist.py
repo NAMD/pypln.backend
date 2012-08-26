@@ -11,8 +11,5 @@ class TestFreqDistWorker(unittest.TestCase):
         result = freqdist.main({'tokens': tokens, 'language': 'en'})
         expected_fd =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
                 ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
-        expected_fd_without_stopwords = [('blue', 1), ('sun', 1), ('sky', 1),
-                ('yellow', 1)]
-        expected = {'freqdist_with_stopwords': expected_fd,
-                    'freqdist_without_stopwords': expected_fd_without_stopwords}
+        expected = {'freqdist': expected_fd,}
         self.assertEqual(result, expected)
