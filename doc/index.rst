@@ -6,8 +6,7 @@
 Welcome to PyPLN's documentation!
 =================================
 
-**WARNING:** since we rebuilt our backend, this documentation is depreacted.
-Come here in some days and we'll have an updated one.
+These docs refelect the pre-release 0.4 version of PyPLN. They are in construction and thus not complete, but we are working actively to improve it.
 
 Contents:
 
