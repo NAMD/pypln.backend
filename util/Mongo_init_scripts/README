@@ -1,9 +1,0 @@
-To install this init script, you should save mongodb to /etc/init.d/ and mongosharding.conf to /etc/
-
-then run the following commands as root or with sudo:
-
-chmod 755 /etc/init.d/mongodb
-chown root:root /etc/init.d mongodb
-update-rc.d mongodb defaults
-
-This installation procedure was tested on UBUNTU 11.10

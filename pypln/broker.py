@@ -11,7 +11,7 @@ from gridfs import GridFS
 import workers
 from client import ManagerClient
 from stores.mongo import MongoDBStore
-from utils import get_host_info, get_outgoing_ip, get_process_info
+from pypln.util import get_host_info, get_outgoing_ip, get_process_info
 
 
 class WorkerPool(object):

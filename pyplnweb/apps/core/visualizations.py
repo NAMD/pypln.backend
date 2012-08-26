@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from django.utils.translation import ugettext as _
-from core.util import TAGSET, most_common
+from pypln.util import TAGSET, COMMON_TAGS
 
 
 def _token_frequency_histogram(data):
@@ -23,7 +23,7 @@ def _pos_highlighter(data):
     pos = []
     for item in data['pos']:
         pos.append({'slug': TAGSET[item[1]]['slug'], 'token': item[0]})
-    return {'pos': pos, 'tagset': TAGSET, 'most_common': most_common[:20]}
+    return {'pos': pos, 'tagset': TAGSET, 'most_common': COMMON_TAGS[:20]}
 
 def _statistics(data):
     data['repertoire'] = '{:.2f}'.format(data['repertoire'] * 100)

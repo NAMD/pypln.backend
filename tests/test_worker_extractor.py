@@ -11,7 +11,7 @@ class TestExtractorWorker(unittest.TestCase):
         filename = 'tests/data/test.txt'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['file-metadata']
+        metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
 
@@ -20,7 +20,7 @@ class TestExtractorWorker(unittest.TestCase):
         filename = 'tests/data/test.html'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['file-metadata']
+        metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
 
@@ -29,7 +29,7 @@ class TestExtractorWorker(unittest.TestCase):
         filename = 'tests/data/test.pdf'
         data = {'filename': filename, 'contents': open(filename).read()}
         result = extractor.main(data)
-        metadata = result['file-metadata']
+        metadata = result['file_metadata']
         metadata_expected = {
                 'Author':         'Álvaro Justen',
                 'Creator':        'Writer',
