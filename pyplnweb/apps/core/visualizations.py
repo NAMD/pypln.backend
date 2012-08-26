@@ -7,12 +7,12 @@ from pypln.util import TAGSET, COMMON_TAGS
 def _token_frequency_histogram(data):
     from collections import Counter
 
-    freqdist = data['freqdist']
+    freqdist = data['freqdist_without_stopwords']
     values = Counter()
     for key, value in freqdist:
         values[value] += 1
     data['values'] = [list(x) for x in values.most_common()]
-    del data['freqdist']
+    del data['freqdist_without_stopwords']
     data['momentum_1'] = '{:.2f}'.format(data['momentum_1'])
     data['momentum_2'] = '{:.2f}'.format(data['momentum_2'])
     data['momentum_3'] = '{:.2f}'.format(data['momentum_3'])
@@ -42,7 +42,7 @@ def _statistics(data):
     return data
 
 def _wordcloud(data):
-    data['freqdist'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist']]
+    data['freqdist_without_stopwords'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist_without_stopwords']]
     return data
 
 VISUALIZATIONS = {
@@ -57,7 +57,7 @@ VISUALIZATIONS = {
         },
         'token-frequency-histogram': {
              'label': _('Token frequency histogram'),
-             'requires': set(['freqdist', 'momentum_1', 'momentum_2',
+             'requires': set(['freqdist_without_stopwords', 'momentum_1', 'momentum_2',
                               'momentum_3', 'momentum_4']),
              'process': _token_frequency_histogram,
         },
@@ -70,7 +70,7 @@ VISUALIZATIONS = {
         },
         'word-cloud': {
             'label': _('Word cloud'),
-            'requires': set(['freqdist']),
+            'requires': set(['freqdist_without_stopwords']),
             'process': _wordcloud,
         },
 }
