@@ -38,7 +38,7 @@ $(document).ready(function() {
   {% for tag, info in tagset.items %} "{{ tag|safe }}": '{{ info.slug|safe }}', {% endfor %}
   };
   var tagLabel = {
-  {% for tag, info in tagset.items %} "{{ tag|safe }}": '{{ info.label|safe }}', {% endfor %}
+  {% for tag, info in tagset.items %} "{{ tag|safe }}": '{% trans info.label|safe %}', {% endfor %}
   };
   var mostCommon = {
   {% for tag in most_common %} "{{ tag|safe }}": true, {% endfor %}

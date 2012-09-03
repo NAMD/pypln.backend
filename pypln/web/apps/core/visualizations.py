@@ -1,7 +1,10 @@
 # coding: utf-8
 
+from string import punctuation
 from django.utils.translation import ugettext as _
-from core.util import TAGSET, most_common
+from nltk.corpus import stopwords
+from pypln.util import TAGSET, COMMON_TAGS
+from pypln.util import LANGUAGES
 
 
 def _token_frequency_histogram(data):
@@ -23,7 +26,7 @@ def _pos_highlighter(data):
     pos = []
     for item in data['pos']:
         pos.append({'slug': TAGSET[item[1]]['slug'], 'token': item[0]})
-    return {'pos': pos, 'tagset': TAGSET, 'most_common': most_common[:20]}
+    return {'pos': pos, 'tagset': TAGSET, 'most_common': COMMON_TAGS[:20]}
 
 def _statistics(data):
     data['repertoire'] = '{:.2f}'.format(data['repertoire'] * 100)
@@ -42,7 +45,12 @@ def _statistics(data):
     return data
 
 def _wordcloud(data):
-    data['freqdist'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist']]
+    stopwords_list = list(punctuation)
+    document_language = LANGUAGES[data['language']].lower()
+    if document_language in stopwords.fileids():
+        stopwords_list += stopwords.words(document_language)
+    data['freqdist'] = [[repr(x[0])[2:-1], x[1]] for x in data['freqdist'] \
+                                                 if x[0] not in stopwords_list]
     return data
 
 VISUALIZATIONS = {
@@ -70,7 +78,7 @@ VISUALIZATIONS = {
         },
         'word-cloud': {
             'label': _('Word cloud'),
-            'requires': set(['freqdist']),
+            'requires': set(['freqdist', 'language']),
             'process': _wordcloud,
         },
 }

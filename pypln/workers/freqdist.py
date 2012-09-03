@@ -1,7 +1,7 @@
 # coding: utf-8
 
 __meta__ = {'from': 'document',
-            'requires': ['tokens'],
+            'requires': ['tokens', 'language'],
             'to': 'document',
             'provides': ['freqdist'],}
 
@@ -11,4 +11,4 @@ def main(document):
                               for token in set(tokens)}
     fd = frequency_distribution.items()
     fd.sort(lambda x, y: cmp(y[1], x[1]))
-    return {'freqdist': fd}
+    return {'freqdist': fd,}

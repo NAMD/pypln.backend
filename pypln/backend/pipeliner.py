@@ -6,7 +6,7 @@
 #      but manager needs to support broker tags
 
 from uuid import uuid4
-from pypln.client import ManagerClient
+from pypln.backend.client import ManagerClient
 
 
 class Worker(object):
