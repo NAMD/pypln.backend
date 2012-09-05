@@ -127,7 +127,7 @@ class TestManagerBroker(unittest.TestCase):
 
     def start_broker_process(self):
         #TODO: call process passing a configuration file
-        self.broker = Popen(shlex.split('python ./pypln/broker.py'),
+        self.broker = Popen(shlex.split('python ./pypln/backend/broker.py'),
                             stdin=PIPE, stdout=PIPE, stderr=PIPE)
         for line in self.broker.stdout.readline():
             if 'main loop' in line:

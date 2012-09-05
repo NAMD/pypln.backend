@@ -15,7 +15,7 @@ from pymongo import Connection
 import datetime
 import time
 from collections import defaultdict
-from pypln.client import ManagerClient
+from pypln.backend.client import ManagerClient
 from flask_debugtoolbar import DebugToolbarExtension
 
 global Db

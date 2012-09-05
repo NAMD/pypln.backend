@@ -28,7 +28,7 @@ class TestManager(unittest.TestCase):
 
     def start_manager_process(self):
         #TODO: call process passing a configuration file
-        self.manager = Popen(shlex.split('python ./pypln/manager.py'),
+        self.manager = Popen(shlex.split('python ./pypln/backend/manager.py'),
                              stdin=PIPE, stdout=PIPE, stderr=PIPE)
         for line in self.manager.stdout.readline():
             if 'main loop' in line:
