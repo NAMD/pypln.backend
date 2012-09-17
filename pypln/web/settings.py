@@ -48,7 +48,11 @@ TIME_ZONE = "America/Sao_Paulo"
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = 'en-us'
+LANGUAGES = (
+            ('en-us', 'English'),
+            ('pt-br', u'Português'),
+)
 
 SITE_ID = 1
 
@@ -104,15 +108,16 @@ TEMPLATE_LOADERS = [
 
 MIDDLEWARE_CLASSES = [
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django_openid.consumer.SessionConsumer",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "pinax.apps.account.middleware.LocaleMiddleware",
+    #"pinax.apps.account.middleware.LocaleMiddleware",
     "pagination.middleware.PaginationMiddleware",
     "pinax.middleware.security.HideSensistiveFieldsMiddleware",
-    #"debug_toolbar.middleware.DebugToolbarMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "pypln.web.urls"
@@ -158,7 +163,7 @@ INSTALLED_APPS = [
     "notification", # must be first
     "staticfiles",
     "compressor",
-    #"debug_toolbar",
+    "debug_toolbar",
     "mailer",
     "django_openid",
     "timezones",
