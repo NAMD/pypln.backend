@@ -4,7 +4,7 @@ from nltk import pos_tag
 
 
 __meta__ = {'from': 'document',
-            'requires': ['text', 'tokens'],
+            'requires': ['text', 'tokens', 'language'],
             'to': 'document',
             'provides': ['pos'],}
 #TODO: add 'lang' to 'requires'
@@ -21,5 +21,7 @@ def _put_offset(text, tagged_text):
 def main(document):
     text = document['text']
     tokens = document['tokens']
-    tagged_text = pos_tag(tokens)
-    return {'pos': _put_offset(text, tagged_text)}
+    tagged_text = None
+    if document['language'] == 'en':
+        tagged_text = _put_offset(text, pos_tag(tokens))
+    return {'pos': tagged_text}
