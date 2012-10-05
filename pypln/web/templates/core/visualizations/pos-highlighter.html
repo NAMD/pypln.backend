@@ -1,9 +1,11 @@
 {% load i18n %}
-<h3>{% trans "Controls" %}</h3>
-<div id="controls"></div>
+<div id="pos">
+  <h3>{% trans "Controls" %}</h3>
+  <div id="controls"></div>
 
-<h3>{% trans "Highlighted text" %}</h3>
-<div id="text"></div>
+  <h3>{% trans "Highlighted text" %}</h3>
+  <div id="text"></div>
+</div>
 
 <style type="text/css">
   #controls {
@@ -34,6 +36,11 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+  {% if not pos %}
+  $('#pos').html('{% trans "We could not do the part-of-speech tagging for this language, sorry." %}');
+  return;
+  {% endif %}
+
   var tagSlug = {
   {% for tag, info in tagset.items %} "{{ tag|safe }}": '{{ info.slug|safe }}', {% endfor %}
   };

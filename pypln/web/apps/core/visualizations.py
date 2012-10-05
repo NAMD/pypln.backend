@@ -24,8 +24,9 @@ def _token_frequency_histogram(data):
 
 def _pos_highlighter(data):
     pos = []
-    for item in data['pos']:
-        pos.append({'slug': TAGSET[item[1]]['slug'], 'token': item[0]})
+    if data['pos'] is not None:
+        for item in data['pos']:
+            pos.append({'slug': TAGSET[item[1]]['slug'], 'token': item[0]})
     return {'pos': pos, 'tagset': TAGSET, 'most_common': COMMON_TAGS[:20]}
 
 def _statistics(data):

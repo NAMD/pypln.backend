@@ -4,6 +4,7 @@
 #
 msgid ""
 msgstr ""
+
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-08-25 10:36-0300\n"
@@ -244,6 +245,7 @@ msgid ""
 "            depending on your demand.\n"
 "            "
 msgstr ""
+"\n"
 "            <b>PyPLN</b> é um arcabouço completo para criar análises "
 "baseadas em corpora.\n"
 "            Através da integração de ferramentas de mineração de textos e "
