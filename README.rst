@@ -29,7 +29,7 @@ To install dependencies (on a Debian-like GNU/Linux distribution)::
     sudo apt-get install python-setuptools
     pip install virtualenv virtualenvwrapper
     mkvirtualenv pypln
-    pip install -r requirements.txt
+    pip install -r requirements/production.txt
 
 
 Developing
@@ -38,7 +38,7 @@ Developing
 To run tests::
 
     workon pypln
-    pip install nose
+    pip install -r requirements/development.txt
     make test
 
 See our `code guidelines <https://github.com/namd/pypln/blob/develop/CONTRIBUTING.rst>`_.
