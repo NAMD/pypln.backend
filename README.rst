@@ -31,6 +31,9 @@ To install dependencies (on a Debian-like GNU/Linux distribution)::
     mkvirtualenv pypln
     pip install -r requirements/production.txt
 
+You will also need to install NLTK data. You can do so following the `NLTK
+documentation <http://nltk.org/data.html>`_.
+
 
 Developing
 ----------
