@@ -13,3 +13,4 @@ nltk
 Pinax
 flask
 jinja2
+django
