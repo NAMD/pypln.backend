@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import unittest
-from pypln.workers import tokenizer
+from pypln.workers import Tokenizer
 
 
 class TestTokenizerWorker(unittest.TestCase):
@@ -12,6 +12,6 @@ class TestTokenizerWorker(unittest.TestCase):
         sentences = [['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
                       'yellow', '.'], ['This', 'is', 'another', 'sentence',
                                        '.']]
-        result = tokenizer.main({'text': text})
+        result = Tokenizer().process({'text': text})
         self.assertEqual(result['tokens'], tokens)
         self.assertEqual(result['sentences'], sentences)

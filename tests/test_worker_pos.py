@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import unittest
-from pypln.workers import pos
+from pypln.workers import POS
 
 
 class TestPosWorker(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestPosWorker(unittest.TestCase):
                    ('blue', 'JJ', 11), (',', ',', 15), ('the', 'DT', 17),
                    ('sun', 'NN', 21), ('is', 'VBZ', 25), ('yellow', 'JJ', 28),
                    ('.', '.', 34)]
-        result = pos.main({'text': text, 'tokens': tokens,
-                           'language': 'english'})
+        result = POS().process({'text': text, 'tokens': tokens,
+                                'language': 'en'})
         self.assertEqual(result, {'pos': expected})
 

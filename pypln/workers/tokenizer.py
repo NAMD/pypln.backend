@@ -1,17 +1,15 @@
 # coding: utf-8
 
+from pypelinin import Worker
+
 from nltk import word_tokenize, sent_tokenize
 
 
-__meta__ = {'from': 'document',
-            'requires': ['text'],
-            'to': 'document',
-            'provides': ['tokens', 'sentences'],}
+class Tokenizer(Worker):
+    requires = ['text']
 
-def main(document):
-    text = document['text']
-    tokens = word_tokenize(text)
-    sentences = []
-    for sentence in sent_tokenize(text):
-        sentences.append(word_tokenize(sentence))
-    return {'tokens': tokens, 'sentences': sentences}
+    def process(self, document):
+        text = document['text']
+        tokens = word_tokenize(text)
+        sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
+        return {'tokens': tokens, 'sentences': sentences}

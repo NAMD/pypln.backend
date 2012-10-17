@@ -1,13 +1,9 @@
 # coding: utf-8
 
+from pypelinin import Worker
+
 from nltk import pos_tag
 
-
-__meta__ = {'from': 'document',
-            'requires': ['text', 'tokens', 'language'],
-            'to': 'document',
-            'provides': ['pos'],}
-#TODO: add 'lang' to 'requires'
 
 def _put_offset(text, tagged_text):
     result = []
@@ -18,10 +14,12 @@ def _put_offset(text, tagged_text):
         position = token_position + len(token) - 1
     return result
 
-def main(document):
-    text = document['text']
-    tokens = document['tokens']
-    tagged_text = None
-    if document['language'] == 'en':
-        tagged_text = _put_offset(text, pos_tag(tokens))
-    return {'pos': tagged_text}
+class POS(Worker):
+    requires = ['text', 'tokens', 'language']
+
+    def process(self, document):
+        tagged_text = None
+        if document['language'] == 'en':
+            tagged_text = _put_offset(document['text'],
+                                      pos_tag(document['tokens']))
+        return {'pos': tagged_text}

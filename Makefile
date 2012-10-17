@@ -2,6 +2,10 @@ test:
 	@clear
 	nosetests -dvs
 
+test-workers:
+	@clear
+	nosetests -dsv tests/test_worker_*.py
+
 test-x:
 	@clear
 	nosetests -dvsx
@@ -16,4 +20,4 @@ clean:
 	find -regex '.*~' -exec rm {} \;
 
 
-.PHONY:	test test-x doc clean
+.PHONY:	test test-x doc clean test-workers

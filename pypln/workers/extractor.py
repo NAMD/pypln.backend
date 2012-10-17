@@ -1,18 +1,17 @@
 # coding: utf-8
 
-__meta__ = {'from': 'gridfs-file',
-            'requires': ['contents'],
-            'to': 'document',
-            'provides': ['text', 'file_metadata', 'language'],}
-
 import shlex
+
 from tempfile import NamedTemporaryFile
 from string import punctuation
 from os import unlink
 from subprocess import Popen, PIPE
 from mimetypes import guess_type
 from re import compile as regexp_compile, DOTALL, escape
+
 import cld
+
+from pypelinin import Worker
 
 
 regexp_tags = regexp_compile(r'(<[ \t]*([a-zA-Z0-9!"./_-]*)[^>]*>)', flags=DOTALL)
@@ -109,20 +108,21 @@ def extract_pdf(data):
     else:
         return '', {}
 
-def main(file_data):
-    file_mime_type = guess_type(file_data['filename'])[0]
-    metadata = {}
-    if file_mime_type == 'text/plain':
-        text = clean(file_data['contents'])
-    elif file_mime_type == 'text/html':
-        text = parse_html(file_data['contents'], True, ['script', 'style'])
-    elif file_mime_type == 'application/pdf':
-        text, metadata = extract_pdf(file_data['contents'])
-    language = cld.detect(text)[1]
-    return {'text': text, 'file_metadata': metadata, 'language': language}
 
-#TODO: detect language with cld
-#TODO: detect encoding to decode
-#TODO: should extractor add file-metadata (creation date, size etc.)?
-#TODO: need to verify some exceptions when trying to convert 'evil' PDFs
-#TODO: should 'replace_with' be '' when extracting from HTML?
+class Extractor(Worker):
+    #TODO: detect encoding to decode
+    #TODO: need to verify some exceptions when trying to convert 'evil' PDFs
+    #TODO: should 'replace_with' be '' when extracting from HTML?
+    requires = ['contents']
+
+    def process(self, file_data):
+        file_mime_type = guess_type(file_data['filename'])[0]
+        metadata = {}
+        if file_mime_type == 'text/plain':
+            text = clean(file_data['contents'])
+        elif file_mime_type == 'text/html':
+            text = parse_html(file_data['contents'], True, ['script', 'style'])
+        elif file_mime_type == 'application/pdf':
+            text, metadata = extract_pdf(file_data['contents'])
+        language = cld.detect(text)[1]
+        return {'text': text, 'file_metadata': metadata, 'language': language}
