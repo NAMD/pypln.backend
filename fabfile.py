@@ -8,6 +8,11 @@ PROJECT_ROOT = os.path.join(HOME, "project/")
 PROJECT_WEB_ROOT = os.path.join(PROJECT_ROOT, "pypln/web/")
 REPO_URL = "https://github.com/NAMD/pypln.git"
 
+def _reload_supervisord():
+    # XXX: Why does supervisor's init script exit with 1 on "restart"?
+    sudo("service supervisor stop")
+    sudo("service supervisor start")
+
 def initial_setup():
     setup_dependecies = " ".join(["git-core", "supervisor"])
     sudo("apt-get update")
@@ -28,10 +33,7 @@ def initial_setup():
                 "server_config/pypln-{}.conf".format(daemon))
         sudo("ln -sf {} /etc/supervisor/conf.d/".format(config_file_path))
 
-    # XXX: Why does supervisor's init script exit with 1 on "restart"?
-    sudo("service supervisor stop")
-    sudo("service supervisor start")
-
+    _reload_supervisord()
 
 def update_nltk_data():
     # FIXME: When we download to the home directory of the user,
@@ -70,6 +72,9 @@ def deploy():
             run("python {} syncdb --noinput".format(os.path.join(PROJECT_WEB_ROOT,
                     "manage.py")))
 
-    sudo("supervisorctl start pypln-manager")
-    sudo("supervisorctl start pypln-pipeliner")
-    sudo("supervisorctl start pypln-broker")
+    # Aparently we need to restart supervisord after the deploy, or it won't
+    # be able to find the processes. This is weird. It should be enough to
+    # reload the configs.
+    _reload_supervisord()
+
+    #TODO: run("python ./manage.py runserver") with supervisor
