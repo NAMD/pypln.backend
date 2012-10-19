@@ -20,7 +20,11 @@ def initial_setup():
     sudo("apt-get install -y {}".format(setup_dependecies))
 
     with settings(warn_only=True):
-        sudo("useradd --shell=/bin/bash --home {} --create-home {}".format(HOME, USER))
+        user_does_not_exist = run("id {}".format(USER)).failed
+
+    if user_does_not_exist:
+        sudo("useradd --shell=/bin/bash --home {} --create-home {}".format(
+            HOME, USER))
         sudo("mkdir {}".format(LOG_DIR))
         sudo("chown -R {0}:{0} {1}".format(USER, LOG_DIR))
         sudo("passwd {}".format(USER))
