@@ -13,6 +13,11 @@ def _reload_supervisord():
     sudo("service supervisor stop")
     sudo("service supervisor start")
 
+def _checkout_branch():
+    with cd(PROJECT_ROOT):
+        #TODO: use master branch
+        run("git checkout feature/deploy")
+
 def initial_setup():
     setup_dependecies = " ".join(["git-core", "supervisor"])
     sudo("apt-get update")
@@ -31,6 +36,7 @@ def initial_setup():
 
     with settings(warn_only=True, user=USER):
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
+        _checkout_branch()
 
     for daemon in ["manager", "pipeliner", "broker"]:
         config_file_path = os.path.join(PROJECT_ROOT,
@@ -61,8 +67,7 @@ def deploy():
 
     with cd(PROJECT_ROOT), settings(user=USER):
         run("git pull")
-        #TODO: use master branch
-        run("git checkout feature/deploy")
+        _checkout_branch()
 
     with cd(PROJECT_ROOT):
         sudo("python setup.py install")
