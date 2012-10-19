@@ -62,7 +62,7 @@ def deploy():
         sudo("supervisorctl stop pypln-pipeliner")
 
     system_packages = " ".join(["python-setuptools", "python-pip", "python-numpy",
-        "build-essential", "python-dev", "mongodb"])
+        "build-essential", "python-dev", "mongodb", "pdftohtml"])
     sudo("apt-get install -y {}".format(system_packages))
 
     with cd(PROJECT_ROOT), settings(user=USER):
