@@ -19,7 +19,7 @@ def _checkout_branch():
         run("git checkout feature/deploy")
 
 def initial_setup():
-    setup_dependecies = " ".join(["git-core", "supervisor"])
+    setup_dependecies = " ".join(["git-core", "supervisor", "nginx"])
     sudo("apt-get update")
     sudo("apt-get upgrade -y")
     sudo("apt-get install -y {}".format(setup_dependecies))
@@ -38,12 +38,15 @@ def initial_setup():
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
         _checkout_branch()
 
-    for daemon in ["manager", "pipeliner", "broker"]:
+    for daemon in ["manager", "pipeliner", "broker", "web"]:
         config_file_path = os.path.join(PROJECT_ROOT,
                 "server_config/pypln-{}.conf".format(daemon))
         sudo("ln -sf {} /etc/supervisor/conf.d/".format(config_file_path))
 
     _reload_supervisord()
+
+    nginx_vhost_path = os.path.join(PROJECT_ROOT, "server_config/nginx.conf")
+    sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
 
 def update_nltk_data():
     # FIXME: When we download to the home directory of the user,
@@ -86,4 +89,4 @@ def deploy():
     # reload the configs.
     _reload_supervisord()
 
-    #TODO: run("python ./manage.py runserver") with supervisor
+    sudo("service nginx reload")
