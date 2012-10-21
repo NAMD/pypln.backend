@@ -80,9 +80,8 @@ def deploy():
     with cd(PROJECT_WEB_ROOT):
         sudo("pip install -r requirements/project.txt")
 
-        with settings(user=USER):
-            run("python {} syncdb --noinput".format(os.path.join(PROJECT_WEB_ROOT,
-                    "manage.py")))
+    manage("syncdb --noinput")
+    manage("collectstatic --noinput")
 
     # Aparently we need to restart supervisord after the deploy, or it won't
     # be able to find the processes. This is weird. It should be enough to
@@ -90,3 +89,10 @@ def deploy():
     _reload_supervisord()
 
     sudo("service nginx reload")
+
+def manage(command):
+    # FIXME: we need to be in the web root because of path issues that should
+    # be fixed
+    with cd(PROJECT_WEB_ROOT), settings(user=USER):
+        manage_script = os.path.join(PROJECT_WEB_ROOT, "manage.py")
+        run("python {} {}".format(manage_script, command))
