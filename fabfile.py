@@ -1,5 +1,5 @@
 import os
-from fabric.api import cd, run, sudo, settings
+from fabric.api import cd, run, sudo, settings, prefix
 
 USER = "pypln"
 HOME = "/srv/pypln/"
@@ -7,6 +7,7 @@ LOG_DIR = os.path.join(HOME, "logs/")
 PROJECT_ROOT = os.path.join(HOME, "project/")
 PROJECT_WEB_ROOT = os.path.join(PROJECT_ROOT, "pypln/web/")
 REPO_URL = "https://github.com/NAMD/pypln.git"
+ACTIVATE_SCRIPT = os.path.join(PROJECT_ROOT, "bin/activate")
 
 def _reload_supervisord():
     # XXX: Why does supervisor's init script exit with 1 on "restart"?
@@ -19,7 +20,8 @@ def _checkout_branch():
         run("git checkout feature/deploy")
 
 def initial_setup():
-    setup_dependecies = " ".join(["git-core", "supervisor", "nginx"])
+    setup_dependecies = " ".join(["git-core", "supervisor", "nginx",
+        "python-virtualenv"])
     sudo("apt-get update")
     sudo("apt-get upgrade -y")
     sudo("apt-get install -y {}".format(setup_dependecies))
@@ -37,6 +39,7 @@ def initial_setup():
     with settings(warn_only=True, user=USER):
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
         _checkout_branch()
+        run("virtualenv --system-site-packages {}".format(PROJECT_ROOT))
 
     for daemon in ["manager", "pipeliner", "broker", "web"]:
         config_file_path = os.path.join(PROJECT_ROOT,
@@ -54,7 +57,8 @@ def update_nltk_data():
     # but this does not work with the --dir flag. That's why, for now,
     # we're downloading to the default location and then copying it to
     # the desired place
-    sudo("python -m nltk.downloader all")
+    with prefix("source {}".format(ACTIVATE_SCRIPT)):
+        sudo("python -m nltk.downloader all")
     sudo("cp -r /root/nltk_data /usr/share/nltk_data")
 
 def deploy():
@@ -69,20 +73,18 @@ def deploy():
         "build-essential", "python-dev", "mongodb", "pdftohtml"])
     sudo("apt-get install -y {}".format(system_packages))
 
-    with cd(PROJECT_ROOT), settings(user=USER):
+    with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
         run("git pull")
         _checkout_branch()
+        run("python setup.py install")
 
-    with cd(PROJECT_ROOT):
-        sudo("python setup.py install")
+        with cd(PROJECT_WEB_ROOT):
+            run("pip install -r requirements/project.txt")
+
+        manage("syncdb --noinput")
+        manage("collectstatic --noinput")
 
     update_nltk_data()
-
-    with cd(PROJECT_WEB_ROOT):
-        sudo("pip install -r requirements/project.txt")
-
-    manage("syncdb --noinput")
-    manage("collectstatic --noinput")
 
     # Aparently we need to restart supervisord after the deploy, or it won't
     # be able to find the processes. This is weird. It should be enough to
@@ -94,6 +96,6 @@ def deploy():
 def manage(command):
     # FIXME: we need to be in the web root because of path issues that should
     # be fixed
-    with cd(PROJECT_WEB_ROOT), settings(user=USER):
+    with prefix("source {}".format(ACTIVATE_SCRIPT)), cd(PROJECT_WEB_ROOT), settings(user=USER):
         manage_script = os.path.join(PROJECT_WEB_ROOT, "manage.py")
         run("python {} {}".format(manage_script, command))
