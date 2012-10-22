@@ -63,6 +63,7 @@ def deploy():
         sudo("supervisorctl stop pypln-manager")
         sudo("supervisorctl stop pypln-broker")
         sudo("supervisorctl stop pypln-pipeliner")
+        sudo("supervisorctl stop pypln-web")
 
     system_packages = " ".join(["python-setuptools", "python-pip", "python-numpy",
         "build-essential", "python-dev", "mongodb", "pdftohtml"])
