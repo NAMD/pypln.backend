@@ -89,7 +89,7 @@ def deploy():
     # reload the configs.
     _reload_supervisord()
 
-    sudo("service nginx reload")
+    sudo("service nginx restart")
 
 def manage(command):
     # FIXME: we need to be in the web root because of path issues that should
