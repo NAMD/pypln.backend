@@ -2,7 +2,9 @@
 
 import datetime
 import json
+
 from mimetypes import guess_type
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -11,11 +13,13 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+
 from .models import Corpus, Document, CorpusForm, DocumentForm
-from pypln.util import LANGUAGES
-from settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT, MONGODB_CONFIG)
-from pypln.backend.client import create_pipeline
+from settings import (ROUTER_API, ROUTER_BROADCAST, ROUTER_TIMEOUT,
+                      MONGODB_CONFIG)
 from apps.core.visualizations import VISUALIZATIONS
+
+from pypln.util import LANGUAGES, create_pipeline
 from mongodict import MongoDict
 
 
@@ -82,8 +86,8 @@ def corpus_page(request, corpus_slug):
             new_document.save()
             data = {'_id': str(new_document.blob.file._id),
                     'id': new_document.id}
-            create_pipeline(MANAGER_API_HOST_PORT, data,
-                            timeout=MANAGER_TIMEOUT)
+            create_pipeline(ROUTER_API, ROUTER_BROADCAST, data,
+                            timeout=ROUTER_TIMEOUT)
             request.user.message_set.create(message=_('Document uploaded '
                                                       'successfully!'))
             return HttpResponseRedirect(reverse('corpus_page',
