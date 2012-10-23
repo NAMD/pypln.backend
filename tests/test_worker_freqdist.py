@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import unittest
-from pypln.workers import FreqDist
+from pypln.backend.workers import FreqDist
 
 
 class TestFreqDistWorker(unittest.TestCase):

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import unittest
-from pypln.workers import POS
+from pypln.backend.workers import POS
 
 
 class TestPosWorker(unittest.TestCase):

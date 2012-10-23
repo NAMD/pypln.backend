@@ -2,7 +2,7 @@
 
 import unittest
 from textwrap import dedent
-from pypln.workers import Extractor
+from pypln.backend.workers import Extractor
 
 
 class TestExtractorWorker(unittest.TestCase):

@@ -1,7 +1,7 @@
 # coding: utf-8
 
 import unittest
-from pypln.workers import Tokenizer
+from pypln.backend.workers import Tokenizer
 
 
 class TestTokenizerWorker(unittest.TestCase):
