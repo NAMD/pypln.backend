@@ -51,16 +51,6 @@ def initial_setup():
     nginx_vhost_path = os.path.join(PROJECT_ROOT, "server_config/nginx.conf")
     sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
 
-def update_nltk_data():
-    # FIXME: When we download to the home directory of the user,
-    # nltk.downloader knows how to handle already installed packages
-    # but this does not work with the --dir flag. That's why, for now,
-    # we're downloading to the default location and then copying it to
-    # the desired place
-    with prefix("source {}".format(ACTIVATE_SCRIPT)):
-        sudo("python -m nltk.downloader all")
-    sudo("cp -r /root/nltk_data /usr/share/nltk_data")
-
 def deploy():
     #TODO: Use a virtualenv
     with settings(warn_only=True):
@@ -77,6 +67,7 @@ def deploy():
         run("git pull")
         _checkout_branch()
         run("python setup.py install")
+        run("python -m nltk.downloader all")
 
         with cd(PROJECT_WEB_ROOT):
             run("pip install -r requirements/project.txt")
@@ -84,7 +75,6 @@ def deploy():
         manage("syncdb --noinput")
         manage("collectstatic --noinput")
 
-    update_nltk_data()
 
     # Aparently we need to restart supervisord after the deploy, or it won't
     # be able to find the processes. This is weird. It should be enough to
