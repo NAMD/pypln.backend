@@ -52,7 +52,6 @@ def initial_setup():
     sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
 
 def deploy():
-    #TODO: Use a virtualenv
     with settings(warn_only=True):
         sudo("supervisorctl stop pypln-manager")
         sudo("supervisorctl stop pypln-broker")
