@@ -19,13 +19,15 @@ def _checkout_branch():
         #TODO: use master branch
         run("git checkout feature/deploy")
 
-def initial_setup():
-    setup_dependecies = " ".join(["git-core", "supervisor", "nginx",
-        "python-virtualenv"])
+def install_system_packages():
+    packages = " ".join(["python-setuptools", "python-pip",
+        "python-numpy", "build-essential", "python-dev", "mongodb",
+        "pdftohtml", "git-core", "supervisor", "nginx", "python-virtualenv"])
     sudo("apt-get update")
-    sudo("apt-get upgrade -y")
-    sudo("apt-get install -y {}".format(setup_dependecies))
+    sudo("apt-get install -y {}".format(packages))
 
+def initial_setup():
+    install_system_packages()
     with settings(warn_only=True):
         user_does_not_exist = run("id {}".format(USER)).failed
 
@@ -57,10 +59,6 @@ def deploy():
         sudo("supervisorctl stop pypln-broker")
         sudo("supervisorctl stop pypln-pipeliner")
         sudo("supervisorctl stop pypln-web")
-
-    system_packages = " ".join(["python-setuptools", "python-pip", "python-numpy",
-        "build-essential", "python-dev", "mongodb", "pdftohtml"])
-    sudo("apt-get install -y {}".format(system_packages))
 
     with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
         run("git pull")
