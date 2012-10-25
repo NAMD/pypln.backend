@@ -1,5 +1,6 @@
 import os
 from fabric.api import cd, run, sudo, settings, prefix
+from fabric.contrib.files import comment, append
 
 USER = "pypln"
 HOME = "/srv/pypln/"
@@ -48,18 +49,22 @@ def initial_setup():
                 "server_config/pypln-{}.conf".format(daemon))
         sudo("ln -sf {} /etc/supervisor/conf.d/".format(config_file_path))
 
+    # Commenting out the path to the socket that supervisorctl uses should make
+    # it fallback to it's default of connecting on localhost:9001.  This should
+    # allow non-root users to control the running processes.
+    supervisor_conf = "/etc/supervisor/supervisord.conf"
+    comment(supervisor_conf,
+                "^serverurl=unix:///var/run//supervisor.sock .*",
+                use_sudo=True, char=";")
+    append(supervisor_conf, ["[inet_http_server]", "port=127.0.0.1:9001"],
+                use_sudo=True)
+
     _reload_supervisord()
 
     nginx_vhost_path = os.path.join(PROJECT_ROOT, "server_config/nginx.conf")
     sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
 
 def deploy():
-    with settings(warn_only=True):
-        sudo("supervisorctl stop pypln-manager")
-        sudo("supervisorctl stop pypln-broker")
-        sudo("supervisorctl stop pypln-pipeliner")
-        sudo("supervisorctl stop pypln-web")
-
     with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
         run("git pull")
         _checkout_branch()
@@ -72,13 +77,7 @@ def deploy():
         manage("syncdb --noinput")
         manage("collectstatic --noinput")
 
-
-    # Aparently we need to restart supervisord after the deploy, or it won't
-    # be able to find the processes. This is weird. It should be enough to
-    # reload the configs.
-    _reload_supervisord()
-
-    sudo("service nginx restart")
+        run("supervisorctl reload")
 
 def manage(command):
     # FIXME: we need to be in the web root because of path issues that should
