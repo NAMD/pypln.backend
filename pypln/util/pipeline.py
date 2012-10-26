@@ -13,7 +13,7 @@ def create_pipeline(api, broadcast, data, timeout):
     return manager.start(pipeline)
 
 
-def get_config_from_manager(api, timeout=5):
+def get_config_from_router(api, timeout=5):
     client = Client()
     client.connect(api)
     client.send_api_request({'command': 'get configuration'})

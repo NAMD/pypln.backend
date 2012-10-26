@@ -3,7 +3,7 @@
 
 import os.path
 import posixpath
-from pypln.util import get_config_from_manager
+from pypln.util import get_config_from_router
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -228,7 +228,7 @@ ROUTER_API = 'tcp://127.0.0.1:5555'
 ROUTER_BROADCAST = 'tcp://127.0.0.1:5555'
 ROUTER_TIMEOUT = 5
 
-CONFIGURATION = get_config_from_manager(ROUTER_API)
+CONFIGURATION = get_config_from_router(ROUTER_API)
 if CONFIGURATION is None:
     MONGODB_CONFIG = {'host': 'localhost',
                       'port': 27017,
