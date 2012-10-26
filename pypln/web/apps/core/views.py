@@ -19,7 +19,7 @@ from settings import (ROUTER_API, ROUTER_BROADCAST, ROUTER_TIMEOUT,
                       MONGODB_CONFIG)
 from apps.core.visualizations import VISUALIZATIONS
 
-from pypln.util import LANGUAGES, create_pipeline
+from utils import LANGUAGES, create_pipeline
 from mongodict import MongoDict
 
 
@@ -113,7 +113,7 @@ def document_page(request, document_slug):
     store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
                       database=MONGODB_CONFIG['database'],
                       collection=MONGODB_CONFIG['analysis_collection'])
-    analysis = set(store.get('id:{}:analysis'.format(document.id), []))
+    properties = set(store.get('id:{}:_properties'.format(document.id), []))
     metadata = store.get('id:{}:file_metadata'.format(document.id), {})
     language = store.get('id:{}:language'.format(document.id), None)
     if language is not None:
@@ -121,7 +121,7 @@ def document_page(request, document_slug):
     data['metadata'] = metadata
     visualizations = []
     for key, value in VISUALIZATIONS.items():
-        if value['requires'].issubset(analysis):
+        if value['requires'].issubset(properties):
             visualizations.append({'slug': key, 'label': value['label']})
     data['visualizations'] = visualizations
     return render_to_response('core/document.html', data,
@@ -133,7 +133,7 @@ def document_visualization(request, document_slug, visualization):
         document = Document.objects.get(slug=document_slug,
                 owner=request.user.id)
     except ObjectDoesNotExist:
-        return HttpResponse('Document not found', status_code=404)
+        return HttpResponse('Document not found', status=404)
 
     data = {}
     store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
@@ -141,12 +141,12 @@ def document_visualization(request, document_slug, visualization):
                       collection=MONGODB_CONFIG['analysis_collection'])
 
     try:
-        analysis = set(store['id:{}:analysis'.format(document.id)])
+        properties = set(store['id:{}:_properties'.format(document.id)])
     except KeyError:
-        return HttpResponse('Visualization not found', status_code=404)
+        return HttpResponse('Visualization not found', status=404)
     if visualization not in VISUALIZATIONS or \
-            not VISUALIZATIONS[visualization]['requires'].issubset(analysis):
-        return HttpResponse('Visualization not found', status_code=404)
+            not VISUALIZATIONS[visualization]['requires'].issubset(properties):
+        return HttpResponse('Visualization not found', status=404)
 
     data = {}
     for key in VISUALIZATIONS[visualization]['requires']:

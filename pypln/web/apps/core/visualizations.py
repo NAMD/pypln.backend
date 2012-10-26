@@ -3,8 +3,7 @@
 from string import punctuation
 from django.utils.translation import ugettext as _
 from nltk.corpus import stopwords
-from pypln.util import TAGSET, COMMON_TAGS
-from pypln.util import LANGUAGES
+from utils import TAGSET, COMMON_TAGS, LANGUAGES
 
 
 def _token_frequency_histogram(data):

@@ -3,7 +3,7 @@
 
 import os.path
 import posixpath
-from pypln.util import get_config_from_router
+from utils import get_config_from_router
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
