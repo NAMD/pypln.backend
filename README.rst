@@ -44,4 +44,17 @@ To run tests::
     pip install -r requirements/development.txt
     make test
 
+
+..  TODO: The PYTHONPATH issue should be fixed once we organize the directory
+    structure. As soon as this is fixed, we must update this instructions.
+
+To run the development webserver::
+
+    workon pypln
+    cd pypln/web/
+    pip install -r requirements/project.txt
+    PYTHONPATH="../../:$PYTHONPATH" ./manage.py runserver --settings=settings.development
+
+
+
 See our `code guidelines <https://github.com/namd/pypln/blob/develop/CONTRIBUTING.rst>`_.

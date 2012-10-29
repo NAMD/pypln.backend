@@ -6,7 +6,8 @@ import posixpath
 from utils import get_config_from_router
 
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                os.path.pardir))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
