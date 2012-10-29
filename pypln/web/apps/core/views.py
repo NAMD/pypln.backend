@@ -15,8 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 
 from .models import Corpus, Document, CorpusForm, DocumentForm
-from settings import (ROUTER_API, ROUTER_BROADCAST, ROUTER_TIMEOUT,
-                      MONGODB_CONFIG)
+from django.conf import settings
 from apps.core.visualizations import VISUALIZATIONS
 
 from utils import LANGUAGES, create_pipeline
@@ -86,8 +85,8 @@ def corpus_page(request, corpus_slug):
             new_document.save()
             data = {'_id': str(new_document.blob.file._id),
                     'id': new_document.id}
-            create_pipeline(ROUTER_API, ROUTER_BROADCAST, data,
-                            timeout=ROUTER_TIMEOUT)
+            create_pipeline(settings.ROUTER_API, settings.ROUTER_BROADCAST, data,
+                            timeout=settings.ROUTER_TIMEOUT)
             request.user.message_set.create(message=_('Document uploaded '
                                                       'successfully!'))
             return HttpResponseRedirect(reverse('corpus_page',
@@ -110,9 +109,10 @@ def document_page(request, document_slug):
 
     data = {'document': document,
             'corpora': Corpus.objects.filter(owner=request.user.id)}
-    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
-                      database=MONGODB_CONFIG['database'],
-                      collection=MONGODB_CONFIG['analysis_collection'])
+    store = MongoDict(host=settings.MONGODB_CONFIG['host'],
+                      port=settings.MONGODB_CONFIG['port'],
+                      database=settings.MONGODB_CONFIG['database'],
+                      collection=settings.MONGODB_CONFIG['analysis_collection'])
     properties = set(store.get('id:{}:_properties'.format(document.id), []))
     metadata = store.get('id:{}:file_metadata'.format(document.id), {})
     language = store.get('id:{}:language'.format(document.id), None)
@@ -136,9 +136,10 @@ def document_visualization(request, document_slug, visualization):
         return HttpResponse('Document not found', status=404)
 
     data = {}
-    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
-                      database=MONGODB_CONFIG['database'],
-                      collection=MONGODB_CONFIG['analysis_collection'])
+    store = MongoDict(host=settings.MONGODB_CONFIG['host'],
+                      port=settings.MONGODB_CONFIG['port'],
+                      database=settings.MONGODB_CONFIG['database'],
+                      collection=settings.MONGODB_CONFIG['analysis_collection'])
 
     try:
         properties = set(store['id:{}:_properties'.format(document.id)])

@@ -4,15 +4,15 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from settings import MONGODB_CONFIG
+from django.conf import settings
 from .storage import GridFSStorage
 
 
 gridfs_storage = GridFSStorage(location='/',
-                               host=MONGODB_CONFIG['host'],
-                               port=MONGODB_CONFIG['port'],
-                               database=MONGODB_CONFIG['database'],
-                               collection=MONGODB_CONFIG['gridfs_collection'])
+                               host=settings.MONGODB_CONFIG['host'],
+                               port=settings.MONGODB_CONFIG['port'],
+                               database=settings.MONGODB_CONFIG['database'],
+                               collection=settings.MONGODB_CONFIG['gridfs_collection'])
 
 class Document(models.Model):
     blob = models.FileField(upload_to='/', storage=gridfs_storage)
