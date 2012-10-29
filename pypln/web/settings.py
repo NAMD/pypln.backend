@@ -3,7 +3,7 @@
 
 import os.path
 import posixpath
-from pypln.backend.client import get_config_from_manager
+from utils import get_config_from_router
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -224,9 +224,11 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 CONTACT_EMAIL = 'namdemapfgv@gmail.com'
-MANAGER_API_HOST_PORT = ('localhost', 5555)
+ROUTER_API = 'tcp://127.0.0.1:5555'
+ROUTER_BROADCAST = 'tcp://127.0.0.1:5555'
+ROUTER_TIMEOUT = 5
 
-CONFIGURATION = get_config_from_manager(MANAGER_API_HOST_PORT)
+CONFIGURATION = get_config_from_router(ROUTER_API)
 if CONFIGURATION is None:
     MONGODB_CONFIG = {'host': 'localhost',
                       'port': 27017,
@@ -236,10 +238,7 @@ if CONFIGURATION is None:
                       'monitoring_collection': 'monitoring',
     }
 else:
-    MONGODB_CONFIG = CONFIGURATION['db']
-
-MANAGER_API_HOST_PORT = ('localhost', 5555)
-MANAGER_TIMEOUT = 5
+    MONGODB_CONFIG = CONFIGURATION['store']
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

@@ -2,7 +2,7 @@
 
 import unittest
 from textwrap import dedent
-from pypln.workers import extractor
+from pypln.backend.workers import Extractor
 
 
 class TestExtractorWorker(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.txt'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
@@ -19,7 +19,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.html'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
@@ -28,7 +28,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.pdf'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         metadata_expected = {
                 'Author':         'Álvaro Justen',
@@ -70,7 +70,7 @@ class TestExtractorWorker(unittest.TestCase):
         </html>
         ''')
         data = {'filename': 'test.html', 'contents': contents}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         expected = dedent('''
             Testing
 
@@ -97,9 +97,9 @@ class TestExtractorWorker(unittest.TestCase):
         data_pt = {'filename': 'text-pt.txt', 'contents': text_pt}
         data_es = {'filename': 'text-es.txt', 'contents': text_es}
         data_en = {'filename': 'text-en.txt', 'contents': text_en}
-        result_pt = extractor.main(data_pt)
-        result_es = extractor.main(data_es)
-        result_en = extractor.main(data_en)
+        result_pt = Extractor().process(data_pt)
+        result_es = Extractor().process(data_es)
+        result_en = Extractor().process(data_en)
         self.assertEqual('pt', result_pt['language'])
         self.assertEqual('es', result_es['language'])
         self.assertEqual('en', result_en['language'])
