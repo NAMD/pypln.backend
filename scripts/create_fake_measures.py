@@ -3,7 +3,7 @@
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
-# This file is part of PyPLN.
+# This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
 # PyPLN is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
