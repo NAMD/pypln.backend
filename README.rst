@@ -9,6 +9,12 @@ for processing big corpora, with a Web interface.
 We don't have a production release yet, but it's scheduled on our
 `next milestone <https://github.com/namd/pypln/issues?milestone=1>`_.
 
+License
+-------
+
+PyPLN is free software, released under the GPLv3
+`<https://gnu.org/licenses/gpl-3.0.html>`_.
+
 
 Documentation
 -------------
