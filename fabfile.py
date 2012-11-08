@@ -1,4 +1,6 @@
 import os
+import random
+import string
 from fabric.api import cd, run, sudo, settings, prefix
 from fabric.contrib.files import comment, append
 
@@ -20,10 +22,29 @@ def _checkout_branch():
         #TODO: use master branch
         run("git checkout feature/deploy")
 
+def create_db(db_user, db_name, db_host="localhost", db_port=5432):
+    # we choose a random password with letters, numbers and some punctuation.
+    db_password = ''.join(random.choice(string.ascii_letters + string.digits +\
+            '#.,/?@+=') for i in range(32))
+
+    pgpass_path = os.path.join(HOME, ".pgpass")
+    pgpass_content = "{}:{}:{}:{}:{}".format(db_user, db_port, db_name,
+            db_user, db_password)
+
+    with settings(warn_only=True):
+        user_creation = sudo('psql template1 -c "CREATE USER {} WITH CREATEDB ENCRYPTED PASSWORD \'{}\'"'.format(db_user, db_password), user='postgres')
+
+    if not user_creation.failed:
+        sudo("echo '{}' > {}".format(pgpass_content, pgpass_path))
+        sudo('chown {0}:{0} {1}'.format(USER, pgpass_path))
+        sudo('chmod 600 {}'.format(pgpass_path))
+        sudo('createdb "{}" -O "{}"'.format(db_name, db_user), user='postgres')
+
 def install_system_packages():
     packages = " ".join(["python-setuptools", "python-pip",
         "python-numpy", "build-essential", "python-dev", "mongodb",
-        "pdftohtml", "git-core", "supervisor", "nginx", "python-virtualenv"])
+        "pdftohtml", "git-core", "supervisor", "nginx", "python-virtualenv",
+        "postgresql"])
     sudo("apt-get update")
     sudo("apt-get install -y {}".format(packages))
 
@@ -63,6 +84,8 @@ def initial_setup():
 
     nginx_vhost_path = os.path.join(PROJECT_ROOT, "server_config/nginx.conf")
     sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
+
+    create_db('pypln', 'pypln')
 
 def deploy():
     with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
