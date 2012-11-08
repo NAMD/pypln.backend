@@ -24,13 +24,8 @@ import posixpath
 from utils import get_config_from_router
 
 
-PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-
-DEBUG = True
-TEMPLATE_DEBUG = DEBUG
-
-# tells Pinax to serve media through the staticfiles app.
-SERVE_MEDIA = DEBUG
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                os.path.pardir))
 
 # django-compressor is turned off by default due to deployment overhead for
 # most users. See <URL> for more information
@@ -45,17 +40,6 @@ ADMINS = [
 ]
 
 MANAGERS = ADMINS
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3", # Add "postgresql_psycopg2", "postgresql", "mysql", "sqlite3" or "oracle".
-        "NAME": "dev.db",                       # Or path to database file if using sqlite3.
-        "USER": "",                             # Not used with sqlite3.
-        "PASSWORD": "",                         # Not used with sqlite3.
-        "HOST": "",                             # Set to empty string for localhost. Not used with sqlite3.
-        "PORT": "",                             # Set to empty string for default. Not used with sqlite3.
-    }
-}
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -114,9 +98,6 @@ ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
 
 # Subdirectory of COMPRESS_ROOT to store the cached media files in
 COMPRESS_OUTPUT_DIR = "cache"
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = "r9^6-zqrk-$uyu96z!$sakf%^ng!w&4^d8qj@t#taxtgi+a1p9"
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = [
@@ -235,32 +216,9 @@ LOGIN_REDIRECT_URLNAME = "what_next"
 LOGOUT_REDIRECT_URLNAME = "home"
 
 EMAIL_CONFIRMATION_DAYS = 2
-EMAIL_DEBUG = DEBUG
 
 DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
 
 CONTACT_EMAIL = 'namdemapfgv@gmail.com'
-ROUTER_API = 'tcp://127.0.0.1:5555'
-ROUTER_BROADCAST = 'tcp://127.0.0.1:5555'
-ROUTER_TIMEOUT = 5
-
-CONFIGURATION = get_config_from_router(ROUTER_API)
-if CONFIGURATION is None:
-    MONGODB_CONFIG = {'host': 'localhost',
-                      'port': 27017,
-                      'database': 'pypln',
-                      'gridfs_collection': 'files',
-                      'analysis_collection': 'analysis',
-                      'monitoring_collection': 'monitoring',
-    }
-else:
-    MONGODB_CONFIG = CONFIGURATION['store']
-
-# local_settings.py can be used to override environment-specific settings
-# like database and email that differ between development and production.
-try:
-    from local_settings import *
-except ImportError:
-    pass
