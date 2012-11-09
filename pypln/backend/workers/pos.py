@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -15,14 +16,27 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-from django.core.handlers.wsgi import WSGIHandler
 
-import pinax.env
+from pypelinin import Worker
 
-
-# setup the environment for Django and Pinax
-pinax.env.setup_environ(__file__)
+from nltk import pos_tag
 
 
-# set application for WSGI processing
-application = WSGIHandler()
+def _put_offset(text, tagged_text):
+    result = []
+    position = 0
+    for token, classification in tagged_text:
+        token_position = text.find(token, position)
+        result.append((token, classification, token_position))
+        position = token_position + len(token) - 1
+    return result
+
+class POS(Worker):
+    requires = ['text', 'tokens', 'language']
+
+    def process(self, document):
+        tagged_text = None
+        if document['language'] == 'en':
+            tagged_text = _put_offset(document['text'],
+                                      pos_tag(document['tokens']))
+        return {'pos': tagged_text}

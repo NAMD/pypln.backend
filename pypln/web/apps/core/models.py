@@ -1,18 +1,35 @@
 # coding: utf-8
+#
+# Copyright 2012 NAMD-EMAP-FGV
+#
+# This file is part of PyPLN. You can get more information at: http://pypln.org/.
+#
+# PyPLN is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# PyPLN is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from settings import MONGODB_CONFIG
+from django.conf import settings
 from .storage import GridFSStorage
 
 
 gridfs_storage = GridFSStorage(location='/',
-                               host=MONGODB_CONFIG['host'],
-                               port=MONGODB_CONFIG['port'],
-                               database=MONGODB_CONFIG['database'],
-                               collection=MONGODB_CONFIG['gridfs_collection'])
+                               host=settings.MONGODB_CONFIG['host'],
+                               port=settings.MONGODB_CONFIG['port'],
+                               database=settings.MONGODB_CONFIG['database'],
+                               collection=settings.MONGODB_CONFIG['gridfs_collection'])
 
 class Document(models.Model):
     blob = models.FileField(upload_to='/', storage=gridfs_storage)

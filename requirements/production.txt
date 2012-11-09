@@ -1,6 +1,5 @@
 # Common
-pyzmq
-pymongo
+pypelinin
 mongodict
 
 # Backend

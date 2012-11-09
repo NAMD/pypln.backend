@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -15,14 +16,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-from django.core.handlers.wsgi import WSGIHandler
 
-import pinax.env
+from extractor import Extractor
+from tokenizer import Tokenizer
+from freqdist import FreqDist
+from pos import POS
+from statistics import Statistics
 
 
-# setup the environment for Django and Pinax
-pinax.env.setup_environ(__file__)
-
-
-# set application for WSGI processing
-application = WSGIHandler()
+__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics']

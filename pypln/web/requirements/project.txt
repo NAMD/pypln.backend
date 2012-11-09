@@ -8,3 +8,5 @@
 
 pymongo
 flup
+pypelinin
+mongodict

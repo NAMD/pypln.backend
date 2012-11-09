@@ -17,16 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-from pypln.backend.workers import FreqDist
+from pypelinin import Job, Pipeline, PipelineManager, Client
 
 
-class TestFreqDistWorker(unittest.TestCase):
-    def test_freqdist_should_return_a_list_of_tuples_with_frequency_distribution(self):
-        tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
-                  'yellow', '.']
-        result = FreqDist().process({'tokens': tokens, 'language': 'en'})
-        expected_fd =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
-                ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
-        expected = {'freqdist': expected_fd,}
-        self.assertEqual(result, expected)
+default_pipeline = {Job('Extractor'): Job('Tokenizer'),
+                    Job('Tokenizer'): (Job('POS'), Job('FreqDist')),
+                    Job('FreqDist'): Job('Statistics')}
+
+def create_pipeline(api, broadcast, data, timeout):
+    pipeline = Pipeline(default_pipeline, data=data)
+    manager = PipelineManager(api, broadcast)
+    return manager.start(pipeline)
+
+
+def get_config_from_router(api, timeout=5):
+    client = Client()
+    client.connect(api)
+    client.send_api_request({'command': 'get configuration'})
+    if client.api_poll(timeout):
+        result = client.get_api_reply()
+    else:
+        result = None
+    client.disconnect()
+    return result
+

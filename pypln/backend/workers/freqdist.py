@@ -1,3 +1,4 @@
+# coding: utf-8
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -15,14 +16,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-from django.core.handlers.wsgi import WSGIHandler
 
-import pinax.env
-
-
-# setup the environment for Django and Pinax
-pinax.env.setup_environ(__file__)
+from pypelinin import Worker
 
 
-# set application for WSGI processing
-application = WSGIHandler()
+class FreqDist(Worker):
+    requires = ['tokens', 'language']
+
+    def process(self, document):
+        tokens = [info.lower() for info in document['tokens']]
+        frequency_distribution = {token: tokens.count(token) \
+                                  for token in set(tokens)}
+        fd = frequency_distribution.items()
+        fd.sort(lambda x, y: cmp(y[1], x[1]))
+        return {'freqdist': fd}

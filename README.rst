@@ -9,6 +9,12 @@ for processing big corpora, with a Web interface.
 We don't have a production release yet, but it's scheduled on our
 `next milestone <https://github.com/namd/pypln/issues?milestone=1>`_.
 
+License
+-------
+
+PyPLN is free software, released under the GPLv3
+`<https://gnu.org/licenses/gpl-3.0.html>`_.
+
 
 Documentation
 -------------
@@ -43,5 +49,18 @@ To run tests::
     workon pypln
     pip install -r requirements/development.txt
     make test
+
+
+..  TODO: The PYTHONPATH issue should be fixed once we organize the directory
+    structure. As soon as this is fixed, we must update this instructions.
+
+To run the development webserver::
+
+    workon pypln
+    cd pypln/web/
+    pip install -r requirements/project.txt
+    PYTHONPATH="../../:$PYTHONPATH" ./manage.py runserver --settings=settings.development
+
+
 
 See our `code guidelines <https://github.com/namd/pypln/blob/develop/CONTRIBUTING.rst>`_.

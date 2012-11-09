@@ -1,8 +1,27 @@
 # coding: utf-8
+#
+# Copyright 2012 NAMD-EMAP-FGV
+#
+# This file is part of PyPLN. You can get more information at: http://pypln.org/.
+#
+# PyPLN is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# PyPLN is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
 import json
+
 from mimetypes import guess_type
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -11,11 +30,12 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+
 from .models import Corpus, Document, CorpusForm, DocumentForm
-from pypln.util import LANGUAGES
-from settings import (MANAGER_API_HOST_PORT, MANAGER_TIMEOUT, MONGODB_CONFIG)
-from pypln.backend.client import create_pipeline
+from django.conf import settings
 from apps.core.visualizations import VISUALIZATIONS
+
+from utils import LANGUAGES, create_pipeline
 from mongodict import MongoDict
 
 
@@ -82,8 +102,8 @@ def corpus_page(request, corpus_slug):
             new_document.save()
             data = {'_id': str(new_document.blob.file._id),
                     'id': new_document.id}
-            create_pipeline(MANAGER_API_HOST_PORT, data,
-                            timeout=MANAGER_TIMEOUT)
+            create_pipeline(settings.ROUTER_API, settings.ROUTER_BROADCAST, data,
+                            timeout=settings.ROUTER_TIMEOUT)
             request.user.message_set.create(message=_('Document uploaded '
                                                       'successfully!'))
             return HttpResponseRedirect(reverse('corpus_page',
@@ -106,10 +126,11 @@ def document_page(request, document_slug):
 
     data = {'document': document,
             'corpora': Corpus.objects.filter(owner=request.user.id)}
-    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
-                      database=MONGODB_CONFIG['database'],
-                      collection=MONGODB_CONFIG['analysis_collection'])
-    analysis = set(store.get('id:{}:analysis'.format(document.id), []))
+    store = MongoDict(host=settings.MONGODB_CONFIG['host'],
+                      port=settings.MONGODB_CONFIG['port'],
+                      database=settings.MONGODB_CONFIG['database'],
+                      collection=settings.MONGODB_CONFIG['analysis_collection'])
+    properties = set(store.get('id:{}:_properties'.format(document.id), []))
     metadata = store.get('id:{}:file_metadata'.format(document.id), {})
     language = store.get('id:{}:language'.format(document.id), None)
     if language is not None:
@@ -117,7 +138,7 @@ def document_page(request, document_slug):
     data['metadata'] = metadata
     visualizations = []
     for key, value in VISUALIZATIONS.items():
-        if value['requires'].issubset(analysis):
+        if value['requires'].issubset(properties):
             visualizations.append({'slug': key, 'label': value['label']})
     data['visualizations'] = visualizations
     return render_to_response('core/document.html', data,
@@ -129,20 +150,21 @@ def document_visualization(request, document_slug, visualization):
         document = Document.objects.get(slug=document_slug,
                 owner=request.user.id)
     except ObjectDoesNotExist:
-        return HttpResponse('Document not found', status_code=404)
+        return HttpResponse('Document not found', status=404)
 
     data = {}
-    store = MongoDict(host=MONGODB_CONFIG['host'], port=MONGODB_CONFIG['port'],
-                      database=MONGODB_CONFIG['database'],
-                      collection=MONGODB_CONFIG['analysis_collection'])
+    store = MongoDict(host=settings.MONGODB_CONFIG['host'],
+                      port=settings.MONGODB_CONFIG['port'],
+                      database=settings.MONGODB_CONFIG['database'],
+                      collection=settings.MONGODB_CONFIG['analysis_collection'])
 
     try:
-        analysis = set(store['id:{}:analysis'.format(document.id)])
+        properties = set(store['id:{}:_properties'.format(document.id)])
     except KeyError:
-        return HttpResponse('Visualization not found', status_code=404)
+        return HttpResponse('Visualization not found', status=404)
     if visualization not in VISUALIZATIONS or \
-            not VISUALIZATIONS[visualization]['requires'].issubset(analysis):
-        return HttpResponse('Visualization not found', status_code=404)
+            not VISUALIZATIONS[visualization]['requires'].issubset(properties):
+        return HttpResponse('Visualization not found', status=404)
 
     data = {}
     for key in VISUALIZATIONS[visualization]['requires']:

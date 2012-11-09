@@ -1,8 +1,25 @@
 # coding: utf-8
+#
+# Copyright 2012 NAMD-EMAP-FGV
+#
+# This file is part of PyPLN. You can get more information at: http://pypln.org/.
+#
+# PyPLN is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# PyPLN is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
 from textwrap import dedent
-from pypln.workers import extractor
+from pypln.backend.workers import Extractor
 
 
 class TestExtractorWorker(unittest.TestCase):
@@ -10,7 +27,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.txt'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
@@ -19,7 +36,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.html'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
@@ -28,7 +45,7 @@ class TestExtractorWorker(unittest.TestCase):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.pdf'
         data = {'filename': filename, 'contents': open(filename).read()}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         metadata = result['file_metadata']
         metadata_expected = {
                 'Author':         'Álvaro Justen',
@@ -70,7 +87,7 @@ class TestExtractorWorker(unittest.TestCase):
         </html>
         ''')
         data = {'filename': 'test.html', 'contents': contents}
-        result = extractor.main(data)
+        result = Extractor().process(data)
         expected = dedent('''
             Testing
 
@@ -97,9 +114,9 @@ class TestExtractorWorker(unittest.TestCase):
         data_pt = {'filename': 'text-pt.txt', 'contents': text_pt}
         data_es = {'filename': 'text-es.txt', 'contents': text_es}
         data_en = {'filename': 'text-en.txt', 'contents': text_en}
-        result_pt = extractor.main(data_pt)
-        result_es = extractor.main(data_es)
-        result_en = extractor.main(data_en)
+        result_pt = Extractor().process(data_pt)
+        result_es = Extractor().process(data_es)
+        result_en = Extractor().process(data_en)
         self.assertEqual('pt', result_pt['language'])
         self.assertEqual('es', result_es['language'])
         self.assertEqual('en', result_en['language'])
