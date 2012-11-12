@@ -102,6 +102,7 @@ def initial_setup():
 
     nginx_vhost_path = os.path.join(PROJECT_ROOT, "server_config/nginx.conf")
     sudo("ln -sf {} /etc/nginx/sites-enabled/pypln".format(nginx_vhost_path))
+    sudo("service nginx restart")
 
     create_db('pypln', 'pypln')
 
