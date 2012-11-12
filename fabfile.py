@@ -62,7 +62,7 @@ def install_system_packages():
     packages = " ".join(["python-setuptools", "python-pip",
         "python-numpy", "build-essential", "python-dev", "mongodb",
         "pdftohtml", "git-core", "supervisor", "nginx", "python-virtualenv",
-        "postgresql"])
+        "postgresql", "python-psycopg2"])
     sudo("apt-get update")
     sudo("apt-get install -y {}".format(packages))
 
