@@ -120,9 +120,10 @@ def deploy():
 
         run("supervisorctl reload")
 
-def manage(command):
+def manage(command, environment="production"):
     # FIXME: we need to be in the web root because of path issues that should
     # be fixed
     with prefix("source {}".format(ACTIVATE_SCRIPT)), cd(PROJECT_WEB_ROOT), settings(user=USER):
         manage_script = os.path.join(PROJECT_WEB_ROOT, "manage.py")
-        run("python {} {}".format(manage_script, command))
+        run("python {} {} --settings=settings.{}".format(manage_script,
+            command, environment))
