@@ -35,9 +35,9 @@ def _reload_supervisord():
     sudo("service supervisor stop")
     sudo("service supervisor start")
 
-def _checkout_branch():
+def _update_code():
     with cd(PROJECT_ROOT):
-        #TODO: use master branch
+        run("git remote update")
         run("git checkout -B feature/deploy origin/feature/deploy")
 
 def create_db(db_user, db_name, db_host="localhost", db_port=5432):
@@ -80,7 +80,7 @@ def initial_setup():
 
     with settings(warn_only=True, user=USER):
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
-        _checkout_branch()
+        _update_code()
         run("virtualenv --system-site-packages {}".format(PROJECT_ROOT))
 
     for daemon in ["router", "pipeliner", "broker", "web"]:
@@ -107,8 +107,7 @@ def initial_setup():
 
 def deploy():
     with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
-        run("git pull")
-        _checkout_branch()
+        _update_code()
         run("python setup.py install")
         run("python -m nltk.downloader all")
 
