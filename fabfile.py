@@ -46,7 +46,7 @@ def create_db(db_user, db_name, db_host="localhost", db_port=5432):
             '#.,/?@+=') for i in range(32))
 
     pgpass_path = os.path.join(HOME, ".pgpass")
-    pgpass_content = "{}:{}:{}:{}:{}".format(db_user, db_port, db_name,
+    pgpass_content = "{}:{}:{}:{}:{}".format(db_host, db_port, db_name,
             db_user, db_password)
 
     with settings(warn_only=True):
