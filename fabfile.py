@@ -38,7 +38,7 @@ def _reload_supervisord():
 def _checkout_branch():
     with cd(PROJECT_ROOT):
         #TODO: use master branch
-        run("git checkout feature/deploy")
+        run("git checkout -B feature/deploy origin/feature/deploy")
 
 def create_db(db_user, db_name, db_host="localhost", db_port=5432):
     # we choose a random password with letters, numbers and some punctuation.
