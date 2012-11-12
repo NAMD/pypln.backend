@@ -17,8 +17,6 @@ from base import *
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-raise ImportError("We are not ready for a production deploy yet.")
-
 ADMINS = [
     #TODO: define admin e-mail
 ]
