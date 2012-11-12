@@ -83,7 +83,7 @@ def initial_setup():
         _checkout_branch()
         run("virtualenv --system-site-packages {}".format(PROJECT_ROOT))
 
-    for daemon in ["manager", "pipeliner", "broker", "web"]:
+    for daemon in ["router", "pipeliner", "broker", "web"]:
         config_file_path = os.path.join(PROJECT_ROOT,
                 "server_config/pypln-{}.conf".format(daemon))
         sudo("ln -sf {} /etc/supervisor/conf.d/".format(config_file_path))
