@@ -41,7 +41,7 @@ def main():
                     store_class=MongoDBStore,
                     logger=logger,
                     # name of the module that contain workers
-                    workers='workers',
+                    workers='pypln.backend.workers',
                     #TODO: string or list of modules
                     # each core will run 4 workers
                     number_of_workers=cpu_count() * 4)
