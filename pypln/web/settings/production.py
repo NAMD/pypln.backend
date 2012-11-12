@@ -1,4 +1,3 @@
-from base import *
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -17,6 +16,9 @@ from base import *
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+from base import *
+import os
+
 ADMINS = [
     #TODO: define admin e-mail
 ]
@@ -25,15 +27,21 @@ MANAGERS = ADMINS
 
 SERVE_MEDIA = False
 
-#TODO: Read database settings (user, passwd etc) from a file on the server
+pgpass_file_path = os.path.expanduser("~/.pgpass")
+
+with open(pgpass_file_path, 'r') as pgpass_file:
+    pg_credentials = pgpass_file.read().strip()
+
+db_host, db_port, db_name, db_user, db_password = pg_credentials.split(":")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "",
-        "USER": "",
-        "PASSWORD": "",
-        "HOST": "",
-        "PORT": "",
+        "NAME": db_name,
+        "USER": db_user,
+        "PASSWORD": db_password,
+        "HOST": db_host,
+        "PORT": db_port,
     }
 }
 
