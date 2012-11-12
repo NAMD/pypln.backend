@@ -23,6 +23,8 @@ ADMINS = [
 
 MANAGERS = ADMINS
 
+SERVE_MEDIA = False
+
 #TODO: Read database settings (user, passwd etc) from a file on the server
 DATABASES = {
     "default": {
