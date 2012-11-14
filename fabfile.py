@@ -38,7 +38,8 @@ def _reload_supervisord():
 def _update_code():
     with cd(PROJECT_ROOT):
         run("git remote update")
-        run("git checkout -B feature/deploy origin/feature/deploy")
+        run("git checkout feature/deploy")
+        run("git reset --hard origin/feature/deploy")
 
 def create_db(db_user, db_name, db_host="localhost", db_port=5432):
     # we choose a random password with letters, numbers and some punctuation.
