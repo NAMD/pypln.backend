@@ -69,6 +69,11 @@ def install_system_packages():
 
 def initial_setup():
     install_system_packages()
+    # Updating virtualenv is specially important since the default changed
+    # to not giving access to system python packages and the option to disable
+    # this didn't exist in old versions.
+    sudo("pip install --upgrade virtualenv")
+
     with settings(warn_only=True):
         user_does_not_exist = run("id {}".format(USER)).failed
 
