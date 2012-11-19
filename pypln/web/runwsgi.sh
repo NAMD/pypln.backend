@@ -18,12 +18,14 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 PYPLN_HOME="/srv/pypln"
-MINSPARE=2
-MAXSPARE=4
-FCGI_PORT="8080"
-ERRLOG="$PYPLN_HOME/logs/fcgi_server.error"
-OUTLOG="$PYPLN_HOME/logs/fcgi_server.out"
+NUM_WORKERS=4
+WSGI_HOST="127.0.0.1"
+WSGI_PORT="8000"
+ERRLOG="$PYPLN_HOME/logs/wsgi_server.err"
+ACCESS_LOG="$PYPLN_HOME/logs/wsgi_server.access"
 SETTINGS="settings.production"
 
 source "$PYPLN_HOME/project/bin/activate"
-exec python manage.py runfcgi method=threaded minspare=$MINSPARE maxspare=$MAXSPARE daemonize=false host=127.0.0.1 port=$FCGI_PORT errlog=$ERRLOG outlog=$OUTLOG --settings=$SETTINGS
+# For some reason gunicorn_django won't work with settings.production
+export DJANGO_SETTINGS_MODULE=$SETTINGS
+exec gunicorn -w $NUM_WORKERS -b $WSGI_HOST:$WSGI_PORT --error-logfile=$ERRLOG --access-logfile=$ACCESS_LOG pypln.web.wsgi:application

@@ -10,3 +10,4 @@ pymongo
 flup
 pypelinin
 mongodict
+gunicorn
