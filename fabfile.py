@@ -16,15 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
 import os
 import random
 import string
-from fabric.api import cd, run, sudo, settings, prefix
+from fabric.api import cd, run, sudo, settings, prefix, abort
 from fabric.contrib.files import comment, append
+from fabric.contrib.console import confirm
 
 USER = "pypln"
 HOME = "/srv/pypln/"
 LOG_DIR = os.path.join(HOME, "logs/")
+BACKUP_DIR = os.path.join(HOME, "backups/")
 PROJECT_ROOT = os.path.join(HOME, "project/")
 PROJECT_WEB_ROOT = os.path.join(PROJECT_ROOT, "pypln/web/")
 REPO_URL = "https://github.com/NAMD/pypln.git"
@@ -59,6 +62,21 @@ def create_db(db_user, db_name, db_host="localhost", db_port=5432):
         sudo('chmod 600 {}'.format(pgpass_path))
         sudo('createdb "{}" -O "{}"'.format(db_name, db_user), user='postgres')
 
+def db_backup():
+    now = datetime.datetime.now()
+    filename = now.strftime("pypln_%Y-%M-%d_%H-%m-%S.backup")
+    backup_file_path = os.path.join(BACKUP_DIR, filename)
+    with settings(user=USER):
+        run("pg_dump -Fc -o -f {}".format(backup_file_path))
+
+def db_restore(filename, db_name="pypln"):
+    message = "Are you sure you want to replace the current database with {}"
+    if not confirm(message.format(filename), default=False):
+        abort("Aborting database restore...")
+
+    backup_file_path = os.path.join(BACKUP_DIR, filename)
+    sudo("pg_restore -d template1 -C {}".format(backup_file_path), user="postgres")
+
 def install_system_packages():
     packages = " ".join(["python-setuptools", "python-pip",
         "python-numpy", "build-essential", "python-dev", "mongodb",
@@ -82,6 +100,8 @@ def initial_setup():
             HOME, USER))
         sudo("mkdir {}".format(LOG_DIR))
         sudo("chown -R {0}:{0} {1}".format(USER, LOG_DIR))
+        sudo("mkdir {}".format(BACKUP_DIR))
+        sudo("chown -R {0}:{0} {1}".format(USER, BACKUP_DIR))
         sudo("passwd {}".format(USER))
 
     with settings(warn_only=True, user=USER):
