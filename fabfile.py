@@ -38,11 +38,11 @@ def _reload_supervisord():
     sudo("service supervisor stop")
     sudo("service supervisor start")
 
-def _update_code():
+def _update_code(rev="master"):
     with cd(PROJECT_ROOT):
         run("git remote update")
-        run("git checkout feature/deploy")
-        run("git reset --hard origin/feature/deploy")
+        run("git checkout {}".format(rev))
+        run("git reset --hard {}".format(rev))
 
 def create_db(db_user, db_name, db_host="localhost", db_port=5432):
     # we choose a random password with letters, numbers and some punctuation.
@@ -92,7 +92,7 @@ def install_system_packages():
     sudo("apt-get update")
     sudo("apt-get install -y {}".format(packages))
 
-def initial_setup():
+def initial_setup(rev="master"):
     install_system_packages()
     # Updating virtualenv is specially important since the default changed
     # to not giving access to system python packages and the option to disable
@@ -114,7 +114,7 @@ def initial_setup():
 
     with settings(warn_only=True, user=USER):
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
-        _update_code()
+        _update_code(rev)
         run("virtualenv --system-site-packages {}".format(PROJECT_ROOT))
 
     for daemon in ["router", "pipeliner", "broker", "web"]:
@@ -140,9 +140,9 @@ def initial_setup():
 
     create_db('pypln', 'pypln')
 
-def deploy():
+def deploy(rev="master"):
     with prefix("source {}".format(ACTIVATE_SCRIPT)), settings(user=USER), cd(PROJECT_ROOT):
-        _update_code()
+        _update_code(rev)
         run("python setup.py install")
         run("python -m nltk.downloader all")
 
