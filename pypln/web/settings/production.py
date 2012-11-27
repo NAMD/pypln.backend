@@ -1,4 +1,3 @@
-from base import *
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -17,7 +16,8 @@ from base import *
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-raise ImportError("We are not ready for a production deploy yet.")
+from base import *
+import os
 
 ADMINS = [
     #TODO: define admin e-mail
@@ -25,23 +25,33 @@ ADMINS = [
 
 MANAGERS = ADMINS
 
-#TODO: Read database settings (user, passwd etc) from a file on the server
+SERVE_MEDIA = False
+
+pgpass_file_path = os.path.expanduser("~/.pgpass")
+secret_key_file_path = os.path.expanduser("~/.secret_key")
+
+with open(secret_key_file_path, 'r') as secret_key_file:
+    SECRET_KEY = secret_key_file.read().strip()
+
+with open(pgpass_file_path, 'r') as pgpass_file:
+    pg_credentials = pgpass_file.read().strip()
+
+db_host, db_port, db_name, db_user, db_password = pg_credentials.split(":")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "",
-        "USER": "",
-        "PASSWORD": "",
-        "HOST": "",
-        "PORT": "",
+        "NAME": db_name,
+        "USER": db_user,
+        "PASSWORD": db_password,
+        "HOST": db_host,
+        "PORT": db_port,
     }
 }
 
-SECRET_KEY = "" #TODO: Read SECRET_KEY from a file on the server
-
 #TODO: read router configuration from a config file (issue #14)
 ROUTER_API = 'tcp://127.0.0.1:5555'
-ROUTER_BROADCAST = 'tcp://127.0.0.1:5555'
+ROUTER_BROADCAST = 'tcp://127.0.0.1:5556'
 ROUTER_TIMEOUT = 5
 
 CONFIGURATION = get_config_from_router(ROUTER_API)

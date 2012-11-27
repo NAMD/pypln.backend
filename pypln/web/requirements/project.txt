@@ -6,5 +6,8 @@
 # Put project-specific requirements here.
 # See http://pip-installer.org/requirement-format.html for more information.
 
+pymongo
+flup
 pypelinin
 mongodict
+gunicorn
