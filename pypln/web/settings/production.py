@@ -28,6 +28,10 @@ MANAGERS = ADMINS
 SERVE_MEDIA = False
 
 pgpass_file_path = os.path.expanduser("~/.pgpass")
+secret_key_file_path = os.path.expanduser("~/.secret_key")
+
+with open(secret_key_file_path, 'r') as secret_key_file:
+    SECRET_KEY = secret_key_file.read().strip()
 
 with open(pgpass_file_path, 'r') as pgpass_file:
     pg_credentials = pgpass_file.read().strip()
@@ -44,8 +48,6 @@ DATABASES = {
         "PORT": db_port,
     }
 }
-
-SECRET_KEY = "" #TODO: Read SECRET_KEY from a file on the server
 
 #TODO: read router configuration from a config file (issue #14)
 ROUTER_API = 'tcp://127.0.0.1:5555'

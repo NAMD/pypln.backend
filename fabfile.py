@@ -62,6 +62,13 @@ def create_db(db_user, db_name, db_host="localhost", db_port=5432):
         sudo('chmod 600 {}'.format(pgpass_path))
         sudo('createdb "{}" -O "{}"'.format(db_name, db_user), user='postgres')
 
+def _create_secret_key_file():
+    valid_chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)'
+    secret_key = ''.join([random.choice(valid_chars) for i in range(50)])
+    secret_key_file_path = os.path.join(HOME, ".secret_key")
+    sudo("echo '{}' > {}".format(secret_key, secret_key_file_path))
+    sudo('chown {0}:{0} {1}'.format(USER, secret_key_file_path))
+
 def db_backup():
     now = datetime.datetime.now()
     filename = now.strftime("pypln_%Y-%M-%d_%H-%m-%S.backup")
@@ -103,6 +110,7 @@ def initial_setup():
         sudo("mkdir {}".format(BACKUP_DIR))
         sudo("chown -R {0}:{0} {1}".format(USER, BACKUP_DIR))
         sudo("passwd {}".format(USER))
+        _create_secret_key_file()
 
     with settings(warn_only=True, user=USER):
         run("git clone {} {}".format(REPO_URL, PROJECT_ROOT))
