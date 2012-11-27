@@ -51,7 +51,7 @@ DATABASES = {
 
 #TODO: read router configuration from a config file (issue #14)
 ROUTER_API = 'tcp://127.0.0.1:5555'
-ROUTER_BROADCAST = 'tcp://127.0.0.1:5555'
+ROUTER_BROADCAST = 'tcp://127.0.0.1:5556'
 ROUTER_TIMEOUT = 5
 
 CONFIGURATION = get_config_from_router(ROUTER_API)
