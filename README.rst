@@ -9,6 +9,8 @@ for processing big corpora, with a Web interface.
 We don't have a production release yet, but it's scheduled on our
 `next milestone <https://github.com/namd/pypln/issues?milestone=1>`_.
 
+PyPLN is funded by `Fundação Getulio Vargas <http://portal.fgv.br/>`_.
+
 License
 -------
 
