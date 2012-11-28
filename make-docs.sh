@@ -79,7 +79,7 @@ function build_sphinx() {
 }
 
 function build_epydoc() {
-    epydoc -v -u https://github.com/namd/pypln --debug --graph=all \
+    epydoc -v -u https://github.com/namd/pypln.backend --debug --graph=all \
            --parse-only --html --no-frames -o $TMP_DIR/reference pypln/
 }
 

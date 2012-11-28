@@ -27,7 +27,7 @@ Contributing
 ============
 
 If you want to contribute, please read our
-`code guidelines <https://github.com/namd/pypln/blob/develop/CONTRIBUTING.rst>`_.
+`code guidelines <https://github.com/namd/pypln.backend/blob/develop/CONTRIBUTING.rst>`_.
 
 You can also interact with us through:
 

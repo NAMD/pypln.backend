@@ -7,7 +7,7 @@ our foundations. The goal of the project is to create an easy way to use NLTK
 for processing big corpora, with a Web interface.
 
 We don't have a production release yet, but it's scheduled on our
-`next milestone <https://github.com/namd/pypln/issues?milestone=1>`_.
+`next milestone <https://github.com/namd/pypln.backend/issues?milestone=1>`_.
 
 PyPLN is sponsored by `Fundação Getulio Vargas <http://portal.fgv.br/>`_.
 
@@ -65,4 +65,4 @@ To run the development webserver::
 
 
 
-See our `code guidelines <https://github.com/namd/pypln/blob/develop/CONTRIBUTING.rst>`_.
+See our `code guidelines <https://github.com/namd/pypln.backend/blob/develop/CONTRIBUTING.rst>`_.

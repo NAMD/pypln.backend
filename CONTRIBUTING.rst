@@ -22,7 +22,7 @@ Code Guidelines
 - Use `Python's new-style formatting <http://docs.python.org/library/string.html#format-string-syntax>`_
   (``'{} = {}'.format(a, b)`` instead of ``'%s = %s' % (a, b)``).
 - All ``#TODO`` should be translated in issues (use our
-  `GitHub issue system <https://github.com/namd/pypln/issues>`_).
+  `GitHub issue system <https://github.com/namd/pypln.backend/issues>`_).
 - Run all tests before pushing (just execute ``make test``).
 - Try to write Python3-friendly code, so when we decide to support both Python2
   and Python3, it'll not be a pain.
