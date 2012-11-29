@@ -23,9 +23,9 @@ Documentation
 
 Our documentation is hosted using `GitHub Pages <http://pages.github.com/>`_:
 
-- `PyPLN Documentation <http://namd.github.com/pypln/>`_
+- `PyPLN Documentation <http://pypln.org/docs>`_
   (created using `Sphinx <http://sphinx.pocoo.org/>`_)
-- `Code reference <http://namd.github.com/pypln/reference/>`_
+- `Code reference <http://pypln.org/docs/reference/>`_
   (created using `epydoc <http://epydoc.sourceforge.net/>`_)
 
 
@@ -36,7 +36,7 @@ To install dependencies (on a Debian-like GNU/Linux distribution)::
 
     sudo apt-get install python-setuptools
     pip install virtualenv virtualenvwrapper
-    mkvirtualenv pypln
+    mkvirtualenv pypln.backend
     pip install -r requirements/production.txt
 
 You will also need to install NLTK data. You can do so following the `NLTK
@@ -48,21 +48,13 @@ Developing
 
 To run tests::
 
-    workon pypln
+    workon pypln.backend
     pip install -r requirements/development.txt
     make test
 
 
 ..  TODO: The PYTHONPATH issue should be fixed once we organize the directory
     structure. As soon as this is fixed, we must update this instructions.
-
-To run the development webserver::
-
-    workon pypln
-    cd pypln/web/
-    pip install -r requirements/project.txt
-    PYTHONPATH="../../:$PYTHONPATH" ./manage.py runserver --settings=settings.development
-
 
 
 See our `code guidelines <https://github.com/namd/pypln.backend/blob/develop/CONTRIBUTING.rst>`_.

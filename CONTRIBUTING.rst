@@ -39,6 +39,11 @@ Git Usage
 Generating Documentation
 ------------------------
 
+Currently we are using the repository
+`pypln.org <https://github.com/NAMD/pypln.org>`_ to store PyPLN's website and
+docs, so the method described below is not needed anymore. We just need to make
+the documentation, move all files to ``pypln.org`` repo, commit and then push.
+
 We use the script ``make-docs.sh`` to generate documentation and it's served by
 `GitHub Pages <http://pages.github.com/>`_. As we need to put **only the static
 documentation files** on branch ``gh-pages``, our script does the job of:
@@ -58,6 +63,7 @@ You can also generate documentation from your current branch (instead of
 ``develop``) or do not commit it (only generate). Please run ``./make-docs -h``
 to know all the available options.
 
+
 Note: epydoc's Bug
 ~~~~~~~~~~~~~~~~~~
 
@@ -66,3 +72,6 @@ bug. Please read
 `this post on StackOverflow <http://stackoverflow.com/questions/6704770/epydoc-attributeerror-text-object-has-no-attribute-data>`_
 and apply the proposed patch. Sorry, but it looks like it is not maintained
 anymore.
+
+Note: we will try to move fron epydoc to Sphinx in a near future due to this
+problem.
