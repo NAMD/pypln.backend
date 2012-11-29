@@ -7,9 +7,3 @@ psutil
 chromium_compact_language_detector
 numpy
 nltk
-
-# Web
-Pinax
-flask
-jinja2
-django
