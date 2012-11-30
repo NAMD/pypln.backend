@@ -73,5 +73,5 @@ bug. Please read
 and apply the proposed patch. Sorry, but it looks like it is not maintained
 anymore.
 
-Note: we will try to move fron epydoc to Sphinx in a near future due to this
+Note: we will try to move from epydoc to Sphinx in a near future due to this
 problem.
