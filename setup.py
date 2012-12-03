@@ -16,11 +16,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-'''
-Created on 26/06/2011
-
-@author: Flávio Codeço Coelho
-'''
 
 from setuptools import setup, find_packages
 
@@ -36,14 +31,15 @@ def get_requirements():
             packages.append(package)
     return packages
 
-setup(name='pypln',
-      version='0.4.0d',
-      author=('Flávio Codeço Coelho <fccoelho@gmail.com>, '
-              'Renato Rocha Souza <rsouza.fgv@gmail.com>, '
-              'Álvaro Justen <alvarojusten@gmail.com>'),
+setup(name='pypln.backend',
+      version='0.1.0d',
+      author=('Álvaro Justen <alvarojusten@gmail.com>',
+              'Flávio Amieiro <flavioamieiro@gmail.com>',
+              'Flávio Codeço Coelho <fccoelho@gmail.com>',
+              'Renato Rocha Souza <rsouza.fgv@gmail.com>'),
       author_email='pypln@googlegroups.com',
-      url='https://github.com/NAMD/pypln',
-      description='Distributed natural language processing pipeline',
+      url='https://github.com/NAMD/pypln.backend',
+      description='Distributed natural language processing framework',
       zip_safe=False,
       entry_points={'console_scripts': ['pypln-router = pypln.backend.router:main',
                                         'pypln-broker = pypln.backend.broker:main',
@@ -52,5 +48,5 @@ setup(name='pypln',
       packages=find_packages(),
       install_requires=get_requirements(),
       test_suite='nose.collector',
-      license='GPL',
+      license='GPL3',
 )
