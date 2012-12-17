@@ -3,4 +3,3 @@
 nose
 epydoc
 sphinx
-fabric
