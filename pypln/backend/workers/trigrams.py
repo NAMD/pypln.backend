@@ -31,7 +31,7 @@ class Trigrams(Worker):
     """
     requires = ['tokens']
 
-    def process(self, tokens):
-        trigram_finder = TrigramCollocationFinder.from_words(tokens)
+    def process(self, document):
+        trigram_finder = TrigramCollocationFinder.from_words(document['tokens'])
 
         return {'trigram_finder': cPickle.dumps(trigram_finder)}

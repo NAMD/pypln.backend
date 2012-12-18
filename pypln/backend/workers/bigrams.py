@@ -32,7 +32,7 @@ class Bigrams(Worker):
     requires = ['tokens']
     bigram_measures = nltk.collocations.BigramAssocMeasures()
 
-    def process(self, tokens):
-        bigram_finder = BigramCollocationFinder.from_words(tokens)
+    def process(self, document):
+        bigram_finder = BigramCollocationFinder.from_words(document['tokens'])
 
         return {'bigram_finder': cPickle.dumps(bigram_finder)}
