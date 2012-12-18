@@ -20,19 +20,18 @@
 from pypelinin import Worker
 
 import nltk
-from nltk.collocations import BigramCollocationFinder
+from nltk.collocations import TrigramCollocationFinder
 import cPickle
 
 
 
-class Bigrams(Worker):
+class Trigrams(Worker):
     """
     Returns pickled bigram finder
     """
     requires = ['tokens']
-    bigram_measures = nltk.collocations.BigramAssocMeasures()
 
     def process(self, tokens):
-        bigram_finder = BigramCollocationFinder.from_words(tokens)
+        trigram_finder = TrigramCollocationFinder.from_words(tokens)
 
-        return {'bigram_finder': cPickle.dumps(bigram_finder)}
+        return {'trigram_finder': cPickle.dumps(trigram_finder)}
