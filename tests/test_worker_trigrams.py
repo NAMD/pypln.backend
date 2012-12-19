@@ -17,18 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-from pypln.backend.workers.trigrams import Trigrams
-import nltk
 import cPickle
+import unittest
 
-trigram_measures = nltk.collocations.TrigramAssocMeasures()
+import nltk
+
+from pypln.backend.workers.trigrams import Trigrams
 
 
 class TestTrigramWorker(unittest.TestCase):
     def test_Trigrams_should_return_10_best_trigrams_in_this_order(self):
+        trigram_measures = nltk.collocations.TrigramAssocMeasures()
         tokens = nltk.corpus.genesis.words('english-web.txt')
-        finder = cPickle.loads(Trigrams().process({'tokens':tokens})['trigram_finder'])
+        worker_result = Trigrams().process({'tokens': tokens})
+        finder = cPickle.loads(worker_result['trigram_finder'])
+
         expected = [(u'olive', u'leaf', u'plucked'),
                     (u'rider', u'falls', u'backward'),
                     (u'sewed', u'fig', u'leaves'),
@@ -39,6 +42,5 @@ class TestTrigramWorker(unittest.TestCase):
                     (u'Their', u'hearts', u'failed'),
                     (u'Valley', u').', u'Melchizedek'),
                     (u'doing', u'forced', u'labor')]
-        result = finder.nbest(trigram_measures.pmi,10)
+        result = finder.nbest(trigram_measures.pmi, 10)
         self.assertEqual(result, expected)
-

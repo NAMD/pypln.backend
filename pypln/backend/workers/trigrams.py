@@ -17,21 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from pypelinin import Worker
-
-import nltk
-from nltk.collocations import TrigramCollocationFinder
 import cPickle
 
+import nltk
+
+from pypelinin import Worker
+from nltk.collocations import TrigramCollocationFinder
 
 
 class Trigrams(Worker):
-    """
-    Returns pickled bigram finder
-    """
+    """Create a NLTK trigram finder and return the pickled object"""
     requires = ['tokens']
 
     def process(self, document):
         trigram_finder = TrigramCollocationFinder.from_words(document['tokens'])
-
         return {'trigram_finder': cPickle.dumps(trigram_finder)}

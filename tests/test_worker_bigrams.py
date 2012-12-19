@@ -17,18 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-from pypln.backend.workers.bigrams import Bigrams
-import nltk
 import cPickle
+import unittest
 
-bigram_measures = nltk.collocations.BigramAssocMeasures()
+import nltk
+
+from pypln.backend.workers.bigrams import Bigrams
 
 
 class TestBigramWorker(unittest.TestCase):
     def test_bigrams_should_return_10_best_bigrams_in_this_order(self):
+        bigram_measures = nltk.collocations.BigramAssocMeasures()
         tokens = nltk.corpus.genesis.words('english-web.txt')
-        finder = cPickle.loads(Bigrams().process({'tokens':tokens})['bigram_finder'])
+        worker_result = Bigrams().process({'tokens': tokens})
+        finder = cPickle.loads(worker_result['bigram_finder'])
+
         expected = [(u'Allon', u'Bacuth'),
                     (u'Ashteroth', u'Karnaim'),
                     (u'Ben', u'Ammi'),
@@ -39,6 +42,5 @@ class TestBigramWorker(unittest.TestCase):
                     (u'appoint', u'overseers'),
                     (u'aromatic', u'resin'),
                     (u'cutting', u'instrument')]
-        result = finder.nbest(bigram_measures.pmi,10)
+        result = finder.nbest(bigram_measures.pmi, 10)
         self.assertEqual(result, expected)
-

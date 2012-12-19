@@ -17,22 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from pypelinin import Worker
-
-import nltk
-from nltk.collocations import BigramCollocationFinder
 import cPickle
 
+import nltk
+
+from nltk.collocations import BigramCollocationFinder
+from pypelinin import Worker
 
 
 class Bigrams(Worker):
-    """
-    Returns pickled bigram finder
-    """
+    """Create a NLTK bigram finder and return the pickled object"""
     requires = ['tokens']
-    bigram_measures = nltk.collocations.BigramAssocMeasures()
 
     def process(self, document):
         bigram_finder = BigramCollocationFinder.from_words(document['tokens'])
-
         return {'bigram_finder': cPickle.dumps(bigram_finder)}
