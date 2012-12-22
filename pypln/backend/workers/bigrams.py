@@ -17,18 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from pypelinin import Worker
+import cPickle
 
 import nltk
-from nltk.collocations import BigramCollocationFinder
 from collections import defaultdict
 
+from nltk.collocations import BigramCollocationFinder
+from pypelinin import Worker
 
 
 class Bigrams(Worker):
-    """
-    Returns pickled bigram finder
-    """
+    """Create a NLTK bigram finder and return the pickled object"""
     requires = ['tokens']
 
 
@@ -50,5 +49,4 @@ class Bigrams(Worker):
         for m in metrics:
             for res in bigram_finder.score_ngrams(getattr(bigram_measures,m)):
                 br[res[0]].append(res[1])
-
         return {'metrics':metrics,'bigram_rank': br}

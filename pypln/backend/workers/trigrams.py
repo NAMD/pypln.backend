@@ -26,9 +26,7 @@ from collections import defaultdict
 
 
 class Trigrams(Worker):
-    """
-    Returns pickled bigram finder
-    """
+    """Create a NLTK trigram finder and return the pickled object"""
     requires = ['tokens']
 
     def process(self, document):
