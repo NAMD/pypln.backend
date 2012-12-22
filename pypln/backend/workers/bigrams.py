@@ -27,7 +27,7 @@ from pypelinin import Worker
 
 
 class Bigrams(Worker):
-    """Create a NLTK bigram finder and return the pickled object"""
+    """Create a NLTK bigram finder and return a table in JSON format"""
     requires = ['tokens']
 
 
