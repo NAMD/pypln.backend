@@ -26,19 +26,11 @@ trigram_measures = nltk.collocations.TrigramAssocMeasures()
 
 
 class TestTrigramWorker(unittest.TestCase):
-    def test_Trigrams_should_return_10_best_trigrams_in_this_order(self):
+    def test_Trigrams_should_return_correct_score_(self):
         tokens = nltk.corpus.genesis.words('english-web.txt')
-        finder = cPickle.loads(Trigrams().process({'tokens':tokens})['trigram_finder'])
-        expected = [(u'olive', u'leaf', u'plucked'),
-                    (u'rider', u'falls', u'backward'),
-                    (u'sewed', u'fig', u'leaves'),
-                    (u'yield', u'royal', u'dainties'),
-                    (u'during', u'mating', u'season'),
-                    (u'Salt', u'Sea', u').'),
-                    (u'Sea', u').', u'Twelve'),
-                    (u'Their', u'hearts', u'failed'),
-                    (u'Valley', u').', u'Melchizedek'),
-                    (u'doing', u'forced', u'labor')]
-        result = finder.nbest(trigram_measures.pmi,10)
+        trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
+        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'olive', u'leaf',u'plucked')
+        trigram_rank = Trigrams().process({'tokens':tokens})['trigram_rank']
+        result = trigram_rank[(u'olive', u'leaf',u'plucked')][0]
         self.assertEqual(result, expected)
 

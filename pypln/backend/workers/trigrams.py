@@ -21,7 +21,7 @@ from pypelinin import Worker
 
 import nltk
 from nltk.collocations import TrigramCollocationFinder
-import cPickle
+from collections import defaultdict
 
 
 
@@ -32,6 +32,19 @@ class Trigrams(Worker):
     requires = ['tokens']
 
     def process(self, document):
+        trigram_measures = nltk.collocations.TrigramAssocMeasures()
+        metrics = ['chi_sq',
+                   'jaccard',
+                   'likelihood_ratio',
+                   'mi_like',
+                   'pmi',
+                   'poisson_stirling',
+                   'raw_freq',
+                   'student_t']
         trigram_finder = TrigramCollocationFinder.from_words(document['tokens'])
+        tr = defaultdict(lambda: [])
+        for m in metrics:
+            for res in trigram_finder.score_ngrams(getattr(trigram_measures,m)):
+                tr[res[0]].append(res[1])
 
-        return {'trigram_finder': cPickle.dumps(trigram_finder)}
+        return {'trigram_rank': tr, 'metrics':metrics}

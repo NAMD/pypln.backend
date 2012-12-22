@@ -21,7 +21,7 @@ from pypelinin import Worker
 
 import nltk
 from nltk.collocations import BigramCollocationFinder
-import cPickle
+from collections import defaultdict
 
 
 
@@ -30,9 +30,25 @@ class Bigrams(Worker):
     Returns pickled bigram finder
     """
     requires = ['tokens']
-    bigram_measures = nltk.collocations.BigramAssocMeasures()
+
 
     def process(self, document):
+        #todo: support filtering by stopwords
+        bigram_measures = nltk.collocations.BigramAssocMeasures()
+        metrics = ['chi_sq',
+               'dice',
+               'jaccard',
+               'likelihood_ratio',
+               'mi_like',
+               'phi_sq',
+               'pmi',
+               'poisson_stirling',
+               'raw_freq',
+               'student_t']
         bigram_finder = BigramCollocationFinder.from_words(document['tokens'])
+        br = defaultdict(lambda :[])
+        for m in metrics:
+            for res in bigram_finder.score_ngrams(getattr(bigram_measures,m)):
+                br[res[0]].append(res[1])
 
-        return {'bigram_finder': cPickle.dumps(bigram_finder)}
+        return {'metrics':metrics,'bigram_rank': br}

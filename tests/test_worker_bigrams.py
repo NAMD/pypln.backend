@@ -20,25 +20,16 @@
 import unittest
 from pypln.backend.workers.bigrams import Bigrams
 import nltk
-import cPickle
 
 bigram_measures = nltk.collocations.BigramAssocMeasures()
 
 
 class TestBigramWorker(unittest.TestCase):
-    def test_bigrams_should_return_10_best_bigrams_in_this_order(self):
+    def test_bigrams_should_return_correct_score(self):
         tokens = nltk.corpus.genesis.words('english-web.txt')
-        finder = cPickle.loads(Bigrams().process({'tokens':tokens})['bigram_finder'])
-        expected = [(u'Allon', u'Bacuth'),
-                    (u'Ashteroth', u'Karnaim'),
-                    (u'Ben', u'Ammi'),
-                    (u'En', u'Mishpat'),
-                    (u'Jegar', u'Sahadutha'),
-                    (u'Salt', u'Sea'),
-                    (u'Whoever', u'sheds'),
-                    (u'appoint', u'overseers'),
-                    (u'aromatic', u'resin'),
-                    (u'cutting', u'instrument')]
-        result = finder.nbest(bigram_measures.pmi,10)
+        bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u'Allon',u'Bacuth')
+        bigram_rank = Bigrams().process({'tokens':tokens})['bigram_rank']
+        result = bigram_rank[(u'Allon', u'Bacuth')][0]
         self.assertEqual(result, expected)
 
