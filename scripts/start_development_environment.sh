@@ -17,8 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN. If not, see <http://www.gnu.org/licenses/>.
 
-SCRIPT_PATH=$(dirname $(readlink -f $0))
-echo "$SCRIPT_PATH"
+SCRIPT_PATH=$(dirname $(readlink -f $0))/../ # get parent directory
 
 # Adding the current directory to PYTHONPATH, the broker will be able to import
 # pypln.backend even if the package is not installed
