@@ -19,6 +19,7 @@
 
 import shlex
 
+from HTMLParser import HTMLParser
 from tempfile import NamedTemporaryFile
 from os import unlink
 from subprocess import Popen, PIPE
@@ -140,6 +141,7 @@ class Extractor(Worker):
             text = parse_html(file_data['contents'], True, ['script', 'style'])
         elif file_mime_type == 'application/pdf':
             text, metadata = extract_pdf(file_data['contents'])
+        text = HTMLParser().unescape(text)
         text = clean(text)
         language = cld.detect(text)[1]
         return {'text': text, 'file_metadata': metadata, 'language': language}

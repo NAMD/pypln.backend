@@ -120,3 +120,10 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertEqual('pt', result_pt['language'])
         self.assertEqual('es', result_es['language'])
         self.assertEqual('en', result_en['language'])
+
+    def test_unescape_html_entities(self):
+        expected = "This text has html <entities>."
+        filename = 'tests/data/test_html_entities.txt'
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        self.assertEqual(expected, result['text'])
