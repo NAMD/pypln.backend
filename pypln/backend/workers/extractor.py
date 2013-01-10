@@ -20,7 +20,6 @@
 import shlex
 
 from tempfile import NamedTemporaryFile
-from string import punctuation
 from os import unlink
 from subprocess import Popen, PIPE
 from mimetypes import guess_type
@@ -38,7 +37,7 @@ regexp_spaces_start = regexp_compile('([\n]+)[ \t]*',
 regexp_spaces_end = regexp_compile('[ \t]*\n', flags=DOTALL)
 regexp_newlines = regexp_compile('[\n]{3,}', flags=DOTALL)
 regexp_spaces = regexp_compile('[ \t]{2,}', flags=DOTALL)
-regexp_punctuation = regexp_compile('[ \t]*([' + escape(punctuation) + '])',
+regexp_punctuation = regexp_compile('[ \t]*([' + escape('!,.:;?') + '])',
         flags=DOTALL)
 breakline_tags = ['table', '/table', 'tr', 'div', '/div', 'h1', '/h1', 'h2',
                   '/h2', 'h3', '/h3', 'h4', '/h4', 'h5', '/h5', 'h6', '/h6',
