@@ -136,10 +136,11 @@ class Extractor(Worker):
         file_mime_type = guess_type(file_data['filename'])[0]
         metadata = {}
         if file_mime_type == 'text/plain':
-            text = clean(file_data['contents'])
+            text = file_data['contents']
         elif file_mime_type == 'text/html':
             text = parse_html(file_data['contents'], True, ['script', 'style'])
         elif file_mime_type == 'application/pdf':
             text, metadata = extract_pdf(file_data['contents'])
+        text = clean(text)
         language = cld.detect(text)[1]
         return {'text': text, 'file_metadata': metadata, 'language': language}
