@@ -122,7 +122,6 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertEqual('en', result_en['language'])
 
     def test_unescape_html_entities(self):
-        import ipdb; ipdb.set_trace()
         expected = ("This text has html <entities>. Álvaro asked me to make"
                     " sure it also has non ascii chars.")
         filename = 'tests/data/test_html_entities.txt'
