@@ -128,3 +128,10 @@ class TestExtractorWorker(unittest.TestCase):
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         self.assertEqual(expected, result['text'])
+
+    def test_should_detect_encoding_and_return_a_utf8_string(self):
+        expected = "Flávio"
+        filename = 'tests/data/test_iso-8859-1.txt'
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        self.assertEqual(expected, result['text'])
