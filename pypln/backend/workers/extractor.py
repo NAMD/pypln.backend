@@ -27,6 +27,7 @@ from mimetypes import guess_type
 from re import compile as regexp_compile, DOTALL, escape
 
 import cld
+import magic
 
 from pypelinin import Worker
 
@@ -127,7 +128,6 @@ def extract_pdf(data):
 
 
 class Extractor(Worker):
-    #TODO: detect encoding to decode
     #TODO: need to verify some exceptions when trying to convert 'evil' PDFs
     #TODO: should 'replace_with' be '' when extracting from HTML?
     requires = ['contents']
@@ -141,7 +141,11 @@ class Extractor(Worker):
             text = parse_html(file_data['contents'], True, ['script', 'style'])
         elif file_mime_type == 'application/pdf':
             text, metadata = extract_pdf(file_data['contents'])
-        text = HTMLParser().unescape(text.decode('utf-8')).encode('utf-8')
+
+        with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
+            content_encoding = m.id_buffer(text)
+        text = text.decode(content_encoding)
+        text = HTMLParser().unescape(text)
         text = clean(text)
-        language = cld.detect(text)[1]
+        language = cld.detect(text.encode('utf-8'))[1]
         return {'text': text, 'file_metadata': metadata, 'language': language}

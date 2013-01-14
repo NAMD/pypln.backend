@@ -12,5 +12,6 @@ pyparsing==1.5.7
 # Backend
 psutil
 chromium_compact_language_detector
+filemagic
 numpy
 nltk
