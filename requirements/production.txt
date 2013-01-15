@@ -7,7 +7,7 @@ mongodict
 # supports python 2) before one of our dependencies tries
 # to install it.
 # http://sourceforge.net/projects/pyparsing/forums/forum/337293/topic/6481050
-pyparsing==1.5.7
+pyparsing>=1.5.6,<2.0
 
 # Backend
 psutil
