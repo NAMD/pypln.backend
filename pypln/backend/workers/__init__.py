@@ -22,6 +22,7 @@ from tokenizer import Tokenizer
 from freqdist import FreqDist
 from pos import POS
 from statistics import Statistics
+from bigrams import Bigrams
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics']
+__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics', 'Bigrams']
