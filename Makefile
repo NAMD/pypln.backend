@@ -37,5 +37,8 @@ clean:
 	find -regex '.*\.pyc' -exec rm {} \;
 	find -regex '.*~' -exec rm {} \;
 
+run:
+	@./scripts/start_development_environment.sh
 
-.PHONY:	test test-x doc clean test-workers
+
+.PHONY:	test test-x doc clean test-workers run

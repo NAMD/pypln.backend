@@ -120,3 +120,19 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertEqual('pt', result_pt['language'])
         self.assertEqual('es', result_es['language'])
         self.assertEqual('en', result_en['language'])
+
+    def test_unescape_html_entities(self):
+        expected = (u"This text has html <entities>. Álvaro asked me to make"
+                     " sure it also has non ascii chars.")
+        filename = 'tests/data/test_html_entities.txt'
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        self.assertEqual(expected, result['text'])
+
+    def test_should_detect_encoding_and_return_a_unicode_object(self):
+        expected = u"Flávio"
+        filename = 'tests/data/test_iso-8859-1.txt'
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        self.assertEqual(expected, result['text'])
+        self.assertEqual(type(result['text']), unicode)
