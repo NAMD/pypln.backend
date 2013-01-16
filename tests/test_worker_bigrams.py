@@ -18,14 +18,36 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import cPickle
-import unittest
-from pypln.backend.workers.bigrams import Bigrams
+import gridfs
 import nltk
+import unittest
+
+from mongodict import MongoDict
+from pymongo import Connection
+
+from pypln.backend.mongo_store import MongoDBStore
+from pypln.backend.workers.bigrams import Bigrams
+from .utils import default_config
 
 bigram_measures = nltk.collocations.BigramAssocMeasures()
 
 
 class TestBigramWorker(unittest.TestCase):
+    def _prepare_store(self):
+        self.db_conf = db_conf = default_config['store']
+        self.connection = Connection(host=db_conf['host'],
+                                     port=db_conf['port'])
+        self.connection.drop_database(db_conf['database'])
+        self.db = self.connection[db_conf['database']]
+        self.monitoring = self.db[db_conf['monitoring_collection']]
+        self.gridfs = gridfs.GridFS(self.db, db_conf['gridfs_collection'])
+        self.db[db_conf['gridfs_collection'] + '.files'].drop()
+        self.db[db_conf['gridfs_collection'] + '.chunks'].drop()
+        self.mongodict = MongoDict(host=db_conf['host'], port=db_conf['port'],
+                                   database=db_conf['database'],
+                                   collection=db_conf['analysis_collection'])
+        self.store = MongoDBStore(**db_conf)
+
     def test_bigrams_should_return_correct_score(self):
         tokens = nltk.corpus.genesis.words('english-web.txt')
         bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
@@ -41,3 +63,13 @@ class TestBigramWorker(unittest.TestCase):
         result = Bigrams().process({'tokens':tokens})
         # This should not raise an exception.
         cPickle.dumps(result)
+
+    def test_saving_worker_output_should_work(self):
+        """Saving the worker output should work. This is a regression test."""
+        self._prepare_store()
+        tokens = nltk.corpus.genesis.words('english-web.txt')[:100]
+        result = Bigrams().process({'tokens': tokens})
+        info = {'data': {'id': 789, '_id': 'eggs'}, 'worker': 'Bigrams',
+                'worker_requires': ['tokens'], 'worker_result': result}
+        self.store.save(info)
+        self.connection.drop_database(self.db)
