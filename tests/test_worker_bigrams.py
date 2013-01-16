@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import cPickle
 import unittest
 from pypln.backend.workers.bigrams import Bigrams
 import nltk
@@ -33,3 +34,10 @@ class TestBigramWorker(unittest.TestCase):
         result = bigram_rank[(u'Allon', u'Bacuth')][0]
         self.assertEqual(result, expected)
 
+    def test_worker_output_should_be_pickleable(self):
+        """The workers run under multiprocessing, so their result is
+        pickled. This is a regression test."""
+        tokens = nltk.corpus.genesis.words('english-web.txt')
+        result = Bigrams().process({'tokens':tokens})
+        # This should not raise an exception.
+        cPickle.dumps(result)
