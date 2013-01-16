@@ -41,7 +41,7 @@ class TestMongoStore(unittest.TestCase):
         self.monitoring = self.db[db_conf['monitoring_collection']]
         self.gridfs = gridfs.GridFS(self.db, db_conf['gridfs_collection'])
         self.db[db_conf['gridfs_collection'] + '.files'].drop()
-        self.db[db_conf['gridfs_collection'] + '.chuncks'].drop()
+        self.db[db_conf['gridfs_collection'] + '.chunks'].drop()
         self.mongodict = MongoDict(host=db_conf['host'], port=db_conf['port'],
                                    database=db_conf['database'],
                                    collection=db_conf['analysis_collection'])
