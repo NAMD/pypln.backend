@@ -51,9 +51,9 @@ class TestBigramWorker(unittest.TestCase):
     def test_bigrams_should_return_correct_score(self):
         tokens = nltk.corpus.genesis.words('english-web.txt')
         bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
-        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u'Allon',u'Bacuth')
+        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u',', u'which')
         bigram_rank = Bigrams().process({'tokens':tokens})['bigram_rank']
-        result = bigram_rank[(u'Allon', u'Bacuth')][0]
+        result = bigram_rank[0][1][0]
         self.assertEqual(result, expected)
 
     def test_worker_output_should_be_pickleable(self):
