@@ -17,12 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
+import unittest
+from pypln.backend.workers.trigrams import Trigrams
+import nltk
+import cPickle
+
+trigram_measures = nltk.collocations.TrigramAssocMeasures()
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics', 'Bigrams']
+class TestTrigramWorker(unittest.TestCase):
+    def test_Trigrams_should_return_correct_score_(self):
+        tokens = nltk.corpus.genesis.words('english-web.txt')
+        trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
+        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'olive', u'leaf',u'plucked')
+        trigram_rank = Trigrams().process({'tokens':tokens})['trigram_rank']
+        result = trigram_rank[(u'olive', u'leaf',u'plucked')][0]
+        self.assertEqual(result, expected)
+
