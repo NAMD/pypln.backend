@@ -136,3 +136,15 @@ class TestExtractorWorker(unittest.TestCase):
         result = Extractor().process(data)
         self.assertEqual(expected, result['text'])
         self.assertEqual(type(result['text']), unicode)
+
+    def test_unkown_mimetype_should_be_flagged(self):
+        filename = 'tests/data/random_file'
+        # we can't put the expected text content here, so we'll just make sure
+        # it's equal to the input content, since
+        contents = open(filename).read()
+        data = {'filename': filename, 'contents': contents}
+        result = Extractor().process(data)
+        self.assertFalse(result.has_key('file_metadata'))
+        self.assertFalse(result.has_key('language'))
+        self.assertEqual(result['unsupported_mimetype'], True)
+        self.assertEqual(result['text'], "")
