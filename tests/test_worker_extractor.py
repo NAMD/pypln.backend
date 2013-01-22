@@ -151,10 +151,10 @@ class TestExtractorWorker(unittest.TestCase):
         contents = open(filename).read()
         data = {'filename': filename, 'contents': contents}
         result = Extractor().process(data)
-        self.assertFalse(result.has_key('file_metadata'))
-        self.assertFalse(result.has_key('language'))
         self.assertEqual(result['unsupported_mimetype'], True)
         self.assertEqual(result['text'], "")
+        self.assertEqual(result['language'], "")
+        self.assertEqual(result['file_metadata'], {})
 
     def test_unkown_encoding_should_be_ignored(self):
         filename = 'tests/data/unkown_encoding.txt'

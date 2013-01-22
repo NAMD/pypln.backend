@@ -150,7 +150,8 @@ class Extractor(Worker):
             # pipeline will run indefinitely. The right approach is to make
             # pypelinin understand an specific exception (something like
             # StopPipeline) as a signal to stop processing this pipeline.
-            return {'unsupported_mimetype': True, 'text': ""}
+            return {'unsupported_mimetype': True, 'text': "",
+                    'file_metadata': {}, 'language': ""}
 
         with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
             content_encoding = m.id_buffer(text)
