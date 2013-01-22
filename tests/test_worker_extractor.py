@@ -137,6 +137,13 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertEqual(expected, result['text'])
         self.assertEqual(type(result['text']), unicode)
 
+    def test_should_guess_mimetype_for_file_without_extension(self):
+        contents = "This is a test file. I'm testing PyPLN extractor worker!"
+        filename = 'tests/data/text_file'
+        data = {'filename': filename, 'contents': contents}
+        result = Extractor().process(data)
+        self.assertFalse(result.has_key('unsupported_mimetype'))
+
     def test_unkown_mimetype_should_be_flagged(self):
         filename = 'tests/data/random_file'
         # we can't put the expected text content here, so we'll just make sure

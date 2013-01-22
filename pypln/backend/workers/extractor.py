@@ -133,7 +133,8 @@ class Extractor(Worker):
     requires = ['contents']
 
     def process(self, file_data):
-        file_mime_type = guess_type(file_data['filename'])[0]
+        with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
+            file_mime_type = m.id_buffer(file_data['contents'])
         metadata = {}
         if file_mime_type == 'text/plain':
             text = file_data['contents']
