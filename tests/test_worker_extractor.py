@@ -155,3 +155,16 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertFalse(result.has_key('language'))
         self.assertEqual(result['unsupported_mimetype'], True)
         self.assertEqual(result['text'], "")
+
+    def test_unkown_encoding_should_be_ignored(self):
+        filename = 'tests/data/unkown_encoding.txt'
+        expected = "This file has a weird byte (\x96) that makes it impossible for libmagic to recognize it's encoding."
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        metadata = result['file_metadata']
+        self.assertEqual(expected, result['text'])
+        self.assertEqual(result['file_metadata'], {})
+        self.assertEqual(result['language'], 'en')
+        # Since we couldn't detect the encoding, we can't return a unicode
+        # object.
+        self.assertNotEqual(type(result['text']), unicode)

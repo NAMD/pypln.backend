@@ -154,8 +154,24 @@ class Extractor(Worker):
 
         with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
             content_encoding = m.id_buffer(text)
-        text = text.decode(content_encoding)
-        text = HTMLParser().unescape(text)
+        try:
+            text = text.decode(content_encoding)
+            # HTMLParser only handles unicode objects. We can't pass the text
+            # through it if we don't know the encoding, and it's possible we
+            # also shouldn't. There's no way of knowing if it's a badly encoded
+            # html or a binary blob that happens do have bytes that look liked
+            # html entities.
+            text = HTMLParser().unescape(text)
+        except LookupError:
+            # If the detected encoding is not supported, we just treat the
+            # content as we used to: ignoring it's encoding.
+            pass
+
         text = clean(text)
-        language = cld.detect(text.encode('utf-8'))[1]
+
+        if isinstance(text, unicode):
+            language = cld.detect(text.encode('utf-8'))[1]
+        else:
+            language = cld.detect(text)[1]
+
         return {'text': text, 'file_metadata': metadata, 'language': language}
