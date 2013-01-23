@@ -19,5 +19,5 @@
 
 from nltk import pos_tag
 
-def pos(text):
-    return 'en-nltk', pos_tag(text)
+def pos(document):
+    return 'en-nltk', pos_tag(document['tokens'])

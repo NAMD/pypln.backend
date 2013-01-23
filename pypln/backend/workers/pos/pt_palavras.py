@@ -53,7 +53,8 @@ def call_palavras(text):
     stdout, stderr = process.communicate(text.encode(PALAVRAS_ENCODING))
     return stdout
 
-def pos(text):
+def pos(document):
+    text = document['text']
     palavras_output = call_palavras(text)
     tagged_text = []
     for line in palavras_output.split('\n')[1:]:
