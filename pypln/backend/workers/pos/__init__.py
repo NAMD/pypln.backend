@@ -44,8 +44,9 @@ class POS(Worker):
 
     def process(self, document):
         tagged_text_with_offset = None
+        tagset = None
         language = document['language']
         if language in MAPPING:
-            tagged_text = MAPPING[language](document['tokens'])
+            tagset, tagged_text = MAPPING[language](document['tokens'])
             tagged_text_with_offset = put_offset(document['text'], tagged_text)
-        return {'pos': tagged_text_with_offset}
+        return {'pos': tagged_text_with_offset, 'tagset': tagset}

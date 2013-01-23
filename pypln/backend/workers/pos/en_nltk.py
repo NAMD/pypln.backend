@@ -17,4 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from nltk import pos_tag as pos
+from nltk import pos_tag
+
+def pos(text):
+    return 'en-nltk', pos_tag(text)

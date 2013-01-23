@@ -80,7 +80,7 @@ def pos(text):
             if tags:
                 pos_tag = tags[0]
                 tagged_text.append((word, pos_tag))
-    return tagged_text
+    return 'pt-palavras', tagged_text
 
 def palavras_installed():
     return os.path.exists(BASE_PARSER)
