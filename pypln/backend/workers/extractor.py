@@ -133,7 +133,8 @@ class Extractor(Worker):
     requires = ['contents']
 
     def process(self, file_data):
-        file_mime_type = guess_type(file_data['filename'])[0]
+        with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
+            file_mime_type = m.id_buffer(file_data['contents'])
         metadata = {}
         if file_mime_type == 'text/plain':
             text = file_data['contents']
@@ -141,11 +142,37 @@ class Extractor(Worker):
             text = parse_html(file_data['contents'], True, ['script', 'style'])
         elif file_mime_type == 'application/pdf':
             text, metadata = extract_pdf(file_data['contents'])
+        else:
+            # If we can't detect the mimetype we add a flag that can be read by
+            # the frontend to provide more information on why the document
+            # wasn't processed.
+            # XXX: We're returning an empty text because if we don't the
+            # pipeline will run indefinitely. The right approach is to make
+            # pypelinin understand an specific exception (something like
+            # StopPipeline) as a signal to stop processing this pipeline.
+            return {'unsupported_mimetype': True, 'text': "",
+                    'file_metadata': {}, 'language': ""}
 
         with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
             content_encoding = m.id_buffer(text)
-        text = text.decode(content_encoding)
-        text = HTMLParser().unescape(text)
+        try:
+            text = text.decode(content_encoding)
+            # HTMLParser only handles unicode objects. We can't pass the text
+            # through it if we don't know the encoding, and it's possible we
+            # also shouldn't. There's no way of knowing if it's a badly encoded
+            # html or a binary blob that happens do have bytes that look liked
+            # html entities.
+            text = HTMLParser().unescape(text)
+        except LookupError:
+            # If the detected encoding is not supported, we just treat the
+            # content as we used to: ignoring it's encoding.
+            pass
+
         text = clean(text)
-        language = cld.detect(text.encode('utf-8'))[1]
+
+        if isinstance(text, unicode):
+            language = cld.detect(text.encode('utf-8'))[1]
+        else:
+            language = cld.detect(text)[1]
+
         return {'text': text, 'file_metadata': metadata, 'language': language}

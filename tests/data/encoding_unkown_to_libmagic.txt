@@ -1,0 +1,1 @@
+This file has a weird byte (–) that makes it impossible for libmagic to recognize it's encoding.

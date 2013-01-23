@@ -136,3 +136,35 @@ class TestExtractorWorker(unittest.TestCase):
         result = Extractor().process(data)
         self.assertEqual(expected, result['text'])
         self.assertEqual(type(result['text']), unicode)
+
+    def test_should_guess_mimetype_for_file_without_extension(self):
+        contents = "This is a test file. I'm testing PyPLN extractor worker!"
+        filename = 'tests/data/text_file'
+        data = {'filename': filename, 'contents': contents}
+        result = Extractor().process(data)
+        self.assertFalse(result.has_key('unsupported_mimetype'))
+
+    def test_unkown_mimetype_should_be_flagged(self):
+        filename = 'tests/data/random_file'
+        # we can't put the expected text content here, so we'll just make sure
+        # it's equal to the input content, since
+        contents = open(filename).read()
+        data = {'filename': filename, 'contents': contents}
+        result = Extractor().process(data)
+        self.assertEqual(result['unsupported_mimetype'], True)
+        self.assertEqual(result['text'], "")
+        self.assertEqual(result['language'], "")
+        self.assertEqual(result['file_metadata'], {})
+
+    def test_unkown_encoding_should_be_ignored(self):
+        filename = 'tests/data/unkown_encoding.txt'
+        expected = "This file has a weird byte (\x96) that makes it impossible for libmagic to recognize it's encoding."
+        data = {'filename': filename, 'contents': open(filename).read()}
+        result = Extractor().process(data)
+        metadata = result['file_metadata']
+        self.assertEqual(expected, result['text'])
+        self.assertEqual(result['file_metadata'], {})
+        self.assertEqual(result['language'], 'en')
+        # Since we couldn't detect the encoding, we can't return a unicode
+        # object.
+        self.assertNotEqual(type(result['text']), unicode)
