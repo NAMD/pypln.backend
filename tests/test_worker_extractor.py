@@ -144,7 +144,7 @@ class TestExtractorWorker(unittest.TestCase):
         result = Extractor().process(data)
         self.assertFalse(result.has_key('unsupported_mimetype'))
 
-    def test_unkown_mimetype_should_be_flagged(self):
+    def test_unknown_mimetype_should_be_flagged(self):
         filename = 'tests/data/random_file'
         # we can't put the expected text content here, so we'll just make sure
         # it's equal to the input content, since
@@ -156,8 +156,8 @@ class TestExtractorWorker(unittest.TestCase):
         self.assertEqual(result['language'], "")
         self.assertEqual(result['file_metadata'], {})
 
-    def test_unkown_encoding_should_be_ignored(self):
-        filename = 'tests/data/unkown_encoding.txt'
+    def test_unknown_encoding_should_be_ignored(self):
+        filename = 'tests/data/encoding_unknown_to_libmagic.txt'
         expected = "This file has a weird byte (\x96) that makes it impossible for libmagic to recognize it's encoding."
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
