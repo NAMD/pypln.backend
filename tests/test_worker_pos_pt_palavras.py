@@ -40,10 +40,10 @@ class TestPosWorker(unittest.TestCase):
         Brasil\t[Brasil] <*> <newlex> PROP M S @P< \t[Brasil] <*> PROP M S @P<
         $.
         ''').strip()
-        expected = [('Eu', 'PERS'), ('sei', 'V'), ('que', 'KS'), ('em', 'PRP'),
-                    ('este', 'DET'), ('momento', 'N'), ('falo', 'V'),
-                    ('para', 'PRP'), ('todo', 'DET'), ('Brasil', 'PROP'),
-                    ('.', '.')]
+        expected = ('pt-palavras', [('Eu', 'PERS'), ('sei', 'V'), ('que', 'KS'),
+                    ('em', 'PRP'), ('este', 'DET'), ('momento', 'N'),
+                    ('falo', 'V'), ('para', 'PRP'), ('todo', 'DET'),
+                    ('Brasil', 'PROP'), ('.', '.')])
         pt_palavras.call_palavras = lambda x: palavras_output
-        result = pt_palavras.pos('anything')
+        result = pt_palavras.pos({'text': 'anything'})
         self.assertEqual(expected, result)
