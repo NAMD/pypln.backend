@@ -31,11 +31,12 @@ Our documentation is hosted using `GitHub Pages <http://pages.github.com/>`_:
 
 Requirements
 ------------
-You will need some Python packages and `poppler utils <http://poppler.freedesktop.org/>`_
+You will need some Python packages `libmagic <http://www.darwinsys.com/file/>`_
+and `poppler utils <http://poppler.freedesktop.org/>`_
 
 To install dependencies (on a Debian-like GNU/Linux distribution)::
 
-    sudo apt-get install python-setuptools poppler-utils
+    sudo apt-get install python-setuptools libmagic-dev poppler-utils
     pip install virtualenv virtualenvwrapper
     mkvirtualenv pypln.backend
     pip install -r requirements/production.txt
