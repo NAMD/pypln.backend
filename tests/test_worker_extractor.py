@@ -17,10 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import unittest
 from textwrap import dedent
 from pypln.backend.workers import Extractor
 
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 class TestExtractorWorker(unittest.TestCase):
     def test_extraction_from_text_file(self):
@@ -44,6 +46,7 @@ class TestExtractorWorker(unittest.TestCase):
     def test_extraction_from_pdf_file(self):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = 'tests/data/test.pdf'
+        filename = os.path.join(DATA_DIR, 'test.pdf')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         metadata = result['file_metadata']
