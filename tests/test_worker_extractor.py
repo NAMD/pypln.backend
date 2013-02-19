@@ -62,7 +62,16 @@ class TestExtractorWorker(unittest.TestCase):
                 'PDF version':    '1.4',
         }
         self.assertEqual(expected, result['text'])
-        self.assertEqual(metadata, metadata_expected)
+        # Check that the expected metadata is a subset of what
+        # our Extractor found (it may have found more details
+        # depending on the toolset used to extract metadata)
+        metadata_expected_set = set(metadata_expected.iteritems())
+        metadata_set = set(metadata.iteritems())
+        diff_set = metadata_expected_set - metadata_set
+        self.assertTrue(metadata_expected_set.issubset(metadata_set),
+                        ("Extracted metadata is not a subset of the expected metadata. "
+                         "Items missing or with different values: {}").format(
+                         u", ".join(unicode(item) for item in diff_set)))
 
     def test_extraction_from_html(self):
         contents = dedent('''
