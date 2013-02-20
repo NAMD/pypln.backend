@@ -33,6 +33,7 @@ class TestExtractorWorker(unittest.TestCase):
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
+        self.assertEqual(result['mimetype'], 'text/plain')
 
     def test_extraction_from_html_file(self):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
@@ -42,6 +43,7 @@ class TestExtractorWorker(unittest.TestCase):
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
+        self.assertEqual(result['mimetype'], 'text/html')
 
     def test_extraction_from_pdf_file(self):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
@@ -72,6 +74,7 @@ class TestExtractorWorker(unittest.TestCase):
                         ("Extracted metadata is not a subset of the expected metadata. "
                          "Items missing or with different values: {}").format(
                          u", ".join(unicode(item) for item in diff_set)))
+        self.assertEqual(result['mimetype'], 'application/pdf')
 
     def test_extraction_from_html(self):
         contents = dedent('''
@@ -117,6 +120,7 @@ class TestExtractorWorker(unittest.TestCase):
 
             bla2''').strip()
         self.assertEqual(result['text'], expected)
+        self.assertEqual(result['mimetype'], 'text/html')
 
     def test_language_detection(self):
         text_pt = 'Esse texto foi escrito por Álvaro em Português.'
@@ -153,7 +157,7 @@ class TestExtractorWorker(unittest.TestCase):
         filename = os.path.join(DATA_DIR, 'text_file')
         data = {'filename': filename, 'contents': contents}
         result = Extractor().process(data)
-        self.assertFalse(result.has_key('unsupported_mimetype'))
+        self.assertEqual(result['mimetype'], 'text/plain')
 
     def test_unknown_mimetype_should_be_flagged(self):
         filename = os.path.join(DATA_DIR, 'random_file')
@@ -162,7 +166,7 @@ class TestExtractorWorker(unittest.TestCase):
         contents = open(filename).read()
         data = {'filename': filename, 'contents': contents}
         result = Extractor().process(data)
-        self.assertEqual(result['unsupported_mimetype'], True)
+        self.assertEqual(result['mimetype'], 'unknown')
         self.assertEqual(result['text'], "")
         self.assertEqual(result['language'], "")
         self.assertEqual(result['file_metadata'], {})
