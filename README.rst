@@ -31,7 +31,7 @@ Our documentation is hosted using `GitHub Pages <http://pages.github.com/>`_:
 
 Requirements
 ------------
-You will need some Python packages `libmagic <http://www.darwinsys.com/file/>`_
+You will need some Python packages, `libmagic <http://www.darwinsys.com/file/>`_
 and `poppler utils <http://poppler.freedesktop.org/>`_
 
 To install dependencies (on a Debian-like GNU/Linux distribution)::
