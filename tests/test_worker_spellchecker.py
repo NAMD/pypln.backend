@@ -17,20 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import unittest
+from textwrap import dedent
+from pypln.backend.workers import spellchecker
 
-from pypelinin import Worker
-import enchant
-from enchant.checker import SpellChecker
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
-class SpellingChecker(Worker):
-    """
-    This worker performs spellchecking in the plain text of a document
-    """
-    requires = ['text', 'language']
 
-    def process(self, document):
-        checker = SpellChecker(document['language'])
-        checker.set_text(document['text'])
-        errors = [[e.word, e.wordpos, e.suggest()] for e in checker]
-        return {'spelling_errors': errors}
+class TestSpellcheckerWorker(unittest.TestCase):
+    def test_spellchek_pt(self):
+        text = u"Meu cachoro é um pastor"
+        errors = spellchecker.SpellingChecker().process({'text': text, 'language': 'pt_BR'})
+        assert len(errors) == 1
+        assert 'cachoro' in errors['spelling_errors'][0]
+        assert 'cachorro' in errors['spelling_errors'][0][2]
+        self.assertEqual(errors['spelling_errors'][0][1], 4)
 
