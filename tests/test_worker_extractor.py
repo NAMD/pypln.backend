@@ -17,33 +17,37 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import unittest
 from textwrap import dedent
 from pypln.backend.workers import Extractor
 
+DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 class TestExtractorWorker(unittest.TestCase):
     def test_extraction_from_text_file(self):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
-        filename = 'tests/data/test.txt'
+        filename = os.path.join(DATA_DIR, 'test.txt')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
+        self.assertEqual(result['mimetype'], 'text/plain')
 
     def test_extraction_from_html_file(self):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
-        filename = 'tests/data/test.html'
+        filename = os.path.join(DATA_DIR, 'test.html')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         metadata = result['file_metadata']
         self.assertEqual(expected, result['text'])
         self.assertEqual(metadata, {})
+        self.assertEqual(result['mimetype'], 'text/html')
 
     def test_extraction_from_pdf_file(self):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
-        filename = 'tests/data/test.pdf'
+        filename = os.path.join(DATA_DIR, 'test.pdf')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         metadata = result['file_metadata']
@@ -60,7 +64,17 @@ class TestExtractorWorker(unittest.TestCase):
                 'PDF version':    '1.4',
         }
         self.assertEqual(expected, result['text'])
-        self.assertEqual(metadata, metadata_expected)
+        # Check that the expected metadata is a subset of what
+        # our Extractor found (it may have found more details
+        # depending on the toolset used to extract metadata)
+        metadata_expected_set = set(metadata_expected.iteritems())
+        metadata_set = set(metadata.iteritems())
+        diff_set = metadata_expected_set - metadata_set
+        self.assertTrue(metadata_expected_set.issubset(metadata_set),
+                        ("Extracted metadata is not a subset of the expected metadata. "
+                         "Items missing or with different values: {}").format(
+                         u", ".join(unicode(item) for item in diff_set)))
+        self.assertEqual(result['mimetype'], 'application/pdf')
 
     def test_extraction_from_html(self):
         contents = dedent('''
@@ -106,6 +120,7 @@ class TestExtractorWorker(unittest.TestCase):
 
             bla2''').strip()
         self.assertEqual(result['text'], expected)
+        self.assertEqual(result['mimetype'], 'text/html')
 
     def test_language_detection(self):
         text_pt = 'Esse texto foi escrito por Álvaro em Português.'
@@ -124,14 +139,14 @@ class TestExtractorWorker(unittest.TestCase):
     def test_unescape_html_entities(self):
         expected = (u"This text has html <entities>. Álvaro asked me to make"
                      " sure it also has non ascii chars.")
-        filename = 'tests/data/test_html_entities.txt'
+        filename = os.path.join(DATA_DIR, 'test_html_entities.txt')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         self.assertEqual(expected, result['text'])
 
     def test_should_detect_encoding_and_return_a_unicode_object(self):
         expected = u"Flávio"
-        filename = 'tests/data/test_iso-8859-1.txt'
+        filename = os.path.join(DATA_DIR, 'test_iso-8859-1.txt')
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)
         self.assertEqual(expected, result['text'])
@@ -139,25 +154,25 @@ class TestExtractorWorker(unittest.TestCase):
 
     def test_should_guess_mimetype_for_file_without_extension(self):
         contents = "This is a test file. I'm testing PyPLN extractor worker!"
-        filename = 'tests/data/text_file'
+        filename = os.path.join(DATA_DIR, 'text_file')
         data = {'filename': filename, 'contents': contents}
         result = Extractor().process(data)
-        self.assertFalse(result.has_key('unsupported_mimetype'))
+        self.assertEqual(result['mimetype'], 'text/plain')
 
-    def test_unkown_mimetype_should_be_flagged(self):
-        filename = 'tests/data/random_file'
+    def test_unknown_mimetype_should_be_flagged(self):
+        filename = os.path.join(DATA_DIR, 'random_file')
         # we can't put the expected text content here, so we'll just make sure
         # it's equal to the input content, since
         contents = open(filename).read()
         data = {'filename': filename, 'contents': contents}
         result = Extractor().process(data)
-        self.assertEqual(result['unsupported_mimetype'], True)
+        self.assertEqual(result['mimetype'], 'unknown')
         self.assertEqual(result['text'], "")
         self.assertEqual(result['language'], "")
         self.assertEqual(result['file_metadata'], {})
 
-    def test_unkown_encoding_should_be_ignored(self):
-        filename = 'tests/data/unkown_encoding.txt'
+    def test_unknown_encoding_should_be_ignored(self):
+        filename = os.path.join(DATA_DIR, 'encoding_unknown_to_libmagic.txt')
         expected = "This file has a weird byte (\x96) that makes it impossible for libmagic to recognize it's encoding."
         data = {'filename': filename, 'contents': open(filename).read()}
         result = Extractor().process(data)

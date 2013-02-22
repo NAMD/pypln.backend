@@ -19,10 +19,18 @@
 
 from pypelinin import Worker
 
-from nltk import pos_tag
+import en_nltk
+import pt_palavras
 
 
-def _put_offset(text, tagged_text):
+MAPPING = {
+           'en': en_nltk.pos,
+           'pt': pt_palavras.pos,
+}
+if not pt_palavras.palavras_installed():
+    del(MAPPING['pt'])
+
+def put_offset(text, tagged_text):
     result = []
     position = 0
     for token, classification in tagged_text:
@@ -35,8 +43,10 @@ class POS(Worker):
     requires = ['text', 'tokens', 'language']
 
     def process(self, document):
-        tagged_text = None
-        if document['language'] == 'en':
-            tagged_text = _put_offset(document['text'],
-                                      pos_tag(document['tokens']))
-        return {'pos': tagged_text}
+        tagged_text_with_offset = None
+        tagset = None
+        language = document['language']
+        if language in MAPPING:
+            tagset, tagged_text = MAPPING[language](document)
+            tagged_text_with_offset = put_offset(document['text'], tagged_text)
+        return {'pos': tagged_text_with_offset, 'tagset': tagset}

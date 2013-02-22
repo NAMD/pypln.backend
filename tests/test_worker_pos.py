@@ -32,5 +32,4 @@ class TestPosWorker(unittest.TestCase):
                    ('.', '.', 34)]
         result = POS().process({'text': text, 'tokens': tokens,
                                 'language': 'en'})
-        self.assertEqual(result, {'pos': expected})
-
+        self.assertEqual(result, {'pos': expected, 'tagset': 'en-nltk'})
