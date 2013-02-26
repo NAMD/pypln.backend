@@ -27,9 +27,12 @@ class SpellingChecker(Worker):
     This worker performs spellchecking in the plain text of a document
     """
     requires = ['text', 'language']
+    def __init__(self):
+        self.checkers = {lang: SpellChecker(lang) for lang in enchant.list_languages()}
 
     def process(self, document):
-        checker = SpellChecker(document['language'])
+        #TODO: this worker may be enhanced by also checking the errors against an specific vocabulary supplied with the document
+        checker = self.checkers[document['language']]
         checker.set_text(document['text'])
         errors = [[e.word, e.wordpos, e.suggest()] for e in checker]
         return {'spelling_errors': errors}
