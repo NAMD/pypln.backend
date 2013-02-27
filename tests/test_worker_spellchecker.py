@@ -34,3 +34,11 @@ class TestSpellcheckerWorker(unittest.TestCase):
         assert 'cachorro' in errors['spelling_errors'][0][2]
         self.assertEqual(errors['spelling_errors'][0][1], 4)
 
+    def test_spellchek_en(self):
+        text = u"The cat bit the doggyo"
+        errors = spellchecker.SpellingChecker().process({'text': text, 'language': 'en'})
+        assert len(errors) == 1
+        assert 'doggyo' in errors['spelling_errors'][0]
+        assert 'doggy' in errors['spelling_errors'][0][2]
+        self.assertEqual(errors['spelling_errors'][0][1], 16)
+
