@@ -32,8 +32,12 @@ class SpellingChecker(Worker):
 
     def process(self, document):
         #TODO: this worker may be enhanced by also checking the errors against an specific vocabulary supplied with the document
-        checker = self.checkers[document['language']]
-        checker.set_text(document['text'])
-        errors = [[e.word, e.wordpos, e.suggest()] for e in checker]
+        try:
+            checker = self.checkers[document['language']]
+            checker.set_text(document['text'])
+            errors = [[e.word, e.wordpos, e.suggest()] for e in checker]
+        except KeyError:
+            errors = None
+
         return {'spelling_errors': errors}
 
