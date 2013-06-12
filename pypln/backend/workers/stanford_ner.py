@@ -17,14 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from stanford_ner import StanfordNER
+from pypelinin import Worker
+import ner
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-    'Bigrams', 'StanfordNER']
+class StanfordNER(Worker):
+    requires = ['text']
+
+    def process(self, document):
+        text = document['text']
+        tagger = ner.SocketNER(host="localhost", port=1234,
+                output_format="slashTags")
+        entities = tagger.get_entities(text)
+        return {'named_entities': entities}
