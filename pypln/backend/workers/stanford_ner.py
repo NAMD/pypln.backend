@@ -28,5 +28,5 @@ class StanfordNER(Worker):
         text = document['text']
         tagger = ner.SocketNER(host="localhost", port=1234,
                 output_format="slashTags")
-        entities = tagger.get_entities(text)
+        entities = tagger.get_entities(text.encode('utf-8'))
         return {'named_entities': entities}

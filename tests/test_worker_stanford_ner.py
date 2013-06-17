@@ -33,13 +33,15 @@ class TestStanfordNERWorker(unittest.TestCase):
             "problem for a graph with non-negative edge path costs, producing "
             "a shortest path tree. This algorithm is often used in routing as "
             "a subroutine in other graph algorithms, or in GPS Technology. "
+            "I'll add a unicode character here just for completion: Flávio."
         )
         # This output is emulating the result using the 7 class classifier
-        expected =  {'DATE': ['1956', '1959'],
-                     'O': ["Dijkstra 's algorithm , conceived by Dutch computer scientist",
-                           'in',
-                           'and published in',
-                           ', -LRB- 1 -RRB- -LRB- 2 -RRB- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs , producing a shortest path tree . This algorithm is often used in routing as a subroutine in other graph algorithms , or in GPS Technology .'],
-                     'PERSON': ['Edsger Dijkstra']}
+        self.maxDiff = None
+        expected =  {'DATE': [u'1956', u'1959'],
+                     'O': [u"Dijkstra 's algorithm , conceived by Dutch computer scientist",
+                           u'in',
+                           u'and published in',
+                           u", -LRB- 1 -RRB- -LRB- 2 -RRB- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs , producing a shortest path tree . This algorithm is often used in routing as a subroutine in other graph algorithms , or in GPS Technology . I 'll add a unicode character here just for completion : Flávio ."],
+                     'PERSON': [u'Edsger Dijkstra']}
         result = StanfordNER().process({'text': text})
         self.assertEqual(result, {'named_entities': expected})
