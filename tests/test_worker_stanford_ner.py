@@ -35,13 +35,22 @@ class TestStanfordNERWorker(unittest.TestCase):
             u"a subroutine in other graph algorithms, or in GPS Technology. "
             u"I'll add a unicode character here just for completion: Flávio."
         )
-        # This output is emulating the result using the 7 class classifier
+        # This output is emulating the result using the 7 classes classifier
+        # merged with the result of the 3 classes classifier. This means that
+        # the 'O' key will keep the entities recognized in classes that the 3
+        # classes classifier do not understand (in this case, DATE).
         self.maxDiff = None
-        expected =  {'DATE': ['1956', '1959'],
-                     'O': ["Dijkstra 's algorithm , conceived by Dutch computer scientist",
-                           'in',
-                           'and published in',
-                           ", -LRB- 1 -RRB- -LRB- 2 -RRB- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs , producing a shortest path tree . This algorithm is often used in routing as a subroutine in other graph algorithms , or in GPS Technology . I 'll add a unicode character here just for completion : Flávio ."],
-                     'PERSON': ['Edsger Dijkstra']}
+        expected = {'DATE': ['1956', '1959'],
+                    'PERSON': ['Dijkstra', 'Edsger Dijkstra', 'Fl\xc3\xa1vio'],
+                    'O': ["'s algorithm , conceived by Dutch computer scientist",
+                        ("in 1956 and published in 1959 , -LRB- 1 -RRB- -LRB-"
+                        " 2 -RRB- is a graph search algorithm that solves the"
+                        " single-source shortest path problem for a graph with"
+                        " non-negative edge path costs , producing a shortest"
+                        " path tree . This algorithm is often used in routing"
+                        " as a subroutine in other graph algorithms , or in GPS"
+                        " Technology . I 'll add a unicode character here just"
+                        " for completion :"), '.']}
+
         result = StanfordNER().process({'text': text})
         self.assertEqual(result, {'named_entities': expected})

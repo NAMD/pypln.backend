@@ -20,15 +20,23 @@
 from pypelinin import Worker
 import ner
 
-NER_HOST="localhost"
-NER_PORT="4242"
+NER_7_CLASSES_HOST="localhost"
+NER_7_CLASSES_PORT=4242
+
+NER_3_CLASSES_HOST="localhost"
+NER_3_CLASSES_PORT=4243
 
 class StanfordNER(Worker):
     requires = ['text']
 
     def process(self, document):
         text = document['text']
-        tagger = ner.SocketNER(host=NER_HOST, port=NER_PORT,
-                output_format="slashTags")
-        entities = tagger.get_entities(text.encode('utf-8'))
+        tagger_7_classes = ner.SocketNER(host=NER_7_CLASSES_HOST,
+                port=NER_7_CLASSES_PORT, output_format="slashTags")
+        tagger_3_classes = ner.SocketNER(host=NER_3_CLASSES_HOST,
+                port=NER_3_CLASSES_PORT, output_format="slashTags")
+
+        entities = tagger_7_classes.get_entities(text.encode('utf-8'))
+        entities.update(tagger_3_classes.get_entities(text.encode('utf-8')))
+
         return {'named_entities': entities}
