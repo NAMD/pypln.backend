@@ -27,21 +27,21 @@ class TestStanfordNERWorker(unittest.TestCase):
         text = 'The sky is blue, the sun is yellow.'
 
         # Sample text from https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
-        text = ("Dijkstra's algorithm, conceived by Dutch computer scientist "
-            "Edsger Dijkstra in 1956 and published in 1959,[1][2] is a graph "
-            "search algorithm that solves the single-source shortest path "
-            "problem for a graph with non-negative edge path costs, producing "
-            "a shortest path tree. This algorithm is often used in routing as "
-            "a subroutine in other graph algorithms, or in GPS Technology. "
-            "I'll add a unicode character here just for completion: Flávio."
+        text = (u"Dijkstra's algorithm, conceived by Dutch computer scientist "
+            u"Edsger Dijkstra in 1956 and published in 1959,[1][2] is a graph "
+            u"search algorithm that solves the single-source shortest path "
+            u"problem for a graph with non-negative edge path costs, producing "
+            u"a shortest path tree. This algorithm is often used in routing as "
+            u"a subroutine in other graph algorithms, or in GPS Technology. "
+            u"I'll add a unicode character here just for completion: Flávio."
         )
         # This output is emulating the result using the 7 class classifier
         self.maxDiff = None
-        expected =  {'DATE': [u'1956', u'1959'],
-                     'O': [u"Dijkstra 's algorithm , conceived by Dutch computer scientist",
-                           u'in',
-                           u'and published in',
-                           u", -LRB- 1 -RRB- -LRB- 2 -RRB- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs , producing a shortest path tree . This algorithm is often used in routing as a subroutine in other graph algorithms , or in GPS Technology . I 'll add a unicode character here just for completion : Flávio ."],
-                     'PERSON': [u'Edsger Dijkstra']}
+        expected =  {'DATE': ['1956', '1959'],
+                     'O': ["Dijkstra 's algorithm , conceived by Dutch computer scientist",
+                           'in',
+                           'and published in',
+                           ", -LRB- 1 -RRB- -LRB- 2 -RRB- is a graph search algorithm that solves the single-source shortest path problem for a graph with non-negative edge path costs , producing a shortest path tree . This algorithm is often used in routing as a subroutine in other graph algorithms , or in GPS Technology . I 'll add a unicode character here just for completion : Flávio ."],
+                     'PERSON': ['Edsger Dijkstra']}
         result = StanfordNER().process({'text': text})
         self.assertEqual(result, {'named_entities': expected})
