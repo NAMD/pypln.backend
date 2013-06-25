@@ -26,6 +26,12 @@ def get_requirements():
     requirements_fp.close()
     packages = []
     for package in requirements:
+        if '#egg=' in package:
+            # This package is installed via pip using "editable installs"
+            # http://www.pip-installer.org/en/latest/logic.html#editable-installs
+            # Since this is not a valid package descriptor for
+            # install_requires, we'll ignore it in setup.py
+            continue
         package = package.split('#')[0].strip()
         if package:
             packages.append(package)
