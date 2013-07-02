@@ -20,23 +20,38 @@
 from pypelinin import Worker
 import ner
 
-NER_7_CLASSES_HOST="localhost"
-NER_7_CLASSES_PORT=4242
+NER_HOST="localhost"
+NER_PORT=4242
 
-NER_3_CLASSES_HOST="localhost"
-NER_3_CLASSES_PORT=4243
+class NERWrapper(ner.SocketNER):
+
+    def __slashTags_parse_entities(self, tagged_text):
+        """Return a list of token tuples (entity_type, token) parsed
+        from slashTags-format tagged text.
+
+        :param tagged_text: slashTag-format entity tagged text
+        """
+        return (match.groups()[::-1] for match in
+            ner.client.SLASHTAGS_EPATTERN.finditer(tagged_text))
+
+    def get_entities_as_tuples(self, text):
+        """
+        """
+        if self.oformat != 'slashTags':
+            raise NotImplementedError("get_entities_as_tuples is not "
+                    "implemented for output formats other than slashTags")
+        tagged_text = self.tag_text(text)
+        entities = self.__slashTags_parse_entities(tagged_text)
+        return entities
 
 class StanfordNER(Worker):
     requires = ['text']
 
     def process(self, document):
         text = document['text']
-        tagger_7_classes = ner.SocketNER(host=NER_7_CLASSES_HOST,
-                port=NER_7_CLASSES_PORT, output_format="slashTags")
-        tagger_3_classes = ner.SocketNER(host=NER_3_CLASSES_HOST,
-                port=NER_3_CLASSES_PORT, output_format="slashTags")
+        tagger = NERWrapper(host=NER_HOST,
+                port=NER_PORT, output_format="slashTags")
 
-        entities = tagger_7_classes.get_entities(text.encode('utf-8'))
-        entities.update(tagger_3_classes.get_entities(text.encode('utf-8')))
+        entities = list(tagger.get_entities_as_tuples(text.encode('utf-8')))
 
         return {'named_entities': entities}
