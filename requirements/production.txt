@@ -15,3 +15,4 @@ chromium_compact_language_detector
 filemagic
 numpy
 nltk
+git+https://github.com/dat/pyner.git#egg=ner
