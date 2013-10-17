@@ -25,25 +25,30 @@ from pypln.backend.workers.pos import pt_palavras
 
 
 class TestPosWorker(unittest.TestCase):
+    def test_should_return_None_if_palavras_raw_does_not_exist(self):
+        result = pt_palavras.pos({'text': 'Isso é um teste.'})
+        expected = '', None
+        self.assertEqual(result, expected)
+
     def test_(self):
         palavras_output = dedent('''
-        $START
-        Eu\t[eu] <*> PERS M/F 1S NOM @SUBJ>
-        sei\t[saber] V PR 1S IND VFIN @FMV
-        que\t[que] KS @#FS-<ACC @SUB
-        em\t[em] <sam-> PRP @PIV>
-        este\t[este] <-sam> <dem> DET M S @>N
-        momento\t[momento] <dur> <f-q> N M S @P<
-        falo\t[falar] <vH> V PR 1S IND VFIN @FMV
-        para\t[para] PRP @<ADVL
-        todo\t[todo] <quant> DET M S @>N
-        Brasil\t[Brasil] <*> <newlex> PROP M S @P< \t[Brasil] <*> PROP M S @P<
-        $.
-        ''').strip()
+        Eu 	[eu] <*> PERS M/F 1S NOM @SUBJ>  #1->2
+        sei 	[saber] <fmc> <mv> V PR 1S IND VFIN @FS-STA  #2->0
+        que 	[que] <clb> <clb-fs> KS @SUB  #3->7
+        em 	[em] <sam-> PRP @PIV>  #4->7
+        este 	[este] <-sam> <dem> DET M S @>N  #5->6
+        momento 	[momento] <dur> <f-q> N M S @P<  #6->4
+        falo 	[falar] <vH> <mv> V PR 1S IND VFIN @FS-<ACC  #7->2
+        para 	[para] PRP @<ADVL  #8->7
+        todo 	[todo] <quant> DET M S @>N  #9->10
+        Brasil 	[Brasil] <civ> <newlex> <*> PROP M S @P< 	[Brasil] <*> PROP M S @P<  #10->8
+        $. #11->0
+        </s>
+        ''').strip() + '\n\n'
         expected = ('pt-palavras', [('Eu', 'PERS'), ('sei', 'V'), ('que', 'KS'),
                     ('em', 'PRP'), ('este', 'DET'), ('momento', 'N'),
                     ('falo', 'V'), ('para', 'PRP'), ('todo', 'DET'),
                     ('Brasil', 'PROP'), ('.', '.')])
-        pt_palavras.call_palavras = lambda x: palavras_output
-        result = pt_palavras.pos({'text': 'anything'})
+        result = pt_palavras.pos({'text': 'anything',
+            'palavras_raw': palavras_output})
         self.assertEqual(expected, result)

@@ -21,10 +21,7 @@ import os
 import subprocess
 import sys
 
-
 PALAVRAS_ENCODING = sys.getfilesystemencoding()
-BASE_PARSER = '/opt/palavras/por.pl'
-PARSER_MODE = '--syn'
 WORD_CLASSES = {
                 'N': 'Nouns',
                 'PROP': 'Proper nouns',
@@ -45,19 +42,14 @@ WORD_CLASSES = {
                 'NW': 'Non Word',
 }
 
-def call_palavras(text):
-    process = subprocess.Popen([BASE_PARSER, PARSER_MODE],
-                               stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
-    stdout, stderr = process.communicate(text.encode(PALAVRAS_ENCODING))
-    return stdout
 
 def pos(document):
-    text = document['text']
-    palavras_output = call_palavras(text)
+    if 'palavras_raw' not in document:
+        return '', None
+
+    palavras_output = document['palavras_raw']
     tagged_text = []
-    for line in palavras_output.split('\n')[1:]:
+    for line in palavras_output.split('\n'):
         line = line.strip().decode(PALAVRAS_ENCODING)
         if line.isspace() or line == '':
             continue
@@ -82,6 +74,3 @@ def pos(document):
                 pos_tag = tags[0]
                 tagged_text.append((word, pos_tag))
     return 'pt-palavras', tagged_text
-
-def palavras_installed():
-    return os.path.exists(BASE_PARSER)
