@@ -20,18 +20,36 @@
 
 import subprocess
 from pypelinin import Worker
+import re
 
 PALAVRAS_PATH = '/opt/palavras/'
+SEMANTIC_TAGS = {}
 
-class NounPhrase(Worker):
-    """Noun phrase extractor"""
+exp = re.compile('<([a-zA-Z]*)>')
+
+class SemanticTagger(Worker):
+    """Semantic Tagger"""
     requires = ['palavras_raw']
 
     def process(self, document):
 
-        process = subprocess.Popen(PALAVRAS_PATH+'extract_np.pl', stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        process = subprocess.Popen(PALAVRAS_PATH+'por.pl', stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate(document['palavras_raw'])
+        linhas = stdout.split('\n')
+        tags = []
+        for l in linhas:
+            matches = exp.findall(l.strip())
+            for m in matches:
+                tagged = False
+                for k, v in SEMANTIC_TAGS.iteritems():
+                    if m in v:
+                        tags.append(k)
+                        #tags.append(m)
+                        tagged = True
+                if not tagged:
+                    tags.append('0')
 
-        return {'noun_phrases': stdout}
+        return {'semantic_tags': tags}
+
 
