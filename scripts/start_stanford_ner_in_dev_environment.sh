@@ -1,4 +1,4 @@
-# coding: utf-8
+#!/bin/bash
 #
 # Copyright 2012 NAMD-EMAP-FGV
 #
@@ -15,16 +15,17 @@
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from stanford_ner import StanfordNER
+# along with PyPLN. If not, see <http://www.gnu.org/licenses/>.
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-    'Bigrams', 'StanfordNER']
+SCRIPT_PATH=$(dirname $(readlink -f $0))/
+
+NER_DIRNAME="stanford-ner-2013-06-20"
+
+NER_DIR="$SCRIPT_PATH/$NER_DIRNAME"
+
+NER_PORT=4242
+NER_CLASSIFIER="classifiers/english.muc.7class.distsim.crf.ser.gz"
+
+cd "$NER_DIR"
+exec java -mx500m -cp stanford-ner.jar edu.stanford.nlp.ie.NERServer -port $NER_PORT -loadClassifier "$NER_CLASSIFIER"

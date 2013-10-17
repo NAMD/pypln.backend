@@ -31,6 +31,8 @@ def _get_momenta(distribution):
         momentum_4 += y * x * x * x * x
         total += y
     total = float(total)
+    if total == 0:
+        total = 1.0
     return (momentum_1 / total, momentum_2 / total, momentum_3 / total,
             momentum_4 / total)
 
@@ -48,13 +50,22 @@ class Statistics(Worker):
         sentences = document['sentences'] # eg: [['1st', 'sentence.'], ['2nd!']]
         momenta = _get_momenta(_histogram(freqdist))
         total_tokens = float(sum(dict(freqdist).values()))
+        if total_tokens == 0:
+            total_tokens = 1.0
         repertoire = len(freqdist) / total_tokens
         sentence_repertoire_sum = 0
         for sentence in sentences:
-            sentence_repertoire_sum += len(set(sentence)) / float(len(sentence))
+            sentence_length = float(len(sentence))
+            if sentence_length == 0:
+                sentence_length = 1.0
+            sentence_repertoire_sum += len(set(sentence)) / sentence_length
         number_of_sentences = len(sentences)
-        average_sentence_length = total_tokens / number_of_sentences
-        sentence_repertoire = sentence_repertoire_sum / number_of_sentences
+        if number_of_sentences == 0:
+            average_sentence_length = 0
+            sentence_repertoire = 0
+        else:
+            average_sentence_length = total_tokens / number_of_sentences
+            sentence_repertoire = sentence_repertoire_sum / number_of_sentences
         return {'momentum_1': momenta[0], 'momentum_2': momenta[1],
                 'momentum_3': momenta[2], 'momentum_4': momenta[3],
                 'repertoire': repertoire,
