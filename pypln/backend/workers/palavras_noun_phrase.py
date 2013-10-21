@@ -19,19 +19,24 @@
 
 
 import subprocess
+import os
+
 from pypelinin import Worker
 
-PALAVRAS_PATH = '/opt/palavras/'
+
+BASE_PATH = '/opt/palavras'
+NOUNPHRASE_SCRIPT = 'bin/extract_np.pl'
 
 class NounPhrase(Worker):
     """Noun phrase extractor"""
     requires = ['palavras_raw']
 
     def process(self, document):
-
-        process = subprocess.Popen(PALAVRAS_PATH+'extract_np.pl', stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+        nounphrase_script = os.path.join(BASE_PATH, NOUNPHRASE_SCRIPT)
+        process = subprocess.Popen(nounphrase_script, stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate(document['palavras_raw'])
 
-        return {'noun_phrases': stdout}
-
+        phrases = [phrase.strip() for phrase in stdout.strip().split('\n')]
+        return {'noun_phrases': phrases}

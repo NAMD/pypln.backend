@@ -25,7 +25,8 @@ from statistics import Statistics
 from bigrams import Bigrams
 from stanford_ner import StanfordNER
 from lemmatizer_pt import Lemmatizer
+from palavras_noun_phrase import NounPhrase
 
 
 __all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'StanfordNER', 'Lemmatizer']
+           'Bigrams', 'StanfordNER', 'Lemmatizer', 'NounPhrase']
