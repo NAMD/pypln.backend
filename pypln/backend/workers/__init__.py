@@ -24,7 +24,8 @@ from pos import POS
 from statistics import Statistics
 from bigrams import Bigrams
 from stanford_ner import StanfordNER
+from palavras_raw import PalavrasRaw
 
 
 __all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-    'Bigrams', 'StanfordNER']
+    'Bigrams', 'StanfordNER', 'PalavrasRaw']
