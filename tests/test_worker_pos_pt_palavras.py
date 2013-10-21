@@ -27,7 +27,7 @@ from pypln.backend.workers.pos import pt_palavras
 class TestPosWorker(unittest.TestCase):
     def test_should_return_None_if_palavras_raw_does_not_exist(self):
         result = pt_palavras.pos({'text': 'Isso é um teste.'})
-        expected = '', None
+        expected = '', []
         self.assertEqual(result, expected)
 
     def test_(self):
