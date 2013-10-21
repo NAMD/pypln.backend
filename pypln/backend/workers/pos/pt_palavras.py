@@ -45,7 +45,7 @@ WORD_CLASSES = {
 
 def pos(document):
     if 'palavras_raw' not in document:
-        return '', None
+        return '', []
 
     palavras_output = document['palavras_raw']
     tagged_text = []
