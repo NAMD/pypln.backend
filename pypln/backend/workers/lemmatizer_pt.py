@@ -25,21 +25,19 @@ PALAVRAS_PATH = '/opt/palavras/'
 
 class Lemmatizer(Worker):
     """Lemmatizer"""
+
     requires = ['palavras_raw']
 
     def process(self, document):
 
-        process = subprocess.Popen(PALAVRAS_PATH+'por.pl', stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate(document['palavras_raw'])
-        linhas = stdout.split('\n')
+        lines = document['palavras_raw'].split('\n')
         lemmas = []
-        for l in linhas:
-            if l.startswith('$'):
-                lemmas.append(l.split('#').strip().strip('$'))
-            else:
-                lemmas.append(l.split('[')[1].split(']')[0])
+        for line in lines:
+            if line.startswith('$'): # punctuation
+                lemmas.append(line.split('#')[0].split('$')[1].strip())
+            else: # other tokens
+                data = line.split('[')
+                if len(data) > 1: # if it is a real token
+                    lemmas.append(line.split('[')[1].split(']')[0])
 
         return {'lemmas': lemmas}
-
-
