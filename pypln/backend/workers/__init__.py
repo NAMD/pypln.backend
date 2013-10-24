@@ -30,4 +30,5 @@ from palavras_semantic_tagger import SemanticTagger
 
 
 __all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'StanfordNER', 'Lemmatizer', 'NounPhrase']
+           'Bigrams', 'StanfordNER', 'Lemmatizer', 'NounPhrase',
+           'SemanticTagger']
