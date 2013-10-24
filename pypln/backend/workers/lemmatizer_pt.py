@@ -17,19 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from stanford_ner import StanfordNER
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
+import subprocess
+from pypelinin import Worker
 
+class Lemmatizer(Worker):
+    """Lemmatizer"""
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'StanfordNER', 'PalavrasRaw', 'Lemmatizer',
-           'NounPhrase', 'SemanticTagger']
+    requires = ['palavras_raw']
+
+    def process(self, document):
+
+        lines = document['palavras_raw'].split('\n')
+        lemmas = []
+        for line in lines:
+            if line.startswith('$'): # punctuation
+                lemmas.append(line.split('#')[0].split('$')[1].strip())
+            else: # other tokens
+                data = line.split('[')
+                if len(data) > 1: # if it is a real token
+                    lemmas.append(line.split('[')[1].split(']')[0])
+
+        return {'lemmas': lemmas}

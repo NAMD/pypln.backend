@@ -17,19 +17,26 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from stanford_ner import StanfordNER
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
+
+import subprocess
+import os
+
+from pypelinin import Worker
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'StanfordNER', 'PalavrasRaw', 'Lemmatizer',
-           'NounPhrase', 'SemanticTagger']
+BASE_PATH = '/opt/palavras'
+NOUNPHRASE_SCRIPT = 'bin/extract_np.pl'
+
+class NounPhrase(Worker):
+    """Noun phrase extractor"""
+    requires = ['palavras_raw']
+
+    def process(self, document):
+        nounphrase_script = os.path.join(BASE_PATH, NOUNPHRASE_SCRIPT)
+        process = subprocess.Popen(nounphrase_script, stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate(document['palavras_raw'])
+
+        phrases = [phrase.strip() for phrase in stdout.strip().split('\n')]
+        return {'noun_phrases': phrases}
