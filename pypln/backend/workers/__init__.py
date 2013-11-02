@@ -23,7 +23,6 @@ from freqdist import FreqDist
 from pos import POS
 from statistics import Statistics
 from bigrams import Bigrams
-from stanford_ner import StanfordNER
 from palavras_raw import PalavrasRaw
 from lemmatizer_pt import Lemmatizer
 from palavras_noun_phrase import NounPhrase
@@ -31,5 +30,5 @@ from palavras_semantic_tagger import SemanticTagger
 
 
 __all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'StanfordNER', 'PalavrasRaw', 'Lemmatizer',
-           'NounPhrase', 'SemanticTagger']
+           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
+           'SemanticTagger']

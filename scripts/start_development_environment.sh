@@ -28,20 +28,6 @@ echo "|     This script is intended for development only.     |"
 echo "| Please do not use it to run a production environment. |"
 echo "+-------------------------------------------------------+"
 
-echo "Starting Stanford NER..."
-NER_DIRNAME="stanford-ner-2013-06-20"
-NER_DIR="$SCRIPT_PATH/scripts/$NER_DIRNAME"
-if [ -d "$NER_DIR" ]
-then
-    "$SCRIPT_PATH/scripts/start_stanford_ner_in_dev_environment.sh" &
-    NER_PID=$!
-    echo "Stanford NER has PID $NER_PID"
-else
-    echo "Can't find Stanford NER."
-    echo "Run $SCRIPT_PATH/scripts/download_stanford_ner.sh to download it."
-    exit 0
-fi
-
 echo "Starting router..."
 "$SCRIPT_PATH/pypln/backend/router.py" &
 ROUTER_PID=$!
