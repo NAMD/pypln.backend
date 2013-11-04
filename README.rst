@@ -41,8 +41,11 @@ To install dependencies (on a Debian-like GNU/Linux distribution)::
     mkvirtualenv pypln.backend
     pip install -r requirements/production.txt
 
-You will also need to install NLTK data. You can do so following the `NLTK
-documentation <http://nltk.org/data.html>`_.
+You will also need to download some NLTK data packages. You can do so
+executing::
+
+    python -m nltk.downloader genesis maxent_treebank_pos_tagger punkt
+
 
 
 Developing
