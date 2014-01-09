@@ -165,16 +165,18 @@ class TestMongoStore(unittest.TestCase):
                 'worker_result': {'_exception': 'ERROR'}}
         self.store.save(info)
         self.assertIn('id:42:_exception', self.mongodict)
-        self.assertEqual(self.mongodict['id:42:_exception'], ['ERROR'])
+        self.assertEqual(self.mongodict['id:42:_exception'],
+                [{'worker': 'SomeWorker', 'traceback': 'ERROR'}])
 
-        info_2 = {'data': {'id': 42}, 'worker': 'SomeWorker',
+        info_2 = {'data': {'id': 42}, 'worker': 'SomeOtherWorker',
                   'worker_requires': [],
                   'worker_result': {'_exception': 'ERROR 2'}}
 
         self.store.save(info_2)
         self.assertIn('id:42:_exception', self.mongodict)
         self.assertEqual(self.mongodict['id:42:_exception'],
-                ['ERROR', 'ERROR 2'])
+                [{'worker': 'SomeWorker', 'traceback': 'ERROR'}, {'worker':
+                    'SomeOtherWorker', 'traceback': 'ERROR 2'}])
 
     def test_exceptions_should_be_turned_into_a_list_if_it_already_exists(self):
         self.mongodict['id:42:_exception'] = 'PREVIOUS ERROR'
@@ -186,4 +188,7 @@ class TestMongoStore(unittest.TestCase):
 
         self.assertIn('id:42:_exception', self.mongodict)
         self.assertEqual(self.mongodict['id:42:_exception'],
-                ['PREVIOUS ERROR', 'ERROR'])
+                [
+                    'PREVIOUS ERROR',
+                    {'worker': 'SomeWorker', 'traceback': 'ERROR'}
+                ])

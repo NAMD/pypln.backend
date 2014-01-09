@@ -91,7 +91,8 @@ class MongoDBStore(object):
                 content = self._dict.get(new_key, [])
                 if isinstance(content, str):
                     content = [content]
-                content.append(worker_result[key])
+                content.append({'worker': info['worker'],
+                    'traceback': worker_result[key]})
                 self._dict[new_key] = content
             else:
                 self._dict[new_key] = worker_result[key]
