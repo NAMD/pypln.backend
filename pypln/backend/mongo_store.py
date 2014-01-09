@@ -87,7 +87,14 @@ class MongoDBStore(object):
         # insert results
         for key, value in worker_result.items():
             new_key = 'id:{}:{}'.format(data['id'], key)
-            self._dict[new_key] = worker_result[key]
+            if key == "_exception" or key == "_traceback":
+                content = self._dict.get(new_key, [])
+                if isinstance(content, str):
+                    content = [content]
+                content.append(worker_result[key])
+                self._dict[new_key] = content
+            else:
+                self._dict[new_key] = worker_result[key]
 
         # update property list for this document
         properties_key = 'id:{}:_properties'.format(data['id'])
