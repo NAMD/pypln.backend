@@ -16,3 +16,9 @@ filemagic
 numpy
 nltk
 git+https://github.com/dat/pyner.git#egg=ner
+Cython
+Pyrex
+Pillow
+# If you have problems installing wordcloud, please install Cython before
+# running `pip install -r requirements/production.txt`
+-e git+https://github.com/flavioamieiro/word_cloud.git#egg=wordcloud
