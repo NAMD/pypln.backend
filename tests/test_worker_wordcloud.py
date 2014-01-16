@@ -1,6 +1,6 @@
 # coding: utf-8
 #
-# Copyright 2012 NAMD-EMAP-FGV
+# Copyright 2014 NAMD-EMAP-FGV
 #
 # This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
@@ -17,19 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
-from word_cloud import WordCloud
+import base64
+from StringIO import StringIO
+import unittest
+
+from PIL import Image
+
+from pypln.backend.workers import WordCloud
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-           'SemanticTagger', 'WordCloud']
+class TestFreqDistWorker(unittest.TestCase):
+    def test_wordcloud_should_return_a_base64_encoded_png(self):
+        example_fdist =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
+                    ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
+        result = WordCloud().process({'freqdist': example_fdist})
+
+        raw_png_data = base64.b64decode(result['wordcloud'])
+
+        fake_file = StringIO(raw_png_data)
+        img = Image.open(fake_file)
+        img.verify()
+        self.assertEqual(img.format, 'PNG')

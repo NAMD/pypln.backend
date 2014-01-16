@@ -1,6 +1,6 @@
 # coding: utf-8
 #
-# Copyright 2012 NAMD-EMAP-FGV
+# Copyright 2014 NAMD-EMAP-FGV
 #
 # This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
@@ -17,19 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
-from word_cloud import WordCloud
+import base64
+from StringIO import StringIO
 
+import numpy
+from wordcloud import make_wordcloud
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-           'SemanticTagger', 'WordCloud']
+from pypelinin import Worker
+
+class WordCloud(Worker):
+    requires = ['freqdist']
+
+    def process(self, document):
+        fdist = document['freqdist']
+        words = numpy.array([t[0] for t in fdist])
+        counts = numpy.array([t[1] for t in fdist])
+        wordcloud_img = make_wordcloud(words, counts,
+                font_path='/usr/share/fonts/TTF/DejaVuSans.ttf')
+        fd = StringIO()
+        wordcloud_img.save(fd, format="PNG")
+        fd.seek(0)
+        result = {'wordcloud': base64.b64encode(fd.read())}
+        fd.close()
+
+        return result
