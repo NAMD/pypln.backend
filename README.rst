@@ -31,14 +31,17 @@ Our documentation is hosted using `GitHub Pages <http://pages.github.com/>`_:
 
 Requirements
 ------------
-You will need some Python packages, `libmagic <http://www.darwinsys.com/file/>`_
-and `poppler utils <http://poppler.freedesktop.org/>`_
+You will need some Python packages, `libmagic <http://www.darwinsys.com/file/>`_,
+ `poppler utils <http://poppler.freedesktop.org/>`_ and
+ `libfreetype <http://www.freetype.org/>`'s development headers.
 
 To install dependencies (on a Debian-like GNU/Linux distribution)::
 
-    sudo apt-get install python-setuptools libmagic-dev poppler-utils
+    sudo apt-get install python-setuptools libmagic-dev poppler-utils libfreetype6-dev
     pip install virtualenv virtualenvwrapper
     mkvirtualenv pypln.backend
+    # we need to install Cython first because of the way pip handles C extensions
+    pip install Cython
     pip install -r requirements/production.txt
 
 You will also need to download some NLTK data packages. You can do so
