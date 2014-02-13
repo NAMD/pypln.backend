@@ -45,8 +45,7 @@ class WordCloud(Worker):
         fdist = filter_stopwords(document['freqdist'], document['language'])
         words = numpy.array([t[0] for t in fdist])
         counts = numpy.array([t[1] for t in fdist])
-        wordcloud_img = make_wordcloud(words, counts,
-                font_path='/usr/share/fonts/TTF/DejaVuSans.ttf')
+        wordcloud_img = make_wordcloud(words, counts)
         fd = StringIO()
         wordcloud_img.save(fd, format="PNG")
         fd.seek(0)
