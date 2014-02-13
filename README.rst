@@ -37,7 +37,7 @@ You will need some Python packages, `libmagic <http://www.darwinsys.com/file/>`_
 
 To install dependencies (on a Debian-like GNU/Linux distribution)::
 
-    sudo apt-get install python-setuptools libmagic-dev poppler-utils libfreetype6-dev
+    sudo apt-get install python-setuptools libmagic-dev poppler-utils libfreetype6-dev fonts-dejavu
     pip install virtualenv virtualenvwrapper
     mkvirtualenv pypln.backend
     # we need to install Cython first because of the way pip handles C extensions
