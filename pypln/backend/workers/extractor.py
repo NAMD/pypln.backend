@@ -127,6 +127,36 @@ def extract_pdf(data):
         return '', {}
 
 
+def trial_decode(text):
+    """
+    Tries to detect text encoding using `magic`. If the detected encoding is
+    not supported, try utf-8 and ultimately falls back to returning the string
+    as it was given.
+
+    This is far from an ideal solution, but the extractor and the rest of the
+    pipeline need an unicode object.
+    """
+    with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
+        content_encoding = m.id_buffer(text)
+
+    try:
+        result = text.decode(content_encoding)
+    except LookupError:
+        # If the detected encoding is not supported, we try to decode it as
+        # utf-8.
+        try:
+            result = text.decode('utf-8')
+        except UnicodeDecodeError:
+            # If utf-8 is also not capable of handling this text, we just
+            # treat the content as we used to: ignoring it's encoding.
+            result = text
+
+        # TODO: Maybe try ISO-8859-1 if UTF-8 raises an UnicodeDecodeError and
+        # only then fallback to returning a string?
+
+    return result
+
+
 class Extractor(Worker):
     #TODO: need to verify some exceptions when trying to convert 'evil' PDFs
     #TODO: should 'replace_with' be '' when extracting from HTML?
@@ -153,20 +183,15 @@ class Extractor(Worker):
             return {'mimetype': 'unknown', 'text': "",
                     'file_metadata': {}, 'language': ""}
 
-        with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
-            content_encoding = m.id_buffer(text)
-        try:
-            text = text.decode(content_encoding)
+        text = trial_decode(text)
+
+        if isinstance(text, unicode):
             # HTMLParser only handles unicode objects. We can't pass the text
             # through it if we don't know the encoding, and it's possible we
             # also shouldn't. There's no way of knowing if it's a badly encoded
             # html or a binary blob that happens do have bytes that look liked
             # html entities.
             text = HTMLParser().unescape(text)
-        except LookupError:
-            # If the detected encoding is not supported, we just treat the
-            # content as we used to: ignoring it's encoding.
-            pass
 
         text = clean(text)
 
