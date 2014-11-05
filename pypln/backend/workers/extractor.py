@@ -147,12 +147,15 @@ def trial_decode(text):
         try:
             result = text.decode('utf-8')
         except UnicodeDecodeError:
-            # If utf-8 is also not capable of handling this text, we just
-            # treat the content as we used to: ignoring it's encoding.
-            result = text
-
-        # TODO: Maybe try ISO-8859-1 if UTF-8 raises an UnicodeDecodeError and
-        # only then fallback to returning a string?
+            # Is there a better way of doing this than nesting try/except
+            # blocks? This smells really bad.
+            try:
+                result = text.decode('iso-8859-1')
+            except UnicodeDecodeError:
+                # If neither utf-8 nor iso-885901 work are capable of handling
+                # this text, we just treat the content as we used to: ignoring
+                # it's encoding.
+                result = text
 
     return result
 
