@@ -14,7 +14,7 @@ psutil
 chromium_compact_language_detector
 filemagic
 numpy
-nltk
+nltk>=2.7.8
 git+https://github.com/dat/pyner.git#egg=ner
 Cython
 Pyrex
