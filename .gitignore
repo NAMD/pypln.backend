@@ -1,6 +1,7 @@
 .*.sw?
 *.pyc
 *~
+*.orig
 .idea/*
 dist/*
 build/*
@@ -10,3 +11,5 @@ pypln.egg-info/*
 reg_settings.py
 MANIFEST
 .directory
+*.db
+.env
