@@ -31,11 +31,7 @@ def filter_stopwords(fdist, lang):
     long_name = {'en': 'english', 'pt': 'portuguese'}
     stopwords =  list(string.punctuation)
     if lang in long_name:
-        # nltk should give is unicode objects.
-        # https://github.com/nltk/nltk/issues/122 says this is already
-        # implemented in a branch, so for now we'll use this workaround.
-        stopwords += map(lambda w: w.decode('utf-8'),
-                nltk.corpus.stopwords.words(long_name[lang]))
+        stopwords += nltk.corpus.stopwords.words(long_name[lang])
     return filter(lambda pair: pair[0].lower() not in stopwords, fdist)
 
 class WordCloud(Worker):
