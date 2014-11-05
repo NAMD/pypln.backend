@@ -130,8 +130,8 @@ def extract_pdf(data):
 def trial_decode(text):
     """
     Tries to detect text encoding using `magic`. If the detected encoding is
-    not supported, try utf-8 and ultimately falls back to returning the string
-    as it was given.
+    not supported, try utf-8, iso-8859-1 and ultimately falls back to decoding
+    as utf-8 replacing invalid chars with `U+FFFD` (the replacement character).
 
     This is far from an ideal solution, but the extractor and the rest of the
     pipeline need an unicode object.
@@ -153,9 +153,11 @@ def trial_decode(text):
                 result = text.decode('iso-8859-1')
             except UnicodeDecodeError:
                 # If neither utf-8 nor iso-885901 work are capable of handling
-                # this text, we just treat the content as we used to: ignoring
-                # it's encoding.
-                result = text
+                # this text, we just decode it using utf-8 and replace invalid
+                # chars with U+FFFD.
+                # Two somewhat arbitrary decisions were made here: use utf-8
+                # and use 'replace' instead of 'ignore'.
+                result = text.decode('utf-8', 'replace')
 
     return result
 
