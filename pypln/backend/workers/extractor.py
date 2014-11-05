@@ -139,6 +139,7 @@ def trial_decode(text):
     with magic.Magic(flags=magic.MAGIC_MIME_ENCODING) as m:
         content_encoding = m.id_buffer(text)
 
+    forced_decoding = False
     try:
         result = text.decode(content_encoding)
     except LookupError:
@@ -158,8 +159,9 @@ def trial_decode(text):
                 # Two somewhat arbitrary decisions were made here: use utf-8
                 # and use 'replace' instead of 'ignore'.
                 result = text.decode('utf-8', 'replace')
+                forced_decoding = True
 
-    return result
+    return result, forced_decoding
 
 
 class Extractor(Worker):
@@ -188,7 +190,7 @@ class Extractor(Worker):
             return {'mimetype': 'unknown', 'text': "",
                     'file_metadata': {}, 'language': ""}
 
-        text = trial_decode(text)
+        text, forced_decoding = trial_decode(text)
 
         if isinstance(text, unicode):
             # HTMLParser only handles unicode objects. We can't pass the text
@@ -206,4 +208,4 @@ class Extractor(Worker):
             language = cld.detect(text)[1]
 
         return {'text': text, 'file_metadata': metadata, 'language': language,
-                'mimetype': file_mime_type}
+                'mimetype': file_mime_type, 'forced_decoding': forced_decoding}
