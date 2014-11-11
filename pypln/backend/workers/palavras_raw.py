@@ -19,12 +19,12 @@
 
 import os
 import subprocess
-import sys
 
 from pypelinin import Worker
 
-
-PALAVRAS_ENCODING = sys.getfilesystemencoding()
+# The machine's locale should be set to pt_BR.UTF-8 during palavras'
+# installation process.
+PALAVRAS_ENCODING = 'utf-8'
 BASE_PARSER = '/opt/palavras/por.pl'
 PARSER_MODE = '--dep'
 

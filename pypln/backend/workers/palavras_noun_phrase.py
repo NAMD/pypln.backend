@@ -36,7 +36,8 @@ class NounPhrase(Worker):
         process = subprocess.Popen(nounphrase_script, stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate(document['palavras_raw'])
+        stdout, stderr = process.communicate(
+                document['palavras_raw'].encode('utf-8'))
 
         phrases = [phrase.strip() for phrase in stdout.strip().split('\n')]
         return {'noun_phrases': phrases}

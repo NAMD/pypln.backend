@@ -49,5 +49,8 @@ class POS(Worker):
         language = document['language']
         if language in MAPPING:
             tagset, tagged_text = MAPPING[language](document)
-            tagged_text_with_offset = put_offset(document['text'], tagged_text)
+            text = document['text']
+            if not isinstance(text, unicode):
+                text = text.decode('utf-8')
+            tagged_text_with_offset = put_offset(text, tagged_text)
         return {'pos': tagged_text_with_offset, 'tagset': tagset}

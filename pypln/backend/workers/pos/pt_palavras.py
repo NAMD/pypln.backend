@@ -50,7 +50,9 @@ def pos(document):
     palavras_output = document['palavras_raw']
     tagged_text = []
     for line in palavras_output.split('\n'):
-        line = line.strip().decode(PALAVRAS_ENCODING)
+        if not isinstance(line, unicode):
+            line = line.decode(PALAVRAS_ENCODING)
+        line = line.strip()
         if line.isspace() or line == '':
             continue
         elif line.startswith('<'):
