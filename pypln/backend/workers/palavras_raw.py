@@ -39,6 +39,17 @@ class PalavrasRaw(Worker):
             return {}
 
         text = document['text']
+
+        # For some reason, in some pypln installations the document['text'] is
+        # not always unicode as it should be. This may be due to errors during
+        # the decoding process that we fixed earlier. That meant that, when we
+        # got a non-unicode string, python would try to decode it using the
+        # default codec (ascii) in `text.encode(PALAVRAS_ENCODING)`. Since we
+        # know the text came from mongodb, we can just decode it using utf-8 to
+        # make sure we have a unicode object.
+        if not isinstance(text, unicode):
+            text = text.decode('utf-8')
+
         process = subprocess.Popen([BASE_PARSER, PARSER_MODE],
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
