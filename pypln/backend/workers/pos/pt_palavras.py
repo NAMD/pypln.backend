@@ -21,54 +21,55 @@ import os
 import subprocess
 import sys
 
-PALAVRAS_ENCODING = sys.getfilesystemencoding()
+PALAVRAS_ENCODING = 'utf-8'
 WORD_CLASSES = {
-                'N': 'Nouns',
-                'PROP': 'Proper nouns',
-                'SPEC': 'Specifiers',
-                'DET': 'Determiners',
-                'PERS': 'Personal pronouns',
-                'ADJ': 'Adjectives',
-                'ADV': 'Adverbs',
-                'V': 'Verbs',
-                'NUM': 'Numerals',
-                'PRP': 'Preposition',
-                'KS': 'Subordinating conjunctions',
-                'KC': 'Coordinationg conjunctions',
-                'IN': 'Interjections',
-                'EC': 'Hyphen-separated prefix',
-                'BL': 'Blank Line',
-                'ES': 'End of Sentence',
-                'NW': 'Non Word',
+                u'N': u'Nouns',
+                u'PROP': u'Proper nouns',
+                u'SPEC': u'Specifiers',
+                u'DET': u'Determiners',
+                u'PERS': u'Personal pronouns',
+                u'ADJ': u'Adjectives',
+                u'ADV': u'Adverbs',
+                u'V': u'Verbs',
+                u'NUM': u'Numerals',
+                u'PRP': u'Preposition',
+                u'KS': u'Subordinating conjunctions',
+                u'KC': u'Coordinationg conjunctions',
+                u'IN': u'Interjections',
+                u'EC': u'Hyphen-separated prefix',
+                u'BL': u'Blank Line',
+                u'ES': u'End of Sentence',
+                u'NW': u'Non Word',
 }
 
 
 def pos(document):
     if 'palavras_raw' not in document:
-        return '', []
+        return u'', []
 
     palavras_output = document['palavras_raw']
+    if not isinstance(palavras_output, unicode):
+        palavras_output = palavras_output.decode(PALAVRAS_ENCODING)
     tagged_text = []
-    for line in palavras_output.split('\n'):
-        if not isinstance(line, unicode):
-            line = line.decode(PALAVRAS_ENCODING)
+    for line in palavras_output.split(u'\n'):
         line = line.strip()
-        if line.isspace() or line == '':
+        #print(line)
+        if line.isspace() or line == u'':
             continue
-        elif line.startswith('<'):
+        elif line.startswith(u'<'):
             continue
-        elif line.startswith('$'):
+        elif line.startswith(u'$'):
             non_word = line.split()[0][1:]
             if non_word.isdigit():
-                non_word_tag = 'NUM'
+                non_word_tag = u'NUM'
             else:
                 non_word_tag = non_word
             tagged_text.append((non_word, non_word_tag))
-        elif len(line.split('\t')) < 2: # Discard malformed lines
+        elif len(line.split(u'\t')) < 2: # Discard malformed lines
             continue
         else:
-            info = line.split('\t')
-            final = '\t'.join(info[1:]).split()
+            info = line.split(u'\t')
+            final = u'\t'.join(info[1:]).split()
             word = info[0].strip()
             syntatic_semantic_tags = final[1:]
             tags = filter(lambda x: x in WORD_CLASSES, syntatic_semantic_tags)

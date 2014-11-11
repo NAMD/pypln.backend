@@ -36,8 +36,12 @@ class NounPhrase(Worker):
         process = subprocess.Popen(nounphrase_script, stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
-        stdout, stderr = process.communicate(
-                document['palavras_raw'].encode('utf-8'))
+        palavras_output = document['palavras_raw']
+        if isinstance(palavras_output, unicode):
+            # we *need* to send a 'str' to the process. Otherwise it's going to try to use ascii.
+            palavras_output = palavras_output.encode('utf-8')
+        stdout, stderr = process.communicate(palavras_output)
 
-        phrases = [phrase.strip() for phrase in stdout.strip().split('\n')]
+        # We should also return the result as unicode
+        phrases = [phrase.strip().decode('utf-8') for phrase in stdout.strip().split('\n')]
         return {'noun_phrases': phrases}
