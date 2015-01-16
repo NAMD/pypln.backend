@@ -36,7 +36,7 @@ class PalavrasRaw(Worker):
 
     def process(self, document):
         if document['language'] != 'pt' or not palavras_installed():
-            return {}
+            return {'palavras_raw_ran': False}
 
         text = document['text']
 
@@ -56,4 +56,4 @@ class PalavrasRaw(Worker):
                                    stderr=subprocess.PIPE)
         stdout, stderr = process.communicate(text.encode(PALAVRAS_ENCODING))
 
-        return {'palavras_raw': stdout}
+        return {'palavras_raw': stdout, 'palavras_raw_ran': True}

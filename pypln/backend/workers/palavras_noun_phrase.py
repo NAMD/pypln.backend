@@ -29,9 +29,13 @@ NOUNPHRASE_SCRIPT = 'bin/extract_np.pl'
 
 class NounPhrase(Worker):
     """Noun phrase extractor"""
-    requires = ['palavras_raw']
+    requires = ['palavras_raw', 'palavras_raw_ran']
 
     def process(self, document):
+        if not document['palavras_raw_ran']:
+            # If palavras didn't run, just ignore this document
+            return {}
+
         nounphrase_script = os.path.join(BASE_PATH, NOUNPHRASE_SCRIPT)
         process = subprocess.Popen(nounphrase_script, stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,

@@ -410,9 +410,13 @@ angle_brackets_contents = re.compile('(<[a-zA-Z]*>)')
 class SemanticTagger(Worker):
     """Semantic Tagger"""
 
-    requires = ['palavras_raw']
+    requires = ['palavras_raw', 'palavras_raw_ran']
 
     def process(self, document):
+        if not document['palavras_raw_ran']:
+            # If palavras didn't run, just ignore this document
+            return {}
+
         lines = document['palavras_raw'].split('\n')
         tagged_entities = {}
         for line in lines:
