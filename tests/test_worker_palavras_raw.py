@@ -32,13 +32,13 @@ class TestPalavrasRawWorker(unittest.TestCase):
         if palavras_raw.palavras_installed():
             document = {'text': 'There was a rock on the way.', 'language': 'en'}
             result = palavras_raw.PalavrasRaw().process(document)
-            self.assertEqual(result, {})
+            self.assertEqual(result, {'palavras_raw_ran': False})
 
     def test_palavras_not_installed(self):
         palavras_raw.BASE_PARSER = '/not-found'
         document = {'text': 'Tinha uma pedra no meio do caminho.', 'language': 'pt'}
         result = palavras_raw.PalavrasRaw().process(document)
-        self.assertEqual(result, {})
+        self.assertEqual(result, {'palavras_raw_ran': False})
 
 
     def test_palavras_should_return_raw_if_it_is_installed(self):
@@ -60,5 +60,6 @@ class TestPalavrasRawWorker(unittest.TestCase):
         </s>
         ''').strip() + '\n\n'
         result = palavras_raw.PalavrasRaw().process(document)
-        expected_result = {'palavras_raw': expected_raw}
+        expected_result = {'palavras_raw': expected_raw,
+                'palavras_raw_ran': True}
         self.assertEqual(expected_result, result)

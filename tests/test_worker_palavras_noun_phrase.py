@@ -45,7 +45,8 @@ class TestNounPhraseWorker(unittest.TestCase):
         </s>
         ''').strip() + '\n\n'
 
-        document = {'palavras_raw': palavras_output}
+        document = {'palavras_raw': palavras_output,
+                'palavras_raw_ran': True}
         result = NounPhrase().process(document)
         expected = {'noun_phrases': ['_este *momento',
                                      'todo o *povo de_ _o Brasil .',
