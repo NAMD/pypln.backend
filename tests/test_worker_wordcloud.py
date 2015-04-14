@@ -30,7 +30,8 @@ class TestFreqDistWorker(unittest.TestCase):
     def test_wordcloud_should_return_a_base64_encoded_png(self):
         example_fdist =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
                     ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
-        result = WordCloud().process({'freqdist': example_fdist})
+        result = WordCloud().process({'freqdist': example_fdist,
+            'language': 'en'})
 
         raw_png_data = base64.b64decode(result['wordcloud'])
 

@@ -43,6 +43,8 @@ class TestLemmatizerWorker(unittest.TestCase):
         ''').strip() + '\n\n'
 
         document = {'palavras_raw': palavras_output}
+        document = {'palavras_raw': palavras_output,
+                'palavras_raw_ran': True}
         result = Lemmatizer().process(document)
         expected = {'lemmas': 'eu saber que em este momento falar para todo Brasil .'.split()}
         self.assertEqual(result, expected)

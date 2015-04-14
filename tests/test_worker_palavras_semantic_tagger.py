@@ -54,7 +54,7 @@ class TestSemanticTaggerWorker(unittest.TestCase):
                  'Human': ['povo'],
                  'Verbs_related_human_things': ['falo']
         }
-        document = {'palavras_raw': palavras_output}
+        document = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
         result = SemanticTagger().process(document)
         expected = {'semantic_tags': expected_tags}
         self.assertEqual(result, expected)
@@ -81,7 +81,7 @@ class TestSemanticTaggerWorker(unittest.TestCase):
                 'Place and spatial': ['canto'],
                 'Verbs_related_human_things': ['canto']
         }
-        document = {'palavras_raw': palavras_output}
+        document = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
         result = SemanticTagger().process(document)
         expected = {'semantic_tags': expected_tags}
         self.assertEqual(result, expected)
