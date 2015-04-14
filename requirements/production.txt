@@ -1,5 +1,5 @@
 # Common
-pypelinin
+celery
 mongodict
 
 # The newest pyparsing (2.0) only supports python 3,

@@ -16,17 +16,25 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-
-from pypelinin import Worker
-
+from mongodict import MongoDict
 from nltk import word_tokenize, sent_tokenize
 
+from pypln.backend.celery_app import app
 
-class Tokenizer(Worker):
-    requires = ['text']
 
-    def process(self, document):
-        text = document['text']
-        tokens = word_tokenize(text)
-        sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
-        return {'tokens': tokens, 'sentences': sentences}
+
+@app.task(name='workers.tokenizer')
+def tokenizer(document_id):
+
+    print(document_id)
+
+    db = MongoDict(database="pypln_backend_test")
+
+    text = db['id:{}:text'.format(document_id)]
+    tokens = word_tokenize(text)
+    sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
+    db['id:{}:tokens'.format(document_id)] = tokens
+    db['id:{}:sentences'.format(document_id)] = sentences
+    print(db.keys())
+
+    return document_id
