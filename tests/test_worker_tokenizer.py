@@ -37,8 +37,10 @@ class TestTokenizerWorker(unittest.TestCase):
         # This is just preparing the expected input in the database
         db['id:{}:text'.format(fake_id)] = text
 
-        # Apply the task synchronously for tests
-        tokenizer.apply(fake_id)
+        # For some reason using `apply` instead of `delay` only works
+        # after you've used the latter. For now we will use `delay`
+        # and `get`.
+        tokenizer.delay(fake_id).get()
 
         tokens = db['id:{}:tokens'.format(fake_id)]
         sentences = db['id:{}:sentences'.format(fake_id)]
