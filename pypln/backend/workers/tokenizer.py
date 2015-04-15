@@ -25,16 +25,13 @@ from pypln.backend.celery_app import app
 
 @app.task(name='workers.tokenizer')
 def tokenizer(document_id):
-
-    print(document_id)
-
     db = MongoDict(database="pypln_backend_test")
-
     text = db['id:{}:text'.format(document_id)]
+
     tokens = word_tokenize(text)
     sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
+
     db['id:{}:tokens'.format(document_id)] = tokens
     db['id:{}:sentences'.format(document_id)] = sentences
-    print(db.keys())
 
     return document_id

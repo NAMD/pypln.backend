@@ -40,8 +40,6 @@ class TestTokenizerWorker(unittest.TestCase):
         # Apply the task synchronously for tests
         tokenizer.apply(fake_id)
 
-        db = MongoDict(database="pypln_backend_test")
-
         tokens = db['id:{}:tokens'.format(fake_id)]
         sentences = db['id:{}:sentences'.format(fake_id)]
 
