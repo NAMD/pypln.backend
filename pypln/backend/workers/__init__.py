@@ -19,7 +19,7 @@
 
 from extractor import Extractor
 from tokenizer import tokenizer
-from freqdist import FreqDist
+from freqdist import freqdist
 from pos import POS
 from statistics import Statistics
 from bigrams import Bigrams
@@ -30,6 +30,6 @@ from palavras_semantic_tagger import SemanticTagger
 from word_cloud import WordCloud
 
 
-__all__ = ['Extractor', 'tokenizer', 'FreqDist', 'POS', 'Statistics',
+__all__ = ['Extractor', 'tokenizer', 'freqdist', 'POS', 'Statistics',
            'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
            'SemanticTagger', 'WordCloud']

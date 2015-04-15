@@ -18,15 +18,34 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from pypln.backend.workers import FreqDist
+from mongodict import MongoDict
+from pypln.backend.workers import freqdist
+
 
 
 class TestFreqDistWorker(unittest.TestCase):
     def test_freqdist_should_return_a_list_of_tuples_with_frequency_distribution(self):
+        fake_id = '1234'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
                   'yellow', '.']
-        result = FreqDist().process({'tokens': tokens, 'language': 'en'})
+
         expected_fd =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
                 ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
-        expected = {'freqdist': expected_fd,}
-        self.assertEqual(result, expected)
+
+
+        db = MongoDict(database="pypln_backend_test")
+        # This is just preparing the expected input in the database
+        db['id:{}:tokens'.format(fake_id)] = tokens
+        #db['id:{}:language'.format(fake_id)] = 'en'
+
+        # For some reason using `apply` instead of `delay` only works
+        # after you've used the latter. For now we will use `delay`
+        # and `get`.
+        freqdist.delay(fake_id).get()
+
+        # getting the results
+        db = MongoDict(database="pypln_backend_test")
+
+        resulting_fd = db['id:{}:freqdist'.format(fake_id)]
+
+        self.assertEqual(resulting_fd, expected_fd)
