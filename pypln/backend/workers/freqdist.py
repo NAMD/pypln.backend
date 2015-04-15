@@ -17,16 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from mongodict import MongoDict
-from pypelinin import Worker
 from pypln.backend.celery_app import app
-
+from pypln.backend.mongodict_adapter import MongoDictById
 
 
 @app.task
 def freqdist(document_id):
-    db = MongoDict(database="pypln_backend_test")
-    document_tokens = db['id:{}:tokens'.format(document_id)]
+    document = MongoDictById(doc_id=document_id, database="pypln_backend_test")
+    document_tokens = document['tokens']
 
     tokens = [info.lower() for info in document_tokens]
     frequency_distribution = {token: tokens.count(token) \
@@ -34,5 +32,5 @@ def freqdist(document_id):
     fd = frequency_distribution.items()
     fd.sort(lambda x, y: cmp(y[1], x[1]))
 
-    db['id:{}:freqdist'.format(document_id)] = fd
+    document['freqdist'] = fd
     return document_id
