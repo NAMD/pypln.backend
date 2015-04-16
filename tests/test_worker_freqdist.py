@@ -16,33 +16,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-
-import unittest
-
-import pymongo
-
-from pypln.backend.mongodict_adapter import MongoDictAdapter
 from pypln.backend.workers import FreqDist
-from pypln.backend.celery_app import app
+from utils import TaskTest
 
 
-
-class TestFreqDistWorker(unittest.TestCase):
-    db_name = 'test_pypln_backend'
-
-    def setUp(self):
-        app.conf.update(CELERY_ALWAYS_EAGER=True)
-        self.fake_id = '1234'
-        self.document = MongoDictAdapter(self.fake_id, database=self.db_name)
-        self.db = pymongo.Connection()[self.db_name]
-
-    def tearDown(self):
-        self.db.main.remove({})
-
-    @classmethod
-    def tearDownClass(cls):
-        pymongo.MongoClient().drop_database(cls.db_name)
-
+class TestFreqDistWorker(TaskTest):
     def test_freqdist_should_return_a_list_of_tuples_with_frequency_distribution(self):
         fake_id = '1234'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',

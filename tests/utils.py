@@ -18,6 +18,30 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from random import randrange
+import unittest
+import pymongo
+
+from pypln.backend.mongodict_adapter import MongoDictAdapter
+from pypln.backend.celery_app import app
+
+
+class TaskTest(unittest.TestCase):
+    db_name = 'test_pypln_backend'
+
+    def setUp(self):
+        app.conf.update(CELERY_ALWAYS_EAGER=True)
+        self.fake_id = '1234'
+        self.document = MongoDictAdapter(self.fake_id, database=self.db_name)
+        self.db = pymongo.Connection()[self.db_name]
+
+    def tearDown(self):
+        self.db.main.remove({})
+
+    @classmethod
+    def tearDownClass(cls):
+        pymongo.MongoClient().drop_database(cls.db_name)
+
+
 
 
 def random_string(min_size=10, max_size=100):
