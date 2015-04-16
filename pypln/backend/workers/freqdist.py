@@ -18,12 +18,12 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from pypln.backend.celery_app import app
-from pypln.backend.mongodict_adapter import MongoDictById
+from pypln.backend.mongodict_adapter import MongoDictAdapter
 
 
 @app.task
 def freqdist(document_id):
-    document = MongoDictById(doc_id=document_id, database="pypln_backend_test")
+    document = MongoDictAdapter(doc_id=document_id, database="pypln_backend_test")
     document_tokens = document['tokens']
 
     tokens = [info.lower() for info in document_tokens]

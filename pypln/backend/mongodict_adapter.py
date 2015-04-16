@@ -20,24 +20,24 @@
 from mongodict import MongoDict
 
 
-class MongoDictById(MongoDict):
+class MongoDictAdapter(MongoDict):
     #TODO: implement clear, __iter__, __len__ and contains with filters by id
     def __init__(self, doc_id, *args, **kwargs):
         self.doc_id = doc_id
         self.prefix = 'id:{}:'.format(self.doc_id)
-        return super(MongoDictById, self).__init__(*args, **kwargs)
+        return super(MongoDictAdapter, self).__init__(*args, **kwargs)
 
     def __setitem__(self, key, value):
         key = 'id:{}:{}'.format(self.doc_id, key)
-        return super(MongoDictById, self).__setitem__(key, value)
+        return super(MongoDictAdapter, self).__setitem__(key, value)
 
     def __getitem__(self, key):
         key = 'id:{}:{}'.format(self.doc_id, key)
-        return super(MongoDictById, self).__getitem__(key)
+        return super(MongoDictAdapter, self).__getitem__(key)
 
     def __delitem__(self, key):
         key = 'id:{}:{}'.format(self.doc_id, key)
-        return super(MongoDictById, self).__delitem__(key)
+        return super(MongoDictAdapter, self).__delitem__(key)
 
     def __iter__(self):
         query_result = self._collection.find({'_id': {'$regex':
