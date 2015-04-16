@@ -22,7 +22,6 @@ from utils import TaskTest
 
 class TestFreqDistWorker(TaskTest):
     def test_freqdist_should_return_a_list_of_tuples_with_frequency_distribution(self):
-        fake_id = '1234'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
                   'yellow', '.']
 
@@ -33,7 +32,7 @@ class TestFreqDistWorker(TaskTest):
         # This is just preparing the expected input in the database
         self.document['tokens'] = tokens
 
-        FreqDist().delay(fake_id)
+        FreqDist().delay(self.fake_id)
 
         resulting_fd = self.document['freqdist']
 
