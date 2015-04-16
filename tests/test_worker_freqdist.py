@@ -22,7 +22,7 @@ import unittest
 import pymongo
 
 from pypln.backend.mongodict_adapter import MongoDictAdapter
-from pypln.backend.workers import freqdist
+from pypln.backend.workers import FreqDist
 from pypln.backend.celery_app import app
 
 
@@ -55,9 +55,7 @@ class TestFreqDistWorker(unittest.TestCase):
         # This is just preparing the expected input in the database
         self.document['tokens'] = tokens
 
-        #db['id:{}:language'.format(fake_id)] = 'en'
-
-        freqdist.delay(fake_id)
+        FreqDist().delay(fake_id)
 
         resulting_fd = self.document['freqdist']
 
