@@ -18,12 +18,31 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
-from mongodict import MongoDict
+
+import pymongo
+
+from pypln.backend.mongodict_adapter import MongoDictAdapter
 from pypln.backend.workers import freqdist
+from pypln.backend.celery_app import app
 
 
 
 class TestFreqDistWorker(unittest.TestCase):
+    db_name = 'test_pypln_backend'
+
+    def setUp(self):
+        app.conf.update(CELERY_ALWAYS_EAGER=True)
+        self.fake_id = '1234'
+        self.document = MongoDictAdapter(self.fake_id, database=self.db_name)
+        self.db = pymongo.Connection()[self.db_name]
+
+    def tearDown(self):
+        self.db.main.remove({})
+
+    @classmethod
+    def tearDownClass(cls):
+        pymongo.MongoClient().drop_database(cls.db_name)
+
     def test_freqdist_should_return_a_list_of_tuples_with_frequency_distribution(self):
         fake_id = '1234'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
@@ -33,19 +52,13 @@ class TestFreqDistWorker(unittest.TestCase):
                 ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
 
 
-        db = MongoDict(database="pypln_backend_test")
         # This is just preparing the expected input in the database
-        db['id:{}:tokens'.format(fake_id)] = tokens
+        self.document['tokens'] = tokens
+
         #db['id:{}:language'.format(fake_id)] = 'en'
 
-        # For some reason using `apply` instead of `delay` only works
-        # after you've used the latter. For now we will use `delay`
-        # and `get`.
-        freqdist.delay(fake_id).get()
+        freqdist.delay(fake_id)
 
-        # getting the results
-        db = MongoDict(database="pypln_backend_test")
-
-        resulting_fd = db['id:{}:freqdist'.format(fake_id)]
+        resulting_fd = self.document['freqdist']
 
         self.assertEqual(resulting_fd, expected_fd)
