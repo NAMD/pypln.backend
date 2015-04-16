@@ -18,7 +18,7 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from extractor import Extractor
-from tokenizer import tokenizer
+from tokenizer import Tokenizer
 from freqdist import FreqDist
 from pos import POS
 from statistics import Statistics
@@ -30,6 +30,6 @@ from palavras_semantic_tagger import SemanticTagger
 from word_cloud import WordCloud
 
 
-__all__ = ['Extractor', 'tokenizer', 'FreqDist', 'POS', 'Statistics',
+__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
            'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
            'SemanticTagger', 'WordCloud']

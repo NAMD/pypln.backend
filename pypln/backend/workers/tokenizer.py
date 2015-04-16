@@ -23,8 +23,8 @@ from pypln.backend.celery_app import app
 
 
 
-@app.task(name='workers.tokenizer')
-def tokenizer(document_id):
+@app.task(name='workers.Tokenizer')
+def Tokenizer(document_id):
     db = MongoDict(database="pypln_backend_test")
     text = db['id:{}:text'.format(document_id)]
 
