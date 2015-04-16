@@ -25,6 +25,8 @@ class MongoDictAdapter(MongoDict):
     def __init__(self, doc_id, *args, **kwargs):
         self.doc_id = doc_id
         self.prefix = 'id:{}:'.format(self.doc_id)
+        self.prefixed_id_query = {'$regex':
+                        '^{}'.format(self.prefix)}
         return super(MongoDictAdapter, self).__init__(*args, **kwargs)
 
     def __setitem__(self, key, value):
@@ -39,8 +41,23 @@ class MongoDictAdapter(MongoDict):
         key = 'id:{}:{}'.format(self.doc_id, key)
         return super(MongoDictAdapter, self).__delitem__(key)
 
+    def __contains__(self, key):
+        # If this is being called by other methods (like __delitem__)
+        # it will already have the prefix
+        if not key.startswith('id:'):
+            key = 'id:{}:{}'.format(self.doc_id, key)
+        return super(MongoDictAdapter, self).__contains__(key)
+
+    has_key = __contains__
+
     def __iter__(self):
-        query_result = self._collection.find({'_id': {'$regex':
-            '^{}'.format(self.prefix)}}, {'_id': 1})
+        query_result = self._collection.find({'_id':
+            self.prefixed_id_query}, {'_id': 1})
         keys = (k['_id'].replace(self.prefix, '', 1) for k in query_result)
         return keys
+
+    def __len__(self):
+        return self._collection.find({'_id': self.prefixed_id_query}).count()
+
+    def clear(self):
+        self._collection.remove({'_id': self.prefixed_id_query})
