@@ -23,17 +23,13 @@ from nltk import word_tokenize, sent_tokenize
 # We need to understand why and remove it from here.
 from pypln.backend.celery_app import app
 
+from pypln.backend.celery_task import PyPLNTask
 
 
-@app.task(name='workers.Tokenizer')
-def Tokenizer(document_id):
-    db = MongoDict(database="pypln_backend_test")
-    text = db['id:{}:text'.format(document_id)]
+class Tokenizer(PyPLNTask):
 
-    tokens = word_tokenize(text)
-    sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
-
-    db['id:{}:tokens'.format(document_id)] = tokens
-    db['id:{}:sentences'.format(document_id)] = sentences
-
-    return document_id
+    def process(self, document):
+        text = document['text']
+        tokens = word_tokenize(text)
+        sentences = [word_tokenize(sent) for sent in sent_tokenize(text)]
+        return {'tokens': tokens, 'sentences': sentences}
