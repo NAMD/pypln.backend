@@ -17,24 +17,32 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-
 from pypln.backend.workers import Statistics
+from utils import TaskTest
 
 
-class TestStatisticsWorker(unittest.TestCase):
+class TestStatisticsWorker(TaskTest):
     def test_simple(self):
-        sentences = [['this', 'is', 'a', 'test', '.'],
+        self.document['sentences'] = [['this', 'is', 'a', 'test', '.'],
                      ['this', 'is', 'another', '!']]
-        freqdist = [('this', 2), ('is', 2), ('a', 1), ('test', 1), ('.', 1),
-                    ('another', 1), ('!', 1)]
-        result = Statistics().process({'freqdist': freqdist,
-                                       'sentences': sentences})
-        self.assertEqual(result['average_sentence_length'], 4.5)
-        self.assertEqual(result['average_sentence_repertoire'], 1)
-        self.assertEqual(result['momentum_3'], 3)
+        self.document['freqdist'] = [('this', 2), ('is', 2), ('a', 1),
+                ('test', 1), ('.', 1), ('another', 1), ('!', 1)]
+        Statistics().delay(self.fake_id)
+        self.assertEqual(self.document['average_sentence_length'], 4.5)
+        self.assertEqual(self.document['average_sentence_repertoire'], 1)
+        self.assertAlmostEqual(self.document['momentum_1'], 1.2857, places=3)
+        self.assertAlmostEqual(self.document['momentum_2'], 1.8571, places=3)
+        self.assertEqual(self.document['momentum_3'], 3)
+        self.assertAlmostEqual(self.document['momentum_4'], 5.2857, places=3)
+        self.assertAlmostEqual(self.document['repertoire'], 0.7777, places=3)
 
     def test_zero_division_error(self):
-        result = Statistics().process({'freqdist': [], 'sentences': []})
-        for value in result.values():
-            self.assertEqual(value, 0)
+        self.document.update({'freqdist': [], 'sentences': []})
+        Statistics().delay(self.fake_id)
+        self.assertEqual(self.document['average_sentence_length'], 0)
+        self.assertEqual(self.document['average_sentence_repertoire'], 0)
+        self.assertEqual(self.document['momentum_1'], 0)
+        self.assertEqual(self.document['momentum_2'], 0)
+        self.assertEqual(self.document['momentum_3'], 0)
+        self.assertEqual(self.document['momentum_4'], 0)
+        self.assertEqual(self.document['repertoire'], 0)
