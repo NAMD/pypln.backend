@@ -17,19 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import cPickle
-
 import nltk
 from collections import defaultdict
 
 from nltk.collocations import BigramCollocationFinder
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 
-class Bigrams(Worker):
+class Bigrams(PyPLNTask):
     """Create a NLTK bigram finder and return a table in JSON format"""
-    requires = ['tokens']
-
 
     def process(self, document):
         #todo: support filtering by stopwords
