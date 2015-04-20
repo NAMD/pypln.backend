@@ -20,7 +20,7 @@
 import os
 import subprocess
 
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 # The machine's locale should be set to pt_BR.UTF-8 during palavras'
 # installation process.
@@ -31,8 +31,7 @@ PARSER_MODE = '--dep'
 def palavras_installed():
     return os.path.exists(BASE_PARSER)
 
-class PalavrasRaw(Worker):
-    requires = ['text', 'language']
+class PalavrasRaw(PyPLNTask):
 
     def process(self, document):
         if document['language'] != 'pt' or not palavras_installed():
