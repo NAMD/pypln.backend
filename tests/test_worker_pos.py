@@ -17,11 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+from textwrap import dedent
 from pypln.backend.workers import POS
+from utils import TaskTest
 
 
-class TestPosWorker(unittest.TestCase):
+class TestPosWorker(TaskTest):
     def test_pos_should_return_a_list_of_tuples_with_token_classification_and_offset(self):
         text = 'The sky is blue, the sun is yellow.'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
@@ -30,6 +31,8 @@ class TestPosWorker(unittest.TestCase):
                    ('blue', 'JJ', 11), (',', ',', 15), ('the', 'DT', 17),
                    ('sun', 'NN', 21), ('is', 'VBZ', 25), ('yellow', 'JJ', 28),
                    ('.', '.', 34)]
-        result = POS().process({'text': text, 'tokens': tokens,
+        self.document.update({'text': text, 'tokens': tokens,
                                 'language': 'en'})
-        self.assertEqual(result, {'pos': expected, 'tagset': 'en-nltk'})
+        POS().delay(self.fake_id)
+        self.assertEqual(self.document['pos'], expected)
+        self.assertEqual(self.document['tagset'], 'en-nltk')
