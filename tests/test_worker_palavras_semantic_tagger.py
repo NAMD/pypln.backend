@@ -17,14 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-
 from textwrap import dedent
 
 from pypln.backend.workers import SemanticTagger
+from utils import TaskTest
 
 
-class TestSemanticTaggerWorker(unittest.TestCase):
+class TestSemanticTaggerWorker(TaskTest):
 
     def test_basic_semantic_tags(self):
         palavras_output = dedent('''
@@ -54,10 +53,12 @@ class TestSemanticTaggerWorker(unittest.TestCase):
                  'Human': ['povo'],
                  'Verbs_related_human_things': ['falo']
         }
-        document = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
-        result = SemanticTagger().process(document)
-        expected = {'semantic_tags': expected_tags}
-        self.assertEqual(result, expected)
+
+        self.document.update({'palavras_raw': palavras_output,
+            'palavras_raw_ran': True})
+        SemanticTagger().delay(self.fake_id)
+
+        self.assertEqual(self.document['semantic_tags'], expected_tags)
 
 
     def test_ambiguous_tags(self):
@@ -81,7 +82,7 @@ class TestSemanticTaggerWorker(unittest.TestCase):
                 'Place and spatial': ['canto'],
                 'Verbs_related_human_things': ['canto']
         }
-        document = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
-        result = SemanticTagger().process(document)
-        expected = {'semantic_tags': expected_tags}
-        self.assertEqual(result, expected)
+        self.document.update({'palavras_raw': palavras_output,
+            'palavras_raw_ran': True})
+        SemanticTagger().delay(self.fake_id)
+        self.assertEqual(self.document['semantic_tags'], expected_tags)
