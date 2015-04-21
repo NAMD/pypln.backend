@@ -21,15 +21,14 @@
 import subprocess
 import os
 
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 
 BASE_PATH = '/opt/palavras'
 NOUNPHRASE_SCRIPT = 'bin/extract_np.pl'
 
-class NounPhrase(Worker):
+class NounPhrase(PyPLNTask):
     """Noun phrase extractor"""
-    requires = ['palavras_raw', 'palavras_raw_ran']
 
     def process(self, document):
         if not document['palavras_raw_ran']:

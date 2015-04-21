@@ -17,14 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
-
 from textwrap import dedent
 
 from pypln.backend.workers import NounPhrase
+from utils import TaskTest
 
 
-class TestNounPhraseWorker(unittest.TestCase):
+class TestNounPhraseWorker(TaskTest):
 
     def test_noun_phrase_worker_should_return_a_list_with_phrases(self):
         palavras_output = dedent('''
@@ -45,10 +44,9 @@ class TestNounPhraseWorker(unittest.TestCase):
         </s>
         ''').strip() + '\n\n'
 
-        document = {'palavras_raw': palavras_output,
-                'palavras_raw_ran': True}
-        result = NounPhrase().process(document)
-        expected = {'noun_phrases': ['_este *momento',
-                                     'todo o *povo de_ _o Brasil .',
-                                     '_o *Brasil .']}
-        self.assertEqual(result, expected)
+        self.document.update({'palavras_raw': palavras_output,
+                'palavras_raw_ran': True})
+        NounPhrase().delay(self.fake_id)
+        expected = ['_este *momento', 'todo o *povo de_ _o Brasil .',
+                                     '_o *Brasil .']
+        self.assertEqual(self.document['noun_phrases'], expected)
