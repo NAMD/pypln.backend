@@ -19,7 +19,6 @@
 
 import base64
 from StringIO import StringIO
-import unittest
 
 from PIL import Image
 
