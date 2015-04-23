@@ -1,4 +1,4 @@
 from celery import Celery
 
-app = Celery('workers', backend='mongodb',
+app = Celery('pypln_workers', backend='mongodb',
         broker='amqp://', include=['pypln.backend.workers'])
