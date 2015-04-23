@@ -19,10 +19,6 @@
 from mongodict import MongoDict
 from nltk import word_tokenize, sent_tokenize
 
-#XXX: For some weird reason the whole backend is depending on this import.
-# We need to understand why and remove it from here.
-from pypln.backend.celery_app import app
-
 from pypln.backend.celery_task import PyPLNTask
 
 

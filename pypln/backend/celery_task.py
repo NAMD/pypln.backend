@@ -2,6 +2,15 @@ from celery import Task
 
 from pypln.backend.mongodict_adapter import MongoDictAdapter
 
+# This import may look like an unused imported, but it is not.
+# When our base task class is defined, the Celery app must have already been
+# instantiated, otherwise when this code is imported elsewhere (like in a
+# client that will call a task, for example) celery will fallback to the
+# default app, and our configuration will be ignored. This is not an issue in
+# the documented project layout, because there they import the app in the
+# module that define the tasks (to use the decorator in `app.task`).
+from pypln.backend.celery_app import app
+
 DATABASE_NAME = 'test_pypln_backend'
 
 class PyPLNTask(Task):
