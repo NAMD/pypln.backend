@@ -29,7 +29,7 @@ from re import compile as regexp_compile, DOTALL, escape
 import cld
 import magic
 
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 
 regexp_tags = regexp_compile(r'(<[ \t]*([a-zA-Z0-9!"./_-]*)[^>]*>)', flags=DOTALL)
@@ -164,10 +164,9 @@ def trial_decode(text):
     return result, forced_decoding
 
 
-class Extractor(Worker):
+class Extractor(PyPLNTask):
     #TODO: need to verify some exceptions when trying to convert 'evil' PDFs
     #TODO: should 'replace_with' be '' when extracting from HTML?
-    requires = ['contents']
 
     def process(self, file_data):
         with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:

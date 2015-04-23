@@ -18,22 +18,22 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 from textwrap import dedent
 from pypln.backend.workers import Extractor
+from utils import TaskTest
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
-class TestExtractorWorker(unittest.TestCase):
+class TestExtractorWorker(TaskTest):
     def test_extraction_from_text_file(self):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = os.path.join(DATA_DIR, 'test.txt')
-        data = {'filename': filename, 'contents': open(filename).read()}
-        result = Extractor().process(data)
-        metadata = result['file_metadata']
-        self.assertEqual(expected, result['text'])
-        self.assertEqual(metadata, {})
-        self.assertEqual(result['mimetype'], 'text/plain')
+        self.document.update({'filename': filename,
+            'contents': open(filename).read()})
+        Extractor().delay(self.fake_id)
+        self.assertEqual(self.document['text'], expected)
+        self.assertEqual(self.document['file_metadata'], {})
+        self.assertEqual(self.document['mimetype'], 'text/plain')
 
     def test_extraction_from_html_file(self):
         expected = "This is a test file. I'm testing PyPLN extractor worker!"
