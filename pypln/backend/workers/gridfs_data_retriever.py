@@ -1,6 +1,6 @@
 # coding: utf-8
 #
-# Copyright 2012 NAMD-EMAP-FGV
+# Copyright 2015 NAMD-EMAP-FGV
 #
 # This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
@@ -16,21 +16,23 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
+from bson import ObjectId
+from gridfs import GridFS
+import pymongo
+from pypln.backend.celery_task import PyPLNTask, DATABASE_NAME
 
-from gridfs_data_retriever import GridFSDataRetriever
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
-from word_cloud import WordCloud
+GRIDFS_COLLECTION = "test_pypln_gridfs"
 
+class GridFSDataRetriever(PyPLNTask):
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-           'SemanticTagger', 'WordCloud']
+    def process(self, document):
+        database = pymongo.MongoClient()[DATABASE_NAME]
+        gridfs = GridFS(database, GRIDFS_COLLECTION)
+
+        file_data = gridfs.get(ObjectId(document['file_id']))
+        result = {'length': file_data.length,
+                  'md5': file_data.md5,
+                  'filename': file_data.filename,
+                  'upload_date': file_data.upload_date,
+                  'contents': file_data.read()}
+        return result
