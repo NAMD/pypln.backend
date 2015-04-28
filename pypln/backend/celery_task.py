@@ -30,7 +30,8 @@ from pypln.backend.mongodict_adapter import MongoDictAdapter
 # module that define the tasks (to use the decorator in `app.task`).
 from pypln.backend.celery_app import app
 
-DATABASE_NAME = 'test_pypln_backend'
+from pypln.backend import config
+
 
 class PyPLNTask(Task):
     """
@@ -48,7 +49,7 @@ class PyPLNTask(Task):
         document information and will update de database with results.
         """
         document = MongoDictAdapter(doc_id=document_id,
-                database=DATABASE_NAME)
+                database=config.DATABASE_NAME)
         # Create a dictionary out of our document. We could simply pass
         # it on to the process method, but for now we won't let the user
         # manipulate the MongoDict directly.

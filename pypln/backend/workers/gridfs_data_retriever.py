@@ -19,14 +19,15 @@
 from bson import ObjectId
 from gridfs import GridFS
 import pymongo
-from pypln.backend.celery_task import PyPLNTask, DATABASE_NAME
+from pypln.backend.celery_task import PyPLNTask
+from pypln.backend import config
 
 GRIDFS_COLLECTION = "test_pypln_gridfs"
 
 class GridFSDataRetriever(PyPLNTask):
 
     def process(self, document):
-        database = pymongo.MongoClient()[DATABASE_NAME]
+        database = pymongo.MongoClient()[config.DATABASE_NAME]
         gridfs = GridFS(database, GRIDFS_COLLECTION)
 
         file_data = gridfs.get(ObjectId(document['file_id']))
