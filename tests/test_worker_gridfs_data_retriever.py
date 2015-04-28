@@ -20,14 +20,13 @@
 import bson
 from gridfs import GridFS
 from pypln.backend.workers import GridFSDataRetriever
+from pypln.backend import config
 from utils import TaskTest
-
-GRIDFS_COLLECTION = "test_pypln_gridfs"
 
 class TestGridFSDataRetrieverWorker(TaskTest):
     def test_extract_file_data_from_GridFS(self):
         content = "File content"
-        gridfs = GridFS(self.db, collection=GRIDFS_COLLECTION)
+        gridfs = GridFS(self.db, collection=config.GRIDFS_COLLECTION)
         new_file_id = gridfs.put(content)
         expected_file_data = gridfs.get(new_file_id)
 

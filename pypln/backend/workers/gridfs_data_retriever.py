@@ -22,13 +22,11 @@ import pymongo
 from pypln.backend.celery_task import PyPLNTask
 from pypln.backend import config
 
-GRIDFS_COLLECTION = "test_pypln_gridfs"
-
 class GridFSDataRetriever(PyPLNTask):
 
     def process(self, document):
         database = pymongo.MongoClient()[config.DATABASE_NAME]
-        gridfs = GridFS(database, GRIDFS_COLLECTION)
+        gridfs = GridFS(database, config.GRIDFS_COLLECTION)
 
         file_data = gridfs.get(ObjectId(document['file_id']))
         result = {'length': file_data.length,
