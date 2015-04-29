@@ -4,3 +4,8 @@ MONGODB_CONFIG = {
     'database': 'pypln_dev',
     'gridfs_collection': 'files',
 }
+
+try:
+    from local_config import *
+except ImportError:
+    pass
