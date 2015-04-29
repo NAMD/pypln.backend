@@ -2,12 +2,9 @@ PyPLN
 =====
 
 PyPLN is a distributed pipeline for natural language processing, made in Python.
-We use `NLTK <http://nltk.org/>`_ and `ZeroMQ <http://www.zeromq.org/>`_ as
+We use `NLTK <http://nltk.org/>`_ and `Celery <http://www.celeryproject.org>`_ as
 our foundations. The goal of the project is to create an easy way to use NLTK
 for processing big corpora, with a Web interface.
-
-We don't have a production release yet, but it's scheduled on our
-`next milestone <https://github.com/namd/pypln.backend/issues?milestone=1>`_.
 
 PyPLN is sponsored by `Fundação Getulio Vargas <http://portal.fgv.br/>`_.
 
@@ -58,11 +55,7 @@ To run tests::
 
     workon pypln.backend
     pip install -r requirements/development.txt
+    echo "MONGODB_CONFIG = {'host': 'localhost', 'port': 27017, 'database': 'test_pypln_dev', 'gridfs_collection': files}" >> pypln/backend/local_config.py
     make test
-
-
-..  TODO: The PYTHONPATH issue should be fixed once we organize the directory
-    structure. As soon as this is fixed, we must update this instructions.
-
 
 See our `code guidelines <https://github.com/namd/pypln.backend/blob/develop/CONTRIBUTING.rst>`_.
