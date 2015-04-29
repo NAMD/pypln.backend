@@ -25,8 +25,8 @@ from pypln.backend import config
 class GridFSDataRetriever(PyPLNTask):
 
     def process(self, document):
-        database = pymongo.MongoClient()[config.DATABASE_NAME]
-        gridfs = GridFS(database, config.GRIDFS_COLLECTION)
+        database = pymongo.MongoClient()[config.MONGODB_CONFIG['database']]
+        gridfs = GridFS(database, config.MONGODB_CONFIG['gridfs_collection'])
 
         file_data = gridfs.get(ObjectId(document['file_id']))
         result = {'length': file_data.length,

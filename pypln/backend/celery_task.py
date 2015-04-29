@@ -49,7 +49,7 @@ class PyPLNTask(Task):
         document information and will update de database with results.
         """
         document = MongoDictAdapter(doc_id=document_id,
-                database=config.DATABASE_NAME)
+                database=config.MONGODB_CONFIG['database'])
         # Create a dictionary out of our document. We could simply pass
         # it on to the process method, but for now we won't let the user
         # manipulate the MongoDict directly.

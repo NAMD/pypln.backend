@@ -26,7 +26,8 @@ from utils import TaskTest
 class TestGridFSDataRetrieverWorker(TaskTest):
     def test_extract_file_data_from_GridFS(self):
         content = "File content"
-        gridfs = GridFS(self.db, collection=config.GRIDFS_COLLECTION)
+        gridfs = GridFS(self.db,
+                collection=config.MONGODB_CONFIG['gridfs_collection'])
         new_file_id = gridfs.put(content)
         expected_file_data = gridfs.get(new_file_id)
 
