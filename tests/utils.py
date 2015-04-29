@@ -23,10 +23,13 @@ import pymongo
 
 from pypln.backend.mongodict_adapter import MongoDictAdapter
 from pypln.backend.celery_app import app
+from pypln.backend import config
 
+class ConfigurationError(Exception):
+    pass
 
 class TaskTest(unittest.TestCase):
-    db_name = 'test_pypln_backend'
+    db_name = config.MONGODB_CONFIG['database']
 
     def setUp(self):
         app.conf.update(CELERY_ALWAYS_EAGER=True)
@@ -36,6 +39,15 @@ class TaskTest(unittest.TestCase):
 
     def tearDown(self):
         self.db.main.remove({})
+
+    @classmethod
+    def setUpClass(cls):
+        # Maybe our test runner should set the new database name. For now, this
+        # ensures we will not drop the wrong database.
+        if not cls.db_name.startswith('test'):
+            raise ConfigurationError("The name of the database used to run "
+                    "tests needs to start with `test`. This is a safeguard to "
+                    "guarantee we don't drop (or polute) the wrong database.")
 
     @classmethod
     def tearDownClass(cls):
