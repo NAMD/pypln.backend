@@ -18,7 +18,7 @@
 
 test:
 	@clear
-	nosetests -dvs
+	nosetests -dvs tests/
 
 test-workers:
 	@clear
@@ -26,7 +26,7 @@ test-workers:
 
 test-x:
 	@clear
-	nosetests -dvsx
+	nosetests -dvsx tests/
 
 doc:
 	@clear
