@@ -37,8 +37,8 @@ clean:
 	find -regex '.*\.pyc' -exec rm {} \;
 	find -regex '.*~' -exec rm {} \;
 
-run:
-	@./scripts/start_development_environment.sh
+run-celery:
+	celery -A 'pypln.backend' worker --app=pypln.backend.celery_app:app  -l info
 
 
-.PHONY:	test test-x doc clean test-workers run
+.PHONY:	test test-x doc clean test-workers run-celery
