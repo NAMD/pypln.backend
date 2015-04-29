@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.backend.workers.palavras_semantic_tagger</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.backend-module.html">Package&nbsp;backend</a> ::
+        <a href="pypln.backend.workers-module.html">Package&nbsp;workers</a> ::
+        Module&nbsp;palavras_semantic_tagger
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.backend.workers.palavras_semantic_tagger-module.html">Module pypln.backend.workers.palavras_semantic_tagger</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"># Copyright 2012 NAMD-EMAP-FGV</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of PyPLN. You can get more information at: http://pypln.org/.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"># the Free Software Foundation, either version 3 of the License, or</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"># along with PyPLN.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">subprocess</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pypelinin</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Worker</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">re</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable pypln.backend.workers.palavras_semantic_tagger.SEMANTIC_TAGS=pypln.backend.workers.palavras_semantic_tagger-module.html#SEMANTIC_TAGS"><a title="pypln.backend.workers.palavras_semantic_tagger.SEMANTIC_TAGS" class="py-name" href="#" onclick="return doclink('link-0', 'SEMANTIC_TAGS', 'link-0');">SEMANTIC_TAGS</a></tt> <tt class="py-op">=</tt> \ </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-op">{</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">    <tt class="py-string">'Animal'</tt><tt class="py-op">:</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">        <tt class="py-string">'&lt;A&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Animal, umbrella tag (clone, f&#234;mea, f&#243;ssil, parasito, predador)'</tt> <tt class="py-op">,</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">        <tt class="py-string">'&lt;AA&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Group of animals (cardume, enxame, passarada, ninhada)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Adom&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Domestic animal or big mammal (likely to have female forms etc.: terneiro, le&#227;o/leoa, cachorro)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">        <tt class="py-string">'&lt;AAdom&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Group of domestic animals (boiada)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Aich&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Water-animal (tubar&#227;o, delfim)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Amyth&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Mythological animal (basilisco)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Azo&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Land-animal (raposa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Aorn&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Bird (&#225;guia, bem-te-vi)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Aent&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Insect (borboleta)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Acell&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Cell-animal (bacteria, blood cells: linf&#243;cito)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-string">'Plant'</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-string">'&lt;B&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Plant, umbrella tag'</tt><tt class="py-op">,</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-string">'&lt;BB&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Group of plants, plantation (field, forest etc.: mata, nabal)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Btree&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Tree (oliveira, palmeira)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Bflo&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Flower (rosa, taraxaco)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Bbush&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Bush, shrub (rododendro, tamariz)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">        <tt class="py-string">'&lt;fruit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(fruit, berries, nuts: ma&#231;&#227;, morango, avel&#227;, melancia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Bveg&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(vegetable espargo, funcho)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">    <tt class="py-string">'Human'</tt><tt class="py-op">:</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-string">'&lt;H&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Human, umbrella tag'</tt><tt class="py-op">,</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">        <tt class="py-string">'&lt;HH&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Group of humans (organisations, teams, companies, e.g. editora)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hattr&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Attributive human umbrella tag (many -ista, -ante)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hbio&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Human classified by biological criteria (race, age etc., caboclo, mesti&#231;o, beb&#233;, adulto)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hfam&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Human with family or other private relation (pai, noiva)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hideo&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Ideological human (comunista, implies &lt;Hattr&gt;), also: follower, disciple (dadaista)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hmyth&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Humanoid mythical (gods, fairy tale humanoids, curupira, duende)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hnat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Nationality human (brasileiro, alem&#227;o), also: inhabitant (lisboeta)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hprof&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Professional human (marinheiro, implies &lt;Hattr&gt;), also: sport, hobby (alpinista)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hsick&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Sick human (few: asm&#225;tico, diab&#233;tico, cp &lt;sick&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Htit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Title noun (rei, senhora)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">    <tt class="py-string">'Place and spatial'</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-string">'&lt;L&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Place, umbrella tag'</tt><tt class="py-op">,</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Labs&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Abstract place (anverso. auge)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lciv&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Civitas, town, country, county (equals &lt;L&gt; + &lt;HH&gt;, cidade, pa&#237;s)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lcover&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Cover, lid (colcha, lona, tampa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lh&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Functional place, human built or human-used (aeroporto, anfiteatro, cp. &lt;build&gt; for just a building)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lopening&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'opening, hole (apertura, fossa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lpath&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Path (road, street etc.: rua, pista)'</tt> <tt class="py-op">,</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lstar&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Star object (planets, comets: planeta, quasar)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lsurf&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'surface (face, verniz, cp. &lt;Lcover&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Ltip&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'tip place, edge (pico, pontinha, cp. &lt;Labs&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Ltop&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Geographical, natural place (promont&#243;rio, p&#226;ntano)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Ltrap&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'trap place (armadilha, armazelo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Lwater&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Water place (river, lake, sea: fonte, foz, lagoa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt class="py-string">'&lt;bar&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'barrier noun (dique, limite, muralha)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-string">'&lt;build&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(building)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-string">'&lt;inst&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(institution)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-string">'&lt;pict&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(picture)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(situation)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-string">'&lt;pos-an&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'anatomical/body position (few: desaprumo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-string">'&lt;pos-soc&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'social position, job (emprego, condado, capitania, presid&#234;ncia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">    <tt class="py-string">'Vehicle'</tt><tt class="py-op">:</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-string">'&lt;V&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Vehicle, umbrella tag and ground vehicle (car, train: carro, comboio, tanque, telef&#233;rico)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-string">'&lt;VV&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Group of vehicles (armada, convoy: frota, esquadra)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Vwater&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Water vehicle (ship: navio, submers&#237;vel, canoa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Vair&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Air vehicle (plane: hidroplano, jatinho)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">    <tt class="py-string">'Abstract'</tt><tt class="py-op">:</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ac&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Abstract countable, umbrella tag (alternativa, chance, lazer)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ac-cat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Category word (latinismo, n&#250;mero at&#244;mico)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ac-sign&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'sign, symbol (par&#234;ntese, semicolcheia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-string">'&lt;am&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Abstract mass/non-countable, umbrella tag (still contains many cases that could be &lt;f-..&gt;, e.g. habilidade, legalidade)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ax&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Abstract/concept, neither countable nor mass (endogamia), cp. &lt;f&gt;, &lt;sit&gt; etc.'</tt><tt class="py-op">,</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f...&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(features)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-string">'&lt;dir&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'direction noun (estibordo, contrasenso, norte)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">        <tt class="py-string">'&lt;geom...&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(shapes)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">        <tt class="py-string">'&lt;meta&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'meta noun (tipo, esp&#233;cie)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">        <tt class="py-string">'&lt;brand&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(MARCA) brand'</tt><tt class="py-op">,</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">        <tt class="py-string">'&lt;genre&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(DISCIPLINA) subject matter'</tt><tt class="py-op">,</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">        <tt class="py-string">'&lt;school&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ESCOLA) school of thought'</tt><tt class="py-op">,</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">        <tt class="py-string">'&lt;idea&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(IDEA) idea, concept'</tt><tt class="py-op">,</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">        <tt class="py-string">'&lt;plan&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(PLANO) named plan, project'</tt><tt class="py-op">,</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">        <tt class="py-string">'&lt;author&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(OBRA) artist-s name, standing for body of work'</tt><tt class="py-op">,</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-string">'&lt;absname&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(NOME)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-string">'&lt;disease&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ESTADO) physiological state, in particular: disease'</tt><tt class="py-op">,</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">    <tt class="py-string">'Concept'</tt><tt class="py-op">:</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-string">'&lt;conv&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'convention (social rule or law, lei, preceito)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-string">'&lt;domain&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'subject matter, profession, cf. &lt;genre&gt;, anatomia, citricultura, dactilografia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ism&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'ideology or other value system (anarquismo, anti-ocidentalismo, apartheid)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-string">'&lt;genre&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ling&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'language (alem&#227;o, catal&#227;o, bengali)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-string">'&lt;disease&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-string">'&lt;state...&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-string">'&lt;therapy&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'therapy (also &lt;domain&gt; and &lt;activity&gt;, acupuntura, balneoterapia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">    <tt class="py-string">'Game'</tt><tt class="py-op">:</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-string">'&lt;game&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'play, game (bilhar, ioi&#244;, poker, also &lt;activity&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">    <tt class="py-string">'Genre'</tt><tt class="py-op">:</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-string">'&lt;genre&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'genre (especially art genre, cf. &lt;domain&gt;, modernismo, tropicalismo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">    <tt class="py-string">'Quantity'</tt><tt class="py-op">:</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">        <tt class="py-string">'&lt;unit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">        <tt class="py-string">'&lt;amount&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'quantity noun (bocada, teor, sem-fim)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cur&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'currency noun (countable, implies &lt;unit&gt;, cf. &lt;mon&gt;, dirham, euro, real, d&#243;lar)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mon&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'amount of money (bolsa, custo, imposto, cf. &lt;cur&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">    <tt class="py-string">'Action'</tt><tt class="py-op">:</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Action umbrella tag (+CONTROL, PERFECTIVE)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act-beat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'beat-action (thrashing, pancada, surra)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act-d&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'do-action (typically dar/fazer + N, tentativa, teste, homenagem)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act-s&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'speech act or communicative act (proposta, ordem)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act-trick&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'trick-action (cheat, fraud, ruse, jeito, fraude, similar to &lt;act-d&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-string">'&lt;activity&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Activity, umbrella tag (+CONTROL, IMPERFECTIVE, correria, manejo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sport&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">        <tt class="py-string">'&lt;game&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">        <tt class="py-string">'&lt;therapy&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">        <tt class="py-string">'&lt;dance&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'dance (both &lt;activity&gt;, &lt;genre&gt; and &lt;sem-l&gt;, calipso, flamenco, forr&#243;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">        <tt class="py-string">'&lt;fight&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'fight, conflict (also &lt;activity&gt; and +TEMP, briga, querela)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-string">'&lt;talk&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'speech situation, talk, discussion, quarrel (implies &lt;activity&gt; and &lt;sd&gt;, entrevista, lero-lero)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">    <tt class="py-string">'Anatomical'</tt><tt class="py-op">:</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">        <tt class="py-string">'&lt;an&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Anatomical noun, umbrella tag (car&#243;tida, cl&#237;toris, dorso)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anmov&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Movable anatomy (arm, leg, bra&#231;o, b&#237;ceps, cotovelo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anorg&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Organ (heart, liver, hip&#243;fise, cora&#231;&#227;o, test&#237;culo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anost&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Bone (calc&#226;neo, f&#237;bula, v&#233;rtebra)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anzo&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Animal anatomy (r&#250;men, carapa&#231;a, chifres, tromba)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anorn&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Bird anatomy (bico, pluma)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anich&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Fish anatomy (few: br&#225;nquias, siba)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anent&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Insect anatomy (few: tent&#225;culo, olho composto)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">        <tt class="py-string">'&lt;anbo&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Plant anatomy (bulbo, caule, folha)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-an&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(human anatomical feature)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">    <tt class="py-string">'Thing'</tt><tt class="py-op">:</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Concrete countable object, umbrella tag (briquete, co&#225;gulo, normally movable things, unlike &lt;part-build&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'Artifact, umbrella tag (so far empty category in PALAVRAS)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L172"></a><tt class="py-lineno">172</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-beauty&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'ornamental object (few: guirlanda, rufo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-board&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'flat long object (few: board, plank, lousa, tabla)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-fire&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'fire object (bonfire, spark, chispa, fogo, gir&#226;ndola)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-handle&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'handle (garra, ansa, chupadouro)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-light&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'light artifact (lampi&#227;o, farol, projector) '</tt><tt class="py-op">,</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-particle&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(atomic) particle (few: c&#225;tion, eletr&#244;nio)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-r&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'read object (carteira, cupom, bilhete, carta, cf. &lt;sem-r&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-rag&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cloth object (towel, napkin, carpet, rag) , cp. &lt;mat-cloth&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-stone&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(cc-round) stones and stone-sized round objects (pedra, it&#225;, amonite, tijolo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-stick&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'stick object (long and thin, vara, lan&#231;e, paulito)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">        <tt class="py-string">'&lt;object&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(OBJECT) named object'</tt><tt class="py-op">,</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">        <tt class="py-string">'&lt;common&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(OBJECT) common noun used as name'</tt><tt class="py-op">,</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(SUBSTANCIA) substance'</tt><tt class="py-op">,</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">        <tt class="py-string">'&lt;class&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CLASSE) classification category for things'</tt><tt class="py-op">,</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">        <tt class="py-string">'&lt;plant&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CLASSE) plant name'</tt><tt class="py-op">,</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">        <tt class="py-string">'&lt;currency&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(MOEDA) currency name (also marked on the number)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mass&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'mass noun (e.g. "leite", "a-gua")'</tt><tt class="py-op">,</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">        <tt class="py-string">'&lt;furn&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'furniture (cama, cadeira, tambo, quadro)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">        <tt class="py-string">'&lt;con&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'container (implies &lt;num+&gt; quantifying, ampola, ch&#237;cara, aqu&#225;rio)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line">    <tt class="py-string">'Substance'</tt><tt class="py-op">:</tt> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'concrete mass/non-countable, umbrella tag, substance (cf. &lt;mat&gt;, terra, cho&#231;a, magma)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human-made substance (cf. &lt;mat&gt;, cemento)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm-chem&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'chemical substance, also biological (acetileno, am&#244;nio, anilina, bilirrubina'</tt><tt class="py-op">,</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm-gas&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'gas substance (so far few: arg&#244;nio, overlap with. &lt;cm-chem&gt; and &lt;cm&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm-liq&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'liquid substance (azeite, gasolina, plasma, overlap with &lt;food&gt; and &lt;cm-rem&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cm-rem&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'remedy (medical or hygiene, antibi&#243;tico, canabis, quinina, part of &lt;cm-h&gt;, overlap with &lt;cm-chem&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">    <tt class="py-string">'Materials'</tt><tt class="py-op">:</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'material (argila, bronze, granito, cf. &lt;cm&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mat-cloth&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cloth material (seda, couro, vison, kevlar), cp. &lt;cc-rag&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cord&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cord, string, rope, tape (previously &lt;tool-tie&gt;, arame, fio, fibrila)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">    <tt class="py-string">'Clothing'</tt><tt class="py-op">:</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cloA&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'animal clothing (sela, xabraque)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cloH&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human clothing (albornoz, anoraque, babadouro, bermudas)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cloH-beauty&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'beauty clothing (e.g. jewelry, diadema, pendente, pulseira)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cloH-hat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'hat (sombrero, mitra, coroa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L213"></a><tt class="py-lineno">213</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cloH-shoe&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'shoe (bota, chinela, patim)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L214"></a><tt class="py-lineno">214</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mat-cloth&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cloth material (seda, couro, vison, kevlar), cp. &lt;cc-rag&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L215"></a><tt class="py-lineno">215</tt>  <tt class="py-line">        <tt class="py-string">'&lt;clo...&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(clothing)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L216"></a><tt class="py-lineno">216</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L217"></a><tt class="py-lineno">217</tt>  <tt class="py-line">    <tt class="py-string">'Collective'</tt><tt class="py-op">:</tt> </tt>
+<a name="L218"></a><tt class="py-lineno">218</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L219"></a><tt class="py-lineno">219</tt>  <tt class="py-line">        <tt class="py-string">'&lt;coll&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'set,collective (random or systematic collection/compound/multitude of similar but distinct small parts, conjunto, s&#233;rie)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L220"></a><tt class="py-lineno">220</tt>  <tt class="py-line">        <tt class="py-string">'&lt;coll-cc&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'thing collective, pile (baralho, lan&#231;o)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L221"></a><tt class="py-lineno">221</tt>  <tt class="py-line">        <tt class="py-string">'&lt;coll-B&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'plant-part collective (buqu&#234;, folhagem)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L222"></a><tt class="py-lineno">222</tt>  <tt class="py-line">        <tt class="py-string">'&lt;coll-sem&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'semantic collective, collection (arquivo, repert&#243;rio)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L223"></a><tt class="py-lineno">223</tt>  <tt class="py-line">        <tt class="py-string">'&lt;coll-tool&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'tool collective, set (intrument&#225;rio, prataria)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L224"></a><tt class="py-lineno">224</tt>  <tt class="py-line">        <tt class="py-string">'&lt;HH&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(group)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L225"></a><tt class="py-lineno">225</tt>  <tt class="py-line">        <tt class="py-string">'&lt;AA&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(herd)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L226"></a><tt class="py-lineno">226</tt>  <tt class="py-line">        <tt class="py-string">'&lt;BB&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(plantation)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L227"></a><tt class="py-lineno">227</tt>  <tt class="py-line">        <tt class="py-string">'&lt;VV&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(convoy)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L228"></a><tt class="py-lineno">228</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L229"></a><tt class="py-lineno">229</tt>  <tt class="py-line">    <tt class="py-string">'Time_Event'</tt><tt class="py-op">:</tt> </tt>
+<a name="L230"></a><tt class="py-lineno">230</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L231"></a><tt class="py-lineno">231</tt>  <tt class="py-line">        <tt class="py-string">'&lt;dur&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'duration noun (test: durar+, implies &lt;unit&gt;, e.g. &#225;timo, m&#234;s, hora)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L232"></a><tt class="py-lineno">232</tt>  <tt class="py-line">        <tt class="py-string">'&lt;temp&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'temporal object, point in time (amanhecer, novil&#250;nio, test: at&#233;+, cf. &lt;dur&gt; and &lt;per&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L233"></a><tt class="py-lineno">233</tt>  <tt class="py-line">        <tt class="py-string">'&lt;event&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'non-organised event  (-CONTROL, PERFECTIVE, milagre, morte)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L234"></a><tt class="py-lineno">234</tt>  <tt class="py-line">        <tt class="py-string">'&lt;occ&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'occasion, human/social event (copa do mundo, anivers&#225;rio, jantar, desfile, cp. unorganized &lt;event&gt;) '</tt><tt class="py-op">,</tt> </tt>
+<a name="L235"></a><tt class="py-lineno">235</tt>  <tt class="py-line">        <tt class="py-string">'&lt;process&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'process (-CONTROL, -PERFECTIVE, cp. &lt;event&gt;, balcaniza&#231;&#227;o, convec&#231;&#227;o, estagna&#231;&#227;o)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L236"></a><tt class="py-lineno">236</tt>  <tt class="py-line">        <tt class="py-string">'&lt;act...&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L237"></a><tt class="py-lineno">237</tt>  <tt class="py-line">        <tt class="py-string">'&lt;activity&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L238"></a><tt class="py-lineno">238</tt>  <tt class="py-line">        <tt class="py-string">'&lt;history&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(EFEMERIDE) one-time [historical] occurrence'</tt><tt class="py-op">,</tt> </tt>
+<a name="L239"></a><tt class="py-lineno">239</tt>  <tt class="py-line">        <tt class="py-string">'&lt;date&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(DATA) date'</tt><tt class="py-op">,</tt> </tt>
+<a name="L240"></a><tt class="py-lineno">240</tt>  <tt class="py-line">        <tt class="py-string">'&lt;hour&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(HORA) hour'</tt><tt class="py-op">,</tt> </tt>
+<a name="L241"></a><tt class="py-lineno">241</tt>  <tt class="py-line">        <tt class="py-string">'&lt;period&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(PERIODO) period'</tt><tt class="py-op">,</tt> </tt>
+<a name="L242"></a><tt class="py-lineno">242</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cyclic&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CICLICO) cyclic time expression'</tt><tt class="py-op">,</tt> </tt>
+<a name="L243"></a><tt class="py-lineno">243</tt>  <tt class="py-line">        <tt class="py-string">'&lt;month&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'month noun/name (agosto, julho, part of &lt;temp&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L244"></a><tt class="py-lineno">244</tt>  <tt class="py-line">        <tt class="py-string">'&lt;per&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'period of time (prototypical test: durante, e.g. guerra, d&#233;cada, cf. &lt;dur&gt; and &lt;temp&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L245"></a><tt class="py-lineno">245</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L246"></a><tt class="py-lineno">246</tt>  <tt class="py-line">    <tt class="py-string">'Feature'</tt><tt class="py-op">:</tt> </tt>
+<a name="L247"></a><tt class="py-lineno">247</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L248"></a><tt class="py-lineno">248</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'feature/property, umbrella tag (problematicidade, proporcionalidade)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L249"></a><tt class="py-lineno">249</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-an&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'anatomical "local" feature, includes countables, e.g. barbela, olheiras)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L250"></a><tt class="py-lineno">250</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-c&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'general countable feature (vest&#237;gio, laivos, vinco)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L251"></a><tt class="py-lineno">251</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human physical feature, not countable (lindura, complei&#231;&#227;o, same as &lt;f-phys-h&gt;, cp. anatomical local features &lt;f-an&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L252"></a><tt class="py-lineno">252</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-phys-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L253"></a><tt class="py-lineno">253</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-psych&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human psychological feature (passionalidade, pavonice, cp. passing states &lt;state-h&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L254"></a><tt class="py-lineno">254</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-q&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'quantifiable feature (e.g. circunfer&#234;ncia, calor, DanGram-s &lt;f-phys&gt; covers both &lt;f&gt; and &lt;f-q&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L255"></a><tt class="py-lineno">255</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-phys&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L256"></a><tt class="py-lineno">256</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-right&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human social feature (right or duty): e.g. copyright, privil&#233;gio, imperativo legal)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L257"></a><tt class="py-lineno">257</tt>  <tt class="py-line">        <tt class="py-string">'&lt;state&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L258"></a><tt class="py-lineno">258</tt>  <tt class="py-line">        <tt class="py-string">'&lt;state-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(human state)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L259"></a><tt class="py-lineno">259</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L260"></a><tt class="py-lineno">260</tt>  <tt class="py-line">    <tt class="py-string">'Food'</tt><tt class="py-op">:</tt> </tt>
+<a name="L261"></a><tt class="py-lineno">261</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L262"></a><tt class="py-lineno">262</tt>  <tt class="py-line">        <tt class="py-string">'&lt;food&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'natural/simplex food (aveia, a&#231;&#250;car, carne, so far including &lt;spice&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L263"></a><tt class="py-lineno">263</tt>  <tt class="py-line">        <tt class="py-string">'&lt;food-c&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'countable food (few: ovo, dente de alho, most are &lt;fruit&gt; or &lt;food-c-h&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L264"></a><tt class="py-lineno">264</tt>  <tt class="py-line">        <tt class="py-string">'&lt;food-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human-prepared/complex culinary food (caldo verde, lasanha)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L265"></a><tt class="py-lineno">265</tt>  <tt class="py-line">        <tt class="py-string">'&lt;food-c-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'culinary countable food (biscoito, enchido, panetone, pastel)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L266"></a><tt class="py-lineno">266</tt>  <tt class="py-line">        <tt class="py-string">'&lt;drink&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'drink (cacha&#231;a, leite, guaran&#225;, moca)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L267"></a><tt class="py-lineno">267</tt>  <tt class="py-line">        <tt class="py-string">'&lt;fruit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'fruit, berry, nut (still mostly marked as &lt;food-c&gt;, abricote, amora, avel&#227;, cebola)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L268"></a><tt class="py-lineno">268</tt>  <tt class="py-line">        <tt class="py-string">'&lt;spice&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'condiments, pepper'</tt><tt class="py-op">,</tt> </tt>
+<a name="L269"></a><tt class="py-lineno">269</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L270"></a><tt class="py-lineno">270</tt>  <tt class="py-line">    <tt class="py-string">'Part'</tt><tt class="py-op">:</tt> </tt>
+<a name="L271"></a><tt class="py-lineno">271</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L272"></a><tt class="py-lineno">272</tt>  <tt class="py-line">        <tt class="py-string">'&lt;part&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'distinctive or functional part (ingrediente, parte, trecho)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L273"></a><tt class="py-lineno">273</tt>  <tt class="py-line">        <tt class="py-string">'&lt;part-build&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'structural part of building or vehicle (balustrada, porta, estai)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L274"></a><tt class="py-lineno">274</tt>  <tt class="py-line">        <tt class="py-string">'&lt;piece&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'indistinctive (little) piece (peda&#231;o, raspa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L275"></a><tt class="py-lineno">275</tt>  <tt class="py-line">        <tt class="py-string">'&lt;cc-handle&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L276"></a><tt class="py-lineno">276</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Ltip&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L277"></a><tt class="py-lineno">277</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L278"></a><tt class="py-lineno">278</tt>  <tt class="py-line">    <tt class="py-string">'Perception'</tt><tt class="py-op">:</tt> </tt>
+<a name="L279"></a><tt class="py-lineno">279</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L280"></a><tt class="py-lineno">280</tt>  <tt class="py-line">        <tt class="py-string">'&lt;percep-f&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'what you feel (senses or sentiment, pain, e.g. arrepio, avers&#227;o, desagrado, c&#243;cegas, some overlap with &lt;state-h&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L281"></a><tt class="py-lineno">281</tt>  <tt class="py-line">        <tt class="py-string">'&lt;percep-l&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'sound (what you hear, apitadela, barrulho, berro, crepita&#231;&#227;o)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L282"></a><tt class="py-lineno">282</tt>  <tt class="py-line">        <tt class="py-string">'&lt;percep-o&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'olfactory impression (what you smell, bafo, chamuscom fragr&#226;ncia)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L283"></a><tt class="py-lineno">283</tt>  <tt class="py-line">        <tt class="py-string">'&lt;percep-t&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'what you taste (PALAVRAS: not implemented)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L284"></a><tt class="py-lineno">284</tt>  <tt class="py-line">        <tt class="py-string">'&lt;percep-w&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'visual impression (what you see, arco-iris, r&#233;stia, vislumbre)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L285"></a><tt class="py-lineno">285</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L286"></a><tt class="py-lineno">286</tt>  <tt class="py-line">    <tt class="py-string">'Semantic Product'</tt><tt class="py-op">:</tt> </tt>
+<a name="L287"></a><tt class="py-lineno">287</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L288"></a><tt class="py-lineno">288</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'semiotic artifact, work of art, umbrella tag (all specified in PALAVRAS)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L289"></a><tt class="py-lineno">289</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-c&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cognition product (concept, plan, system, conjetura, esquema, plano, preju&#237;zo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L290"></a><tt class="py-lineno">290</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-l&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'listen-work (music, cantarola, prel&#250;dio, at the same time &lt;genre&gt;: bossa nova)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L291"></a><tt class="py-lineno">291</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-nons&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'nonsense, rubbish (implies &lt;sem-s&gt;, galimatias, farel&#243;rio)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L292"></a><tt class="py-lineno">292</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-r&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'read-work (biografia, disserta&#231;&#227;o, e-mail, ficha cadastral)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L293"></a><tt class="py-lineno">293</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-s&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'speak-work (palestra, piada, exposto)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L294"></a><tt class="py-lineno">294</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sem-w&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'watch-work (filme, esquete, mininovela)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L295"></a><tt class="py-lineno">295</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ac-s&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(speach act)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L296"></a><tt class="py-lineno">296</tt>  <tt class="py-line">        <tt class="py-string">'&lt;talk&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L297"></a><tt class="py-lineno">297</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L298"></a><tt class="py-lineno">298</tt>  <tt class="py-line">    <tt class="py-string">'Disease'</tt><tt class="py-op">:</tt> </tt>
+<a name="L299"></a><tt class="py-lineno">299</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L300"></a><tt class="py-lineno">300</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sick&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'disease (acne, AIDS, sida, alcoolismo, cp. &lt;Hsick&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L301"></a><tt class="py-lineno">301</tt>  <tt class="py-line">        <tt class="py-string">'&lt;Hsick&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L302"></a><tt class="py-lineno">302</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sick-c&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'countable disease-object (abscesso, berruga, cicatriz, gangrena)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L303"></a><tt class="py-lineno">303</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L304"></a><tt class="py-lineno">304</tt>  <tt class="py-line">    <tt class="py-string">'State-of-affairs'</tt><tt class="py-op">:</tt> </tt>
+<a name="L305"></a><tt class="py-lineno">305</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L306"></a><tt class="py-lineno">306</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'psychological situation or physical state of affairs (reclus&#227;o, arrua&#231;a, ilegalidade, more complex and more "locative" than &lt;state&gt; and &lt;state-h&gt;'</tt><tt class="py-op">,</tt> </tt>
+<a name="L307"></a><tt class="py-lineno">307</tt>  <tt class="py-line">        <tt class="py-string">'&lt;state&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'state (of something, otherwise &lt;sit&gt;), abund&#226;ncia, calma, baixa-mar, equil&#237;brio'</tt><tt class="py-op">,</tt> </tt>
+<a name="L308"></a><tt class="py-lineno">308</tt>  <tt class="py-line">        <tt class="py-string">'&lt;state-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'human state (desamparo, desesperan&#231;a, dorm&#234;ncia, euforia, febre'</tt><tt class="py-op">,</tt> </tt>
+<a name="L309"></a><tt class="py-lineno">309</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-psych&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L310"></a><tt class="py-lineno">310</tt>  <tt class="py-line">        <tt class="py-string">'&lt;f-phys-h&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u''</tt><tt class="py-op">,</tt> </tt>
+<a name="L311"></a><tt class="py-lineno">311</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L312"></a><tt class="py-lineno">312</tt>  <tt class="py-line">    <tt class="py-string">'Sport'</tt><tt class="py-op">:</tt> </tt>
+<a name="L313"></a><tt class="py-lineno">313</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L314"></a><tt class="py-lineno">314</tt>  <tt class="py-line">        <tt class="py-string">'&lt;sport&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'sport (capoeira, futebol, golfe, also &lt;activity&gt; and &lt;domain&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L315"></a><tt class="py-lineno">315</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L316"></a><tt class="py-lineno">316</tt>  <tt class="py-line">    <tt class="py-string">'Tool'</tt><tt class="py-op">:</tt> </tt>
+<a name="L317"></a><tt class="py-lineno">317</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L318"></a><tt class="py-lineno">318</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tool&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'tool, umbrella tag (abana-moscas, l&#225;pis, computador, maceta, "handable", cf. &lt;mach&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L319"></a><tt class="py-lineno">319</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tool-cut&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'cutting tool, knife (canivete, espada)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L320"></a><tt class="py-lineno">320</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tool-gun&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'shooting tool, gun (carabina, metralhadora, helican&#227;o, in Dangram: &lt;tool-shoot&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L321"></a><tt class="py-lineno">321</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tool-mus&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'musical instrument (clavic&#243;rdio, ocarina, viol&#227;o)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L322"></a><tt class="py-lineno">322</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tool-sail&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'sailing tool, sail (vela latina, joanete, coringa)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L323"></a><tt class="py-lineno">323</tt>  <tt class="py-line">        <tt class="py-string">'&lt;mach&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'machine (complex, usually with moving parts, betoneira, embrulhador, limpa-pratos, cp. &lt;tool&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L324"></a><tt class="py-lineno">324</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tube&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'tube object (c&#226;nula, gasoduto, zarabatana, shape-category, typically with another category, like &lt;an&gt; or &lt;tool&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L325"></a><tt class="py-lineno">325</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L326"></a><tt class="py-lineno">326</tt>  <tt class="py-line">    <tt class="py-string">'Unit'</tt><tt class="py-op">:</tt> </tt>
+<a name="L327"></a><tt class="py-lineno">327</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L328"></a><tt class="py-lineno">328</tt>  <tt class="py-line">        <tt class="py-string">'&lt;unit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'unit noun (always implying &lt;num+&gt;, implied by &lt;cur&gt; and &lt;dur&gt;, e.g. caloria, cent&#237;metro, l&#250;men))'</tt><tt class="py-op">,</tt> </tt>
+<a name="L329"></a><tt class="py-lineno">329</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L330"></a><tt class="py-lineno">330</tt>  <tt class="py-line">    <tt class="py-string">'Weather'</tt><tt class="py-op">:</tt> </tt>
+<a name="L331"></a><tt class="py-lineno">331</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L332"></a><tt class="py-lineno">332</tt>  <tt class="py-line">        <tt class="py-string">'&lt;wea&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'weather (states), umbrella tag (friagem, bruma)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L333"></a><tt class="py-lineno">333</tt>  <tt class="py-line">        <tt class="py-string">'&lt;wea-c&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'countable weather phenomenon (nuvem, tsunami)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L334"></a><tt class="py-lineno">334</tt>  <tt class="py-line">        <tt class="py-string">'&lt;wea-rain&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'rain and other precipitation (chuvisco, tromba d-&#225;gua, granizo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L335"></a><tt class="py-lineno">335</tt>  <tt class="py-line">        <tt class="py-string">'&lt;wea-wind&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'wind, storm (brisa, furac&#227;o)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L336"></a><tt class="py-lineno">336</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L337"></a><tt class="py-lineno">337</tt>  <tt class="py-line">    <tt class="py-string">'Person'</tt><tt class="py-op">:</tt> </tt>
+<a name="L338"></a><tt class="py-lineno">338</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L339"></a><tt class="py-lineno">339</tt>  <tt class="py-line">        <tt class="py-string">'&lt;hum&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(INDIVIDUAL) person name (cp. &lt;H&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L340"></a><tt class="py-lineno">340</tt>  <tt class="py-line">        <tt class="py-string">'&lt;official&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CARGO) official function (~ cp. &lt;Htitle&gt; and &lt;Hprof&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L341"></a><tt class="py-lineno">341</tt>  <tt class="py-line">        <tt class="py-string">'&lt;member&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(MEMBRO) member'</tt><tt class="py-op">,</tt> </tt>
+<a name="L342"></a><tt class="py-lineno">342</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L343"></a><tt class="py-lineno">343</tt>  <tt class="py-line">    <tt class="py-string">'Organization_Group'</tt><tt class="py-op">:</tt> </tt>
+<a name="L344"></a><tt class="py-lineno">344</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L345"></a><tt class="py-lineno">345</tt>  <tt class="py-line">        <tt class="py-string">'&lt;admin&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ADMINISTRACAO, ORG.) administrative body (government, town administration etc.)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L346"></a><tt class="py-lineno">346</tt>  <tt class="py-line">        <tt class="py-string">'&lt;org&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(INSTITUICAO/EMPRESA) commercial or non-commercial, non-administrative non-party organisations (not place-bound, therefore not the same as &lt;Linst&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L347"></a><tt class="py-lineno">347</tt>  <tt class="py-line">        <tt class="py-string">'&lt;inst&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(EMPRESA) organized site (e.g. restaurant, cp. &lt;Linst&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L348"></a><tt class="py-lineno">348</tt>  <tt class="py-line">        <tt class="py-string">'&lt;media&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(EMPRESA) media organisation (e.g. newspaper, tv channel)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L349"></a><tt class="py-lineno">349</tt>  <tt class="py-line">        <tt class="py-string">'&lt;party&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(INSTITUICAO) political party'</tt><tt class="py-op">,</tt> </tt>
+<a name="L350"></a><tt class="py-lineno">350</tt>  <tt class="py-line">        <tt class="py-string">'&lt;suborg&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(SUB) organized part of any of the above'</tt><tt class="py-op">,</tt> </tt>
+<a name="L351"></a><tt class="py-lineno">351</tt>  <tt class="py-line">        <tt class="py-string">'&lt;company&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'currently unsupported: (EMPRESA) company (not site-bound, unlike &lt;inst&gt;, now fused with. &lt;org&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L352"></a><tt class="py-lineno">352</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L353"></a><tt class="py-lineno">353</tt>  <tt class="py-line">    <tt class="py-string">'Group'</tt><tt class="py-op">:</tt> </tt>
+<a name="L354"></a><tt class="py-lineno">354</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L355"></a><tt class="py-lineno">355</tt>  <tt class="py-line">        <tt class="py-string">'&lt;groupind&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(GROUPOIND) people, family'</tt><tt class="py-op">,</tt> </tt>
+<a name="L356"></a><tt class="py-lineno">356</tt>  <tt class="py-line">        <tt class="py-string">'&lt;groupofficial&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(GROUPOCARGO) board, government (not fully implemented)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L357"></a><tt class="py-lineno">357</tt>  <tt class="py-line">        <tt class="py-string">'&lt;grouporg&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'currently unsupported (GROUPOMEMBRO) club, e.g. football club (now fused with &lt;org&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L358"></a><tt class="py-lineno">358</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L359"></a><tt class="py-lineno">359</tt>  <tt class="py-line">    <tt class="py-string">'Place'</tt><tt class="py-op">:</tt> </tt>
+<a name="L360"></a><tt class="py-lineno">360</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L361"></a><tt class="py-lineno">361</tt>  <tt class="py-line">        <tt class="py-string">'&lt;top&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(GEOGRAFICO) geographical location (cp. &lt;Ltop&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L362"></a><tt class="py-lineno">362</tt>  <tt class="py-line">        <tt class="py-string">'&lt;civ&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ADMINISTRACAO, LOC.) civitas (country, town, state, cp. &lt;Lciv&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L363"></a><tt class="py-lineno">363</tt>  <tt class="py-line">        <tt class="py-string">'&lt;address&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CORREIO) address (including numbers etc.)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L364"></a><tt class="py-lineno">364</tt>  <tt class="py-line">        <tt class="py-string">'&lt;site&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ALARGADO) functional place (cp. &lt;Lh&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L365"></a><tt class="py-lineno">365</tt>  <tt class="py-line">        <tt class="py-string">'&lt;virtual&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(VIRTUAL) virtual place'</tt><tt class="py-op">,</tt> </tt>
+<a name="L366"></a><tt class="py-lineno">366</tt>  <tt class="py-line">        <tt class="py-string">'&lt;astro&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(OBJECTO) astronomical place (in HAREM object, not place)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L367"></a><tt class="py-lineno">367</tt>  <tt class="py-line">        <tt class="py-string">'&lt;road&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'suggested (ALARGADO) roads, motorway (unlike &lt;address&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L368"></a><tt class="py-lineno">368</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L369"></a><tt class="py-lineno">369</tt>  <tt class="py-line">    <tt class="py-string">'Work_of_Art'</tt><tt class="py-op">:</tt> </tt>
+<a name="L370"></a><tt class="py-lineno">370</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L371"></a><tt class="py-lineno">371</tt>  <tt class="py-line">        <tt class="py-string">'&lt;tit&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(REPRODUZIDO) [title of] reproduced work, copy'</tt><tt class="py-op">,</tt> </tt>
+<a name="L372"></a><tt class="py-lineno">372</tt>  <tt class="py-line">        <tt class="py-string">'&lt;pub&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(PUBLICACAO) [scientific] publication'</tt><tt class="py-op">,</tt> </tt>
+<a name="L373"></a><tt class="py-lineno">373</tt>  <tt class="py-line">        <tt class="py-string">'&lt;product&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(PRODUTO) product brand'</tt><tt class="py-op">,</tt> </tt>
+<a name="L374"></a><tt class="py-lineno">374</tt>  <tt class="py-line">        <tt class="py-string">'&lt;V&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(PRODUTO) vehicle brand (cp. &lt;V&gt;, &lt;Vair&gt;, &lt;Vwater&gt;)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L375"></a><tt class="py-lineno">375</tt>  <tt class="py-line">        <tt class="py-string">'&lt;artwork&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(ARTE) work of art'</tt><tt class="py-op">,</tt> </tt>
+<a name="L376"></a><tt class="py-lineno">376</tt>  <tt class="py-line">        <tt class="py-string">'&lt;pict&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'picture (combination of &lt;cc&gt;, &lt;sem-w&gt; and &lt;L&gt;, caricatura, cintilograma, diapositivo)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L377"></a><tt class="py-lineno">377</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L378"></a><tt class="py-lineno">378</tt>  <tt class="py-line">    <tt class="py-string">'Colours'</tt><tt class="py-op">:</tt> </tt>
+<a name="L379"></a><tt class="py-lineno">379</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L380"></a><tt class="py-lineno">380</tt>  <tt class="py-line">        <tt class="py-string">'&lt;col&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'colours'</tt><tt class="py-op">,</tt> </tt>
+<a name="L381"></a><tt class="py-lineno">381</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L382"></a><tt class="py-lineno">382</tt>  <tt class="py-line">    <tt class="py-string">'Numeric_and_Math'</tt><tt class="py-op">:</tt> </tt>
+<a name="L383"></a><tt class="py-lineno">383</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L384"></a><tt class="py-lineno">384</tt>  <tt class="py-line">        <tt class="py-string">'&lt;quantity&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(QUANTIDADE) simple measuring numeral'</tt><tt class="py-op">,</tt> </tt>
+<a name="L385"></a><tt class="py-lineno">385</tt>  <tt class="py-line">        <tt class="py-string">'&lt;prednum&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(CLASSIFICADO) predicating numeral'</tt><tt class="py-op">,</tt> </tt>
+<a name="L386"></a><tt class="py-lineno">386</tt>  <tt class="py-line">        <tt class="py-string">'&lt;currency&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(MOEDA) currency name (also marked on the unit)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L387"></a><tt class="py-lineno">387</tt>  <tt class="py-line">        <tt class="py-string">'&lt;geom&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'geometry noun (circle, shape, e.g. losango, oct&#243;gono, elipse)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L388"></a><tt class="py-lineno">388</tt>  <tt class="py-line">        <tt class="py-string">'&lt;geom-line&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'line (few: linha, percentil, curvas isob&#225;ricas)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L389"></a><tt class="py-lineno">389</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L390"></a><tt class="py-lineno">390</tt>  <tt class="py-line">    <tt class="py-string">'Modifying_Adjectives'</tt><tt class="py-op">:</tt> </tt>
+<a name="L391"></a><tt class="py-lineno">391</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L392"></a><tt class="py-lineno">392</tt>  <tt class="py-line">        <tt class="py-string">'&lt;jh&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'adjective modifying human noun'</tt><tt class="py-op">,</tt> </tt>
+<a name="L393"></a><tt class="py-lineno">393</tt>  <tt class="py-line">        <tt class="py-string">'&lt;jn&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'adjective modifying inanimate noun '</tt><tt class="py-op">,</tt> </tt>
+<a name="L394"></a><tt class="py-lineno">394</tt>  <tt class="py-line">        <tt class="py-string">'&lt;ja&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'adjective modifying animal'</tt><tt class="py-op">,</tt> </tt>
+<a name="L395"></a><tt class="py-lineno">395</tt>  <tt class="py-line">        <tt class="py-string">'&lt;jb&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'adjective modifying plant'</tt><tt class="py-op">,</tt> </tt>
+<a name="L396"></a><tt class="py-lineno">396</tt>  <tt class="py-line">        <tt class="py-string">'&lt;col&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'color adjective'</tt><tt class="py-op">,</tt> </tt>
+<a name="L397"></a><tt class="py-lineno">397</tt>  <tt class="py-line">        <tt class="py-string">'&lt;nat&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'nationality adjective (also: from a certain town etc.)'</tt><tt class="py-op">,</tt> </tt>
+<a name="L398"></a><tt class="py-lineno">398</tt>  <tt class="py-line">        <tt class="py-string">'&lt;attr&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'(human) attributive adjective (not fully implemented, cp. &lt;Hattr&gt;, e.g. "um presidente COMUNISTA")'</tt><tt class="py-op">,</tt> </tt>
+<a name="L399"></a><tt class="py-lineno">399</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L400"></a><tt class="py-lineno">400</tt>  <tt class="py-line">    <tt class="py-string">'Verbs_related_human_things'</tt><tt class="py-op">:</tt> </tt>
+<a name="L401"></a><tt class="py-lineno">401</tt>  <tt class="py-line">        <tt class="py-op">{</tt> </tt>
+<a name="L402"></a><tt class="py-lineno">402</tt>  <tt class="py-line">        <tt class="py-string">'&lt;vH&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'verb with human subject'</tt><tt class="py-op">,</tt> </tt>
+<a name="L403"></a><tt class="py-lineno">403</tt>  <tt class="py-line">        <tt class="py-string">'&lt;vN&gt;'</tt><tt class="py-op">:</tt> <tt class="py-string">u'verb with inanimate subject'</tt><tt class="py-op">,</tt> </tt>
+<a name="L404"></a><tt class="py-lineno">404</tt>  <tt class="py-line">        <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L405"></a><tt class="py-lineno">405</tt>  <tt class="py-line"><tt class="py-op">}</tt> </tt>
+<a name="L406"></a><tt class="py-lineno">406</tt>  <tt class="py-line"> </tt>
+<a name="L407"></a><tt class="py-lineno">407</tt>  <tt class="py-line"> </tt>
+<a name="L408"></a><tt class="py-lineno">408</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable pypln.backend.workers.palavras_semantic_tagger.angle_brackets_contents=pypln.backend.workers.palavras_semantic_tagger-module.html#angle_brackets_contents"><a title="pypln.backend.workers.palavras_semantic_tagger.angle_brackets_contents" class="py-name" href="#" onclick="return doclink('link-1', 'angle_brackets_contents', 'link-1');">angle_brackets_contents</a></tt> <tt class="py-op">=</tt> <tt class="py-name">re</tt><tt class="py-op">.</tt><tt class="py-name">compile</tt><tt class="py-op">(</tt><tt class="py-string">'(&lt;[a-zA-Z]*&gt;)'</tt><tt class="py-op">)</tt> </tt>
+<a name="L409"></a><tt class="py-lineno">409</tt>  <tt class="py-line"> </tt>
+<a name="SemanticTagger"></a><div id="SemanticTagger-def"><a name="L410"></a><tt class="py-lineno">410</tt> <a class="py-toggle" href="#" id="SemanticTagger-toggle" onclick="return toggle('SemanticTagger');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.backend.workers.palavras_semantic_tagger.SemanticTagger-class.html">SemanticTagger</a><tt class="py-op">(</tt><tt class="py-base-class">Worker</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SemanticTagger-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="SemanticTagger-expanded"><a name="L411"></a><tt class="py-lineno">411</tt>  <tt class="py-line">    <tt class="py-docstring">"""Semantic Tagger"""</tt> </tt>
+<a name="L412"></a><tt class="py-lineno">412</tt>  <tt class="py-line"> </tt>
+<a name="L413"></a><tt class="py-lineno">413</tt>  <tt class="py-line">    <tt id="link-2" class="py-name" targets="Variable pypln.backend.workers.bigrams.Bigrams.requires=pypln.backend.workers.bigrams.Bigrams-class.html#requires,Variable pypln.backend.workers.extractor.Extractor.requires=pypln.backend.workers.extractor.Extractor-class.html#requires,Variable pypln.backend.workers.freqdist.FreqDist.requires=pypln.backend.workers.freqdist.FreqDist-class.html#requires,Variable pypln.backend.workers.lemmatizer_pt.Lemmatizer.requires=pypln.backend.workers.lemmatizer_pt.Lemmatizer-class.html#requires,Variable pypln.backend.workers.palavras_noun_phrase.NounPhrase.requires=pypln.backend.workers.palavras_noun_phrase.NounPhrase-class.html#requires,Variable pypln.backend.workers.palavras_raw.PalavrasRaw.requires=pypln.backend.workers.palavras_raw.PalavrasRaw-class.html#requires,Variable pypln.backend.workers.palavras_semantic_tagger.SemanticTagger.requires=pypln.backend.workers.palavras_semantic_tagger.SemanticTagger-class.html#requires,Variable pypln.backend.workers.pos.POS.requires=pypln.backend.workers.pos.POS-class.html#requires,Variable pypln.backend.workers.spellchecker.SpellingChecker.requires=pypln.backend.workers.spellchecker.SpellingChecker-class.html#requires,Variable pypln.backend.workers.statistics.Statistics.requires=pypln.backend.workers.statistics.Statistics-class.html#requires,Variable pypln.backend.workers.tokenizer.Tokenizer.requires=pypln.backend.workers.tokenizer.Tokenizer-class.html#requires,Variable pypln.backend.workers.trigrams.Trigrams.requires=pypln.backend.workers.trigrams.Trigrams-class.html#requires,Variable pypln.backend.workers.word_cloud.WordCloud.requires=pypln.backend.workers.word_cloud.WordCloud-class.html#requires"><a title="pypln.backend.workers.bigrams.Bigrams.requires
+pypln.backend.workers.extractor.Extractor.requires
+pypln.backend.workers.freqdist.FreqDist.requires
+pypln.backend.workers.lemmatizer_pt.Lemmatizer.requires
+pypln.backend.workers.palavras_noun_phrase.NounPhrase.requires
+pypln.backend.workers.palavras_raw.PalavrasRaw.requires
+pypln.backend.workers.palavras_semantic_tagger.SemanticTagger.requires
+pypln.backend.workers.pos.POS.requires
+pypln.backend.workers.spellchecker.SpellingChecker.requires
+pypln.backend.workers.statistics.Statistics.requires
+pypln.backend.workers.tokenizer.Tokenizer.requires
+pypln.backend.workers.trigrams.Trigrams.requires
+pypln.backend.workers.word_cloud.WordCloud.requires" class="py-name" href="#" onclick="return doclink('link-2', 'requires', 'link-2');">requires</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'palavras_raw'</tt><tt class="py-op">,</tt> <tt class="py-string">'palavras_raw_ran'</tt><tt class="py-op">]</tt> </tt>
+<a name="L414"></a><tt class="py-lineno">414</tt>  <tt class="py-line"> </tt>
+<a name="SemanticTagger.process"></a><div id="SemanticTagger.process-def"><a name="L415"></a><tt class="py-lineno">415</tt> <a class="py-toggle" href="#" id="SemanticTagger.process-toggle" onclick="return toggle('SemanticTagger.process');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.palavras_semantic_tagger.SemanticTagger-class.html#process">process</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">document</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="SemanticTagger.process-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="SemanticTagger.process-expanded"><a name="L416"></a><tt class="py-lineno">416</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">document</tt><tt class="py-op">[</tt><tt class="py-string">'palavras_raw_ran'</tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L417"></a><tt class="py-lineno">417</tt>  <tt class="py-line">            <tt class="py-comment"># If palavras didn't run, just ignore this document</tt> </tt>
+<a name="L418"></a><tt class="py-lineno">418</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L419"></a><tt class="py-lineno">419</tt>  <tt class="py-line"> </tt>
+<a name="L420"></a><tt class="py-lineno">420</tt>  <tt class="py-line">        <tt class="py-name">lines</tt> <tt class="py-op">=</tt> <tt class="py-name">document</tt><tt class="py-op">[</tt><tt class="py-string">'palavras_raw'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">'\n'</tt><tt class="py-op">)</tt> </tt>
+<a name="L421"></a><tt class="py-lineno">421</tt>  <tt class="py-line">        <tt class="py-name">tagged_entities</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L422"></a><tt class="py-lineno">422</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">lines</tt><tt class="py-op">:</tt> </tt>
+<a name="L423"></a><tt class="py-lineno">423</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">startswith</tt><tt class="py-op">(</tt><tt class="py-string">'$'</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> <tt class="py-keyword">not</tt> <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> \ </tt>
+<a name="L424"></a><tt class="py-lineno">424</tt>  <tt class="py-line">               <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">'&lt;/s&gt;'</tt><tt class="py-op">:</tt> </tt>
+<a name="L425"></a><tt class="py-lineno">425</tt>  <tt class="py-line">                <tt class="py-keyword">continue</tt> </tt>
+<a name="L426"></a><tt class="py-lineno">426</tt>  <tt class="py-line">            <tt class="py-name">word</tt> <tt class="py-op">=</tt> <tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L427"></a><tt class="py-lineno">427</tt>  <tt class="py-line">            <tt class="py-name">word_sem_tags</tt> <tt class="py-op">=</tt> <tt id="link-3" class="py-name"><a title="pypln.backend.workers.palavras_semantic_tagger.angle_brackets_contents" class="py-name" href="#" onclick="return doclink('link-3', 'angle_brackets_contents', 'link-1');">angle_brackets_contents</a></tt><tt class="py-op">.</tt><tt class="py-name">findall</tt><tt class="py-op">(</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L428"></a><tt class="py-lineno">428</tt>  <tt class="py-line">            <tt class="py-name">is_tagged</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L429"></a><tt class="py-lineno">429</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt class="py-name">tag</tt> <tt class="py-keyword">in</tt> <tt class="py-name">word_sem_tags</tt><tt class="py-op">:</tt> </tt>
+<a name="L430"></a><tt class="py-lineno">430</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">category</tt><tt class="py-op">,</tt> <tt class="py-name">subcategories</tt> <tt class="py-keyword">in</tt> <tt id="link-4" class="py-name"><a title="pypln.backend.workers.palavras_semantic_tagger.SEMANTIC_TAGS" class="py-name" href="#" onclick="return doclink('link-4', 'SEMANTIC_TAGS', 'link-0');">SEMANTIC_TAGS</a></tt><tt class="py-op">.</tt><tt class="py-name">items</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L431"></a><tt class="py-lineno">431</tt>  <tt class="py-line">                    <tt class="py-keyword">if</tt> <tt class="py-name">tag</tt> <tt class="py-keyword">in</tt> <tt class="py-name">subcategories</tt><tt class="py-op">:</tt> </tt>
+<a name="L432"></a><tt class="py-lineno">432</tt>  <tt class="py-line">                        <tt class="py-name">tagged_entities</tt><tt class="py-op">.</tt><tt class="py-name">setdefault</tt><tt class="py-op">(</tt><tt class="py-name">category</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">word</tt><tt class="py-op">)</tt> </tt>
+<a name="L433"></a><tt class="py-lineno">433</tt>  <tt class="py-line">                        <tt class="py-name">is_tagged</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L434"></a><tt class="py-lineno">434</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">is_tagged</tt><tt class="py-op">:</tt> </tt>
+<a name="L435"></a><tt class="py-lineno">435</tt>  <tt class="py-line">                <tt class="py-name">tagged_entities</tt><tt class="py-op">.</tt><tt class="py-name">setdefault</tt><tt class="py-op">(</tt><tt class="py-string">'Non_Tagged'</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">word</tt><tt class="py-op">)</tt> </tt>
+<a name="L436"></a><tt class="py-lineno">436</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-op">{</tt><tt class="py-string">'semantic_tags'</tt><tt class="py-op">:</tt> <tt class="py-name">tagged_entities</tt><tt class="py-op">}</tt> </tt>
+</div></div><a name="L437"></a><tt class="py-lineno">437</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Apr 29 18:09:02 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

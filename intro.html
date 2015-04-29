@@ -1,18 +1,19 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction to PyPLN &mdash; PyPLN v0.1.1 documentation</title>
+    <title>Introduction to PyPLN &mdash; PyPLN 0.1.1 documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -22,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyPLN v0.1.1 documentation" href="index.html" />
+    <link rel="top" title="PyPLN 0.1.1 documentation" href="index.html" />
     <link rel="next" title="Installing PyPLN" href="installation.html" />
     <link rel="prev" title="Welcome to PyPLN’s documentation!" href="index.html" /> 
   </head>
@@ -39,7 +40,7 @@
         <li class="right" >
           <a href="index.html" title="Welcome to PyPLN’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -50,34 +51,36 @@
             
   <div class="section" id="introduction-to-pypln">
 <h1>Introduction to PyPLN<a class="headerlink" href="#introduction-to-pypln" title="Permalink to this headline">¶</a></h1>
-<p><strong>WARNING:</strong> since we rebuilt our backend, this documentation is depreacted.
-Come here in some days and we&#8217;ll have an updated one.</p>
 <p>PyPLN is a distributed pipeline architecture to analyze text. Conceptually, it was idealized to provide a complete analysis of textual documents in any format. A diagram of the currently envisioned analytical tasks can be seen on Figure <a class="reference internal" href="#fig-cmap"><em>Conceptual diagram of PyPLN</em></a>.</p>
 <div class="figure" id="fig-cmap">
-<img alt="_images/pypln.png" src="_images/pypln.png" style="width: 20cm;" />
+<a class="reference internal image-reference" href="_images/pypln.png"><img alt="_images/pypln.png" src="_images/pypln.png" style="width: 20cm;" /></a>
 <p class="caption">Conceptual diagram of PyPLN</p>
 </div>
 <p>PyPLN makes use of well know text processing tools such as NLTK for natural language processing, and various other opensource tools for  text manipulation. PyPLN developers may develop new or improve existing tools for text/language processing but that is not the main development focus of the project. The main focus of PyPLN is providing a framework for efficient analysis of large collections of text. By efficient analysis we mean the combination of computational, mathematical and visualization techniques.</p>
-<p>PyPLN relies heavily on distributed computing to be able to handle large collections of text. This distributed processing is built upon the ZeroMQ library and its API. Another key element to the scalability of our solution is the adoption of Mongodb for our storage backend. We use its replication and sharding capabilities to maintain IO performance.</p>
+<p>PyPLN relies heavily on distributed computing to be able to handle large collections of text. This distributed processing is built upon the ZeroMQ library and its API. Another key element to the scalability of our solution is the adoption of Mongodb for our storage backend. We use its replication and sharding capabilities to maximize I/O performance.</p>
 <p>An very simplified example of the inner working of a text processing job in PyPLN is depicted on figure <a class="reference internal" href="#fig-arch"><em>Example text processing job PyPLN.</em></a>.</p>
 <div class="figure" id="fig-arch">
-<img alt="_images/Pipeline_architecture.png" src="_images/Pipeline_architecture.png" style="width: 20cm;" />
+<a class="reference internal image-reference" href="_images/Pipeline_architecture.png"><img alt="_images/Pipeline_architecture.png" src="_images/Pipeline_architecture.png" style="width: 20cm;" /></a>
 <p class="caption">Example text processing job PyPLN.</p>
 </div>
 <div class="section" id="cluster-architecture">
 <h2>Cluster Architecture<a class="headerlink" href="#cluster-architecture" title="Permalink to this headline">¶</a></h2>
-<p>Although PyPLN can be run on a single server, it can be configured to take advantage of a cluster of machines. Its basic architecture is illustrated on figure <a class="reference internal" href="#fig-cluster"><em>General architecture of a PyPLN cluster</em></a>.</p>
+<p>Although PyPLN can be run on a single server, it should be configured to take advantage of a cluster of machines. Its basic architecture is illustrated on figure <a class="reference internal" href="#fig-cluster"><em>General architecture of a PyPLN cluster</em></a>.</p>
 <div class="figure" id="fig-cluster">
-<img alt="_images/PyPLNcluster.png" src="_images/PyPLNcluster.png" style="width: 20cm;" />
+<a class="reference internal image-reference" href="_images/PyPLNcluster.png"><img alt="_images/PyPLNcluster.png" src="_images/PyPLNcluster.png" style="width: 20cm;" /></a>
 <p class="caption">General architecture of a PyPLN cluster</p>
 </div>
-<p>The cluster is manager by the manager process which interact with the client interfaces to distribute task to the cluster. But befor it can dedicate itsel to this key job. The manager also takes care of deploying Slavedriver processisn on each node of the cluster and minitoring them on a constant basis.</p>
-<p>Once a new job reaches the managers it distributes it to one or more available Slavedrivers to work on it. The slavedrivers may start one or more apps on their nodes to handle the tasks it receives. The apps will launch multiple workers to crunch on the jobs. and monitor them for job completion or failure, notifying its slavedriver. Apps implements one of the distribution patterns implemented in baseapp.py. The most commonly used pattern is the task ventilator pattern.</p>
+<p>The cluster is managed by the manager process which interact with broker processes to distribute jobs to the cluster. Individual jobs are actualy managed by the broker processes running on each node os the cluster. Brokers start worker processes to run each job and monitor them for completion. If a worker hangs or takes too long to finish a job it can be killed have its job re-assigned.</p>
+<p>The kinds of jobs PyPLN can run depend on its worker library. PyPLN comes with a set of basic workers, but users can easily write their own, as workers are very simple python scripts. (see <a class="reference internal" href="#fig-worker"><em>Simple code of a worker</em></a> for example implementation). Since workers have full access to the underlying OS other executables can be started by a worker to do it&#8217;s job.</p>
+<div class="figure" id="fig-worker">
+<a class="reference internal image-reference" href="_static/workercode.png"><img alt="_static/workercode.png" src="_static/workercode.png" style="width: 20cm;" /></a>
+<p class="caption">Simple code of a worker</p>
+</div>
+<p>Jobs can be chained in pipelines to realize more complex tasks. Currently, a single pipeline is available, but in the future, designing pipelines will be as simple as creating a worker.</p>
 </div>
 <div class="section" id="extending-pypln">
 <h2>Extending PyPLN<a class="headerlink" href="#extending-pypln" title="Permalink to this headline">¶</a></h2>
-<p>PyPLN can be extended through the implementation of new worker, sink or app.
-New workers and sinks should mimic the dummy implentations provided and must subclass BaseWorker and BaseSink, respectively.</p>
+<p>PyPLN can be extended through the implementation of new workers, and in the future new pipelines.</p>
 </div>
 </div>
 
@@ -139,13 +142,13 @@ New workers and sinks should mimic the dummy implentations provided and must sub
         <li class="right" >
           <a href="index.html" title="Welcome to PyPLN’s documentation!"
              >previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011, Flávio Codeço Coelho.
-      Last updated on Jun 09, 2012.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Last updated on Apr 29, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

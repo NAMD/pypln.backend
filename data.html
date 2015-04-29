@@ -1,18 +1,19 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Data Gathering and Importing &mdash; PyPLN v0.1.1 documentation</title>
+    <title>Data Gathering and Importing &mdash; PyPLN 0.1.1 documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -22,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyPLN v0.1.1 documentation" href="index.html" />
+    <link rel="top" title="PyPLN 0.1.1 documentation" href="index.html" />
     <link rel="prev" title="Storage Backend" href="storage.html" /> 
   </head>
   <body>
@@ -35,7 +36,7 @@
         <li class="right" >
           <a href="storage.html" title="Storage Backend"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -46,14 +47,12 @@
             
   <div class="section" id="data-gathering-and-importing">
 <h1>Data Gathering and Importing<a class="headerlink" href="#data-gathering-and-importing" title="Permalink to this headline">¶</a></h1>
-<p><strong>WARNING:</strong> since we rebuilt our backend, this documentation is depreacted.
-Come here in some days and we&#8217;ll have an updated one.</p>
-<p>The main goal of PyPLN is to analyze textual data coming from all kinds of documents. Therefore, an essencial pre-requisite to its use is
-gathering some collection of documents which can then be imported to PyPLN Mongodb document store in order to be analyzed.</p>
+<p>The main goal of PyPLN is to analyze textual data coming from all kinds of documents. Therefore, an essential pre-requisite to its use is
+gathering some collection of documents which can then be imported to PyPLN document store in order to be analyzed.</p>
 <p>To help achieve this goal, PyPLN provides some tools for data gathering and importing. Here we will cover some of these tools and also describe some of the already supported sources of documents that one might want to tap into.</p>
 <div class="section" id="document-sources">
 <h2>Document Sources<a class="headerlink" href="#document-sources" title="Permalink to this headline">¶</a></h2>
-<p>The sources described here are already supported for fetching and importing, or are in the process of analysis to be included among the fully supported sources. Those in development shold be clearly marked so.</p>
+<p>The sources described here are already supported for fetching and importing, or are in the process of analysis to be included among the fully supported sources. Those in development should be clearly marked so.</p>
 <div class="section" id="scientific-publications">
 <h3>Scientific Publications<a class="headerlink" href="#scientific-publications" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
@@ -61,14 +60,13 @@ gathering some collection of documents which can then be imported to PyPLN Mongo
 <dd>This repository contais close to 2 million articles from multiple open access <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/journals/?filter=t1#csvfile">journals</a>. The ful text of the articles is available via <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/tools/ftp/">FTP</a> (for full text, PDFs, and supplementary data files, if any) or through an <a class="reference external" href="http://www.ncbi.nlm.nih.gov/pmc/tools/oai/">OAI service</a> for full articles in XML format.</dd>
 </dl>
 </div>
+<div class="section" id="documents-in-the-file-system">
+<h3>Documents in the File System<a class="headerlink" href="#documents-in-the-file-system" title="Permalink to this headline">¶</a></h3>
+<p>Files can be uploaded through the web interface either one by one or as a zipped collection of documents. PyPLN will then extract the text from these documents and add them to a collection. The documents are also kept in the original format, so that the file can be re-analyzed when new versions of the extractor worker are made available.</p>
+<p>Bulk loading of ocuments
+&#8212;- &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;</p>
+<p>While the use of the web interface is very simple and usable for corpus creation, it may not be practical for loading large collections of texts. PyPLN include scrpits for fast loading of large collections of documents. These scripts can be found in the scripts directory in the package.</p>
 </div>
-<div class="section" id="document-gathering-tools">
-<h2>Document Gathering Tools<a class="headerlink" href="#document-gathering-tools" title="Permalink to this headline">¶</a></h2>
-<p>Automatic download of documents require some kind of software which is normally distributed along with PyPLN sources. Listed Below are the document fetching tools already available with a link to their full documentation.</p>
-</div>
-<div class="section" id="document-importing-tools">
-<h2>Document Importing Tools<a class="headerlink" href="#document-importing-tools" title="Permalink to this headline">¶</a></h2>
-<p>For every document type, an importing tool is required to add the document do aour Mongodb store. Listed below are the importing tools already available with a link to their full documentation.</p>
 </div>
 </div>
 
@@ -86,10 +84,9 @@ gathering some collection of documents which can then be imported to PyPLN Mongo
 <li><a class="reference internal" href="#">Data Gathering and Importing</a><ul>
 <li><a class="reference internal" href="#document-sources">Document Sources</a><ul>
 <li><a class="reference internal" href="#scientific-publications">Scientific Publications</a></li>
+<li><a class="reference internal" href="#documents-in-the-file-system">Documents in the File System</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#document-gathering-tools">Document Gathering Tools</a></li>
-<li><a class="reference internal" href="#document-importing-tools">Document Importing Tools</a></li>
 </ul>
 </li>
 </ul>
@@ -128,13 +125,13 @@ gathering some collection of documents which can then be imported to PyPLN Mongo
         <li class="right" >
           <a href="storage.html" title="Storage Backend"
              >previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011, Flávio Codeço Coelho.
-      Last updated on Jun 09, 2012.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Last updated on Apr 29, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

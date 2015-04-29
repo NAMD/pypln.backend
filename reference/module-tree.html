@@ -34,7 +34,7 @@
       <th class="navbar" align="right" width="100%">
         <table border="0" cellpadding="0" cellspacing="0">
           <tr><th class="navbar" align="center"
-            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
           </tr></table></th>
   </tr>
 </table>
@@ -58,28 +58,35 @@
 <ul class="nomargin-top">
     <li> <strong class="uidlink"><a href="pypln-module.html">pypln</a></strong>
     <ul>
-    <li> <strong class="uidlink"><a href="pypln.broker-module.html">pypln.broker</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.client-module.html">pypln.client</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.manager-module.html">pypln.manager</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores-module.html">pypln.stores</a></strong>: <em class="summary">Abstraction layer to store data in MongoDB</em>
+    <li> <strong class="uidlink"><a href="pypln.backend-module.html">pypln.backend</a></strong>
     <ul>
-    <li> <strong class="uidlink"><a href="pypln.stores.filestore-module.html">pypln.stores.filestore</a></strong>: <em class="summary">Configure an interface for accessing files in MongoDB's GridFS</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores.mongocorpus-module.html">pypln.stores.mongocorpus</a></strong>: <em class="summary">Implement a MongoDB-backed NLTK Corpus reader</em>    </li>
-    <li> <strong class="uidlink"><a href="pypln.stores.ontology-module.html">pypln.stores.ontology</a></strong>: <em class="summary">Store and load ontologies from MongoDB</em>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.broker-module.html">pypln.backend.broker</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.local_config-module.html">pypln.backend.local_config</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.mongo_store-module.html">pypln.backend.mongo_store</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.pipeliner-module.html">pypln.backend.pipeliner</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.router-module.html">pypln.backend.router</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers-module.html">pypln.backend.workers</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.bigrams-module.html">pypln.backend.workers.bigrams</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.extractor-module.html">pypln.backend.workers.extractor</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.freqdist-module.html">pypln.backend.workers.freqdist</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.lemmatizer_pt-module.html">pypln.backend.workers.lemmatizer_pt</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.palavras_noun_phrase-module.html">pypln.backend.workers.palavras_noun_phrase</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.palavras_raw-module.html">pypln.backend.workers.palavras_raw</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.palavras_semantic_tagger-module.html">pypln.backend.workers.palavras_semantic_tagger</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.pos-module.html">pypln.backend.workers.pos</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.pos.en_nltk-module.html">pypln.backend.workers.pos.en_nltk</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.pos.pt_palavras-module.html">pypln.backend.workers.pos.pt_palavras</a></strong>    </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="pypln.utils-module.html">pypln.utils</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.utils.monitoring-module.html">pypln.utils.monitoring</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.utils.tagset-module.html">pypln.utils.tagset</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.spellchecker-module.html">pypln.backend.workers.spellchecker</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.statistics-module.html">pypln.backend.workers.statistics</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.tokenizer-module.html">pypln.backend.workers.tokenizer</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.trigrams-module.html">pypln.backend.workers.trigrams</a></strong>    </li>
+    <li> <strong class="uidlink"><a href="pypln.backend.workers.word_cloud-module.html">pypln.backend.workers.word_cloud</a></strong>    </li>
     </ul>
     </li>
-    <li> <strong class="uidlink"><a href="pypln.workers-module.html">pypln.workers</a></strong>
-    <ul>
-    <li> <strong class="uidlink"><a href="pypln.workers.extractor-module.html">pypln.workers.extractor</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.freqdist-module.html">pypln.workers.freqdist</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.pos-module.html">pypln.workers.pos</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="pypln.workers.tokenizer-module.html">pypln.workers.tokenizer</a></strong>    </li>
     </ul>
     </li>
     </ul>
@@ -109,14 +116,14 @@
       <th class="navbar" align="right" width="100%">
         <table border="0" cellpadding="0" cellspacing="0">
           <tr><th class="navbar" align="center"
-            ><a class="navbar" target="_top" href="https://github.com/namd/pypln">Project Homepage</a></th>
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
           </tr></table></th>
   </tr>
 </table>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Jun  9 05:46:13 2012
+    Generated by Epydoc 3.0.1 on Wed Apr 29 18:09:02 2015
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.backend.workers</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.backend-module.html">Package&nbsp;backend</a> ::
+        Package&nbsp;workers
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.backend.workers-module.html">Package pypln.backend.workers</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-comment"># Copyright 2012 NAMD-EMAP-FGV</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of PyPLN. You can get more information at: http://pypln.org/.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-comment"># the Free Software Foundation, either version 3 of the License, or</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-comment"># along with PyPLN.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module pypln.backend.workers.extractor=pypln.backend.workers.extractor-module.html"><a title="pypln.backend.workers.extractor" class="py-name" href="#" onclick="return doclink('link-0', 'extractor', 'link-0');">extractor</a></tt> <tt class="py-keyword">import</tt> <tt id="link-1" class="py-name" targets="Class pypln.backend.workers.extractor.Extractor=pypln.backend.workers.extractor.Extractor-class.html"><a title="pypln.backend.workers.extractor.Extractor" class="py-name" href="#" onclick="return doclink('link-1', 'Extractor', 'link-1');">Extractor</a></tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-2" class="py-name" targets="Module pypln.backend.workers.tokenizer=pypln.backend.workers.tokenizer-module.html"><a title="pypln.backend.workers.tokenizer" class="py-name" href="#" onclick="return doclink('link-2', 'tokenizer', 'link-2');">tokenizer</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Class pypln.backend.workers.tokenizer.Tokenizer=pypln.backend.workers.tokenizer.Tokenizer-class.html"><a title="pypln.backend.workers.tokenizer.Tokenizer" class="py-name" href="#" onclick="return doclink('link-3', 'Tokenizer', 'link-3');">Tokenizer</a></tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-4" class="py-name" targets="Module pypln.backend.workers.freqdist=pypln.backend.workers.freqdist-module.html"><a title="pypln.backend.workers.freqdist" class="py-name" href="#" onclick="return doclink('link-4', 'freqdist', 'link-4');">freqdist</a></tt> <tt class="py-keyword">import</tt> <tt id="link-5" class="py-name" targets="Class pypln.backend.workers.freqdist.FreqDist=pypln.backend.workers.freqdist.FreqDist-class.html"><a title="pypln.backend.workers.freqdist.FreqDist" class="py-name" href="#" onclick="return doclink('link-5', 'FreqDist', 'link-5');">FreqDist</a></tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-6" class="py-name" targets="Package pypln.backend.workers.pos=pypln.backend.workers.pos-module.html"><a title="pypln.backend.workers.pos" class="py-name" href="#" onclick="return doclink('link-6', 'pos', 'link-6');">pos</a></tt> <tt class="py-keyword">import</tt> <tt id="link-7" class="py-name" targets="Class pypln.backend.workers.pos.POS=pypln.backend.workers.pos.POS-class.html"><a title="pypln.backend.workers.pos.POS" class="py-name" href="#" onclick="return doclink('link-7', 'POS', 'link-7');">POS</a></tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-8" class="py-name" targets="Module pypln.backend.workers.statistics=pypln.backend.workers.statistics-module.html"><a title="pypln.backend.workers.statistics" class="py-name" href="#" onclick="return doclink('link-8', 'statistics', 'link-8');">statistics</a></tt> <tt class="py-keyword">import</tt> <tt id="link-9" class="py-name" targets="Class pypln.backend.workers.statistics.Statistics=pypln.backend.workers.statistics.Statistics-class.html"><a title="pypln.backend.workers.statistics.Statistics" class="py-name" href="#" onclick="return doclink('link-9', 'Statistics', 'link-9');">Statistics</a></tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-10" class="py-name" targets="Module pypln.backend.workers.bigrams=pypln.backend.workers.bigrams-module.html"><a title="pypln.backend.workers.bigrams" class="py-name" href="#" onclick="return doclink('link-10', 'bigrams', 'link-10');">bigrams</a></tt> <tt class="py-keyword">import</tt> <tt id="link-11" class="py-name" targets="Class pypln.backend.workers.bigrams.Bigrams=pypln.backend.workers.bigrams.Bigrams-class.html"><a title="pypln.backend.workers.bigrams.Bigrams" class="py-name" href="#" onclick="return doclink('link-11', 'Bigrams', 'link-11');">Bigrams</a></tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-12" class="py-name" targets="Module pypln.backend.workers.palavras_raw=pypln.backend.workers.palavras_raw-module.html"><a title="pypln.backend.workers.palavras_raw" class="py-name" href="#" onclick="return doclink('link-12', 'palavras_raw', 'link-12');">palavras_raw</a></tt> <tt class="py-keyword">import</tt> <tt id="link-13" class="py-name" targets="Class pypln.backend.workers.palavras_raw.PalavrasRaw=pypln.backend.workers.palavras_raw.PalavrasRaw-class.html"><a title="pypln.backend.workers.palavras_raw.PalavrasRaw" class="py-name" href="#" onclick="return doclink('link-13', 'PalavrasRaw', 'link-13');">PalavrasRaw</a></tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-14" class="py-name" targets="Module pypln.backend.workers.lemmatizer_pt=pypln.backend.workers.lemmatizer_pt-module.html"><a title="pypln.backend.workers.lemmatizer_pt" class="py-name" href="#" onclick="return doclink('link-14', 'lemmatizer_pt', 'link-14');">lemmatizer_pt</a></tt> <tt class="py-keyword">import</tt> <tt id="link-15" class="py-name" targets="Class pypln.backend.workers.lemmatizer_pt.Lemmatizer=pypln.backend.workers.lemmatizer_pt.Lemmatizer-class.html"><a title="pypln.backend.workers.lemmatizer_pt.Lemmatizer" class="py-name" href="#" onclick="return doclink('link-15', 'Lemmatizer', 'link-15');">Lemmatizer</a></tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-16" class="py-name" targets="Module pypln.backend.workers.palavras_noun_phrase=pypln.backend.workers.palavras_noun_phrase-module.html"><a title="pypln.backend.workers.palavras_noun_phrase" class="py-name" href="#" onclick="return doclink('link-16', 'palavras_noun_phrase', 'link-16');">palavras_noun_phrase</a></tt> <tt class="py-keyword">import</tt> <tt id="link-17" class="py-name" targets="Class pypln.backend.workers.palavras_noun_phrase.NounPhrase=pypln.backend.workers.palavras_noun_phrase.NounPhrase-class.html"><a title="pypln.backend.workers.palavras_noun_phrase.NounPhrase" class="py-name" href="#" onclick="return doclink('link-17', 'NounPhrase', 'link-17');">NounPhrase</a></tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-18" class="py-name" targets="Module pypln.backend.workers.palavras_semantic_tagger=pypln.backend.workers.palavras_semantic_tagger-module.html"><a title="pypln.backend.workers.palavras_semantic_tagger" class="py-name" href="#" onclick="return doclink('link-18', 'palavras_semantic_tagger', 'link-18');">palavras_semantic_tagger</a></tt> <tt class="py-keyword">import</tt> <tt id="link-19" class="py-name" targets="Class pypln.backend.workers.palavras_semantic_tagger.SemanticTagger=pypln.backend.workers.palavras_semantic_tagger.SemanticTagger-class.html"><a title="pypln.backend.workers.palavras_semantic_tagger.SemanticTagger" class="py-name" href="#" onclick="return doclink('link-19', 'SemanticTagger', 'link-19');">SemanticTagger</a></tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-20" class="py-name" targets="Module pypln.backend.workers.word_cloud=pypln.backend.workers.word_cloud-module.html"><a title="pypln.backend.workers.word_cloud" class="py-name" href="#" onclick="return doclink('link-20', 'word_cloud', 'link-20');">word_cloud</a></tt> <tt class="py-keyword">import</tt> <tt id="link-21" class="py-name" targets="Class pypln.backend.workers.word_cloud.WordCloud=pypln.backend.workers.word_cloud.WordCloud-class.html"><a title="pypln.backend.workers.word_cloud.WordCloud" class="py-name" href="#" onclick="return doclink('link-21', 'WordCloud', 'link-21');">WordCloud</a></tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-name">__all__</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'Extractor'</tt><tt class="py-op">,</tt> <tt class="py-string">'Tokenizer'</tt><tt class="py-op">,</tt> <tt class="py-string">'FreqDist'</tt><tt class="py-op">,</tt> <tt class="py-string">'POS'</tt><tt class="py-op">,</tt> <tt class="py-string">'Statistics'</tt><tt class="py-op">,</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">           <tt class="py-string">'Bigrams'</tt><tt class="py-op">,</tt> <tt class="py-string">'PalavrasRaw'</tt><tt class="py-op">,</tt> <tt class="py-string">'Lemmatizer'</tt><tt class="py-op">,</tt> <tt class="py-string">'NounPhrase'</tt><tt class="py-op">,</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">           <tt class="py-string">'SemanticTagger'</tt><tt class="py-op">,</tt> <tt class="py-string">'WordCloud'</tt><tt class="py-op">]</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Apr 29 18:09:02 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

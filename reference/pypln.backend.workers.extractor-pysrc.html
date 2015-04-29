@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>pypln.backend.workers.extractor</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="pypln-module.html">Package&nbsp;pypln</a> ::
+        <a href="pypln.backend-module.html">Package&nbsp;backend</a> ::
+        <a href="pypln.backend.workers-module.html">Package&nbsp;workers</a> ::
+        Module&nbsp;extractor
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="pypln.backend.workers.extractor-module.html">Module pypln.backend.workers.extractor</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment"># coding: utf-8</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"># Copyright 2012 NAMD-EMAP-FGV</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"># This file is part of PyPLN. You can get more information at: http://pypln.org/.</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is free software: you can redistribute it and/or modify</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"># it under the terms of the GNU General Public License as published by</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"># the Free Software Foundation, either version 3 of the License, or</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"># (at your option) any later version.</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"># PyPLN is distributed in the hope that it will be useful,</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"># but WITHOUT ANY WARRANTY; without even the implied warranty of</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"># MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"># GNU General Public License for more details.</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"># You should have received a copy of the GNU General Public License</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"># along with PyPLN.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">shlex</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">HTMLParser</tt> <tt class="py-keyword">import</tt> <tt class="py-name">HTMLParser</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">tempfile</tt> <tt class="py-keyword">import</tt> <tt class="py-name">NamedTemporaryFile</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">os</tt> <tt class="py-keyword">import</tt> <tt class="py-name">unlink</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">subprocess</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Popen</tt><tt class="py-op">,</tt> <tt class="py-name">PIPE</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">mimetypes</tt> <tt class="py-keyword">import</tt> <tt class="py-name">guess_type</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">re</tt> <tt class="py-keyword">import</tt> <tt class="py-name">compile</tt> <tt class="py-keyword">as</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">,</tt> <tt class="py-name">DOTALL</tt><tt class="py-op">,</tt> <tt class="py-name">escape</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">cld</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">magic</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pypelinin</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Worker</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_tags=pypln.backend.workers.extractor-module.html#regexp_tags"><a title="pypln.backend.workers.extractor.regexp_tags" class="py-name" href="#" onclick="return doclink('link-0', 'regexp_tags', 'link-0');">regexp_tags</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">r'(&lt;[ \t]*([a-zA-Z0-9!"./_-]*)[^&gt;]*&gt;)'</tt><tt class="py-op">,</tt> <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_comment=pypln.backend.workers.extractor-module.html#regexp_comment"><a title="pypln.backend.workers.extractor.regexp_comment" class="py-name" href="#" onclick="return doclink('link-1', 'regexp_comment', 'link-1');">regexp_comment</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">r'&lt;!--.*?--&gt;'</tt><tt class="py-op">,</tt> <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt id="link-2" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_spaces_start=pypln.backend.workers.extractor-module.html#regexp_spaces_start"><a title="pypln.backend.workers.extractor.regexp_spaces_start" class="py-name" href="#" onclick="return doclink('link-2', 'regexp_spaces_start', 'link-2');">regexp_spaces_start</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">'([\n]+)[ \t]*'</tt><tt class="py-op">,</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line"><tt id="link-3" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_spaces_end=pypln.backend.workers.extractor-module.html#regexp_spaces_end"><a title="pypln.backend.workers.extractor.regexp_spaces_end" class="py-name" href="#" onclick="return doclink('link-3', 'regexp_spaces_end', 'link-3');">regexp_spaces_end</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">'[ \t]*\n'</tt><tt class="py-op">,</tt> <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"><tt id="link-4" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_newlines=pypln.backend.workers.extractor-module.html#regexp_newlines"><a title="pypln.backend.workers.extractor.regexp_newlines" class="py-name" href="#" onclick="return doclink('link-4', 'regexp_newlines', 'link-4');">regexp_newlines</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">'[\n]{3,}'</tt><tt class="py-op">,</tt> <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt id="link-5" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_spaces=pypln.backend.workers.extractor-module.html#regexp_spaces"><a title="pypln.backend.workers.extractor.regexp_spaces" class="py-name" href="#" onclick="return doclink('link-5', 'regexp_spaces', 'link-5');">regexp_spaces</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">'[ \t]{2,}'</tt><tt class="py-op">,</tt> <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt id="link-6" class="py-name" targets="Variable pypln.backend.workers.extractor.regexp_punctuation=pypln.backend.workers.extractor-module.html#regexp_punctuation"><a title="pypln.backend.workers.extractor.regexp_punctuation" class="py-name" href="#" onclick="return doclink('link-6', 'regexp_punctuation', 'link-6');">regexp_punctuation</a></tt> <tt class="py-op">=</tt> <tt class="py-name">regexp_compile</tt><tt class="py-op">(</tt><tt class="py-string">'[ \t]*(['</tt> <tt class="py-op">+</tt> <tt class="py-name">escape</tt><tt class="py-op">(</tt><tt class="py-string">'!,.:;?'</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">'])'</tt><tt class="py-op">,</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">DOTALL</tt><tt class="py-op">)</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt id="link-7" class="py-name" targets="Variable pypln.backend.workers.extractor.breakline_tags=pypln.backend.workers.extractor-module.html#breakline_tags"><a title="pypln.backend.workers.extractor.breakline_tags" class="py-name" href="#" onclick="return doclink('link-7', 'breakline_tags', 'link-7');">breakline_tags</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'table'</tt><tt class="py-op">,</tt> <tt class="py-string">'/table'</tt><tt class="py-op">,</tt> <tt class="py-string">'tr'</tt><tt class="py-op">,</tt> <tt class="py-string">'div'</tt><tt class="py-op">,</tt> <tt class="py-string">'/div'</tt><tt class="py-op">,</tt> <tt class="py-string">'h1'</tt><tt class="py-op">,</tt> <tt class="py-string">'/h1'</tt><tt class="py-op">,</tt> <tt class="py-string">'h2'</tt><tt class="py-op">,</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">                  <tt class="py-string">'/h2'</tt><tt class="py-op">,</tt> <tt class="py-string">'h3'</tt><tt class="py-op">,</tt> <tt class="py-string">'/h3'</tt><tt class="py-op">,</tt> <tt class="py-string">'h4'</tt><tt class="py-op">,</tt> <tt class="py-string">'/h4'</tt><tt class="py-op">,</tt> <tt class="py-string">'h5'</tt><tt class="py-op">,</tt> <tt class="py-string">'/h5'</tt><tt class="py-op">,</tt> <tt class="py-string">'h6'</tt><tt class="py-op">,</tt> <tt class="py-string">'/h6'</tt><tt class="py-op">,</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">                  <tt class="py-string">'br'</tt><tt class="py-op">,</tt> <tt class="py-string">'br/'</tt><tt class="py-op">]</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt id="link-8" class="py-name" targets="Variable pypln.backend.workers.extractor.double_breakline=pypln.backend.workers.extractor-module.html#double_breakline"><a title="pypln.backend.workers.extractor.double_breakline" class="py-name" href="#" onclick="return doclink('link-8', 'double_breakline', 'link-8');">double_breakline</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'table'</tt><tt class="py-op">,</tt> <tt class="py-string">'h1'</tt><tt class="py-op">,</tt> <tt class="py-string">'h2'</tt><tt class="py-op">,</tt> <tt class="py-string">'h3'</tt><tt class="py-op">,</tt> <tt class="py-string">'h4'</tt><tt class="py-op">,</tt> <tt class="py-string">'h5'</tt><tt class="py-op">,</tt> <tt class="py-string">'h6'</tt><tt class="py-op">]</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"> </tt>
+<a name="clean"></a><div id="clean-def"><a name="L49"></a><tt class="py-lineno"> 49</tt> <a class="py-toggle" href="#" id="clean-toggle" onclick="return toggle('clean');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor-module.html#clean">clean</a><tt class="py-op">(</tt><tt class="py-param">text</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="clean-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="clean-expanded"><a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-9" class="py-name"><a title="pypln.backend.workers.extractor.regexp_spaces_start" class="py-name" href="#" onclick="return doclink('link-9', 'regexp_spaces_start', 'link-2');">regexp_spaces_start</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">r'\1'</tt><tt class="py-op">,</tt> <tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name"><a title="pypln.backend.workers.extractor.regexp_spaces_end" class="py-name" href="#" onclick="return doclink('link-10', 'regexp_spaces_end', 'link-3');">regexp_spaces_end</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">'\n'</tt><tt class="py-op">,</tt> <tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-11" class="py-name"><a title="pypln.backend.workers.extractor.regexp_newlines" class="py-name" href="#" onclick="return doclink('link-11', 'regexp_newlines', 'link-4');">regexp_newlines</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">'\n\n'</tt><tt class="py-op">,</tt> <tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name"><a title="pypln.backend.workers.extractor.regexp_spaces" class="py-name" href="#" onclick="return doclink('link-12', 'regexp_spaces', 'link-5');">regexp_spaces</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">' '</tt><tt class="py-op">,</tt> <tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="pypln.backend.workers.extractor.regexp_punctuation" class="py-name" href="#" onclick="return doclink('link-13', 'regexp_punctuation', 'link-6');">regexp_punctuation</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">r'\1'</tt><tt class="py-op">,</tt> <tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"> </tt>
+<a name="parse_html"></a><div id="parse_html-def"><a name="L57"></a><tt class="py-lineno"> 57</tt> <a class="py-toggle" href="#" id="parse_html-toggle" onclick="return toggle('parse_html');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor-module.html#parse_html">parse_html</a><tt class="py-op">(</tt><tt class="py-param">html</tt><tt class="py-op">,</tt> <tt class="py-param">remove_tags</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">remove_inside</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">               <tt class="py-param">replace_space_with</tt><tt class="py-op">=</tt><tt class="py-string">' '</tt><tt class="py-op">,</tt> <tt class="py-param">replace_newline_with</tt><tt class="py-op">=</tt><tt class="py-string">'\n'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="parse_html-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="parse_html-expanded"><a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">    <tt class="py-name">html</tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="pypln.backend.workers.extractor.regexp_comment" class="py-name" href="#" onclick="return doclink('link-14', 'regexp_comment', 'link-1');">regexp_comment</a></tt><tt class="py-op">.</tt><tt class="py-name">sub</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">,</tt> <tt class="py-name">html</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'\n'</tt><tt class="py-op">,</tt> <tt class="py-string">''</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">    <tt class="py-name">data</tt> <tt class="py-op">=</tt> <tt id="link-15" class="py-name"><a title="pypln.backend.workers.extractor.regexp_tags" class="py-name" href="#" onclick="return doclink('link-15', 'regexp_tags', 'link-0');">regexp_tags</a></tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-name">html</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">    <tt class="py-name">content_between</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">    <tt class="py-name">complete_tags</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">    <tt class="py-name">tag_names</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">x</tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">x</tt> <tt class="py-keyword">in</tt> <tt class="py-name">data</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">:</tt><tt class="py-op">:</tt><tt class="py-number">3</tt><tt class="py-op">]</tt><tt class="py-op">]</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">index</tt><tt class="py-op">,</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">in</tt> <tt class="py-name">enumerate</tt><tt class="py-op">(</tt><tt class="py-name">tag_names</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">tag_name</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-keyword">continue</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">        <tt class="py-name">search_tag</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_name</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">and</tt> <tt class="py-name">tag_name</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> <tt class="py-op">==</tt> <tt class="py-string">'/'</tt><tt class="py-op">:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">            <tt class="py-name">search_tag</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_name</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">remove_tags</tt> <tt class="py-keyword">and</tt> <tt class="py-name">search_tag</tt> <tt class="py-keyword">not</tt> <tt class="py-keyword">in</tt> <tt class="py-name">remove_inside</tt><tt class="py-op">:</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">in</tt> <tt id="link-16" class="py-name"><a title="pypln.backend.workers.extractor.breakline_tags" class="py-name" href="#" onclick="return doclink('link-16', 'breakline_tags', 'link-7');">breakline_tags</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">search_tag</tt> <tt class="py-keyword">in</tt> <tt id="link-17" class="py-name"><a title="pypln.backend.workers.extractor.double_breakline" class="py-name" href="#" onclick="return doclink('link-17', 'double_breakline', 'link-8');">double_breakline</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">                    <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-number">2</tt> <tt class="py-op">*</tt> <tt class="py-name">replace_newline_with</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">                <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">                    <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">replace_newline_with</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">            <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">                <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">replace_space_with</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">remove_inside</tt> <tt class="py-keyword">and</tt> <tt class="py-name">tag_name</tt> <tt class="py-keyword">in</tt> <tt class="py-name">remove_inside</tt><tt class="py-op">:</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">            <tt class="py-name">remove_to</tt> <tt class="py-op">=</tt> <tt class="py-name">tag_names</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">'/'</tt> <tt class="py-op">+</tt> <tt class="py-name">tag_name</tt><tt class="py-op">,</tt> <tt class="py-name">index</tt><tt class="py-op">)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">            <tt class="py-name">total_to_remove</tt> <tt class="py-op">=</tt> <tt class="py-name">remove_to</tt> <tt class="py-op">-</tt> <tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">            <tt class="py-name">complete_tags</tt><tt class="py-op">[</tt><tt class="py-name">index</tt><tt class="py-op">:</tt><tt class="py-name">remove_to</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">''</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-name">total_to_remove</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">            <tt class="py-name">content_between</tt><tt class="py-op">[</tt><tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">2</tt><tt class="py-op">:</tt><tt class="py-name">remove_to</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> \ </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">                    <tt class="py-op">[</tt><tt class="py-string">''</tt><tt class="py-op">]</tt> <tt class="py-op">*</tt> <tt class="py-op">(</tt><tt class="py-name">total_to_remove</tt> <tt class="py-op">-</tt> <tt class="py-number">2</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">            <tt class="py-name">content_between</tt><tt class="py-op">[</tt><tt class="py-name">index</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-string">'\n'</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">    <tt class="py-name">complete_tags</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-string">''</tt><tt class="py-op">)</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">    <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-string">''</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">sum</tt><tt class="py-op">(</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-name">content_between</tt><tt class="py-op">,</tt> <tt class="py-name">complete_tags</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">tuple</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt id="link-18" class="py-name" targets="Function pypln.backend.workers.extractor.clean()=pypln.backend.workers.extractor-module.html#clean"><a title="pypln.backend.workers.extractor.clean" class="py-name" href="#" onclick="return doclink('link-18', 'clean', 'link-18');">clean</a></tt><tt class="py-op">(</tt><tt class="py-name">result</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line"> </tt>
+<a name="get_pdf_metadata"></a><div id="get_pdf_metadata-def"><a name="L89"></a><tt class="py-lineno"> 89</tt> <a class="py-toggle" href="#" id="get_pdf_metadata-toggle" onclick="return toggle('get_pdf_metadata');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor-module.html#get_pdf_metadata">get_pdf_metadata</a><tt class="py-op">(</tt><tt class="py-param">data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="get_pdf_metadata-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="get_pdf_metadata-expanded"><a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">    <tt class="py-name">lines</tt> <tt class="py-op">=</tt> <tt class="py-name">data</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">splitlines</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">    <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">line</tt> <tt class="py-keyword">in</tt> <tt class="py-name">lines</tt><tt class="py-op">:</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">            <tt class="py-name">key</tt><tt class="py-op">,</tt> <tt class="py-name">value</tt> <tt class="py-op">=</tt> <tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-op">:</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">':'</tt><tt class="py-op">)</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">line</tt><tt class="py-op">[</tt><tt class="py-name">line</tt><tt class="py-op">.</tt><tt class="py-name">index</tt><tt class="py-op">(</tt><tt class="py-string">':'</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-number">1</tt><tt class="py-op">:</tt><tt class="py-op">]</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">ValueError</tt><tt class="py-op">:</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">            <tt class="py-keyword">continue</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt><tt class="py-op">[</tt><tt class="py-name">key</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">]</tt> <tt class="py-op">=</tt> <tt class="py-name">value</tt><tt class="py-op">.</tt><tt class="py-name">strip</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">metadata</tt> </tt>
+</div><a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"> </tt>
+<a name="extract_pdf"></a><div id="extract_pdf-def"><a name="L100"></a><tt class="py-lineno">100</tt> <a class="py-toggle" href="#" id="extract_pdf-toggle" onclick="return toggle('extract_pdf');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor-module.html#extract_pdf">extract_pdf</a><tt class="py-op">(</tt><tt class="py-param">data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="extract_pdf-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="extract_pdf-expanded"><a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">    <tt class="py-name">temp</tt> <tt class="py-op">=</tt> <tt class="py-name">NamedTemporaryFile</tt><tt class="py-op">(</tt><tt class="py-name">delete</tt><tt class="py-op">=</tt><tt class="py-name">False</tt><tt class="py-op">)</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">    <tt class="py-name">filename</tt> <tt class="py-op">=</tt> <tt class="py-name">temp</tt><tt class="py-op">.</tt><tt class="py-name">name</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">    <tt class="py-name">temp</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">    <tt class="py-name">pdf2html</tt> <tt class="py-op">=</tt> <tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-name">shlex</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">'pdftohtml -q -i - {}'</tt><tt class="py-op">.</tt><tt class="py-name">format</tt><tt class="py-op">(</tt><tt class="py-name">temp</tt><tt class="py-op">.</tt><tt class="py-name">name</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">                     <tt class="py-name">stdin</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> <tt class="py-name">stdout</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> <tt class="py-name">stderr</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">    <tt class="py-name">html</tt><tt class="py-op">,</tt> <tt class="py-name">html_err</tt> <tt class="py-op">=</tt> <tt class="py-name">pdf2html</tt><tt class="py-op">.</tt><tt class="py-name">communicate</tt><tt class="py-op">(</tt><tt class="py-name">input</tt><tt class="py-op">=</tt><tt class="py-name">data</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">    <tt class="py-name">fp</tt> <tt class="py-op">=</tt> <tt class="py-name">open</tt><tt class="py-op">(</tt><tt class="py-name">filename</tt> <tt class="py-op">+</tt> <tt class="py-string">'s.html'</tt><tt class="py-op">,</tt> <tt class="py-string">'r'</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">    <tt class="py-name">html</tt> <tt class="py-op">=</tt> <tt class="py-name">fp</tt><tt class="py-op">.</tt><tt class="py-name">read</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">    <tt class="py-name">fp</tt><tt class="py-op">.</tt><tt class="py-name">close</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line">    <tt class="py-name">unlink</tt><tt class="py-op">(</tt><tt class="py-name">filename</tt> <tt class="py-op">+</tt> <tt class="py-string">'.html'</tt><tt class="py-op">)</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">    <tt class="py-name">unlink</tt><tt class="py-op">(</tt><tt class="py-name">filename</tt> <tt class="py-op">+</tt> <tt class="py-string">'_ind.html'</tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">    <tt class="py-name">unlink</tt><tt class="py-op">(</tt><tt class="py-name">filename</tt> <tt class="py-op">+</tt> <tt class="py-string">'s.html'</tt><tt class="py-op">)</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">    <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-19" class="py-name" targets="Function pypln.backend.workers.extractor.parse_html()=pypln.backend.workers.extractor-module.html#parse_html"><a title="pypln.backend.workers.extractor.parse_html" class="py-name" href="#" onclick="return doclink('link-19', 'parse_html', 'link-19');">parse_html</a></tt><tt class="py-op">(</tt><tt class="py-name">html</tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'&amp;#160;'</tt><tt class="py-op">,</tt> <tt class="py-string">' '</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-string">'script'</tt><tt class="py-op">,</tt> <tt class="py-string">'style'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">    <tt class="py-name">pdfinfo</tt> <tt class="py-op">=</tt> <tt class="py-name">Popen</tt><tt class="py-op">(</tt><tt class="py-name">shlex</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">'pdfinfo -'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-name">stdin</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> <tt class="py-name">stdout</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">,</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">                    <tt class="py-name">stderr</tt><tt class="py-op">=</tt><tt class="py-name">PIPE</tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">    <tt class="py-name">meta_out</tt><tt class="py-op">,</tt> <tt class="py-name">meta_err</tt> <tt class="py-op">=</tt> <tt class="py-name">pdfinfo</tt><tt class="py-op">.</tt><tt class="py-name">communicate</tt><tt class="py-op">(</tt><tt class="py-name">input</tt><tt class="py-op">=</tt><tt class="py-name">data</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">    <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt id="link-20" class="py-name" targets="Function pypln.backend.workers.extractor.get_pdf_metadata()=pypln.backend.workers.extractor-module.html#get_pdf_metadata"><a title="pypln.backend.workers.extractor.get_pdf_metadata" class="py-name" href="#" onclick="return doclink('link-20', 'get_pdf_metadata', 'link-20');">get_pdf_metadata</a></tt><tt class="py-op">(</tt><tt class="py-name">meta_out</tt><tt class="py-op">)</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">    <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-comment">#TODO: what should I do here?</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-op">(</tt><tt class="py-name">text</tt> <tt class="py-keyword">and</tt> <tt class="py-name">metadata</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">''</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">    <tt class="py-keyword">elif</tt> <tt class="py-keyword">not</tt> <tt class="py-name">html_err</tt><tt class="py-op">:</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> <tt class="py-keyword">if</tt> <tt class="py-name">meta_err</tt> <tt class="py-keyword">else</tt> <tt class="py-name">metadata</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">    <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-string">''</tt><tt class="py-op">,</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+</div><a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line"> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt>
+<a name="trial_decode"></a><div id="trial_decode-def"><a name="L130"></a><tt class="py-lineno">130</tt> <a class="py-toggle" href="#" id="trial_decode-toggle" onclick="return toggle('trial_decode');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor-module.html#trial_decode">trial_decode</a><tt class="py-op">(</tt><tt class="py-param">text</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="trial_decode-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="trial_decode-expanded"><a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"><tt class="py-docstring">    Tries to detect text encoding using `magic`. If the detected encoding is</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"><tt class="py-docstring">    not supported, try utf-8, iso-8859-1 and ultimately falls back to decoding</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-docstring">    as utf-8 replacing invalid chars with `U+FFFD` (the replacement character).</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-docstring">    This is far from an ideal solution, but the extractor and the rest of the</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line"><tt class="py-docstring">    pipeline need an unicode object.</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">    <tt class="py-keyword">with</tt> <tt class="py-name">magic</tt><tt class="py-op">.</tt><tt class="py-name">Magic</tt><tt class="py-op">(</tt><tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">magic</tt><tt class="py-op">.</tt><tt class="py-name">MAGIC_MIME_ENCODING</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">m</tt><tt class="py-op">:</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">        <tt class="py-name">content_encoding</tt> <tt class="py-op">=</tt> <tt class="py-name">m</tt><tt class="py-op">.</tt><tt class="py-name">id_buffer</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line"> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">    <tt class="py-name">forced_decoding</tt> <tt class="py-op">=</tt> <tt class="py-name">False</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">    <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">decode</tt><tt class="py-op">(</tt><tt class="py-name">content_encoding</tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">    <tt class="py-keyword">except</tt> <tt class="py-name">LookupError</tt><tt class="py-op">:</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">        <tt class="py-comment"># If the detected encoding is not supported, we try to decode it as</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">        <tt class="py-comment"># utf-8.</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">        <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">            <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">decode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">        <tt class="py-keyword">except</tt> <tt class="py-name">UnicodeDecodeError</tt><tt class="py-op">:</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line">            <tt class="py-comment"># Is there a better way of doing this than nesting try/except</tt> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">            <tt class="py-comment"># blocks? This smells really bad.</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">            <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">                <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">decode</tt><tt class="py-op">(</tt><tt class="py-string">'iso-8859-1'</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">            <tt class="py-keyword">except</tt> <tt class="py-name">UnicodeDecodeError</tt><tt class="py-op">:</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">                <tt class="py-comment"># If neither utf-8 nor iso-885901 work are capable of handling</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">                <tt class="py-comment"># this text, we just decode it using utf-8 and replace invalid</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">                <tt class="py-comment"># chars with U+FFFD.</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">                <tt class="py-comment"># Two somewhat arbitrary decisions were made here: use utf-8</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">                <tt class="py-comment"># and use 'replace' instead of 'ignore'.</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">                <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">decode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">,</tt> <tt class="py-string">'replace'</tt><tt class="py-op">)</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">                <tt class="py-name">forced_decoding</tt> <tt class="py-op">=</tt> <tt class="py-name">True</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line"> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">result</tt><tt class="py-op">,</tt> <tt class="py-name">forced_decoding</tt> </tt>
+</div><a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line"> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line"> </tt>
+<a name="Extractor"></a><div id="Extractor-def"><a name="L167"></a><tt class="py-lineno">167</tt> <a class="py-toggle" href="#" id="Extractor-toggle" onclick="return toggle('Extractor');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="pypln.backend.workers.extractor.Extractor-class.html">Extractor</a><tt class="py-op">(</tt><tt class="py-base-class">Worker</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Extractor-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Extractor-expanded"><a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">    <tt class="py-comment">#TODO: need to verify some exceptions when trying to convert 'evil' PDFs</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">    <tt class="py-comment">#TODO: should 'replace_with' be '' when extracting from HTML?</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">    <tt id="link-21" class="py-name" targets="Variable pypln.backend.workers.bigrams.Bigrams.requires=pypln.backend.workers.bigrams.Bigrams-class.html#requires,Variable pypln.backend.workers.extractor.Extractor.requires=pypln.backend.workers.extractor.Extractor-class.html#requires,Variable pypln.backend.workers.freqdist.FreqDist.requires=pypln.backend.workers.freqdist.FreqDist-class.html#requires,Variable pypln.backend.workers.lemmatizer_pt.Lemmatizer.requires=pypln.backend.workers.lemmatizer_pt.Lemmatizer-class.html#requires,Variable pypln.backend.workers.palavras_noun_phrase.NounPhrase.requires=pypln.backend.workers.palavras_noun_phrase.NounPhrase-class.html#requires,Variable pypln.backend.workers.palavras_raw.PalavrasRaw.requires=pypln.backend.workers.palavras_raw.PalavrasRaw-class.html#requires,Variable pypln.backend.workers.palavras_semantic_tagger.SemanticTagger.requires=pypln.backend.workers.palavras_semantic_tagger.SemanticTagger-class.html#requires,Variable pypln.backend.workers.pos.POS.requires=pypln.backend.workers.pos.POS-class.html#requires,Variable pypln.backend.workers.spellchecker.SpellingChecker.requires=pypln.backend.workers.spellchecker.SpellingChecker-class.html#requires,Variable pypln.backend.workers.statistics.Statistics.requires=pypln.backend.workers.statistics.Statistics-class.html#requires,Variable pypln.backend.workers.tokenizer.Tokenizer.requires=pypln.backend.workers.tokenizer.Tokenizer-class.html#requires,Variable pypln.backend.workers.trigrams.Trigrams.requires=pypln.backend.workers.trigrams.Trigrams-class.html#requires,Variable pypln.backend.workers.word_cloud.WordCloud.requires=pypln.backend.workers.word_cloud.WordCloud-class.html#requires"><a title="pypln.backend.workers.bigrams.Bigrams.requires
+pypln.backend.workers.extractor.Extractor.requires
+pypln.backend.workers.freqdist.FreqDist.requires
+pypln.backend.workers.lemmatizer_pt.Lemmatizer.requires
+pypln.backend.workers.palavras_noun_phrase.NounPhrase.requires
+pypln.backend.workers.palavras_raw.PalavrasRaw.requires
+pypln.backend.workers.palavras_semantic_tagger.SemanticTagger.requires
+pypln.backend.workers.pos.POS.requires
+pypln.backend.workers.spellchecker.SpellingChecker.requires
+pypln.backend.workers.statistics.Statistics.requires
+pypln.backend.workers.tokenizer.Tokenizer.requires
+pypln.backend.workers.trigrams.Trigrams.requires
+pypln.backend.workers.word_cloud.WordCloud.requires" class="py-name" href="#" onclick="return doclink('link-21', 'requires', 'link-21');">requires</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line"> </tt>
+<a name="Extractor.process"></a><div id="Extractor.process-def"><a name="L172"></a><tt class="py-lineno">172</tt> <a class="py-toggle" href="#" id="Extractor.process-toggle" onclick="return toggle('Extractor.process');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="pypln.backend.workers.extractor.Extractor-class.html#process">process</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">file_data</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Extractor.process-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Extractor.process-expanded"><a name="L173"></a><tt class="py-lineno">173</tt>  <tt class="py-line">        <tt class="py-keyword">with</tt> <tt class="py-name">magic</tt><tt class="py-op">.</tt><tt class="py-name">Magic</tt><tt class="py-op">(</tt><tt class="py-name">flags</tt><tt class="py-op">=</tt><tt class="py-name">magic</tt><tt class="py-op">.</tt><tt class="py-name">MAGIC_MIME_TYPE</tt><tt class="py-op">)</tt> <tt class="py-keyword">as</tt> <tt class="py-name">m</tt><tt class="py-op">:</tt> </tt>
+<a name="L174"></a><tt class="py-lineno">174</tt>  <tt class="py-line">            <tt class="py-name">file_mime_type</tt> <tt class="py-op">=</tt> <tt class="py-name">m</tt><tt class="py-op">.</tt><tt class="py-name">id_buffer</tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L175"></a><tt class="py-lineno">175</tt>  <tt class="py-line">        <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt> </tt>
+<a name="L176"></a><tt class="py-lineno">176</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'text/plain'</tt><tt class="py-op">:</tt> </tt>
+<a name="L177"></a><tt class="py-lineno">177</tt>  <tt class="py-line">            <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt> </tt>
+<a name="L178"></a><tt class="py-lineno">178</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'text/html'</tt><tt class="py-op">:</tt> </tt>
+<a name="L179"></a><tt class="py-lineno">179</tt>  <tt class="py-line">            <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-22" class="py-name"><a title="pypln.backend.workers.extractor.parse_html" class="py-name" href="#" onclick="return doclink('link-22', 'parse_html', 'link-19');">parse_html</a></tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">True</tt><tt class="py-op">,</tt> <tt class="py-op">[</tt><tt class="py-string">'script'</tt><tt class="py-op">,</tt> <tt class="py-string">'style'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L180"></a><tt class="py-lineno">180</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">file_mime_type</tt> <tt class="py-op">==</tt> <tt class="py-string">'application/pdf'</tt><tt class="py-op">:</tt> </tt>
+<a name="L181"></a><tt class="py-lineno">181</tt>  <tt class="py-line">            <tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-name">metadata</tt> <tt class="py-op">=</tt> <tt id="link-23" class="py-name" targets="Function pypln.backend.workers.extractor.extract_pdf()=pypln.backend.workers.extractor-module.html#extract_pdf"><a title="pypln.backend.workers.extractor.extract_pdf" class="py-name" href="#" onclick="return doclink('link-23', 'extract_pdf', 'link-23');">extract_pdf</a></tt><tt class="py-op">(</tt><tt class="py-name">file_data</tt><tt class="py-op">[</tt><tt class="py-string">'contents'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L182"></a><tt class="py-lineno">182</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L183"></a><tt class="py-lineno">183</tt>  <tt class="py-line">            <tt class="py-comment"># If we can't detect the mimetype we add a flag that can be read by</tt> </tt>
+<a name="L184"></a><tt class="py-lineno">184</tt>  <tt class="py-line">            <tt class="py-comment"># the frontend to provide more information on why the document</tt> </tt>
+<a name="L185"></a><tt class="py-lineno">185</tt>  <tt class="py-line">            <tt class="py-comment"># wasn't processed.</tt> </tt>
+<a name="L186"></a><tt class="py-lineno">186</tt>  <tt class="py-line">            <tt class="py-comment"># XXX: We're returning an empty text because if we don't the</tt> </tt>
+<a name="L187"></a><tt class="py-lineno">187</tt>  <tt class="py-line">            <tt class="py-comment"># pipeline will run indefinitely. The right approach is to make</tt> </tt>
+<a name="L188"></a><tt class="py-lineno">188</tt>  <tt class="py-line">            <tt class="py-comment"># pypelinin understand an specific exception (something like</tt> </tt>
+<a name="L189"></a><tt class="py-lineno">189</tt>  <tt class="py-line">            <tt class="py-comment"># StopPipeline) as a signal to stop processing this pipeline.</tt> </tt>
+<a name="L190"></a><tt class="py-lineno">190</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> <tt class="py-op">{</tt><tt class="py-string">'mimetype'</tt><tt class="py-op">:</tt> <tt class="py-string">'unknown'</tt><tt class="py-op">,</tt> <tt class="py-string">'text'</tt><tt class="py-op">:</tt> <tt class="py-string">""</tt><tt class="py-op">,</tt> </tt>
+<a name="L191"></a><tt class="py-lineno">191</tt>  <tt class="py-line">                    <tt class="py-string">'file_metadata'</tt><tt class="py-op">:</tt> <tt class="py-op">{</tt><tt class="py-op">}</tt><tt class="py-op">,</tt> <tt class="py-string">'language'</tt><tt class="py-op">:</tt> <tt class="py-string">""</tt><tt class="py-op">}</tt> </tt>
+<a name="L192"></a><tt class="py-lineno">192</tt>  <tt class="py-line"> </tt>
+<a name="L193"></a><tt class="py-lineno">193</tt>  <tt class="py-line">        <tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-name">forced_decoding</tt> <tt class="py-op">=</tt> <tt id="link-24" class="py-name" targets="Function pypln.backend.workers.extractor.trial_decode()=pypln.backend.workers.extractor-module.html#trial_decode"><a title="pypln.backend.workers.extractor.trial_decode" class="py-name" href="#" onclick="return doclink('link-24', 'trial_decode', 'link-24');">trial_decode</a></tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L194"></a><tt class="py-lineno">194</tt>  <tt class="py-line"> </tt>
+<a name="L195"></a><tt class="py-lineno">195</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-name">unicode</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L196"></a><tt class="py-lineno">196</tt>  <tt class="py-line">            <tt class="py-comment"># HTMLParser only handles unicode objects. We can't pass the text</tt> </tt>
+<a name="L197"></a><tt class="py-lineno">197</tt>  <tt class="py-line">            <tt class="py-comment"># through it if we don't know the encoding, and it's possible we</tt> </tt>
+<a name="L198"></a><tt class="py-lineno">198</tt>  <tt class="py-line">            <tt class="py-comment"># also shouldn't. There's no way of knowing if it's a badly encoded</tt> </tt>
+<a name="L199"></a><tt class="py-lineno">199</tt>  <tt class="py-line">            <tt class="py-comment"># html or a binary blob that happens do have bytes that look liked</tt> </tt>
+<a name="L200"></a><tt class="py-lineno">200</tt>  <tt class="py-line">            <tt class="py-comment"># html entities.</tt> </tt>
+<a name="L201"></a><tt class="py-lineno">201</tt>  <tt class="py-line">            <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt class="py-name">HTMLParser</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">.</tt><tt class="py-name">unescape</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L202"></a><tt class="py-lineno">202</tt>  <tt class="py-line"> </tt>
+<a name="L203"></a><tt class="py-lineno">203</tt>  <tt class="py-line">        <tt class="py-name">text</tt> <tt class="py-op">=</tt> <tt id="link-25" class="py-name"><a title="pypln.backend.workers.extractor.clean" class="py-name" href="#" onclick="return doclink('link-25', 'clean', 'link-18');">clean</a></tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">)</tt> </tt>
+<a name="L204"></a><tt class="py-lineno">204</tt>  <tt class="py-line"> </tt>
+<a name="L205"></a><tt class="py-lineno">205</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-name">unicode</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L206"></a><tt class="py-lineno">206</tt>  <tt class="py-line">            <tt class="py-name">language</tt> <tt class="py-op">=</tt> <tt class="py-name">cld</tt><tt class="py-op">.</tt><tt class="py-name">detect</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">encode</tt><tt class="py-op">(</tt><tt class="py-string">'utf-8'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L207"></a><tt class="py-lineno">207</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L208"></a><tt class="py-lineno">208</tt>  <tt class="py-line">            <tt class="py-name">language</tt> <tt class="py-op">=</tt> <tt class="py-name">cld</tt><tt class="py-op">.</tt><tt class="py-name">detect</tt><tt class="py-op">(</tt><tt class="py-name">text</tt><tt class="py-op">)</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L209"></a><tt class="py-lineno">209</tt>  <tt class="py-line"> </tt>
+<a name="L210"></a><tt class="py-lineno">210</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-op">{</tt><tt class="py-string">'text'</tt><tt class="py-op">:</tt> <tt class="py-name">text</tt><tt class="py-op">,</tt> <tt class="py-string">'file_metadata'</tt><tt class="py-op">:</tt> <tt class="py-name">metadata</tt><tt class="py-op">,</tt> <tt class="py-string">'language'</tt><tt class="py-op">:</tt> <tt class="py-name">language</tt><tt class="py-op">,</tt> </tt>
+<a name="L211"></a><tt class="py-lineno">211</tt>  <tt class="py-line">                <tt class="py-string">'mimetype'</tt><tt class="py-op">:</tt> <tt class="py-name">file_mime_type</tt><tt class="py-op">,</tt> <tt class="py-string">'forced_decoding'</tt><tt class="py-op">:</tt> <tt class="py-name">forced_decoding</tt><tt class="py-op">}</tt> </tt>
+</div></div><a name="L212"></a><tt class="py-lineno">212</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="pypln-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="https://github.com/namd/pypln.backend">Project Homepage</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Wed Apr 29 18:09:02 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

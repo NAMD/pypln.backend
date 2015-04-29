@@ -1,18 +1,19 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Storage Backend &mdash; PyPLN v0.1.1 documentation</title>
+    <title>Storage Backend &mdash; PyPLN 0.1.1 documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '0.1.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -22,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="PyPLN v0.1.1 documentation" href="index.html" />
+    <link rel="top" title="PyPLN 0.1.1 documentation" href="index.html" />
     <link rel="next" title="Data Gathering and Importing" href="data.html" />
     <link rel="prev" title="Text Parsing and Part-of-Speech Tagging" href="parsing.html" /> 
   </head>
@@ -39,7 +40,7 @@
         <li class="right" >
           <a href="parsing.html" title="Text Parsing and Part-of-Speech Tagging"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -50,88 +51,21 @@
             
   <div class="section" id="storage-backend">
 <h1>Storage Backend<a class="headerlink" href="#storage-backend" title="Permalink to this headline">¶</a></h1>
-<p><strong>WARNING:</strong> since we rebuilt our backend, this documentation is depreacted.
-Come here in some days and we&#8217;ll have an updated one.</p>
-<p>PyPLN can make use of various storage formats for both documents and analytical
-results. Since PyPLN is built with distributed processing in mind, the
-configuration of storage backends should, whenever possible be distributed as
-well. That is all databases should be available to workers and sinks as local
-resources, but at the same time be part of a distributed infrastructure, being
-equally available to all machines in the cluster.</p>
-<p>Whenever possible, we will use MongoDB document database to handle storage,
-due to simplicity of its deployment and usage on distributed environments.</p>
+<p>PyPLN makes use of MongoDB document database to handle storage of files and documents,
+due to its scalability and performance characteristics.</p>
 <div class="section" id="file-storage">
 <h2>File Storage<a class="headerlink" href="#file-storage" title="Permalink to this headline">¶</a></h2>
-<p>For PyPLN, document storage happens at more than one stage of of the pipeline.
-At the beginning, we have the document files in their original formats prior to
-the text extraction phase. To avoid resorting to specific implementations of
-distributed filesystems, we use instead MongoDB&#8217;s GridFS which transparently
-handles distribution of files across the cluster without the need of extra
-configurations.</p>
+<p>For PyPLN, files access must be performant on a large cluster of nodes. To keep the deploymento of PyPLN as simple as possible, we resort to GridFS, MongoDB&#8217;s distributed filesystem to store all files imported into PyPLN.</p>
 </div>
 <div class="section" id="document-storage">
 <h2>Document Storage<a class="headerlink" href="#document-storage" title="Permalink to this headline">¶</a></h2>
-<p>For storing the raw text versions of the files and its analysis, PyPLN takes
-advantage of the schemaless nature of MongoDB. MongoDB collections are sets of
-JSON objects (which are stored internally in a binary format called BSON),
-which in our case will be constructed gradually. Initially a document in a
-MongoDB collection will have only one these fields:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;...&#39;</span><span class="p">),</span>
- <span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;test.pdf&#39;</span><span class="p">,</span>
-          <span class="s">&#39;created_on&#39;</span><span class="p">:</span> <span class="s">&#39;2012-05-29&#39;</span><span class="p">,</span>
-         <span class="p">},</span>
- <span class="s">&#39;analysis&#39;</span><span class="p">:</span> <span class="p">{},</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>When this document passes for a pipeline, each node of the pipeline (we call
-these nodes &#8220;apps&#8221;) will do some kind of analysis in the document and
-optionally store more information. For example:</p>
-<ul class="simple">
-<li><tt class="docutils literal"><span class="pre">extractor</span></tt> app extracts text from PDF files;</li>
-<li><tt class="docutils literal"><span class="pre">tokenizer</span></tt> app extracts tokens from text;</li>
-<li><tt class="docutils literal"><span class="pre">freqdist</span></tt> app extracts frequency distribution of tokens in the text;</li>
-<li><tt class="docutils literal"><span class="pre">pos</span></tt> app extracts do the part-of-speech tagging;</li>
-<li>and so on...</li>
-</ul>
+<p>After text extraction, the raw text versions of the files and their analyses are store in a collection on MongoDB.
+All documents are stored in a similar way in the database, basically just the raw text plus some metadata.</p>
+<p>When a document passes through a pipeline, Analyses will be generated for it and stores in the analyses collection in the database along with the id of the documento it refers to.</p>
 <div class="figure">
 <img alt="_images/default-pipeline.png" src="_images/default-pipeline.png" />
 <p class="caption">The PyPLN&#8217;s default pipeline</p>
 </div>
-<p>Each of these new data will be available at the dictionary <tt class="docutils literal"><span class="pre">analysis</span></tt>, inside
-the MongoDB&#8217;s document, for example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">{</span><span class="s">&#39;_id&#39;</span><span class="p">:</span> <span class="n">ObjectId</span><span class="p">(</span><span class="s">&#39;...&#39;</span><span class="p">),</span>
- <span class="s">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;test.pdf&#39;</span><span class="p">,</span>
-          <span class="s">&#39;created_on&#39;</span><span class="p">:</span> <span class="s">&#39;2012-05-29&#39;</span><span class="p">,</span>
-          <span class="s">&#39;Author&#39;</span><span class="p">:</span> <span class="s">u&#39;Álvaro Justen&#39;</span><span class="p">,</span>
-          <span class="s">&#39;Paper format&#39;</span><span class="p">:</span> <span class="s">&#39;A4&#39;</span><span class="p">,</span>
-         <span class="p">},</span>
- <span class="s">&#39;analysis&#39;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s">&#39;text&#39;</span><span class="p">:</span> <span class="s">&#39;This is a sentence, this is a test.&#39;</span><span class="p">,</span>
-              <span class="s">&#39;tokens&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s">&#39;This&#39;</span><span class="p">,</span> <span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;is&#39;</span><span class="p">,</span>
-                         <span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">],</span>
-              <span class="s">&#39;freqdist&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-                           <span class="p">(</span><span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-                           <span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span>
-              <span class="s">&#39;pos&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="s">&#39;This&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;VBZ&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span>
-                      <span class="p">(</span><span class="s">&#39;sentence&#39;</span><span class="p">,</span> <span class="s">&#39;NN&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="s">&#39;,&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;this&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span>
-                      <span class="p">(</span><span class="s">&#39;is&#39;</span><span class="p">,</span> <span class="s">&#39;VBZ&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;DT&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s">&#39;test&#39;</span><span class="p">,</span> <span class="s">&#39;NN&#39;</span><span class="p">),</span>
-                      <span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)],</span>
- <span class="p">},</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>In the example above, each app created an entry in <tt class="docutils literal"><span class="pre">analysis</span></tt> key of
-MongoDB&#8217;s document (<tt class="docutils literal"><span class="pre">extractor</span></tt> created <tt class="docutils literal"><span class="pre">text</span></tt>, <tt class="docutils literal"><span class="pre">tokenizer</span></tt> created
-<tt class="docutils literal"><span class="pre">tokens</span></tt>, <tt class="docutils literal"><span class="pre">freqdist</span></tt> created <tt class="docutils literal"><span class="pre">freqdist</span></tt> and <tt class="docutils literal"><span class="pre">pos</span></tt> created <tt class="docutils literal"><span class="pre">pos</span></tt>).
-An app can also add file meta-information, for example, extractor can add
-<tt class="docutils literal"><span class="pre">document['meta']['Author']</span></tt> and <tt class="docutils literal"><span class="pre">document['meta']['Paper</span> <span class="pre">format']</span></tt> since
-it&#8217;s available in PDF meta-data and can be used for further analysis.</p>
-<p>In the interface between the pipeline and the app must be a way to the app
-to define which keys will be (optionally) created in <tt class="docutils literal"><span class="pre">document['analysis']</span></tt>
-and <tt class="docutils literal"><span class="pre">document['meta']</span></tt>.</p>
 </div>
 </div>
 
@@ -193,13 +127,13 @@ and <tt class="docutils literal"><span class="pre">document['meta']</span></tt>.
         <li class="right" >
           <a href="parsing.html" title="Text Parsing and Part-of-Speech Tagging"
              >previous</a> |</li>
-        <li><a href="index.html">PyPLN v0.1.1 documentation</a> &raquo;</li> 
+        <li><a href="index.html">PyPLN 0.1.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011, Flávio Codeço Coelho.
-      Last updated on Jun 09, 2012.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.8.
+      Last updated on Apr 29, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -1,9 +1,12 @@
 Text Extraction and Normalization
 =================================
 
-**WARNING:** since we rebuilt our backend, this documentation is depreacted.
-Come here in some days and we'll have an updated one.
+By default, PyPLN runs all documents uploaded, through a pipeline which starts with the extraction of plain text and its conversion into Unicode.
+Then the text is ready to be stored and fed to other analytical steps, such as tokenization, part-of-speech tagging, etc.
 
-The functioning of PyPLN's analytical pipeline starts depends on the existence of a collection raw text documents in Unicode encoding. such a collection, frequently is derived from a collection of text containing files in a variety of formats. In order to extract the text from a given file, we first need to find out its mimetype, and then invoke the appropriate program which is able to extract the text from it.
+Currently PyPLN supports the following document formats, from which it can extract plain text:
+- PDF
+- HTML
+- Text
 
-In PyPLN, we intend to handle a variety of document formats, but these extractors will be added gradually.
+Prior to extraction however, PyPLN does mimetype detection, to define the form of the extraction. New mimetypes can be supported by writing new workers to perform the text extraction.
