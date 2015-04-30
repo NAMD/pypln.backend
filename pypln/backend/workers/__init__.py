@@ -31,6 +31,6 @@ from palavras_semantic_tagger import SemanticTagger
 from word_cloud import WordCloud
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-           'SemanticTagger', 'WordCloud']
+__all__ = ['GridFSDataRetriever', 'Extractor', 'Tokenizer', 'FreqDist', 'POS',
+            'Statistics', 'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
+            'SemanticTagger', 'WordCloud']
