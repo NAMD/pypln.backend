@@ -1,5 +1,5 @@
 # Common
-pypelinin
+celery
 mongodict
 
 # The newest pyparsing (2.0) only supports python 3,
@@ -17,7 +17,7 @@ numpy
 nltk>=2.7.8
 git+https://github.com/dat/pyner.git#egg=ner
 Cython
-Pyrex
+# Pyrex #this is deprecated we should use cython only
 Pillow
 # If you have problems installing wordcloud, please install Cython before
 # running `pip install -r requirements/production.txt`

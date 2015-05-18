@@ -17,11 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
+from textwrap import dedent
 from pypln.backend.workers import POS
+from utils import TaskTest
 
 
-class TestPosWorker(unittest.TestCase):
+class TestPosWorker(TaskTest):
     def test_pos_should_return_a_list_of_tuples_with_token_classification_and_offset(self):
         text = 'The sky is blue, the sun is yellow.'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
@@ -30,6 +31,29 @@ class TestPosWorker(unittest.TestCase):
                    ('blue', 'JJ', 11), (',', ',', 15), ('the', 'DT', 17),
                    ('sun', 'NN', 21), ('is', 'VBZ', 25), ('yellow', 'JJ', 28),
                    ('.', '.', 34)]
-        result = POS().process({'text': text, 'tokens': tokens,
+        self.document.update({'text': text, 'tokens': tokens,
                                 'language': 'en'})
-        self.assertEqual(result, {'pos': expected, 'tagset': 'en-nltk'})
+        POS().delay(self.fake_id)
+        self.assertEqual(self.document['pos'], expected)
+        self.assertEqual(self.document['tagset'], 'en-nltk')
+
+    def test_pos_should_run_pt_palavras_if_text_is_in_portuguese(self):
+        text = 'Isso é uma frase em português.'
+        tokens = ['Isso', 'é', 'uma', 'frase', 'em', 'português', '.']
+        palavras_raw = dedent('''
+            Isso    [isso] <*> <dem> SPEC M S @SUBJ>  #1->2
+            é       [ser] <vK> <fmc> <mv> V PR 3S IND VFIN @FS-STA  #2->0
+            uma     [um] <arti> DET F S @>N  #3->4
+            frase   [frase] <act-s> <ac-cat> N F S @<SC  #4->2
+            em=português    [em=português] <pp> ADV @<ADVL  #5->2
+            $. #6->0
+            </s>
+        ''').strip() + '\n\n'
+
+        # '.' is the only named entity here.
+        expected = [(u'.', u'.', 29)]
+        self.document.update({'text': text, 'tokens': tokens,
+            'language': 'pt', 'palavras_raw': palavras_raw})
+        POS().delay(self.fake_id)
+        self.assertEqual(self.document['pos'], expected)
+        self.assertEqual(self.document['tagset'], 'pt-palavras')

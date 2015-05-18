@@ -19,7 +19,7 @@
 
 from collections import Counter
 
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 
 def _get_momenta(distribution):
@@ -42,8 +42,7 @@ def _histogram(freqdist):
         counter[y] += 1
     return sorted(counter.most_common())
 
-class Statistics(Worker):
-    requires = ['freqdist', 'sentences']
+class Statistics(PyPLNTask):
 
     def process(self, document):
         freqdist = document['freqdist'] # eg: [('word', 100), ('other', 97)]

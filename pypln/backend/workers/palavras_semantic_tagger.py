@@ -19,8 +19,8 @@
 
 
 import subprocess
-from pypelinin import Worker
 import re
+from pypln.backend.celery_task import PyPLNTask
 
 SEMANTIC_TAGS = \
 {
@@ -407,10 +407,8 @@ SEMANTIC_TAGS = \
 
 angle_brackets_contents = re.compile('(<[a-zA-Z]*>)')
 
-class SemanticTagger(Worker):
+class SemanticTagger(PyPLNTask):
     """Semantic Tagger"""
-
-    requires = ['palavras_raw', 'palavras_raw_ran']
 
     def process(self, document):
         if not document['palavras_raw_ran']:

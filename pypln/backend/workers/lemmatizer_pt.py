@@ -18,12 +18,10 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import subprocess
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
-class Lemmatizer(Worker):
+class Lemmatizer(PyPLNTask):
     """Lemmatizer"""
-
-    requires = ['palavras_raw', 'palavras_raw_ran']
 
     def process(self, document):
         if not document['palavras_raw_ran']:

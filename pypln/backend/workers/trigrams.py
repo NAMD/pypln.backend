@@ -17,17 +17,16 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from pypelinin import Worker
 
 import nltk
 from nltk.collocations import TrigramCollocationFinder
 from collections import defaultdict
+from pypln.backend.celery_task import PyPLNTask
 
 
 
-class Trigrams(Worker):
+class Trigrams(PyPLNTask):
     """Create a NLTK trigram finder and returns a table in JSON format"""
-    requires = ['tokens']
 
     def process(self, document):
         trigram_measures = nltk.collocations.TrigramAssocMeasures()
@@ -45,4 +44,4 @@ class Trigrams(Worker):
             for res in trigram_finder.score_ngrams(getattr(trigram_measures,m)):
                 tr[res[0]].append(res[1])
 
-        return {'trigram_rank': tr, 'metrics':metrics}
+        return {'trigram_rank': dict(tr), 'metrics':metrics}

@@ -1,5 +1,6 @@
+#!/bin/bash
 #
-# Copyright 2012 NAMD-EMAP-FGV
+# Copyright 2015 NAMD-EMAP-FGV
 #
 # This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
@@ -16,29 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-test:
-	@clear
-	nosetests -dvs tests/
+PYPLN_HOME="/srv/pypln"
 
-test-workers:
-	@clear
-	nosetests -dsv tests/test_worker_*.py
-
-test-x:
-	@clear
-	nosetests -dvsx tests/
-
-doc:
-	@clear
-	./make-docs.sh -vg
-
-clean:
-	rm -rf MANIFEST build/ dist/ pypln.egg-info/ reg-settings.py*
-	find -regex '.*\.pyc' -exec rm {} \;
-	find -regex '.*~' -exec rm {} \;
-
-run-celery:
-	celery -A 'pypln.backend' worker --app=pypln.backend.celery_app:app  -l info
-
-
-.PHONY:	test test-x doc clean test-workers run-celery
+source "$PYPLN_HOME/project/bin/activate"
+cd "$PYPLN_HOME/project/backend/"
+exec celery -A 'pypln.backend' worker --app=pypln.backend.celery_app:app  -l info

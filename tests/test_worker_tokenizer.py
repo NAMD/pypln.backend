@@ -17,18 +17,23 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
 from pypln.backend.workers import Tokenizer
+from utils import TaskTest
 
 
-class TestTokenizerWorker(unittest.TestCase):
+class TestTokenizerWorker(TaskTest):
     def test_tokenizer_should_receive_text_and_return_tokens(self):
-        text = 'The sky is blue, the sun is yellow. This is another sentence.'
-        tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
-                  'yellow', '.', 'This', 'is', 'another', 'sentence', '.']
-        sentences = [['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
-                      'yellow', '.'], ['This', 'is', 'another', 'sentence',
-                                       '.']]
-        result = Tokenizer().process({'text': text})
-        self.assertEqual(result['tokens'], tokens)
-        self.assertEqual(result['sentences'], sentences)
+        self.document['text'] = 'The sky is blue, the sun is yellow. This is another sentence.'
+
+        expected_tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
+            'yellow', '.', 'This', 'is', 'another', 'sentence', '.']
+        expected_sentences = [['The', 'sky', 'is', 'blue', ',', 'the', 'sun',
+            'is', 'yellow', '.'], ['This', 'is', 'another', 'sentence', '.']]
+
+        Tokenizer().delay(self.fake_id)
+
+        tokens = self.document['tokens']
+        sentences = self.document['sentences']
+
+        self.assertEqual(tokens, expected_tokens)
+        self.assertEqual(sentences, expected_sentences)

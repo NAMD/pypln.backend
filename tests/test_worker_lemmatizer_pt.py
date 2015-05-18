@@ -17,14 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
 
 from textwrap import dedent
 
 from pypln.backend.workers import Lemmatizer
+from utils import TaskTest
 
 
-class TestLemmatizerWorker(unittest.TestCase):
+class TestLemmatizerWorker(TaskTest):
 
     def test_lemmatizer_should_return_a_list_with_lemmas(self):
         palavras_output = dedent('''
@@ -42,9 +42,8 @@ class TestLemmatizerWorker(unittest.TestCase):
         </s>
         ''').strip() + '\n\n'
 
-        document = {'palavras_raw': palavras_output}
-        document = {'palavras_raw': palavras_output,
-                'palavras_raw_ran': True}
-        result = Lemmatizer().process(document)
-        expected = {'lemmas': 'eu saber que em este momento falar para todo Brasil .'.split()}
-        self.assertEqual(result, expected)
+        self.document['palavras_raw'] = palavras_output
+        self.document['palavras_raw_ran'] = True
+        result = Lemmatizer().delay(self.fake_id)
+        expected = 'eu saber que em este momento falar para todo Brasil .'.split()
+        self.assertEqual(self.document['lemmas'], expected)

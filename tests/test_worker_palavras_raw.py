@@ -17,34 +17,38 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-import unittest
 
 from textwrap import dedent
 
 from pypln.backend.workers import palavras_raw
+from utils import TaskTest
 
 
 ORIGINAL_PATH = palavras_raw.BASE_PARSER
 
-class TestPalavrasRawWorker(unittest.TestCase):
+class TestPalavrasRawWorker(TaskTest):
 
     def test_should_run_only_if_language_is_portuguese(self):
         if palavras_raw.palavras_installed():
-            document = {'text': 'There was a rock on the way.', 'language': 'en'}
-            result = palavras_raw.PalavrasRaw().process(document)
-            self.assertEqual(result, {'palavras_raw_ran': False})
+            self.document.update({'text': 'There was a rock on the way.',
+                'language': 'en'})
+
+            palavras_raw.PalavrasRaw().delay(self.fake_id)
+            self.assertEqual(self.document['palavras_raw_ran'], False)
 
     def test_palavras_not_installed(self):
         palavras_raw.BASE_PARSER = '/not-found'
-        document = {'text': 'Tinha uma pedra no meio do caminho.', 'language': 'pt'}
-        result = palavras_raw.PalavrasRaw().process(document)
-        self.assertEqual(result, {'palavras_raw_ran': False})
+        self.document.update({'text': 'Tinha uma pedra no meio do caminho.',
+            'language': 'pt'})
+        palavras_raw.PalavrasRaw().delay(self.fake_id)
+        self.assertEqual(self.document['palavras_raw_ran'], False)
 
 
     def test_palavras_should_return_raw_if_it_is_installed(self):
         palavras_raw.BASE_PARSER = ORIGINAL_PATH
-        document = {'text': 'Eu sei que neste momento falo para todo Brasil.',
-                    'language': 'pt'}
+        self.document.update(
+                {'text': 'Eu sei que neste momento falo para todo Brasil.',
+                    'language': 'pt'})
         expected_raw = dedent('''
         Eu 	[eu] <*> PERS M/F 1S NOM @SUBJ>  #1->2
         sei 	[saber] <fmc> <mv> V PR 1S IND VFIN @FS-STA  #2->0
@@ -59,7 +63,6 @@ class TestPalavrasRawWorker(unittest.TestCase):
         $. #11->0
         </s>
         ''').strip() + '\n\n'
-        result = palavras_raw.PalavrasRaw().process(document)
-        expected_result = {'palavras_raw': expected_raw,
-                'palavras_raw_ran': True}
-        self.assertEqual(expected_result, result)
+        result = palavras_raw.PalavrasRaw().delay(self.fake_id)
+        self.assertEqual(self.document['palavras_raw'], expected_raw)
+        self.assertEqual(self.document['palavras_raw_ran'], True)

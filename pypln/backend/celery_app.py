@@ -1,7 +1,6 @@
-#!/usr/bin/env python
 # coding: utf-8
 #
-# Copyright 2012 NAMD-EMAP-FGV
+# Copyright 2015 NAMD-EMAP-FGV
 #
 # This file is part of PyPLN. You can get more information at: http://pypln.org/.
 #
@@ -18,23 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from sys import stdout
-from logging import Logger, StreamHandler, Formatter
+from celery import Celery
 
-from pypelinin import Pipeliner
-
-
-def main():
-    logger = Logger('PyPLN-Pipeliner')
-    handler = StreamHandler(stdout)
-    formatter = Formatter('%(asctime)s - %(name)s - %(levelname)s - '
-                          '%(message)s')
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    pipeliner = Pipeliner(api='tcp://localhost:5555',
-                          broadcast='tcp://localhost:5556', logger=logger)
-    pipeliner.start()
-
-if __name__ == '__main__':
-    main()
-
+app = Celery('pypln_workers', backend='mongodb',
+        broker='amqp://', include=['pypln.backend.workers'])

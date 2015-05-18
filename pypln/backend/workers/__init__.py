@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+from gridfs_data_retriever import GridFSDataRetriever
 from extractor import Extractor
 from tokenizer import Tokenizer
 from freqdist import FreqDist
@@ -30,6 +31,6 @@ from palavras_semantic_tagger import SemanticTagger
 from word_cloud import WordCloud
 
 
-__all__ = ['Extractor', 'Tokenizer', 'FreqDist', 'POS', 'Statistics',
-           'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-           'SemanticTagger', 'WordCloud']
+__all__ = ['GridFSDataRetriever', 'Extractor', 'Tokenizer', 'FreqDist', 'POS',
+            'Statistics', 'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
+            'SemanticTagger', 'WordCloud']

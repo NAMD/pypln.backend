@@ -18,27 +18,29 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import unittest
 from textwrap import dedent
 from pypln.backend.workers import spellchecker
+from utils import TaskTest
 
 DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 
 
-class TestSpellcheckerWorker(unittest.TestCase):
+class TestSpellcheckerWorker(TaskTest):
     def test_spellchek_pt(self):
         text = u"Meu cachoro é um pastor"
-        errors = spellchecker.SpellingChecker().process({'text': text, 'language': 'pt_BR'})
-        assert len(errors) == 1
-        assert 'cachoro' in errors['spelling_errors'][0]
-        assert 'cachorro' in errors['spelling_errors'][0][2]
-        self.assertEqual(errors['spelling_errors'][0][1], 4)
+        self.document.update({'text': text, 'language': 'pt_BR'})
+        spellchecker.SpellingChecker().delay(self.fake_id)
+        self.assertEqual(len(self.document['spelling_errors']), 1)
+        self.assertIn('cachoro', self.document['spelling_errors'][0])
+        self.assertIn('cachorro', self.document['spelling_errors'][0][2])
+        self.assertEqual(self.document['spelling_errors'][0][1], 4)
 
     def test_spellchek_en(self):
         text = u"The cat bit the doggyo"
-        errors = spellchecker.SpellingChecker().process({'text': text, 'language': 'en'})
-        assert len(errors) == 1
-        assert 'doggyo' in errors['spelling_errors'][0]
-        assert 'doggy' in errors['spelling_errors'][0][2]
-        self.assertEqual(errors['spelling_errors'][0][1], 16)
+        self.document.update({'text': text, 'language': 'en'})
+        spellchecker.SpellingChecker().delay(self.fake_id)
+        self.assertEqual(len(self.document['spelling_errors']), 1)
+        self.assertIn('doggyo', self.document['spelling_errors'][0])
+        self.assertIn('doggy', self.document['spelling_errors'][0][2])
+        self.assertEqual(self.document['spelling_errors'][0][1], 16)
 

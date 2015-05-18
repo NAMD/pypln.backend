@@ -18,16 +18,20 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from pypelinin import Worker
 import enchant
 from enchant.checker import SpellChecker
+from pypln.backend.celery_task import PyPLNTask
 
-class SpellingChecker(Worker):
+class SpellingChecker(PyPLNTask):
     """
     This worker performs spellchecking in the plain text of a document
     """
-    requires = ['text', 'language']
     def __init__(self):
+        # This method is only called once per process, but that is no problem
+        # since the enchant languange list should not change. Don't use this
+        # method for anything that should run every time the task is called.
+        # See http://docs.celeryproject.org/en/latest/userguide/tasks.html#instantiation
+        # for more information.
         self.checkers = {lang: SpellChecker(lang) for lang in enchant.list_languages()}
 
     def process(self, document):

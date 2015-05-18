@@ -25,7 +25,7 @@ import numpy
 import nltk
 from wordcloud import make_wordcloud
 
-from pypelinin import Worker
+from pypln.backend.celery_task import PyPLNTask
 
 def filter_stopwords(fdist, lang):
     long_name = {'en': 'english', 'pt': 'portuguese'}
@@ -34,8 +34,7 @@ def filter_stopwords(fdist, lang):
         stopwords += nltk.corpus.stopwords.words(long_name[lang])
     return filter(lambda pair: pair[0].lower() not in stopwords, fdist)
 
-class WordCloud(Worker):
-    requires = ['freqdist', 'language']
+class WordCloud(PyPLNTask):
 
     def process(self, document):
         fdist = filter_stopwords(document['freqdist'], document['language'])

@@ -18,6 +18,42 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from random import randrange
+import unittest
+import pymongo
+
+from pypln.backend.mongodict_adapter import MongoDictAdapter
+from pypln.backend.celery_app import app
+from pypln.backend import config
+
+class ConfigurationError(Exception):
+    pass
+
+class TaskTest(unittest.TestCase):
+    db_name = config.MONGODB_CONFIG['database']
+
+    def setUp(self):
+        app.conf.update(CELERY_ALWAYS_EAGER=True)
+        self.fake_id = '1234'
+        self.document = MongoDictAdapter(self.fake_id, database=self.db_name)
+        self.db = pymongo.Connection()[self.db_name]
+
+    def tearDown(self):
+        self.db.main.remove({})
+
+    @classmethod
+    def setUpClass(cls):
+        # Maybe our test runner should set the new database name. For now, this
+        # ensures we will not drop the wrong database.
+        if not cls.db_name.startswith('test'):
+            raise ConfigurationError("The name of the database used to run "
+                    "tests needs to start with `test`. This is a safeguard to "
+                    "guarantee we don't drop (or polute) the wrong database.")
+
+    @classmethod
+    def tearDownClass(cls):
+        pymongo.MongoClient().drop_database(cls.db_name)
+
+
 
 
 def random_string(min_size=10, max_size=100):
@@ -33,147 +69,3 @@ default_config = {'store': {'host': 'localhost', 'port': 27017,
                             'monitoring_collection': 'monitoring',},
                   'monitoring interval': 60,
 }
-
-monitoring_sample = \
-{'datetime': [2012, 10, 26, 18, 38, 57, 4, 300, -1],
- 'host': {'cpu': {'cpu percent': 32.5, 'number of cpus': 4},
-          'memory': {'buffers': 22138880L,
-                     'cached': 355336192,
-                     'free': 94998528L,
-                     'free virtual': 0L,
-                     'percent': 97.58766341492336,
-                     'real free': 472473600L,
-                     'real percent': 88.00228409051904,
-                     'real used': 3465555968L,
-                     'total': 3938029568L,
-                     'total virtual': 0L,
-                     'used': 3843031040L,
-                     'used virtual': 0L},
-          'network': {'cluster ip': '127.0.0.1',
-                      'interfaces': {'eth0': {'bytes received': 261445920,
-                                              'bytes sent': 49557117,
-                                              'packets received': 325187,
-                                              'packets sent': 282361},
-                                     'eth1': {'bytes received': 1021135,
-                                              'bytes sent': 17132,
-                                              'packets received': 5939,
-                                              'packets sent': 103},
-                                     'lo': {'bytes received': 8793427,
-                                            'bytes sent': 8793427,
-                                            'packets received': 33867,
-                                            'packets sent': 33867},
-                                     'teredo': {'bytes received': 0,
-                                                'bytes sent': 234864,
-                                                'packets received': 0,
-                                                'packets sent': 2937}}},
-          'storage': {'/dev/sda3': {'file system': 'ext4',
-                                    'mount point': '/',
-                                    'percent used': 78.0,
-                                    'total bytes': 393723564032,
-                                    'total free bytes': 66740322304,
-                                    'total used bytes': 306983178240}},
-          'uptime': 61796.50727200508},
- 'processes': [{'active workers': 0,
-                'cpu percent': 0.0,
-                'number of workers': 16,
-                'pid': 11172,
-                'resident memory': 14585856,
-                'started at': 1351276733.51,
-                'type': 'broker',
-                'virtual memory': 180486144},
-               {'cpu percent': 0.0,
-                'pid': 11179,
-                'resident memory': 10543104,
-                'started at': 1351276734.96,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11180,
-                'resident memory': 10481664,
-                'started at': 1351276734.96,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11181,
-                'resident memory': 10489856,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11182,
-                'resident memory': 10493952,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11183,
-                'resident memory': 10485760,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11184,
-                'resident memory': 10498048,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11185,
-                'resident memory': 10510336,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11186,
-                'resident memory': 10502144,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11187,
-                'resident memory': 10510336,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11188,
-                'resident memory': 10588160,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11189,
-                'resident memory': 10518528,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11190,
-                'resident memory': 10518528,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113238016},
-               {'cpu percent': 0.0,
-                'pid': 11191,
-                'resident memory': 10616832,
-                'started at': 1351276734.97,
-                'type': 'worker',
-                'virtual memory': 113373184},
-               {'cpu percent': 0.0,
-                'pid': 11192,
-                'resident memory': 10534912,
-                'started at': 1351276734.98,
-                'type': 'worker',
-                'virtual memory': 113373184},
-               {'cpu percent': 0.0,
-                'pid': 11193,
-                'resident memory': 10539008,
-                'started at': 1351276734.98,
-                'type': 'worker',
-                'virtual memory': 113373184},
-               {'cpu percent': 0.0,
-                'pid': 11194,
-                'resident memory': 10543104,
-                'started at': 1351276734.98,
-                'type': 'worker',
-                'virtual memory': 113373184}]}

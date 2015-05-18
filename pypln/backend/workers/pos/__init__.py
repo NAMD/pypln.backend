@@ -17,11 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from pypelinin import Worker
 
 import en_nltk
 import pt_palavras
 from pypln.backend.workers.palavras_raw import palavras_installed
+from pypln.backend.celery_task import PyPLNTask
 
 
 MAPPING = {
@@ -40,9 +40,7 @@ def put_offset(text, tagged_text):
         position = token_position + len(token) - 1
     return result
 
-class POS(Worker):
-    requires = ['text', 'tokens', 'language', 'palavras_raw']
-
+class POS(PyPLNTask):
     def process(self, document):
         tagged_text_with_offset = None
         tagset = None
