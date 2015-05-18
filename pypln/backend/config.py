@@ -1,9 +1,23 @@
-MONGODB_CONFIG = {
-    'host': 'localhost',
-    'port': 27017,
-    'database': 'pypln_dev',
-    'gridfs_collection': 'files',
-}
+import os
+import ConfigParser
+def get_store_config():
+    config_filename = os.path.expanduser('~/.pypln_store_config')
+    defaults = {'host': 'localhost',
+                'port': '27017',
+                'database': 'pypln_dev',
+                'gridfs_collection': 'files',
+    }
+    config = ConfigParser.ConfigParser(defaults=defaults)
+    config.add_section('store')
+    config.read(config_filename)
+    store_config = dict(config.items('store'))
+    # The database port needs to be an integer, but ConfigParser will treat
+    # everything as a string unless you use the specific method to retrieve the
+    # value.
+    store_config['port'] = config.getint('store', 'port')
+    return store_config
+
+MONGODB_CONFIG = get_store_config()
 
 try:
     from local_config import *
