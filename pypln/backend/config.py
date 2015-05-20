@@ -18,6 +18,9 @@ def get_store_config():
     return store_config
 
 MONGODB_CONFIG = get_store_config()
+ELASTICSEARCH_CONFIG = {
+    'hosts': ['172.16.4.46', '172.16.4.52'],
+}
 
 try:
     from local_config import *
