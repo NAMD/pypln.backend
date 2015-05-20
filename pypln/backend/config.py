@@ -23,6 +23,8 @@ def get_broker_config():
     defaults = {
         "host": "localhost",
         "port": "5672",
+        "user": "guest",
+        "password": "guest",
     }
     celery_config = ConfigParser.ConfigParser(defaults=defaults)
     celery_config.add_section('broker')
@@ -31,7 +33,8 @@ def get_broker_config():
 
 CELERY_BROKER_CONFIG = get_broker_config()
 
-BROKER_URL = 'amqp://guest:guest@{}:{}//'.format(
+BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
+        CELERY_BROKER_CONFIG['user'], CELERY_BROKER_CONFIG['password'],
         CELERY_BROKER_CONFIG['host'], CELERY_BROKER_CONFIG['port'])
 
 CELERY_RESULT_BACKEND = 'mongodb://{}:{}'.format(MONGODB_CONFIG['host'],
