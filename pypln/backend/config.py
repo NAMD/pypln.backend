@@ -19,6 +19,23 @@ def get_store_config():
 
 MONGODB_CONFIG = get_store_config()
 
+def get_broker_config():
+    defaults = {
+        "host": "localhost",
+        "port": "5672",
+    }
+    celery_config = ConfigParser.ConfigParser(defaults=defaults)
+    celery_config.add_section('broker')
+    celery_config.read(os.path.expanduser('~/.pypln_celery_config'))
+    return dict(celery_config.items('broker'))
+
+CELERY_BROKER_CONFIG = get_broker_config()
+
+BROKER_URL = 'amqp://guest:guest@{}:{}//'.format(
+        CELERY_BROKER_CONFIG['host'], CELERY_BROKER_CONFIG['port'])
+
+CELERY_RESULT_BACKEND = 'mongodb://{}:{}'.format(MONGODB_CONFIG['host'],
+        MONGODB_CONFIG['port'])
 try:
     from local_config import *
 except ImportError:

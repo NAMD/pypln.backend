@@ -18,6 +18,11 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from celery import Celery
+import config
 
 app = Celery('pypln_workers', backend='mongodb',
         broker='amqp://', include=['pypln.backend.workers'])
+app.conf.update(
+    BROKER_URL=config.BROKER_URL,
+    CELERY_RESULT_BACKEND=config.CELERY_RESULT_BACKEND,
+)
