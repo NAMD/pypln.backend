@@ -67,7 +67,7 @@ All analyses in PyPLN are performed by our workers. Every worker is a Celery
 task that can be included in the canvas that will run when a document is
 received in pypln.web.
 
-New workers are very to create. All you need to do is write a subclass of `PyPLNTask <https://github.com/NAMD/pypln.backend/blob/develop/pypln/backend/celery_task.py#L36>`
+New workers are very easy to create. All you need to do is write a subclass of `PyPLNTask <https://github.com/NAMD/pypln.backend/blob/develop/pypln/backend/celery_task.py#L36>`
 that implements a "process" method. This method will receive the document as a
 dictionary, and should return a dictionary that will be used to update the
 existing document. As an example::
