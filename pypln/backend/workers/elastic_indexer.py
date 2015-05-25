@@ -32,7 +32,8 @@ class ElasticIndexer(PyPLNTask):
         doc_type = document.pop('doc_type')
         _id = document.pop("pypln_id")
         ES.indices.create(index_name, ignore=400)
-        result = ES.index(doc_type=doc_type, body=document, id=_id)
+        result = ES.index(index=index_name, doc_type=doc_type,
+                body=document, id=_id)
         return result
 
 
