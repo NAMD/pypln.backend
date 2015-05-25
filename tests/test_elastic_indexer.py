@@ -14,7 +14,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch.exceptions import NotFoundError
 
 
-class TestIndexa(TaskTest):
+class TestIndexer(TaskTest):
     def test_indexing_go_through(self):
         ES = Elasticsearch()
         try:
@@ -32,7 +32,3 @@ class TestIndexa(TaskTest):
         self.document.update(doc)
         ElasticIndexer().delay(self.fake_id)
         assert self.document['created']  # must be True
-
-
-
-
