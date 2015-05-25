@@ -18,12 +18,12 @@ class TestIndexer(TaskTest):
     def test_indexing_go_through(self):
         ES = Elasticsearch()
         try:
-            ES.indices.delete('test')
+            ES.indices.delete('test_pypln')
         except NotFoundError:
             pass
-        ES.indices.create('test')
+        ES.indices.create('test_pypln')
         doc = {
-            'index_name': "test",
+            'index_name': "test_pypln",
             'doc_type': 'document',
             'pypln_id': 1,
             'text': "Om nama Shivaya "*100
