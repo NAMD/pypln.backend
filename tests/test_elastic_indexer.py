@@ -11,12 +11,16 @@ __docformat__ = 'restructuredtext en'
 from pypln.backend.workers.elastic_indexer import ElasticIndexer
 from .utils import TaskTest
 from elasticsearch import Elasticsearch
+from elasticsearch.exceptions import NotFoundError
 
 
 class TestIndexa(TaskTest):
     def test_indexing_go_through(self):
         ES = Elasticsearch()
-        ES.indices.delete('test')
+        try:
+            ES.indices.delete('test')
+        except NotFoundError:
+            pass
         ES.indices.create('test')
         doc = {
             'index_name': "test",
