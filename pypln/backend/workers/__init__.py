@@ -29,8 +29,9 @@ from lemmatizer_pt import Lemmatizer
 from palavras_noun_phrase import NounPhrase
 from palavras_semantic_tagger import SemanticTagger
 from word_cloud import WordCloud
+from elastic_indexer import ElasticIndexer
 
 
 __all__ = ['GridFSDataRetriever', 'Extractor', 'Tokenizer', 'FreqDist', 'POS',
             'Statistics', 'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-            'SemanticTagger', 'WordCloud']
+            'SemanticTagger', 'WordCloud', 'ElasticIndexer']
