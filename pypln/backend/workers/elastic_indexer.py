@@ -30,10 +30,10 @@ class ElasticIndexer(PyPLNTask):
     def process(self, document):
         index_name = document.pop("index_name")
         doc_type = document.pop('doc_type')
-        _id = document.pop("pypln_id")
+        file_id = document["file_id"]
         ES.indices.create(index_name, ignore=400)
         result = ES.index(index=index_name, doc_type=doc_type,
-                body=document, id=_id)
+                body=document, id=file_id)
         return result
 
 
