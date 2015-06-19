@@ -25,7 +25,7 @@ class TestIndexer(TaskTest):
         doc = {
             'index_name': "test_pypln",
             'doc_type': 'document',
-            'pypln_id': 1,
+            'file_id': 'deadbeef',
             'text': "Om nama Shivaya "*100
         }
 
