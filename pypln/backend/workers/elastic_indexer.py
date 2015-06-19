@@ -35,7 +35,3 @@ class ElasticIndexer(PyPLNTask):
         result = ES.index(index=index_name, doc_type=doc_type,
                 body=document, id=file_id)
         return result
-
-
-
-
