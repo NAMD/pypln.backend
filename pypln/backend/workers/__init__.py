@@ -18,6 +18,7 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from gridfs_data_retriever import GridFSDataRetriever
+from gridfs_file_deleter import GridFSFileDeleter
 from extractor import Extractor
 from tokenizer import Tokenizer
 from freqdist import FreqDist
@@ -34,4 +35,5 @@ from elastic_indexer import ElasticIndexer
 
 __all__ = ['GridFSDataRetriever', 'Extractor', 'Tokenizer', 'FreqDist', 'POS',
             'Statistics', 'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-            'SemanticTagger', 'WordCloud', 'ElasticIndexer']
+            'SemanticTagger', 'WordCloud', 'ElasticIndexer',
+            'GridFSFileDeleter']
