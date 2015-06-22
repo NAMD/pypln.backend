@@ -30,5 +30,5 @@ class GridFSFileDeleter(PyPLNTask):
             )[config.MONGODB_CONFIG['database']]
         gridfs = GridFS(database, config.MONGODB_CONFIG['gridfs_collection'])
 
-        result = gridfs.delete(ObjectId(document['file_id']))
+        gridfs.delete(ObjectId(document['file_id']))
         return {}
