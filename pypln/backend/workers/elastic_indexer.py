@@ -17,21 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
-from gridfs_data_retriever import GridFSDataRetriever
-from extractor import Extractor
-from tokenizer import Tokenizer
-from freqdist import FreqDist
-from pos import POS
-from statistics import Statistics
-from bigrams import Bigrams
-from palavras_raw import PalavrasRaw
-from lemmatizer_pt import Lemmatizer
-from palavras_noun_phrase import NounPhrase
-from palavras_semantic_tagger import SemanticTagger
-from word_cloud import WordCloud
-from elastic_indexer import ElasticIndexer
+from pypln.backend.celery_task import PyPLNTask
+from elasticsearch import Elasticsearch
+from pypln.backend.config import ELASTICSEARCH_CONFIG
 
+ES = Elasticsearch(hosts=ELASTICSEARCH_CONFIG['hosts'])
 
-__all__ = ['GridFSDataRetriever', 'Extractor', 'Tokenizer', 'FreqDist', 'POS',
-            'Statistics', 'Bigrams', 'PalavrasRaw', 'Lemmatizer', 'NounPhrase',
-            'SemanticTagger', 'WordCloud', 'ElasticIndexer']
+class ElasticIndexer(PyPLNTask):
+    """
+    Index document in an elasticsearch index specified in the document as `index_name`.
+    """
+    def process(self, document):
+        index_name = document.pop("index_name")
+        doc_type = document.pop('doc_type')
+        file_id = document["file_id"]
+        ES.indices.create(index_name, ignore=400)
+        result = ES.index(index=index_name, doc_type=doc_type,
+                body=document, id=file_id)
+        return result

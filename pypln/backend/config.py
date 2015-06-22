@@ -18,6 +18,9 @@ def get_store_config():
     return store_config
 
 MONGODB_CONFIG = get_store_config()
+ELASTICSEARCH_CONFIG = {
+    'hosts': ['127.0.0.1', '172.16.4.46', '172.16.4.52'],
+}
 
 def get_broker_config():
     defaults = {

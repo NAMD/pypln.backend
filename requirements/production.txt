@@ -24,3 +24,4 @@ Pillow
 # running `pip install -r requirements/production.txt`
 -e git+https://github.com/flavioamieiro/word_cloud.git#egg=wordcloud
 pyenchant
+elasticsearch
