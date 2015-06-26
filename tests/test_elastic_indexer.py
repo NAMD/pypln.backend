@@ -8,6 +8,8 @@ license: GPL V3 or Later
 __docformat__ = 'restructuredtext en'
 
 
+from mock import patch
+
 from pypln.backend.workers.elastic_indexer import ElasticIndexer
 from .utils import TaskTest
 from elasticsearch import Elasticsearch
@@ -26,9 +28,37 @@ class TestIndexer(TaskTest):
             'index_name': "test_pypln",
             'doc_type': 'document',
             'file_id': 'deadbeef',
-            'text': "Om nama Shivaya "*100
+            'text': "Om nama Shivaya "*100,
+            'contents': 'raw_file_contents',
         }
 
         self.document.update(doc)
         ElasticIndexer().delay(self.fake_id)
         assert self.document['created']  # must be True
+
+    @patch('pypln.backend.workers.elastic_indexer.ES')
+    def test_regression_indexing_should_not_include_contents(self, ES):
+        """
+        We should not index the original file contents for two reasons: 1) they
+        are not relevant to the search. The `text` attribute should include the
+        relevant content and 2) they may be in a binary format that will not be
+        serializable.
+
+        See https://github.com/NAMD/pypln.backend/issues/176 for details.
+        """
+        doc = {
+            'index_name': "test_pypln",
+            'doc_type': 'document',
+            'file_id': 'deadbeef',
+            'text': "Om nama Shivaya "*100,
+            'contents': 'raw_file_contents',
+        }
+
+        self.document.update(doc)
+        ElasticIndexer().delay(self.fake_id)
+        # remove properties that won't be indexed
+        index_name = doc.pop("index_name")
+        doc_type = doc.pop('doc_type')
+        doc.pop('contents')
+        ES.index.assert_called_with(body=doc, id=doc['file_id'],
+                doc_type=doc_type, index=index_name)

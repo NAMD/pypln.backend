@@ -32,6 +32,10 @@ class ElasticIndexer(PyPLNTask):
         doc_type = document.pop('doc_type')
         file_id = document["file_id"]
         ES.indices.create(index_name, ignore=400)
+        # We need to remove the raw contents of the file.
+        # See `test_regression_indexing_should_not_include_contents` in
+        # tests/test_elastic_indexer.py for details.
+        document.pop('contents')
         result = ES.index(index=index_name, doc_type=doc_type,
                 body=document, id=file_id)
         return result
