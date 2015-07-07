@@ -84,3 +84,9 @@ existing document. As an example::
 
 This worker assumes that a previous worker has already included "value" in the
 document and uses it to create a new one, called "squared_value".
+
+
+.. image:: https://d2weczhvl823v0.cloudfront.net/NAMD/pypln.backend/trend.png
+   :alt: Bitdeli badge
+   :target: https://bitdeli.com/free
+
