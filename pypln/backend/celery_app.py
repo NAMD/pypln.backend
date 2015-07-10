@@ -18,6 +18,7 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 from celery import Celery
+from kombu import Exchange, Queue
 import config
 
 app = Celery('pypln_workers', backend='mongodb',
@@ -25,4 +26,8 @@ app = Celery('pypln_workers', backend='mongodb',
 app.conf.update(
     BROKER_URL=config.BROKER_URL,
     CELERY_RESULT_BACKEND=config.CELERY_RESULT_BACKEND,
+    CELERY_QUEUES=(Queue(config.CELERY_QUEUE_NAME,
+        Exchange(config.CELERY_QUEUE_NAME),
+            routing_key=config.CELERY_QUEUE_NAME),),
+    CELERY_DEFAULT_QUEUE=config.CELERY_DEFAULT_QUEUE,
 )

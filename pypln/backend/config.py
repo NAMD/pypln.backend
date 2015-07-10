@@ -42,6 +42,10 @@ BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
 
 CELERY_RESULT_BACKEND = 'mongodb://{}:{}'.format(MONGODB_CONFIG['host'],
         MONGODB_CONFIG['port'])
+
+CELERY_DEFAULT_QUEUE = "pypln"
+CELERY_QUEUE_NAME = "pypln"
+
 try:
     from local_config import *
 except ImportError:
