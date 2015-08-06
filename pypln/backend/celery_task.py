@@ -16,10 +16,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-
+import pymongo
 from celery import Task
-
-from pypln.backend.mongodict_adapter import MongoDictAdapter
 
 # This import may look like an unused imported, but it is not.
 # When our base task class is defined, the Celery app must have already been
@@ -32,6 +30,11 @@ from pypln.backend.celery_app import app
 
 from pypln.backend import config
 
+
+mongo_client = pymongo.MongoClient(host=config.MONGODB_CONFIG["host"],
+        port=config.MONGODB_CONFIG["port"])
+database = mongo_client[config.MONGODB_CONFIG["database"]]
+document_collection = database[config.MONGODB_CONFIG["collection"]]
 
 class PyPLNTask(Task):
     """
@@ -48,16 +51,9 @@ class PyPLNTask(Task):
         It will call the `process` method with a dictionary containing all the
         document information and will update de database with results.
         """
-        document = MongoDictAdapter(doc_id=document_id,
-                host=config.MONGODB_CONFIG['host'],
-                port=config.MONGODB_CONFIG['port'],
-                database=config.MONGODB_CONFIG['database'])
-        # Create a dictionary out of our document. We could simply pass
-        # it on to the process method, but for now we won't let the user
-        # manipulate the MongoDict directly.
-        dic = {k: v for k, v in document.iteritems()}
-        result = self.process(dic)
-        document.update(result)
+        document = document_collection.find_one()
+        result = self.process(document)
+        document_collection.update({"_id": document_id}, {"$set": result})
         return document_id
 
     def process(self, document):
