@@ -36,6 +36,12 @@ class ElasticIndexer(PyPLNTask):
         # See `test_regression_indexing_should_not_include_contents` in
         # tests/test_elastic_indexer.py for details.
         document.pop('contents')
+        # We also need to exclude _id, because ObjectId's won't be
+        # serializable.
+        document.pop("_id")
+
         result = ES.index(index=index_name, doc_type=doc_type,
                 body=document, id=file_id)
+        index_id = result.pop("_id")
+        result["index_id"] = index_id
         return result
