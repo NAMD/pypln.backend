@@ -21,7 +21,6 @@ from random import randrange
 import unittest
 import pymongo
 
-from pypln.backend.mongodict_adapter import MongoDictAdapter
 from pypln.backend.celery_app import app
 from pypln.backend import config
 
@@ -33,12 +32,11 @@ class TaskTest(unittest.TestCase):
 
     def setUp(self):
         app.conf.update(CELERY_ALWAYS_EAGER=True)
-        self.fake_id = '1234'
-        self.document = MongoDictAdapter(self.fake_id, database=self.db_name)
         self.db = pymongo.Connection()[self.db_name]
+        self.collection = self.db[config.MONGODB_CONFIG['collection']]
 
     def tearDown(self):
-        self.db.main.remove({})
+        self.collection.remove({})
 
     @classmethod
     def setUpClass(cls):
