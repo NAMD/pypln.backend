@@ -32,9 +32,10 @@ class TestIndexer(TaskTest):
             'contents': 'raw_file_contents',
         }
 
-        self.document.update(doc)
-        ElasticIndexer().delay(self.fake_id)
-        assert self.document['created']  # must be True
+        doc_id = self.collection.insert(doc)
+        ElasticIndexer().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertTrue(refreshed_document['created'])
 
     @patch('pypln.backend.workers.elastic_indexer.ES')
     def test_regression_indexing_should_not_include_contents(self, ES):
@@ -54,11 +55,12 @@ class TestIndexer(TaskTest):
             'contents': 'raw_file_contents',
         }
 
-        self.document.update(doc)
-        ElasticIndexer().delay(self.fake_id)
+        doc_id = self.collection.insert(doc)
+        ElasticIndexer().delay(doc_id)
         # remove properties that won't be indexed
         index_name = doc.pop("index_name")
         doc_type = doc.pop('doc_type')
         doc.pop('contents')
+        doc.pop('_id')
         ES.index.assert_called_with(body=doc, id=doc['file_id'],
                 doc_type=doc_type, index=index_name)
