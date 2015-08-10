@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import base64
 import shlex
 
 from HTMLParser import HTMLParser
@@ -169,15 +170,16 @@ class Extractor(PyPLNTask):
     #TODO: should 'replace_with' be '' when extracting from HTML?
 
     def process(self, file_data):
+        contents = base64.b64decode(file_data['contents'])
         with magic.Magic(flags=magic.MAGIC_MIME_TYPE) as m:
-            file_mime_type = m.id_buffer(file_data['contents'])
+            file_mime_type = m.id_buffer(contents)
         metadata = {}
         if file_mime_type == 'text/plain':
-            text = file_data['contents']
+            text = contents
         elif file_mime_type == 'text/html':
-            text = parse_html(file_data['contents'], True, ['script', 'style'])
+            text = parse_html(contents, True, ['script', 'style'])
         elif file_mime_type == 'application/pdf':
-            text, metadata = extract_pdf(file_data['contents'])
+            text, metadata = extract_pdf(contents)
         else:
             # If we can't detect the mimetype we add a flag that can be read by
             # the frontend to provide more information on why the document
