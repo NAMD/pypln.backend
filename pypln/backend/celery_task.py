@@ -51,7 +51,7 @@ class PyPLNTask(Task):
         It will call the `process` method with a dictionary containing all the
         document information and will update de database with results.
         """
-        document = document_collection.find_one()
+        document = document_collection.find_one({"_id": document_id})
         result = self.process(document)
         document_collection.update({"_id": document_id}, {"$set": result})
         return document_id
