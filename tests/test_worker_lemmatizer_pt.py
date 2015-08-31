@@ -42,8 +42,9 @@ class TestLemmatizerWorker(TaskTest):
         </s>
         ''').strip() + '\n\n'
 
-        self.document['palavras_raw'] = palavras_output
-        self.document['palavras_raw_ran'] = True
-        result = Lemmatizer().delay(self.fake_id)
+        doc = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
+        doc_id = self.collection.insert(doc)
+        result = Lemmatizer().delay(doc_id)
         expected = 'eu saber que em este momento falar para todo Brasil .'.split()
-        self.assertEqual(self.document['lemmas'], expected)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['lemmas'], expected)
