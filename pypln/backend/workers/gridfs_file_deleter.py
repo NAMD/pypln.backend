@@ -25,9 +25,9 @@ from pypln.backend import config
 class GridFSFileDeleter(PyPLNTask):
 
     def process(self, document):
-        database = pymongo.MongoClient(host=config.MONGODB_CONFIG['host'],
-                port=config.MONGODB_CONFIG['port']
-            )[config.MONGODB_CONFIG['database']]
+        mongo_client = pymongo.MongoClient(host=config.MONGODB_CONFIG["host"],
+                port=config.MONGODB_CONFIG["port"])
+        database = mongo_client[config.MONGODB_CONFIG["database"]]
         gridfs = GridFS(database, config.MONGODB_CONFIG['gridfs_collection'])
 
         gridfs.delete(ObjectId(document['file_id']))
