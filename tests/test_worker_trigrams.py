@@ -26,7 +26,7 @@ trigram_measures = nltk.collocations.TrigramAssocMeasures()
 
 
 class TestTrigramWorker(TaskTest):
-    def test_Trigrams_should_return_correct_score_(self):
+    def test_Trigrams_should_return_correct_score(self):
         tokens = [w for w in
                 nltk.corpus.genesis.words('english-web.txt')]
         trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
