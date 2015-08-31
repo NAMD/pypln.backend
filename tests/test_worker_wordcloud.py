@@ -29,12 +29,13 @@ from utils import TaskTest
 class TestFreqDistWorker(TaskTest):
     name = "WordCloud"
     def test_wordcloud_should_return_a_base64_encoded_png(self):
-        self.document['freqdist'] =  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
-                    ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)]
-        self.document['language'] = 'en'
-        WordCloud().delay(self.fake_id).get()
+        doc = {'freqdist':  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
+            ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)], 'language': 'en'}
+        doc_id = self.collection.insert(doc)
+        WordCloud().delay(doc_id)
 
-        raw_png_data = base64.b64decode(self.document['wordcloud'])
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        raw_png_data = base64.b64decode(refreshed_document['wordcloud'])
 
         fake_file = StringIO(raw_png_data)
         img = Image.open(fake_file)
