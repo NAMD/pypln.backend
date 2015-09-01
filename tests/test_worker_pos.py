@@ -27,15 +27,16 @@ class TestPosWorker(TaskTest):
         text = 'The sky is blue, the sun is yellow.'
         tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
                   'yellow', '.']
-        expected = [('The', 'DT', 0), ('sky', 'NN', 4), ('is', 'VBZ', 8),
-                   ('blue', 'JJ', 11), (',', ',', 15), ('the', 'DT', 17),
-                   ('sun', 'NN', 21), ('is', 'VBZ', 25), ('yellow', 'JJ', 28),
-                   ('.', '.', 34)]
-        self.document.update({'text': text, 'tokens': tokens,
+        expected = [['The', 'DT', 0], ['sky', 'NN', 4], ['is', 'VBZ', 8],
+                   ['blue', 'JJ', 11], [',', ',', 15], ['the', 'DT', 17],
+                   ['sun', 'NN', 21], ['is', 'VBZ', 25], ['yellow', 'JJ', 28],
+                   ['.', '.', 34]]
+        doc_id = self.collection.insert({'text': text, 'tokens': tokens,
                                 'language': 'en'})
-        POS().delay(self.fake_id)
-        self.assertEqual(self.document['pos'], expected)
-        self.assertEqual(self.document['tagset'], 'en-nltk')
+        POS().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['pos'], expected)
+        self.assertEqual(refreshed_document['tagset'], 'en-nltk')
 
     def test_pos_should_run_pt_palavras_if_text_is_in_portuguese(self):
         text = 'Isso é uma frase em português.'
@@ -51,9 +52,10 @@ class TestPosWorker(TaskTest):
         ''').strip() + '\n\n'
 
         # '.' is the only named entity here.
-        expected = [(u'.', u'.', 29)]
-        self.document.update({'text': text, 'tokens': tokens,
+        expected = [[u'.', u'.', 29]]
+        doc_id = self.collection.insert({'text': text, 'tokens': tokens,
             'language': 'pt', 'palavras_raw': palavras_raw})
-        POS().delay(self.fake_id)
-        self.assertEqual(self.document['pos'], expected)
-        self.assertEqual(self.document['tagset'], 'pt-palavras')
+        POS().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['pos'], expected)
+        self.assertEqual(refreshed_document['tagset'], 'pt-palavras')
