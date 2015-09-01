@@ -28,19 +28,23 @@ DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 class TestSpellcheckerWorker(TaskTest):
     def test_spellchek_pt(self):
         text = u"Meu cachoro é um pastor"
-        self.document.update({'text': text, 'language': 'pt_BR'})
-        spellchecker.SpellingChecker().delay(self.fake_id)
-        self.assertEqual(len(self.document['spelling_errors']), 1)
-        self.assertIn('cachoro', self.document['spelling_errors'][0])
-        self.assertIn('cachorro', self.document['spelling_errors'][0][2])
-        self.assertEqual(self.document['spelling_errors'][0][1], 4)
+        doc_id = self.collection.insert({'text': text, 'language': 'pt_BR'})
+        spellchecker.SpellingChecker().delay(doc_id)
+
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(len(refreshed_document['spelling_errors']), 1)
+        self.assertIn('cachoro', refreshed_document['spelling_errors'][0])
+        self.assertIn('cachorro', refreshed_document['spelling_errors'][0][2])
+        self.assertEqual(refreshed_document['spelling_errors'][0][1], 4)
 
     def test_spellchek_en(self):
         text = u"The cat bit the doggyo"
-        self.document.update({'text': text, 'language': 'en'})
-        spellchecker.SpellingChecker().delay(self.fake_id)
-        self.assertEqual(len(self.document['spelling_errors']), 1)
-        self.assertIn('doggyo', self.document['spelling_errors'][0])
-        self.assertIn('doggy', self.document['spelling_errors'][0][2])
-        self.assertEqual(self.document['spelling_errors'][0][1], 16)
+        doc_id = self.collection.insert({'text': text, 'language': 'en'})
+        spellchecker.SpellingChecker().delay(doc_id)
+
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(len(refreshed_document['spelling_errors']), 1)
+        self.assertIn('doggyo', refreshed_document['spelling_errors'][0])
+        self.assertIn('doggy', refreshed_document['spelling_errors'][0][2])
+        self.assertEqual(refreshed_document['spelling_errors'][0][1], 16)
 
