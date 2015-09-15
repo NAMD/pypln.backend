@@ -28,8 +28,8 @@ bigram_measures = nltk.collocations.BigramAssocMeasures()
 class TestBigramWorker(TaskTest):
     def test_bigrams_should_return_correct_score(self):
         # We need this list comprehension because we need to save the word list
-        # in MongoDict (thus, it needs to be pickleable). Also, a list is what
-        # will be available to the worker in real situations.
+        # in mongo (thus, it needs to be json serializable). Also, a list is
+        # what will be available to the worker in real situations.
         tokens = [w for w in
                 nltk.corpus.genesis.words('english-web.txt')]
 
