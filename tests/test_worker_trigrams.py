@@ -30,9 +30,10 @@ class TestTrigramWorker(TaskTest):
         tokens = [w for w in
                 nltk.corpus.genesis.words('english-web.txt')]
         trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
-        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'olive', u'leaf',u'plucked')
-        self.document['tokens'] = tokens
-        Trigrams().delay(self.fake_id)
-        trigram_rank = self.document['trigram_rank']
-        result = trigram_rank[(u'olive', u'leaf',u'plucked')][0]
+        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'olive', u'leaf', u'plucked')
+        doc_id = self.collection.insert({'tokens': tokens}, w=1)
+        Trigrams().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        trigram_rank = refreshed_document['trigram_rank']
+        result = trigram_rank[u'olive leaf plucked'][0]
         self.assertEqual(result, expected)
