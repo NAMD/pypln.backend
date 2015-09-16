@@ -33,7 +33,7 @@ class TestGridFSDataRetrieverWorker(TaskTest):
         expected_file_data = gridfs.get(new_file_id)
 
         data = {'file_id': str(new_file_id)}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         GridFSDataRetriever().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
 
@@ -51,7 +51,7 @@ class TestGridFSDataRetrieverWorker(TaskTest):
 
     def test_task_raises_exception_when_file_does_not_exist(self):
         data = {'file_id': "Inexistent document"}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         result = GridFSDataRetriever().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
 

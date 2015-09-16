@@ -45,7 +45,7 @@ class TestNounPhraseWorker(TaskTest):
         ''').strip() + '\n\n'
 
         doc_id = self.collection.insert({'palavras_raw': palavras_output,
-                'palavras_raw_ran': True})
+                'palavras_raw_ran': True}, w=1)
         NounPhrase().delay(doc_id)
         expected = ['_este *momento', 'todo o *povo de_ _o Brasil .',
                                      '_o *Brasil .']

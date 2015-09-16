@@ -30,7 +30,7 @@ class TestTokenizerWorker(TaskTest):
         expected_sentences = [['The', 'sky', 'is', 'blue', ',', 'the', 'sun',
             'is', 'yellow', '.'], ['This', 'is', 'another', 'sentence', '.']]
 
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         Tokenizer().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})

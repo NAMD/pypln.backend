@@ -32,7 +32,7 @@ class TestPosWorker(TaskTest):
                    ['sun', 'NN', 21], ['is', 'VBZ', 25], ['yellow', 'JJ', 28],
                    ['.', '.', 34]]
         doc_id = self.collection.insert({'text': text, 'tokens': tokens,
-                                'language': 'en'})
+                                'language': 'en'}, w=1)
         POS().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['pos'], expected)
@@ -54,7 +54,7 @@ class TestPosWorker(TaskTest):
         # '.' is the only named entity here.
         expected = [[u'.', u'.', 29]]
         doc_id = self.collection.insert({'text': text, 'tokens': tokens,
-            'language': 'pt', 'palavras_raw': palavras_raw})
+            'language': 'pt', 'palavras_raw': palavras_raw}, w=1)
         POS().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['pos'], expected)

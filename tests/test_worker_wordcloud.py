@@ -31,7 +31,7 @@ class TestFreqDistWorker(TaskTest):
     def test_wordcloud_should_return_a_base64_encoded_png(self):
         doc = {'freqdist':  [('is', 2), ('the', 2), ('blue', 1), ('sun', 1),
             ('sky', 1), (',', 1), ('yellow', 1), ('.', 1)], 'language': 'en'}
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         WordCloud().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})

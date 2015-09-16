@@ -43,7 +43,7 @@ class TestLemmatizerWorker(TaskTest):
         ''').strip() + '\n\n'
 
         doc = {'palavras_raw': palavras_output, 'palavras_raw_ran': True}
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         result = Lemmatizer().delay(doc_id)
         expected = 'eu saber que em este momento falar para todo Brasil .'.split()
         refreshed_document = self.collection.find_one({'_id': doc_id})

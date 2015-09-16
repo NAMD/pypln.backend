@@ -33,7 +33,7 @@ class TestBigramWorker(TaskTest):
         tokens = [w for w in
                 nltk.corpus.genesis.words('english-web.txt')]
 
-        doc_id = self.collection.insert({'tokens': tokens})
+        doc_id = self.collection.insert({'tokens': tokens}, w=1)
         bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
         expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u',', u'which')
 

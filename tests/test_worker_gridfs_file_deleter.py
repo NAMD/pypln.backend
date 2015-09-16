@@ -31,7 +31,7 @@ class TestGridFSFileDeleterWorker(TaskTest):
         new_file_id = gridfs.put(content)
         expected_file_data = gridfs.get(new_file_id)
 
-        doc_id = self.collection.insert({'file_id': new_file_id})
+        doc_id = self.collection.insert({'file_id': new_file_id}, w=1)
         self.assertTrue(gridfs.exists(new_file_id))
 
         GridFSFileDeleter().delay(doc_id)
@@ -39,7 +39,7 @@ class TestGridFSFileDeleterWorker(TaskTest):
         self.assertFalse(gridfs.exists(new_file_id))
 
     def test_task_raises_exception_when_file_does_not_exist(self):
-        doc_id = self.collection.insert({'file_id': "Inexistent document"})
+        doc_id = self.collection.insert({'file_id': "Inexistent document"}, w=1)
         result = GridFSFileDeleter().delay(doc_id)
         self.assertTrue(result.failed())
         self.assertEqual(result.status, "FAILURE")

@@ -31,7 +31,7 @@ class TestPalavrasRawWorker(TaskTest):
     def test_should_run_only_if_language_is_portuguese(self):
         if palavras_raw.palavras_installed():
             doc_id = self.collection.insert({'text': 'There was a rock on the way.',
-                'language': 'en'})
+                'language': 'en'}, w=1)
 
             palavras_raw.PalavrasRaw().delay(doc_id)
             refreshed_document = self.collection.find_one({'_id': doc_id})
@@ -41,7 +41,7 @@ class TestPalavrasRawWorker(TaskTest):
         palavras_raw.BASE_PARSER = '/not-found'
         doc_id = self.collection.insert(
                 {'text': 'Tinha uma pedra no meio do caminho.',
-                    'language': 'pt'})
+                    'language': 'pt'}, w=1)
         palavras_raw.PalavrasRaw().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['palavras_raw_ran'], False)
@@ -51,7 +51,7 @@ class TestPalavrasRawWorker(TaskTest):
         palavras_raw.BASE_PARSER = ORIGINAL_PATH
         doc_id = self.collection.insert(
                 {'text': 'Eu sei que neste momento falo para todo Brasil.',
-                    'language': 'pt'})
+                    'language': 'pt'}, w=1)
         expected_raw = dedent('''
         Eu 	[eu] <*> PERS M/F 1S NOM @SUBJ>  #1->2
         sei 	[saber] <fmc> <mv> V PR 1S IND VFIN @FS-STA  #2->0

@@ -28,7 +28,8 @@ DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 class TestSpellcheckerWorker(TaskTest):
     def test_spellchek_pt(self):
         text = u"Meu cachoro é um pastor"
-        doc_id = self.collection.insert({'text': text, 'language': 'pt_BR'})
+        doc_id = self.collection.insert({'text': text, 'language': 'pt_BR'},
+                w=1)
         spellchecker.SpellingChecker().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})
@@ -39,7 +40,7 @@ class TestSpellcheckerWorker(TaskTest):
 
     def test_spellchek_en(self):
         text = u"The cat bit the doggyo"
-        doc_id = self.collection.insert({'text': text, 'language': 'en'})
+        doc_id = self.collection.insert({'text': text, 'language': 'en'}, w=1)
         spellchecker.SpellingChecker().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})

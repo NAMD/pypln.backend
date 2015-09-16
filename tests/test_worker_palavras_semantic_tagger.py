@@ -55,7 +55,7 @@ class TestSemanticTaggerWorker(TaskTest):
         }
 
         doc_id = self.collection.insert({'palavras_raw': palavras_output,
-            'palavras_raw_ran': True})
+            'palavras_raw_ran': True}, w=1)
         SemanticTagger().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})
@@ -84,7 +84,7 @@ class TestSemanticTaggerWorker(TaskTest):
                 'Verbs_related_human_things': [u'canto']
         }
         doc_id = self.collection.insert({'palavras_raw': palavras_output,
-            'palavras_raw_ran': True})
+            'palavras_raw_ran': True}, w=1)
         SemanticTagger().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['semantic_tags'], expected_tags)

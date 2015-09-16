@@ -30,7 +30,7 @@ class TestFreqDistWorker(TaskTest):
 
 
         # This is just preparing the expected input in the database
-        doc_id = self.collection.insert({'tokens': tokens})
+        doc_id = self.collection.insert({'tokens': tokens}, w=1)
 
         FreqDist().delay(doc_id)
 

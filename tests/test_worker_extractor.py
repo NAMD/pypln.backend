@@ -30,7 +30,7 @@ class TestExtractorWorker(TaskTest):
         expected = "This is a test file.\nI'm testing PyPLN extractor worker!"
         filename = os.path.join(DATA_DIR, 'test.txt')
         doc_id = self.collection.insert({'filename': filename,
-            'contents': base64.b64encode(open(filename).read())})
+            'contents': base64.b64encode(open(filename).read())}, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)
@@ -47,7 +47,7 @@ class TestExtractorWorker(TaskTest):
         # pickled representation of the data.
         data = {'filename': filename,
                 'contents': base64.b64encode(open(filename).read())}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)
@@ -59,7 +59,7 @@ class TestExtractorWorker(TaskTest):
         filename = os.path.join(DATA_DIR, 'test.pdf')
         data = {'filename': filename,
                 'contents': base64.b64encode(open(filename).read())}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)
@@ -114,7 +114,7 @@ class TestExtractorWorker(TaskTest):
         ''')
         data = {'filename': 'test.html',
                 'contents': base64.b64encode(contents)}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         expected = dedent('''
             Testing
@@ -141,7 +141,7 @@ class TestExtractorWorker(TaskTest):
         text_pt = 'Esse texto foi escrito por Álvaro em Português.'
         data_pt = {'filename': 'text-pt.txt',
                 'contents': base64.b64encode(text_pt)}
-        doc_id = self.collection.insert(data_pt)
+        doc_id = self.collection.insert(data_pt, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['language'], 'pt')
@@ -150,7 +150,7 @@ class TestExtractorWorker(TaskTest):
         text_es = 'Este texto ha sido escrito en Español por Álvaro.'
         data_es = {'filename': 'text-es.txt',
                 'contents': base64.b64encode(text_es)}
-        doc_id = self.collection.insert(data_es)
+        doc_id = self.collection.insert(data_es, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['language'], 'es')
@@ -159,7 +159,7 @@ class TestExtractorWorker(TaskTest):
         text_en = 'This text was written by Álvaro in English.'
         data_en = {'filename': 'text-en.txt',
                 'contents': base64.b64encode(text_en)}
-        doc_id = self.collection.insert(data_en)
+        doc_id = self.collection.insert(data_en, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['language'], 'en')
@@ -170,7 +170,7 @@ class TestExtractorWorker(TaskTest):
         filename = os.path.join(DATA_DIR, 'test_html_entities.txt')
         data = {'filename': filename,
                 'contents': base64.b64encode(open(filename).read())}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)
@@ -180,7 +180,7 @@ class TestExtractorWorker(TaskTest):
         filename = os.path.join(DATA_DIR, 'test_iso-8859-1.txt')
         data = {'filename': filename,
                 'contents': base64.b64encode(open(filename).read())}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)
@@ -191,7 +191,7 @@ class TestExtractorWorker(TaskTest):
         filename = os.path.join(DATA_DIR, 'text_file')
         data = {'filename': filename,
                 'contents': base64.b64encode(contents)}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['mimetype'], 'text/plain')
@@ -203,7 +203,7 @@ class TestExtractorWorker(TaskTest):
         contents = open(filename).read()
         data = {'filename': filename,
                 'contents': base64.b64encode(contents)}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['mimetype'], 'unknown')
@@ -216,7 +216,7 @@ class TestExtractorWorker(TaskTest):
         expected = u"This file has a weird byte (\x96) that makes it impossible for libmagic to recognize it's encoding."
         data = {'filename': filename,
                 'contents': base64.b64encode(open(filename).read())}
-        doc_id = self.collection.insert(data)
+        doc_id = self.collection.insert(data, w=1)
         Extractor().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['text'], expected)

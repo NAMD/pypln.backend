@@ -26,7 +26,7 @@ class TestStatisticsWorker(TaskTest):
         doc = {'sentences': [['this', 'is', 'a', 'test', '.'], ['this', 'is',
             'another', '!']], 'freqdist': [('this', 2), ('is', 2), ('a', 1),
                 ('test', 1), ('.', 1), ('another', 1), ('!', 1)]}
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         Statistics().delay(doc_id)
 
         refreshed_document = self.collection.find_one({'_id': doc_id})
@@ -40,7 +40,7 @@ class TestStatisticsWorker(TaskTest):
         self.assertAlmostEqual(refreshed_document['repertoire'], 0.7777, places=3)
 
     def test_zero_division_error(self):
-        doc_id = self.collection.insert({'freqdist': [], 'sentences': []})
+        doc_id = self.collection.insert({'freqdist': [], 'sentences': []}, w=1)
 
         Statistics().delay(doc_id)
 

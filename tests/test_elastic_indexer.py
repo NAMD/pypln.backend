@@ -32,7 +32,7 @@ class TestIndexer(TaskTest):
             'contents': 'raw_file_contents',
         }
 
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         ElasticIndexer().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertTrue(refreshed_document['created'])
@@ -55,7 +55,7 @@ class TestIndexer(TaskTest):
             'contents': 'raw_file_contents',
         }
 
-        doc_id = self.collection.insert(doc)
+        doc_id = self.collection.insert(doc, w=1)
         ElasticIndexer().delay(doc_id)
         # remove properties that won't be indexed
         index_name = doc.pop("index_name")
