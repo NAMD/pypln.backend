@@ -29,23 +29,24 @@ class TestTrigramWorker(TaskTest):
     def test_Trigrams_should_return_correct_score(self):
         tokens = [w for w in
                 nltk.corpus.genesis.words('english-web.txt')]
-        trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
-        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'olive', u'leaf', u'plucked')
         doc_id = self.collection.insert({'tokens': tokens}, w=1)
         Trigrams().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         trigram_rank = refreshed_document['trigram_rank']
         result = trigram_rank[u'olive leaf plucked'][0]
-        self.assertEqual(result, expected)
+        # This is the value of the chi_sq measure for this trigram in this
+        # colocation
+        expected_chi_sq = 1940754916.9623578
+        self.assertEqual(result, expected_chi_sq)
 
     def test_Trigrams_may_contain_dots_and_dollar_signs(self):
         tokens = ['$', 'test', '.']
-        trigram_finder = nltk.collocations.TrigramCollocationFinder.from_words(tokens)
-        expected = trigram_finder.score_ngram(trigram_measures.chi_sq, u'$',
-                u'test', u'.')
         doc_id = self.collection.insert({'tokens': tokens}, w=1)
         Trigrams().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         trigram_rank = refreshed_document['trigram_rank']
         result = trigram_rank[u'\dollarsign test \dot'][0]
-        self.assertEqual(result, expected)
+        # This is the value of the chi_sq measure for this trigram in this
+        # colocation
+        expected_chi_sq = 10.5
+        self.assertEqual(result, expected_chi_sq)

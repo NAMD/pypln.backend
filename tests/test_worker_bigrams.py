@@ -34,23 +34,25 @@ class TestBigramWorker(TaskTest):
                 nltk.corpus.genesis.words('english-web.txt')]
 
         doc_id = self.collection.insert({'tokens': tokens}, w=1)
-        bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
-        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u',', u'which')
 
         Bigrams().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         bigram_rank = refreshed_document['bigram_rank']
         result = bigram_rank[0][1][0]
-        self.assertEqual(result, expected)
+        # This is the value of the chi_sq measure for this bigram in this
+        # colocation
+        expected_chi_sq = 95.59393417173634
+        self.assertEqual(result, expected_chi_sq)
 
     def test_bigrams_could_contain_dollar_signs_and_dots(self):
         tokens = ['$', '.']
         doc_id = self.collection.insert({'tokens': tokens}, w=1)
-        bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
-        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u'$', u'.')
 
         Bigrams().delay(doc_id)
         refreshed_document = self.collection.find_one({'_id': doc_id})
         bigram_rank = refreshed_document['bigram_rank']
         result = bigram_rank[0][1][0]
-        self.assertEqual(result, expected)
+        # 2.0 is the value of the chi_sq measure for this bigram in this
+        # colocation
+        expected_chi_sq = 2.0
+        self.assertEqual(result, expected_chi_sq)
