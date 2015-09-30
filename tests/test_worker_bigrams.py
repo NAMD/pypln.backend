@@ -42,3 +42,15 @@ class TestBigramWorker(TaskTest):
         bigram_rank = refreshed_document['bigram_rank']
         result = bigram_rank[0][1][0]
         self.assertEqual(result, expected)
+
+    def test_bigrams_could_contain_dollar_signs_and_dots(self):
+        tokens = ['$', '.']
+        doc_id = self.collection.insert({'tokens': tokens}, w=1)
+        bigram_finder = nltk.collocations.BigramCollocationFinder.from_words(tokens)
+        expected = bigram_finder.score_ngram(bigram_measures.chi_sq, u'$', u'.')
+
+        Bigrams().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        bigram_rank = refreshed_document['bigram_rank']
+        result = bigram_rank[0][1][0]
+        self.assertEqual(result, expected)
