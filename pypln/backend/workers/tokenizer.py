@@ -16,7 +16,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-from mongodict import MongoDict
 from nltk import word_tokenize, sent_tokenize
 
 from pypln.backend.celery_task import PyPLNTask

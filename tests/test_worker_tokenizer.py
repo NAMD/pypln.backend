@@ -23,17 +23,19 @@ from utils import TaskTest
 
 class TestTokenizerWorker(TaskTest):
     def test_tokenizer_should_receive_text_and_return_tokens(self):
-        self.document['text'] = 'The sky is blue, the sun is yellow. This is another sentence.'
+        doc = {'text': 'The sky is blue, the sun is yellow. This is another sentence.'}
 
         expected_tokens = ['The', 'sky', 'is', 'blue', ',', 'the', 'sun', 'is',
             'yellow', '.', 'This', 'is', 'another', 'sentence', '.']
         expected_sentences = [['The', 'sky', 'is', 'blue', ',', 'the', 'sun',
             'is', 'yellow', '.'], ['This', 'is', 'another', 'sentence', '.']]
 
-        Tokenizer().delay(self.fake_id)
+        doc_id = self.collection.insert(doc, w=1)
+        Tokenizer().delay(doc_id)
 
-        tokens = self.document['tokens']
-        sentences = self.document['sentences']
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        tokens = refreshed_document['tokens']
+        sentences = refreshed_document['sentences']
 
         self.assertEqual(tokens, expected_tokens)
         self.assertEqual(sentences, expected_sentences)

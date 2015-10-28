@@ -42,6 +42,14 @@ class Trigrams(PyPLNTask):
         tr = defaultdict(lambda: [])
         for m in metrics:
             for res in trigram_finder.score_ngrams(getattr(trigram_measures,m)):
-                tr[res[0]].append(res[1])
+                # We cannot store the trigram as a tuple (mongo keys need to be
+                # strings). We decided to join tokens using spaces since a
+                # space will never be in a token.
+                key = u' '.join(res[0])
+                # Mongo cannot have `.` or `$` in key names. Unfortunatelly
+                # this means we need to replace them with placeholders.
+                key = key.replace(u'$', u'\dollarsign')
+                key = key.replace(u'.', u'\dot')
+                tr[key].append(res[1])
 
-        return {'trigram_rank': dict(tr), 'metrics':metrics}
+        return {'trigram_rank': tr, 'metrics':metrics}

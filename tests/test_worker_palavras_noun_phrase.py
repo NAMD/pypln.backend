@@ -44,9 +44,10 @@ class TestNounPhraseWorker(TaskTest):
         </s>
         ''').strip() + '\n\n'
 
-        self.document.update({'palavras_raw': palavras_output,
-                'palavras_raw_ran': True})
-        NounPhrase().delay(self.fake_id)
+        doc_id = self.collection.insert({'palavras_raw': palavras_output,
+                'palavras_raw_ran': True}, w=1)
+        NounPhrase().delay(doc_id)
         expected = ['_este *momento', 'todo o *povo de_ _o Brasil .',
                                      '_o *Brasil .']
-        self.assertEqual(self.document['noun_phrases'], expected)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['noun_phrases'], expected)

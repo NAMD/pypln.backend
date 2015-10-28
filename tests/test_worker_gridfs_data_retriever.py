@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+import base64
 import bson
 from gridfs import GridFS
 from pypln.backend.workers import GridFSDataRetriever
@@ -31,19 +32,29 @@ class TestGridFSDataRetrieverWorker(TaskTest):
         new_file_id = gridfs.put(content)
         expected_file_data = gridfs.get(new_file_id)
 
-        self.document['file_id'] = str(new_file_id)
-        GridFSDataRetriever().delay(self.fake_id)
+        data = {'file_id': str(new_file_id)}
+        doc_id = self.collection.insert(data, w=1)
+        GridFSDataRetriever().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
 
-        self.assertEqual(self.document['contents'], content)
-        self.assertEqual(self.document['length'], expected_file_data.length)
-        self.assertEqual(self.document['md5'], expected_file_data.md5)
-        self.assertEqual(self.document['filename'], expected_file_data.filename)
-        self.assertEqual(self.document['upload_date'], expected_file_data.upload_date)
-        self.assertEqual(self.document['contents'], expected_file_data.read())
+        self.assertEqual(refreshed_document['contents'],
+                base64.b64encode(content))
+        self.assertEqual(refreshed_document['length'],
+                expected_file_data.length)
+        self.assertEqual(refreshed_document['md5'], expected_file_data.md5)
+        self.assertEqual(refreshed_document['filename'],
+                expected_file_data.filename)
+        self.assertEqual(refreshed_document['upload_date'],
+                expected_file_data.upload_date)
+        self.assertEqual(refreshed_document['contents'],
+                base64.b64encode(expected_file_data.read()))
 
     def test_task_raises_exception_when_file_does_not_exist(self):
-        self.document['file_id'] = "Inexistent document"
-        result = GridFSDataRetriever().delay(self.fake_id)
+        data = {'file_id': "Inexistent document"}
+        doc_id = self.collection.insert(data, w=1)
+        result = GridFSDataRetriever().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+
         self.assertTrue(result.failed())
         self.assertEqual(result.status, "FAILURE")
         self.assertIsInstance(result.info, bson.errors.InvalidId)

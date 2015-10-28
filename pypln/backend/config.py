@@ -5,6 +5,7 @@ def get_store_config():
     defaults = {'host': 'localhost',
                 'port': '27017',
                 'database': 'pypln_dev',
+                'collection': 'documents',
                 'gridfs_collection': 'files',
     }
     config = ConfigParser.ConfigParser(defaults=defaults)

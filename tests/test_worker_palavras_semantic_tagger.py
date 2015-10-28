@@ -54,11 +54,12 @@ class TestSemanticTaggerWorker(TaskTest):
                  'Verbs_related_human_things': ['falo']
         }
 
-        self.document.update({'palavras_raw': palavras_output,
-            'palavras_raw_ran': True})
-        SemanticTagger().delay(self.fake_id)
+        doc_id = self.collection.insert({'palavras_raw': palavras_output,
+            'palavras_raw_ran': True}, w=1)
+        SemanticTagger().delay(doc_id)
 
-        self.assertEqual(self.document['semantic_tags'], expected_tags)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['semantic_tags'], expected_tags)
 
 
     def test_ambiguous_tags(self):
@@ -77,12 +78,13 @@ class TestSemanticTaggerWorker(TaskTest):
         ''').strip() + '\n\n'
 
         expected_tags = {
-                'Non_Tagged': ['Eu', 'bem', 'enquanto', 'ele', 'está', 'em',
-                               'o'],
-                'Place and spatial': ['canto'],
-                'Verbs_related_human_things': ['canto']
+                'Non_Tagged': [u'Eu', u'bem', u'enquanto', u'ele', u'está',
+                    u'em', u'o'],
+                'Place and spatial': [u'canto'],
+                'Verbs_related_human_things': [u'canto']
         }
-        self.document.update({'palavras_raw': palavras_output,
-            'palavras_raw_ran': True})
-        SemanticTagger().delay(self.fake_id)
-        self.assertEqual(self.document['semantic_tags'], expected_tags)
+        doc_id = self.collection.insert({'palavras_raw': palavras_output,
+            'palavras_raw_ran': True}, w=1)
+        SemanticTagger().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['semantic_tags'], expected_tags)

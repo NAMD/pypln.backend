@@ -1,7 +1,6 @@
 # Common
 celery
 pymongo==2.8.1
-mongodict
 
 # The newest pyparsing (2.0) only supports python 3,
 # so we explicitly install 1.5.7 (the last version that

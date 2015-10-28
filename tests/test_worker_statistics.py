@@ -23,26 +23,32 @@ from utils import TaskTest
 
 class TestStatisticsWorker(TaskTest):
     def test_simple(self):
-        self.document['sentences'] = [['this', 'is', 'a', 'test', '.'],
-                     ['this', 'is', 'another', '!']]
-        self.document['freqdist'] = [('this', 2), ('is', 2), ('a', 1),
-                ('test', 1), ('.', 1), ('another', 1), ('!', 1)]
-        Statistics().delay(self.fake_id)
-        self.assertEqual(self.document['average_sentence_length'], 4.5)
-        self.assertEqual(self.document['average_sentence_repertoire'], 1)
-        self.assertAlmostEqual(self.document['momentum_1'], 1.2857, places=3)
-        self.assertAlmostEqual(self.document['momentum_2'], 1.8571, places=3)
-        self.assertEqual(self.document['momentum_3'], 3)
-        self.assertAlmostEqual(self.document['momentum_4'], 5.2857, places=3)
-        self.assertAlmostEqual(self.document['repertoire'], 0.7777, places=3)
+        doc = {'sentences': [['this', 'is', 'a', 'test', '.'], ['this', 'is',
+            'another', '!']], 'freqdist': [('this', 2), ('is', 2), ('a', 1),
+                ('test', 1), ('.', 1), ('another', 1), ('!', 1)]}
+        doc_id = self.collection.insert(doc, w=1)
+        Statistics().delay(doc_id)
+
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+
+        self.assertEqual(refreshed_document['average_sentence_length'], 4.5)
+        self.assertEqual(refreshed_document['average_sentence_repertoire'], 1)
+        self.assertAlmostEqual(refreshed_document['momentum_1'], 1.2857, places=3)
+        self.assertAlmostEqual(refreshed_document['momentum_2'], 1.8571, places=3)
+        self.assertEqual(refreshed_document['momentum_3'], 3)
+        self.assertAlmostEqual(refreshed_document['momentum_4'], 5.2857, places=3)
+        self.assertAlmostEqual(refreshed_document['repertoire'], 0.7777, places=3)
 
     def test_zero_division_error(self):
-        self.document.update({'freqdist': [], 'sentences': []})
-        Statistics().delay(self.fake_id)
-        self.assertEqual(self.document['average_sentence_length'], 0)
-        self.assertEqual(self.document['average_sentence_repertoire'], 0)
-        self.assertEqual(self.document['momentum_1'], 0)
-        self.assertEqual(self.document['momentum_2'], 0)
-        self.assertEqual(self.document['momentum_3'], 0)
-        self.assertEqual(self.document['momentum_4'], 0)
-        self.assertEqual(self.document['repertoire'], 0)
+        doc_id = self.collection.insert({'freqdist': [], 'sentences': []}, w=1)
+
+        Statistics().delay(doc_id)
+
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['average_sentence_length'], 0)
+        self.assertEqual(refreshed_document['average_sentence_repertoire'], 0)
+        self.assertEqual(refreshed_document['momentum_1'], 0)
+        self.assertEqual(refreshed_document['momentum_2'], 0)
+        self.assertEqual(refreshed_document['momentum_3'], 0)
+        self.assertEqual(refreshed_document['momentum_4'], 0)
+        self.assertEqual(refreshed_document['repertoire'], 0)

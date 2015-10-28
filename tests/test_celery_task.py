@@ -16,19 +16,24 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
-from bson import ObjectId
-from gridfs import GridFS
-import pymongo
 from pypln.backend.celery_task import PyPLNTask
-from pypln.backend import config
+from utils import TaskTest
 
-class GridFSFileDeleter(PyPLNTask):
-
+class FakeTask(PyPLNTask):
     def process(self, document):
-        mongo_client = pymongo.MongoClient(host=config.MONGODB_CONFIG["host"],
-                port=config.MONGODB_CONFIG["port"])
-        database = mongo_client[config.MONGODB_CONFIG["database"]]
-        gridfs = GridFS(database, config.MONGODB_CONFIG['gridfs_collection'])
+        return {'result': document['input']}
 
-        gridfs.delete(ObjectId(document['file_id']))
-        return {}
+class TestCeleryTask(TaskTest):
+    def test_task_should_get_the_correct_document(self):
+        """This is a regression test. PyPLNTask was not filtering by _id. It
+        was getting the first document it found. """
+
+        # This is just preparing the expected input in the database
+        wrong_doc_id = self.collection.insert({'input': 'wrong'}, w=1)
+        correct_doc_id = self.collection.insert({'input': 'correct'}, w=1)
+
+        FakeTask().delay(correct_doc_id)
+
+        refreshed_doc = self.collection.find_one({'_id': correct_doc_id})
+
+        self.assertEqual(refreshed_doc['result'], 'correct')
