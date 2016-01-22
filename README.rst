@@ -29,12 +29,14 @@ Our documentation is hosted using `GitHub Pages <http://pages.github.com/>`_:
 Requirements
 ------------
 You will need some Python packages, `libmagic <http://www.darwinsys.com/file/>`_,
- `poppler utils <http://poppler.freedesktop.org/>`_ and
- `libfreetype <http://www.freetype.org/>`'s development headers.
+ `poppler utils <http://poppler.freedesktop.org/>`_,
+ `libfreetype <http://www.freetype.org/>`'s development headers and `aspell
+ dictionaries <ftp://ftp.gnu.org/gnu/aspell/dict/0index.html.>`_ for english
+ and portuguese.
 
 To install dependencies (on a Debian-like GNU/Linux distribution)::
 
-    sudo apt-get install python-setuptools libmagic-dev poppler-utils libfreetype6-dev fonts-dejavu
+    sudo apt-get install python-setuptools libmagic-dev poppler-utils libfreetype6-dev fonts-dejavu aspell-en aspell-pt
     pip install virtualenv virtualenvwrapper
     mkvirtualenv pypln.backend
     # we need to install Cython first because of the way pip handles C extensions
