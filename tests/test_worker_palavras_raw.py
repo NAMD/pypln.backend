@@ -29,7 +29,6 @@ ORIGINAL_PATH = palavras_raw.BASE_PARSER
 
 class TestPalavrasRawWorker(TaskTest):
 
-    @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_should_run_only_if_language_is_portuguese(self):
         doc_id = self.collection.insert({'text': 'There was a rock on the way.',
             'language': 'en'}, w=1)
