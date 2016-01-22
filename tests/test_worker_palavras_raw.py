@@ -38,7 +38,6 @@ class TestPalavrasRawWorker(TaskTest):
         refreshed_document = self.collection.find_one({'_id': doc_id})
         self.assertEqual(refreshed_document['palavras_raw_ran'], False)
 
-    @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_palavras_not_installed(self):
         palavras_raw.BASE_PARSER = '/not-found'
         doc_id = self.collection.insert(
