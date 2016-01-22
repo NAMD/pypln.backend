@@ -46,7 +46,7 @@ To install dependencies (on a Debian-like GNU/Linux distribution)::
 You will also need to download some NLTK data packages. You can do so
 executing::
 
-    python -m nltk.downloader genesis maxent_treebank_pos_tagger punkt
+    python -m nltk.downloader genesis maxent_treebank_pos_tagger punkt stopwords averaged_perceptron_tagger
 
 
 
