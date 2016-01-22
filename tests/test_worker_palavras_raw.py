@@ -31,13 +31,12 @@ class TestPalavrasRawWorker(TaskTest):
 
     @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_should_run_only_if_language_is_portuguese(self):
-        if palavras_raw.palavras_installed():
-            doc_id = self.collection.insert({'text': 'There was a rock on the way.',
-                'language': 'en'}, w=1)
+        doc_id = self.collection.insert({'text': 'There was a rock on the way.',
+            'language': 'en'}, w=1)
 
-            palavras_raw.PalavrasRaw().delay(doc_id)
-            refreshed_document = self.collection.find_one({'_id': doc_id})
-            self.assertEqual(refreshed_document['palavras_raw_ran'], False)
+        palavras_raw.PalavrasRaw().delay(doc_id)
+        refreshed_document = self.collection.find_one({'_id': doc_id})
+        self.assertEqual(refreshed_document['palavras_raw_ran'], False)
 
     @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_palavras_not_installed(self):
