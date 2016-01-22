@@ -18,6 +18,7 @@
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
 
+from unittest import skipIf
 from textwrap import dedent
 
 from pypln.backend.workers import palavras_raw
@@ -28,6 +29,7 @@ ORIGINAL_PATH = palavras_raw.BASE_PARSER
 
 class TestPalavrasRawWorker(TaskTest):
 
+    @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_should_run_only_if_language_is_portuguese(self):
         if palavras_raw.palavras_installed():
             doc_id = self.collection.insert({'text': 'There was a rock on the way.',
@@ -37,6 +39,7 @@ class TestPalavrasRawWorker(TaskTest):
             refreshed_document = self.collection.find_one({'_id': doc_id})
             self.assertEqual(refreshed_document['palavras_raw_ran'], False)
 
+    @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_palavras_not_installed(self):
         palavras_raw.BASE_PARSER = '/not-found'
         doc_id = self.collection.insert(
@@ -47,6 +50,7 @@ class TestPalavrasRawWorker(TaskTest):
         self.assertEqual(refreshed_document['palavras_raw_ran'], False)
 
 
+    @skipIf(not palavras_raw.palavras_installed(), 'palavras software is not installed')
     def test_palavras_should_return_raw_if_it_is_installed(self):
         palavras_raw.BASE_PARSER = ORIGINAL_PATH
         doc_id = self.collection.insert(

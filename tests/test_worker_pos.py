@@ -17,7 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+from unittest import skipIf
+
 from textwrap import dedent
+from pypln.backend.workers.palavras_raw import palavras_installed
 from pypln.backend.workers import POS
 from utils import TaskTest
 
@@ -38,6 +41,7 @@ class TestPosWorker(TaskTest):
         self.assertEqual(refreshed_document['pos'], expected)
         self.assertEqual(refreshed_document['tagset'], 'en-nltk')
 
+    @skipIf(not palavras_installed(), 'palavras software is not installed')
     def test_pos_should_run_pt_palavras_if_text_is_in_portuguese(self):
         text = 'Isso é uma frase em português.'
         tokens = ['Isso', 'é', 'uma', 'frase', 'em', 'português', '.']

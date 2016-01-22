@@ -17,14 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with PyPLN.  If not, see <http://www.gnu.org/licenses/>.
 
+from unittest import skipIf
 from textwrap import dedent
 
 from pypln.backend.workers import NounPhrase
+from pypln.backend.workers.palavras_raw import palavras_installed
 from utils import TaskTest
 
 
 class TestNounPhraseWorker(TaskTest):
 
+    @skipIf(not palavras_installed(), 'palavras software is not installed')
     def test_noun_phrase_worker_should_return_a_list_with_phrases(self):
         palavras_output = dedent('''
         Eu\t[eu] <*> PERS M/F 1S NOM @SUBJ>  #1->2
