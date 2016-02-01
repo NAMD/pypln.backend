@@ -24,3 +24,4 @@ Pillow
 -e git+https://github.com/flavioamieiro/word_cloud.git#egg=wordcloud
 pyenchant
 elasticsearch
+python-decouple==3.0

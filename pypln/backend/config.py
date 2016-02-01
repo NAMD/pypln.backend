@@ -1,39 +1,52 @@
 import os
-import ConfigParser
-def get_store_config():
-    config_filename = os.path.expanduser('~/.pypln_store_config')
-    defaults = {'host': 'localhost',
-                'port': '27017',
-                'database': 'pypln_dev',
-                'collection': 'documents',
-                'gridfs_collection': 'files',
+
+from decouple import config, Csv
+
+try:
+    import urlparse
+except ImportError:
+    import urllib.parse as urlparse
+
+
+def parse_url(url):
+    urlparse.uses_netloc.append('mongodb')
+    urlparse.uses_netloc.append('celery')
+    url = urlparse.urlparse(url)
+
+    path = url.path[1:]
+    path = path.split('?', 2)[0]
+
+    return {
+        'database': path or '',
+        'port': url.port or '',
+        'host': url.hostname or '',
+        'user': url.username,
+        'password': url.password,
     }
-    config = ConfigParser.ConfigParser(defaults=defaults)
-    config.add_section('store')
-    config.read(config_filename)
-    store_config = dict(config.items('store'))
-    # The database port needs to be an integer, but ConfigParser will treat
-    # everything as a string unless you use the specific method to retrieve the
-    # value.
-    store_config['port'] = config.getint('store', 'port')
+
+    return config
+
+def get_store_config():
+    store_config = config('MONGODB_CONFIG',
+            default='mongodb://localhost:27017/pypln_dev', cast=parse_url)
+    collection = config('MONGO_COLLECTION', default='documents')
+    gridfs_collection = config('GRIDFS_COLLECTION', default='files')
+    store_config.update({
+        'collection': collection,
+        'gridfs_collection': gridfs_collection
+    })
     return store_config
 
 MONGODB_CONFIG = get_store_config()
 ELASTICSEARCH_CONFIG = {
-    'hosts': ['127.0.0.1', '172.16.4.46', '172.16.4.52'],
+    'hosts': config('ELASTICSEARCH_HOSTS',
+        default='127.0.0.1,172.16.4.46,172.16.4.52', cast=Csv())
 }
 
 def get_broker_config():
-    defaults = {
-        "host": "localhost",
-        "port": "5672",
-        "user": "guest",
-        "password": "guest",
-    }
-    celery_config = ConfigParser.ConfigParser(defaults=defaults)
-    celery_config.add_section('broker')
-    celery_config.read(os.path.expanduser('~/.pypln_celery_config'))
-    return dict(celery_config.items('broker'))
+    celery_config = config('CELERY_CONFIG',
+        default='celery://guest:guest@localhost:5672', cast=parse_url)
+    return celery_config
 
 CELERY_BROKER_CONFIG = get_broker_config()
 
