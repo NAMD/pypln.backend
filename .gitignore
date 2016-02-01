@@ -13,4 +13,3 @@ MANIFEST
 .directory
 *.db
 .env
-local_config.py
