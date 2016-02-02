@@ -24,8 +24,6 @@ def parse_url(url):
         'password': url.password,
     }
 
-    return config
-
 MONGODB_CONFIG = config('MONGODB_CONFIG',
             default='mongodb://localhost:27017/pypln_dev', cast=parse_url)
 MONGODB_CONFIG['collection'] =  config('MONGO_COLLECTION', default='analysis')
