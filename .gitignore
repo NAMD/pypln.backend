@@ -13,3 +13,4 @@ MANIFEST
 .directory
 *.db
 .env
+settings.ini
