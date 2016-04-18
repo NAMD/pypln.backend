@@ -36,6 +36,9 @@ mongo_client = pymongo.MongoClient(host=config.MONGODB_CONFIG["host"],
 database = mongo_client[config.MONGODB_CONFIG["database"]]
 document_collection = database[config.MONGODB_CONFIG["collection"]]
 
+class DocumentNotFound(Exception):
+    pass
+
 class PyPLNTask(Task):
     """
     A base class for PyPLN tasks. It is in charge of getting the document
@@ -52,6 +55,9 @@ class PyPLNTask(Task):
         document information and will update de database with results.
         """
         document = document_collection.find_one({"_id": document_id})
+        if document is None:
+            raise DocumentNotFound('Document with ObjectId("{}") not found in '
+                    'database'.format(document_id))
         result = self.process(document)
         document_collection.update({"_id": document_id}, {"$set": result})
         return document_id
