@@ -57,7 +57,6 @@ To run tests::
 
     workon pypln.backend
     pip install -r requirements/development.txt
-    echo "MONGODB_CONFIG = {'host': 'localhost', 'port': 27017, 'database': 'test_pypln_dev', 'gridfs_collection': files}" >> pypln/backend/local_config.py
     make test
 
 See our `code guidelines <https://github.com/namd/pypln.backend/blob/develop/CONTRIBUTING.rst>`_.

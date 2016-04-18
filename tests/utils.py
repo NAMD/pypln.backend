@@ -28,12 +28,12 @@ class ConfigurationError(Exception):
     pass
 
 class TaskTest(unittest.TestCase):
-    db_name = config.MONGODB_CONFIG['database']
+    db_name = config.MONGODB_DBNAME
 
     def setUp(self):
         app.conf.update(CELERY_ALWAYS_EAGER=True)
         self.db = pymongo.Connection()[self.db_name]
-        self.collection = self.db[config.MONGODB_CONFIG['collection']]
+        self.collection = self.db[config.MONGODB_COLLECTION]
 
     def tearDown(self):
         self.collection.remove({})

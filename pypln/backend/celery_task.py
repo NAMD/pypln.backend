@@ -31,10 +31,9 @@ from pypln.backend.celery_app import app
 from pypln.backend import config
 
 
-mongo_client = pymongo.MongoClient(host=config.MONGODB_CONFIG["host"],
-        port=config.MONGODB_CONFIG["port"])
-database = mongo_client[config.MONGODB_CONFIG["database"]]
-document_collection = database[config.MONGODB_CONFIG["collection"]]
+mongo_client = pymongo.MongoClient(host=config.MONGODB_URIS)
+database = mongo_client[config.MONGODB_DBNAME]
+document_collection = database[config.MONGODB_COLLECTION]
 
 class DocumentNotFound(Exception):
     pass
