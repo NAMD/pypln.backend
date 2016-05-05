@@ -55,8 +55,8 @@ class PyPLNTask(Task):
         """
         document = document_collection.find_one({"_id": document_id})
         if document is None:
-            raise DocumentNotFound('Document with ObjectId("{}") not found in '
-                    'database'.format(document_id))
+            self.retry(exc=DocumentNotFound('Document with ObjectId("{}") '
+                'not found in database'.format(document_id)))
         result = self.process(document)
         document_collection.update({"_id": document_id}, {"$set": result})
         return document_id
